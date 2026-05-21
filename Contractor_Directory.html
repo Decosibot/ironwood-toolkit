@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood Renovations — Contractor Directory</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
+    --green: #4caf50; --red: #e53935; --yellow: #f9a825;
+  }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  .header {
+    background: linear-gradient(160deg, #0a0a0a 0%, #141008 50%, #1a1408 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 32px 32px 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .logo-box {
+    width: 48px; height: 48px; background: var(--gold); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px; color: #0a0a0a; flex-shrink: 0;
+  }
+  .header-text h1 { font-size: 22px; font-weight: 800; color: var(--cream); }
+  .header-text p { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+  .toolbar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 14px 24px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .toolbar input[type="text"] {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    border-radius: 6px; padding: 8px 12px; font-size: 13px; width: 260px;
+    outline: none;
+  }
+  .toolbar input[type="text"]:focus { border-color: var(--gold); }
+  .toolbar select {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none; cursor: pointer;
+  }
+  .toolbar select:focus { border-color: var(--gold); }
+  .btn {
+    padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; transition: opacity .15s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn-gold { background: var(--gold); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--cream); }
+  .btn-outline:hover { border-color: var(--gold); }
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+  .container { max-width: 1200px; margin: 0 auto; padding: 28px 24px 60px; }
+
+  .stats-row {
+    display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+  }
+  .stat-pill {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 18px; font-size: 12px; color: var(--muted);
+  }
+  .stat-pill strong { color: var(--cream); font-size: 18px; display: block; margin-bottom: 2px; }
+
+  .trade-section { margin-bottom: 32px; }
+  .trade-label {
+    font-size: 10px; color: var(--gold); text-transform: uppercase;
+    letter-spacing: 2px; font-weight: 700; margin-bottom: 12px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .trade-count { color: var(--muted); font-size: 11px; letter-spacing: 0; font-weight: 400; }
+
+  .contractor-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 12px; }
+
+  .contractor-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px 18px; position: relative; transition: border-color .2s;
+  }
+  .contractor-card:hover { border-color: #3a3a3a; }
+  .contractor-card.preferred { border-color: var(--gold); }
+
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
+  .card-name { font-size: 15px; font-weight: 700; color: var(--cream); }
+  .card-company { font-size: 12px; color: var(--muted); margin-top: 2px; }
+
+  .status-badge {
+    font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 20px;
+    text-transform: uppercase; letter-spacing: .05em; flex-shrink: 0;
+  }
+  .status-active { background: rgba(76,175,80,.15); color: var(--green); border: 1px solid rgba(76,175,80,.3); }
+  .status-pending { background: rgba(249,168,37,.15); color: var(--yellow); border: 1px solid rgba(249,168,37,.3); }
+  .status-inactive { background: rgba(229,57,53,.15); color: var(--red); border: 1px solid rgba(229,57,53,.3); }
+
+  .card-info { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-bottom: 12px; }
+  .info-item { font-size: 12px; }
+  .info-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; display: block; margin-bottom: 1px; }
+  .info-value { color: var(--cream); }
+  .info-value a { color: var(--gold); text-decoration: none; }
+  .info-value a:hover { text-decoration: underline; }
+
+  .card-notes {
+    font-size: 12px; color: var(--muted); background: var(--surface2);
+    border-radius: 6px; padding: 8px 10px; line-height: 1.5;
+    border-left: 2px solid var(--border); margin-bottom: 12px;
+    min-height: 32px;
+  }
+  .card-notes.empty { font-style: italic; }
+
+  .card-actions { display: flex; gap: 8px; }
+
+  .preferred-star {
+    position: absolute; top: 12px; right: 52px;
+    font-size: 14px; cursor: pointer; opacity: .4; transition: opacity .15s;
+  }
+  .preferred-star:hover { opacity: 1; }
+  .contractor-card.preferred .preferred-star { opacity: 1; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.75); z-index: 200;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 28px 28px 24px; width: 100%; max-width: 540px; max-height: 90vh;
+    overflow-y: auto; position: relative;
+  }
+  .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 20px; color: var(--cream); }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; color: var(--muted); font-size: 20px;
+    cursor: pointer; line-height: 1;
+  }
+  .modal-close:hover { color: var(--cream); }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+  .field input, .field select, .field textarea {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 13px;
+    font-family: inherit; outline: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+  .field textarea { resize: vertical; min-height: 70px; }
+
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  .empty-state {
+    text-align: center; padding: 60px 24px; color: var(--muted);
+  }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 14px; }
+
+  .no-results { text-align: center; padding: 40px; color: var(--muted); font-size: 14px; }
+
+  footer { text-align: center; padding: 24px; font-size: 11px; color: #444; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-box">IW</div>
+  <div class="header-text">
+    <h1>Contractor Directory</h1>
+    <p>Ironwood Renovations — Internal Use Only</p>
+  </div>
+</div>
+
+<div class="toolbar">
+  <input type="text" id="search-input" placeholder="Search by name, company, trade…" oninput="renderAll()"/>
+  <select id="trade-filter" onchange="renderAll()">
+    <option value="">All Trades</option>
+  </select>
+  <select id="status-filter" onchange="renderAll()">
+    <option value="">All Statuses</option>
+    <option value="active">Active</option>
+    <option value="pending">Pending</option>
+    <option value="inactive">Inactive</option>
+  </select>
+  <button class="btn btn-gold" onclick="openModal()">+ Add Contractor</button>
+  <button class="btn btn-outline" onclick="exportCSV()">Export CSV</button>
+</div>
+
+<div class="container">
+  <div class="stats-row" id="stats-row"></div>
+  <div id="directory-root"></div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2 id="modal-title">Add Contractor</h2>
+    <div class="form-grid">
+      <div class="field full">
+        <label>Full Name *</label>
+        <input type="text" id="f-name" placeholder="e.g. Marcus Johnson"/>
+      </div>
+      <div class="field full">
+        <label>Company / Business Name</label>
+        <input type="text" id="f-company" placeholder="e.g. Johnson Electric LLC"/>
+      </div>
+      <div class="field">
+        <label>Trade / Specialty *</label>
+        <select id="f-trade">
+          <option value="">Select trade…</option>
+          <option>General Labor</option>
+          <option>Electrician</option>
+          <option>Plumber</option>
+          <option>HVAC</option>
+          <option>Roofer</option>
+          <option>Flooring</option>
+          <option>Tile / Masonry</option>
+          <option>Painter</option>
+          <option>Carpenter / Framing</option>
+          <option>Drywall</option>
+          <option>Landscaping / Lawn</option>
+          <option>Cleaning</option>
+          <option>Concrete / Foundation</option>
+          <option>Insulation</option>
+          <option>Windows / Doors</option>
+          <option>Cabinets / Countertops</option>
+          <option>Property Inspector</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="f-status">
+          <option value="active">Active</option>
+          <option value="pending">Pending — Not Yet Used</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input type="text" id="f-phone" placeholder="(404) 555-0000"/>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="text" id="f-email" placeholder="email@example.com"/>
+      </div>
+      <div class="field">
+        <label>Rate / Pricing</label>
+        <input type="text" id="f-rate" placeholder="e.g. $65/hr or bid-based"/>
+      </div>
+      <div class="field">
+        <label>License #</label>
+        <input type="text" id="f-license" placeholder="GA license number"/>
+      </div>
+      <div class="field full">
+        <label>Insurance / Bonded</label>
+        <input type="text" id="f-insurance" placeholder="e.g. $1M general liability — expires 12/2025"/>
+      </div>
+      <div class="field full">
+        <label>Notes (work quality, availability, past jobs, preferred for…)</label>
+        <textarea id="f-notes" placeholder="e.g. Reliable, fast turnaround on kitchens. Used on 3 jobs. Prefers cash."></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveContractor()">Save Contractor</button>
+    </div>
+  </div>
+</div>
+
+<footer>Ironwood Renovations · Contractor Directory · Internal Use Only · Atlanta Metro</footer>
+
+<script>
+const STORAGE_KEY = 'ironwood-contractors-v1';
+let contractors = [];
+let editingId = null;
+
+function load() {
+  try { contractors = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { contractors = []; }
+}
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(contractors));
+}
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+function getTrades() {
+  const set = new Set(contractors.map(c => c.trade).filter(Boolean));
+  return [...set].sort();
+}
+
+function populateTradeFilter() {
+  const sel = document.getElementById('trade-filter');
+  const cur = sel.value;
+  sel.innerHTML = '<option value="">All Trades</option>';
+  getTrades().forEach(t => {
+    const o = document.createElement('option');
+    o.value = t; o.textContent = t;
+    if (t === cur) o.selected = true;
+    sel.appendChild(o);
+  });
+}
+
+function renderStats() {
+  const total = contractors.length;
+  const active = contractors.filter(c => c.status === 'active').length;
+  const trades = getTrades().length;
+  const preferred = contractors.filter(c => c.preferred).length;
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-pill"><strong>${total}</strong>Total Contractors</div>
+    <div class="stat-pill"><strong>${active}</strong>Active</div>
+    <div class="stat-pill"><strong>${trades}</strong>Trades</div>
+    <div class="stat-pill"><strong>${preferred}</strong>Preferred</div>
+  `;
+}
+
+function filtered() {
+  const q = document.getElementById('search-input').value.toLowerCase();
+  const trade = document.getElementById('trade-filter').value;
+  const status = document.getElementById('status-filter').value;
+  return contractors.filter(c => {
+    const matchQ = !q || [c.name, c.company, c.trade, c.notes, c.phone].join(' ').toLowerCase().includes(q);
+    const matchTrade = !trade || c.trade === trade;
+    const matchStatus = !status || c.status === status;
+    return matchQ && matchTrade && matchStatus;
+  });
+}
+
+function groupByTrade(list) {
+  const map = {};
+  list.forEach(c => {
+    const t = c.trade || 'Uncategorized';
+    if (!map[t]) map[t] = [];
+    map[t].push(c);
+  });
+  return map;
+}
+
+function statusLabel(s) {
+  if (s === 'active') return '<span class="status-badge status-active">Active</span>';
+  if (s === 'pending') return '<span class="status-badge status-pending">Pending</span>';
+  return '<span class="status-badge status-inactive">Inactive</span>';
+}
+
+function esc(v) { return (v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderCard(c) {
+  const phone = c.phone ? `<a href="tel:${c.phone.replace(/\D/g,'')}">${esc(c.phone)}</a>` : '<span style="color:var(--muted)">—</span>';
+  const email = c.email ? `<a href="mailto:${esc(c.email)}">${esc(c.email)}</a>` : '<span style="color:var(--muted)">—</span>';
+  const rate = c.rate ? esc(c.rate) : '<span style="color:var(--muted)">—</span>';
+  const license = c.license ? esc(c.license) : '<span style="color:var(--muted)">—</span>';
+  const insurance = c.insurance ? esc(c.insurance) : '<span style="color:var(--muted)">—</span>';
+  const notes = c.notes ? esc(c.notes) : 'No notes yet.';
+  const notesClass = c.notes ? '' : ' empty';
+  return `
+    <div class="contractor-card${c.preferred?' preferred':''}" id="card-${c.id}">
+      <span class="preferred-star" onclick="togglePreferred('${c.id}')" title="Mark as preferred">★</span>
+      <div class="card-top">
+        <div>
+          <div class="card-name">${esc(c.name)}</div>
+          ${c.company ? `<div class="card-company">${esc(c.company)}</div>` : ''}
+        </div>
+        ${statusLabel(c.status)}
+      </div>
+      <div class="card-info">
+        <div class="info-item"><span class="info-label">Phone</span><span class="info-value">${phone}</span></div>
+        <div class="info-item"><span class="info-label">Email</span><span class="info-value">${email}</span></div>
+        <div class="info-item"><span class="info-label">Rate</span><span class="info-value">${rate}</span></div>
+        <div class="info-item"><span class="info-label">License #</span><span class="info-value">${license}</span></div>
+        <div class="info-item full" style="grid-column:1/-1"><span class="info-label">Insurance</span><span class="info-value">${insurance}</span></div>
+      </div>
+      <div class="card-notes${notesClass}">${notes}</div>
+      <div class="card-actions">
+        <button class="btn btn-outline btn-sm" onclick="openModal('${c.id}')">Edit</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--red);border-color:rgba(229,57,53,.3);" onclick="deleteContractor('${c.id}')">Delete</button>
+      </div>
+    </div>
+  `;
+}
+
+function renderAll() {
+  populateTradeFilter();
+  renderStats();
+  const root = document.getElementById('directory-root');
+  const list = filtered();
+
+  if (contractors.length === 0) {
+    root.innerHTML = `<div class="empty-state"><div class="icon">👷</div><p>No contractors yet.<br/>Click <strong>+ Add Contractor</strong> to get started.</p></div>`;
+    return;
+  }
+  if (list.length === 0) {
+    root.innerHTML = `<div class="no-results">No contractors match your search.</div>`;
+    return;
+  }
+
+  // Preferred at top
+  const preferred = list.filter(c => c.preferred);
+  const grouped = groupByTrade(list.filter(c => !c.preferred));
+  const trades = Object.keys(grouped).sort();
+
+  let html = '';
+
+  if (preferred.length) {
+    html += `<div class="trade-section">
+      <div class="trade-label">⭐ Preferred Contractors <span class="trade-count">${preferred.length}</span></div>
+      <div class="contractor-grid">${preferred.map(renderCard).join('')}</div>
+    </div>`;
+  }
+
+  trades.forEach(trade => {
+    const group = grouped[trade];
+    html += `<div class="trade-section">
+      <div class="trade-label">${esc(trade)} <span class="trade-count">${group.length}</span></div>
+      <div class="contractor-grid">${group.map(renderCard).join('')}</div>
+    </div>`;
+  });
+
+  root.innerHTML = html;
+}
+
+function openModal(id) {
+  editingId = id || null;
+  const c = id ? contractors.find(x => x.id === id) : null;
+  document.getElementById('modal-title').textContent = c ? 'Edit Contractor' : 'Add Contractor';
+  document.getElementById('f-name').value = c ? c.name : '';
+  document.getElementById('f-company').value = c ? (c.company||'') : '';
+  document.getElementById('f-trade').value = c ? (c.trade||'') : '';
+  document.getElementById('f-status').value = c ? (c.status||'active') : 'active';
+  document.getElementById('f-phone').value = c ? (c.phone||'') : '';
+  document.getElementById('f-email').value = c ? (c.email||'') : '';
+  document.getElementById('f-rate').value = c ? (c.rate||'') : '';
+  document.getElementById('f-license').value = c ? (c.license||'') : '';
+  document.getElementById('f-insurance').value = c ? (c.insurance||'') : '';
+  document.getElementById('f-notes').value = c ? (c.notes||'') : '';
+  document.getElementById('modal-overlay').classList.add('open');
+  document.getElementById('f-name').focus();
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function saveContractor() {
+  const name = document.getElementById('f-name').value.trim();
+  const trade = document.getElementById('f-trade').value;
+  if (!name) { alert('Name is required.'); return; }
+  if (!trade) { alert('Please select a trade.'); return; }
+
+  const data = {
+    name,
+    company: document.getElementById('f-company').value.trim(),
+    trade,
+    status: document.getElementById('f-status').value,
+    phone: document.getElementById('f-phone').value.trim(),
+    email: document.getElementById('f-email').value.trim(),
+    rate: document.getElementById('f-rate').value.trim(),
+    license: document.getElementById('f-license').value.trim(),
+    insurance: document.getElementById('f-insurance').value.trim(),
+    notes: document.getElementById('f-notes').value.trim(),
+  };
+
+  if (editingId) {
+    const idx = contractors.findIndex(c => c.id === editingId);
+    contractors[idx] = { ...contractors[idx], ...data };
+  } else {
+    contractors.push({ id: uid(), preferred: false, ...data });
+  }
+
+  save();
+  closeModal();
+  renderAll();
+}
+
+function deleteContractor(id) {
+  const c = contractors.find(x => x.id === id);
+  if (!confirm(`Delete ${c.name}? This cannot be undone.`)) return;
+  contractors = contractors.filter(x => x.id !== id);
+  save();
+  renderAll();
+}
+
+function togglePreferred(id) {
+  const c = contractors.find(x => x.id === id);
+  if (c) { c.preferred = !c.preferred; save(); renderAll(); }
+}
+
+function exportCSV() {
+  if (!contractors.length) { alert('No contractors to export.'); return; }
+  const cols = ['Name','Company','Trade','Status','Phone','Email','Rate','License','Insurance','Notes','Preferred'];
+  const rows = contractors.map(c => [
+    c.name, c.company||'', c.trade||'', c.status||'',
+    c.phone||'', c.email||'', c.rate||'', c.license||'',
+    c.insurance||'', c.notes||'', c.preferred?'Yes':'No'
+  ].map(v => `"${v.replace(/"/g,'""')}"`).join(','));
+  const csv = [cols.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'Ironwood_Contractors.csv';
+  a.click();
+}
+
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+load();
+renderAll();
+</script>
+</body>
+</html>
