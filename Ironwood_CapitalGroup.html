@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood Capital Group — Platform Overview</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
+    --green: #4caf50; --red: #e53935; --yellow: #f9a825; --blue: #42a5f5;
+  }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  .header {
+    background: linear-gradient(160deg, #0a0a0a 0%, #141008 60%, #1a1408 100%);
+    border-bottom: 2px solid var(--gold); padding: 40px 40px 32px;
+  }
+  .header-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
+  .logo-box { width: 56px; height: 56px; background: var(--gold); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; color: #0a0a0a; flex-shrink: 0; }
+  .header-text h1 { font-size: 26px; font-weight: 900; }
+  .header-text p { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
+  .header-badge { margin-left: auto; background: rgba(184,147,62,.12); border: 1px solid rgba(184,147,62,.3); border-radius: 6px; padding: 8px 16px; text-align: right; flex-shrink: 0; }
+  .header-badge .badge-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .header-badge .badge-val { font-size: 20px; font-weight: 900; color: var(--gold); }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 48px 40px 80px; }
+
+  .doc-eyebrow { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 8px; }
+  .doc-title { font-size: 32px; font-weight: 900; color: var(--cream); line-height: 1.2; margin-bottom: 8px; }
+  .doc-sub { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 40px; max-width: 720px; }
+  .doc-divider { height: 1px; background: var(--border); margin: 40px 0; }
+
+  h2.sec { font-size: 19px; font-weight: 800; color: var(--gold); margin: 44px 0 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  h3.sub { font-size: 15px; font-weight: 700; color: var(--cream); margin: 24px 0 8px; }
+  p.body { font-size: 14px; line-height: 1.9; color: #ccc4b8; margin-bottom: 14px; }
+  ul.body { margin: 0 0 16px 22px; }
+  ul.body li { font-size: 14px; line-height: 1.9; color: #ccc4b8; margin-bottom: 4px; }
+  ul.body li strong { color: var(--cream); }
+
+  .callout { background: rgba(184,147,62,.07); border: 1px solid rgba(184,147,62,.22); border-radius: 10px; padding: 20px 24px; margin: 24px 0; }
+  .callout-label { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+  .callout p.body { margin-bottom: 0; }
+
+  .callout-green { background: rgba(76,175,80,.06); border: 1px solid rgba(76,175,80,.2); border-radius: 10px; padding: 20px 24px; margin: 24px 0; }
+  .callout-green .callout-label { color: var(--green); }
+
+  .risk-box { background: rgba(229,57,53,.05); border: 1px solid rgba(229,57,53,.2); border-radius: 8px; padding: 14px 18px; margin: 12px 0; }
+  .risk-title { font-size: 12px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+  .risk-box p.body { margin: 0; font-size: 13px; }
+
+  .data-table { width: 100%; border-collapse: collapse; margin: 18px 0 28px; font-size: 13px; }
+  .data-table th { background: var(--surface2); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
+  .data-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--cream); vertical-align: top; line-height: 1.6; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .hl td { background: rgba(184,147,62,.06); font-weight: 700; }
+  .data-table .gold { color: var(--gold); font-weight: 700; }
+  .data-table .green { color: var(--green); font-weight: 700; }
+  .data-table .sec-row td { background: rgba(184,147,62,.04); color: var(--gold); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+
+  .step-list { margin: 18px 0 28px; }
+  .step { display: flex; gap: 16px; margin-bottom: 18px; }
+  .step-num { background: var(--gold); color: #0a0a0a; font-weight: 900; font-size: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-body { flex: 1; }
+  .step-title { font-size: 14px; font-weight: 700; color: var(--cream); margin-bottom: 5px; }
+  .step-desc { font-size: 13px; color: #ccc4b8; line-height: 1.7; }
+
+  /* ORG CHART */
+  .org-chart { margin: 28px 0; }
+  .org-gp { background: var(--gold); color: #0a0a0a; border-radius: 10px; padding: 18px 24px; text-align: center; font-weight: 900; font-size: 15px; margin-bottom: 0; }
+  .org-gp-sub { font-size: 11px; font-weight: 600; margin-top: 3px; opacity: .7; }
+  .org-line { width: 2px; height: 28px; background: var(--gold); margin: 0 auto; opacity: .4; }
+  .org-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; margin-top: 0; }
+  .org-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; border-top: 3px solid var(--gold); }
+  .org-card-title { font-size: 12px; font-weight: 700; color: var(--cream); margin-bottom: 4px; }
+  .org-card-role { font-size: 11px; color: var(--muted); line-height: 1.5; }
+  .org-card-income { font-size: 11px; color: var(--gold); margin-top: 6px; font-weight: 600; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
+  .info-card { background: var(--surface2); border-radius: 10px; padding: 18px 20px; }
+  .info-card h3.sub { margin-top: 0; }
+
+  .phase-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0 28px; }
+  .phase-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; border-top: 3px solid var(--gold); }
+  .phase-num { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin-bottom: 6px; }
+  .phase-title { font-size: 13px; font-weight: 700; color: var(--cream); margin-bottom: 6px; }
+  .phase-aum { font-size: 16px; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
+  .phase-time { font-size: 11px; color: var(--muted); }
+
+  .waterfall { margin: 20px 0 28px; }
+  .wf-row { display: flex; align-items: center; gap: 0; margin-bottom: 4px; }
+  .wf-label { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px 0 0 6px; padding: 10px 16px; font-size: 13px; font-weight: 600; color: var(--cream); width: 260px; flex-shrink: 0; }
+  .wf-bar { height: 40px; display: flex; align-items: center; padding: 0 14px; font-size: 12px; font-weight: 700; border-radius: 0 6px 6px 0; flex: 1; }
+  .wf-bar.return { background: rgba(66,165,245,.15); color: var(--blue); border: 1px solid rgba(66,165,245,.2); }
+  .wf-bar.pref { background: rgba(76,175,80,.12); color: var(--green); border: 1px solid rgba(76,175,80,.2); }
+  .wf-bar.lp { background: rgba(76,175,80,.2); color: var(--green); border: 1px solid rgba(76,175,80,.3); }
+  .wf-bar.gp { background: rgba(184,147,62,.2); color: var(--gold); border: 1px solid rgba(184,147,62,.3); }
+
+  .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
+  .asset-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+  .asset-icon { font-size: 24px; margin-bottom: 8px; }
+  .asset-title { font-size: 13px; font-weight: 700; color: var(--cream); margin-bottom: 4px; }
+  .asset-cap { font-size: 12px; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
+  .asset-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .fee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
+  .fee-card { background: var(--surface); border: 1px solid var(--gold); border-radius: 10px; padding: 20px 22px; text-align: center; }
+  .fee-pct { font-size: 36px; font-weight: 900; color: var(--gold); }
+  .fee-label { font-size: 13px; font-weight: 700; color: var(--cream); margin: 6px 0 4px; }
+  .fee-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  footer { text-align: center; padding: 28px; font-size: 11px; color: #444; border-top: 1px solid var(--border); margin-top: 40px; }
+
+  @media (max-width: 700px) {
+    .container { padding: 28px 18px 60px; }
+    .header-inner { flex-wrap: wrap; }
+    .two-col, .phase-row, .fee-grid { grid-template-columns: 1fr; }
+    .org-row { grid-template-columns: 1fr 1fr; }
+    .wf-label { width: 160px; font-size: 11px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-inner">
+    <div class="logo-box">IW</div>
+    <div class="header-text">
+      <h1>Ironwood Capital Group</h1>
+      <p>Multi-Asset Real Estate Capital Management Platform</p>
+    </div>
+    <div class="header-badge">
+      <div class="badge-label">AUM Target</div>
+      <div class="badge-val">$100M</div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="doc-eyebrow">Platform Overview</div>
+  <div class="doc-title">From Renovation Company to Capital Management Platform</div>
+  <div class="doc-sub">Ironwood Capital Group LLC is the fund manager and general partner entity that sits above all of Ironwood's investment vehicles and operating subsidiaries. It raises, deploys, and manages capital across residential BRRRR, commercial real estate, opportunity zones, private lending, and infrastructure — on a path to $100M AUM.</div>
+
+  <div class="callout">
+    <div class="callout-label">Core Philosophy</div>
+    <p class="body">Own the real estate. Not the business. A gas station, a car wash, a strip mall — the tenant pays rent and runs the operation. Ironwood holds the land and the building, collects NNN rent for 15–20 years, and never touches the day-to-day. The business is a tenant. The real estate is the asset. This is how generational wealth is built.</p>
+  </div>
+
+  <!-- PHASE ROADMAP -->
+  <h2 class="sec">Phase Roadmap to $100M AUM</h2>
+  <div class="phase-row">
+    <div class="phase-card">
+      <div class="phase-num">Phase 1</div>
+      <div class="phase-title">Residential Foundation</div>
+      <div class="phase-aum">$0–$5M</div>
+      <div class="phase-time">Now – Year 2</div>
+      <p class="body" style="font-size:12px;margin-top:8px;margin-bottom:0;">BRRRR + new construction + STR. Build track record. Close Fund I deal-by-deal raises. 10+ doors.</p>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">Phase 2</div>
+      <div class="phase-title">Multifamily + First Commercial</div>
+      <div class="phase-aum">$5–$25M</div>
+      <div class="phase-time">Year 2–4</div>
+      <p class="body" style="font-size:12px;margin-top:8px;margin-bottom:0;">4–20 unit multifamily. First NNN or car wash acquisition. Fund I fully deployed. Audited returns in hand.</p>
+    </div>
+    <div class="phase-card">
+      <div class="phase-num">Phase 3</div>
+      <div class="phase-title">Commercial + OZ Fund</div>
+      <div class="phase-aum">$25–$75M</div>
+      <div class="phase-time">Year 4–7</div>
+      <p class="body" style="font-size:12px;margin-top:8px;margin-bottom:0;">Fund II raise. Opportunity Zone Fund launch. Lending Fund active. Institutional LP relationships. 50+ doors.</p>
+    </div>
+    <div class="phase-card" style="border-top-color:var(--green);">
+      <div class="phase-num" style="color:var(--green);">Phase 4</div>
+      <div class="phase-title">Multi-Asset Platform</div>
+      <div class="phase-aum" style="color:var(--green);">$75–$100M+</div>
+      <div class="phase-time">Year 7–10</div>
+      <p class="body" style="font-size:12px;margin-top:8px;margin-bottom:0;">ADV registration. REIT election considered. Non-traded REIT option. Fully diversified capital platform.</p>
+    </div>
+  </div>
+
+  <!-- ENTITY STRUCTURE -->
+  <h2 class="sec">Entity Structure</h2>
+  <div class="org-chart">
+    <div class="org-gp">Ironwood Capital Group LLC — General Partner &amp; Fund Manager<div class="org-gp-sub">2% mgmt fee + 20% carried interest across all funds · Sole controlling entity</div></div>
+    <div class="org-line"></div>
+    <div class="org-row">
+      <div class="org-card">
+        <div class="org-card-title">Real Estate Fund I LP</div>
+        <div class="org-card-role">Residential BRRRR + New Construction. Deal-by-deal accredited investors.</div>
+        <div class="org-card-income">2% mgmt + 20% carry</div>
+      </div>
+      <div class="org-card">
+        <div class="org-card-title">Commercial Fund LLC</div>
+        <div class="org-card-role">NNN, car wash, gas station, strip mall acquisitions.</div>
+        <div class="org-card-income">2% mgmt + 20% carry</div>
+      </div>
+      <div class="org-card">
+        <div class="org-card-title">Opportunity Zone Fund LLC</div>
+        <div class="org-card-role">OZ-designated deals. Affordable + workforce housing. 10-year hold.</div>
+        <div class="org-card-income">1.5% mgmt + 20% carry</div>
+      </div>
+      <div class="org-card">
+        <div class="org-card-title">Lending Fund LLC</div>
+        <div class="org-card-role">Private bridge loans at 11–13%. LPs earn 8% pref. Ironwood keeps the spread.</div>
+        <div class="org-card-income">Spread + 1–2pt origination</div>
+      </div>
+      <div class="org-card">
+        <div class="org-card-title">Ironwood Construction LLC</div>
+        <div class="org-card-role">GC arm. Builds for all funds at cost + margin.</div>
+        <div class="org-card-income">GC fee + markup</div>
+      </div>
+      <div class="org-card">
+        <div class="org-card-title">Ironwood Property Mgmt LLC</div>
+        <div class="org-card-role">Manages all residential + commercial assets in the portfolio.</div>
+        <div class="org-card-income">8–10% of gross rents</div>
+      </div>
+      <div class="org-card">
+        <div class="org-card-title">Peach to Palms LLC</div>
+        <div class="org-card-role">STR portfolio. Cash flow asset inside Fund I.</div>
+        <div class="org-card-income">STR nightly revenue</div>
+      </div>
+      <div class="org-card">
+        <div class="org-card-title">Project LLCs (per deal)</div>
+        <div class="org-card-role">Individual deal wrappers. Investors hold LP interest here — never in Ironwood LLC.</div>
+        <div class="org-card-income">Deal-level profit</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMERCIAL TARGET ASSETS -->
+  <h2 class="sec">Commercial Real Estate — Target Assets</h2>
+  <p class="body">The commercial strategy is built around one principle: own the real estate the business sits on, not the business itself. NNN leases mean the tenant pays rent plus all taxes, insurance, and maintenance. Ironwood collects a check. The tenant runs the operation.</p>
+  <div class="asset-grid">
+    <div class="asset-card">
+      <div class="asset-icon">⛽</div>
+      <div class="asset-title">Gas Station Pads</div>
+      <div class="asset-cap">Cap Rate: 5–7%</div>
+      <div class="asset-desc">Buy land + canopy + building. Lease NNN to Shell, BP, or independent operator. 15–20 yr lease. $8K–$15K/mo NNN rent. Zero landlord responsibilities.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-icon">🚗</div>
+      <div class="asset-title">Car Wash Real Estate</div>
+      <div class="asset-cap">Cap Rate: 6–8%</div>
+      <div class="asset-desc">Operational expertise = underwriting edge. Operate directly (Phase 2) or lease NNN (Phase 3+). Express membership model: $35K–$60K net/mo per location.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-icon">🏪</div>
+      <div class="asset-title">Strip Mall / Flex Commercial</div>
+      <div class="asset-cap">Cap Rate: 7–9%</div>
+      <div class="asset-desc">3–8 bay neighborhood retail. Anchor with recession-proof tenants. South Fulton, Clayton Co., DeKalb submarkets. $1.2M acquisition at 7.5% cap = $90K/yr gross income.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-icon">🏢</div>
+      <div class="asset-title">NNN / Dollar Store Pads</div>
+      <div class="asset-cap">Cap Rate: 5–6%</div>
+      <div class="asset-desc">Dollar General, AutoZone, Family Dollar — 10–15 yr absolute NNN leases. Investment grade tenants. Low risk, predictable income. Entry point $500K–$2M.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-icon">🏗</div>
+      <div class="asset-title">Opportunity Zone Multifamily</div>
+      <div class="asset-cap">OZ + LIHTC eligible</div>
+      <div class="asset-desc">New construction in OZ census tracts. Workforce + affordable housing. Tax-free appreciation after 10-yr hold. Layers OZ deferral + LIHTC equity credit.</div>
+    </div>
+    <div class="asset-card">
+      <div class="asset-icon">📡</div>
+      <div class="asset-title">Infrastructure Add-Ons</div>
+      <div class="asset-cap">$1,500–$4,000/mo</div>
+      <div class="asset-desc">Cell towers, EV charging, fiber conduit, billboard ground leases — layered onto existing real estate at zero acquisition cost. Passive income on top of passive income.</div>
+    </div>
+  </div>
+
+  <!-- CAR WASH DEEP DIVE -->
+  <h2 class="sec">Car Wash Strategy — Operational Edge</h2>
+  <p class="body">Car wash real estate is one of the hottest commercial asset classes in the country right now. Express tunnel washes with unlimited membership models generate predictable, recurring revenue that institutional buyers are paying premium cap rates to acquire. Ironwood has an edge most operators and investors do not: direct operational experience in the industry. That means underwriting a car wash acquisition without relying on a broker's pro forma — verifying throughput, membership penetration, equipment age, chemical costs, and labor independently.</p>
+  <div class="two-col">
+    <div class="info-card">
+      <h3 class="sub">Phase 2 — Operate Directly</h3>
+      <ul class="body" style="font-size:13px;">
+        <li>Ironwood Car Wash LLC as subsidiary of Ironwood Capital Group</li>
+        <li>Target: express tunnel, membership model, high-traffic corridor</li>
+        <li>Site selection criteria: 30,000+ daily traffic count, 1-mile pop. density, minimal direct competition</li>
+        <li>Acquisition target: $800K–$2M for existing wash; greenfield build $1.5M–$3M</li>
+        <li>Stabilized net: $35K–$60K/mo per location at full membership ramp</li>
+        <li>Leverage existing operational knowledge for due diligence — no guessing</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 class="sub">Phase 3 — NNN Lease to Operator</h3>
+      <ul class="body" style="font-size:13px;">
+        <li>Acquire real estate only — sell or lease the operation to an established chain</li>
+        <li>Fully passive — tenant handles all staffing, chemicals, maintenance, marketing</li>
+        <li>NNN lease 10–15 years with 2–3% annual rent escalations</li>
+        <li>Cap rate 6–8% on stabilized car wash real estate</li>
+        <li>Ironwood retains real estate appreciation — unlimited upside on land value</li>
+        <li>Scales without operational burden — right model at 3+ locations</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- OPPORTUNITY ZONE -->
+  <h2 class="sec">Opportunity Zone Fund</h2>
+  <p class="body">The Ironwood Opportunity Zone Fund LLC raises capital from investors who have existing capital gains — real estate sales, stock sales, business exits — and deploys it into projects located in Georgia's 260 Qualified Opportunity Zone census tracts. Investors defer and potentially eliminate capital gains tax. Communities in underserved Atlanta submarkets receive quality housing and commercial development. Ironwood earns GP fees and promote.</p>
+  <table class="data-table">
+    <thead><tr><th>Tax Benefit</th><th>How It Works</th><th>Hold Requirement</th></tr></thead>
+    <tbody>
+      <tr><td class="gold">Capital Gains Deferral</td><td>Defer paying tax on the original gain until Dec 31, 2026 (or sale of OZ investment)</td><td>Invest within 180 days of the gain event</td></tr>
+      <tr><td class="gold">Basis Step-Up</td><td>10% reduction in deferred gain (5-yr hold) — available on existing investments</td><td>5 years in fund</td></tr>
+      <tr class="hl"><td class="gold">Gain Elimination</td><td>ZERO federal capital gains tax on ALL appreciation inside the OZ investment</td><td>10+ years in fund</td></tr>
+    </tbody>
+  </table>
+  <p class="body">Target OZ tracts: South Fulton, East Point, College Park, Vine City, English Avenue, and select tracts in Clayton County and DeKalb. Projects eligible for OZ treatment include new construction multifamily, mixed-use commercial, and veteran transitional housing. Many of these projects also qualify for Low Income Housing Tax Credits (LIHTC) — layering two separate equity sources into the same capital stack, reducing Ironwood's required equity contribution substantially.</p>
+
+  <!-- LENDING FUND -->
+  <h2 class="sec">Ironwood Lending Fund — Become the Bank</h2>
+  <p class="body">Ironwood currently borrows at 10–13% from hard money lenders. The Ironwood Lending Fund LLC reverses that relationship. Raise capital from accredited investors at 8% preferred return. Deploy it as short-term bridge loans to other operators at 11–13%. Keep the spread plus origination fees. This fund generates recurring income that is completely uncorrelated to whether Ironwood's own deals are selling or refinancing.</p>
+  <table class="data-table">
+    <thead><tr><th>Metric</th><th>Value</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>LP preferred return</td><td class="gold">8%</td><td>Paid quarterly from interest collected</td></tr>
+      <tr><td>Lending rate to borrowers</td><td class="gold">11–13%</td><td>Secured by real estate, 65–70% LTV max</td></tr>
+      <tr><td>Ironwood gross spread</td><td class="green">3–5%</td><td>Before origination fees and GP promote</td></tr>
+      <tr><td>Origination fee (Ironwood)</td><td class="green">1–2 points per loan</td><td>Collected at closing</td></tr>
+      <tr><td>Loan term</td><td>12 months</td><td>Short duration, rapid capital recycling</td></tr>
+      <tr><td>Fund size (Phase 3 target)</td><td>$5M–$10M deployed</td><td>At $10M: $400K+/yr in spread income to Ironwood</td></tr>
+    </tbody>
+  </table>
+
+  <!-- FUND ECONOMICS -->
+  <h2 class="sec">Fund Economics — How Ironwood Gets Paid</h2>
+  <div class="fee-grid">
+    <div class="fee-card">
+      <div class="fee-pct">2%</div>
+      <div class="fee-label">Annual Management Fee</div>
+      <div class="fee-desc">Charged on committed or deployed capital across all funds. Recurring income paid quarterly — independent of deal performance. On $10M AUM: $200K/yr. On $50M: $1M/yr.</div>
+    </div>
+    <div class="fee-card">
+      <div class="fee-pct">20%</div>
+      <div class="fee-label">Carried Interest (Promote)</div>
+      <div class="fee-desc">20% of profits above the 8% preferred return hurdle. On a $10M fund returning 18% net to LPs, Ironwood's promote is ~$200K+ per fund cycle. This is where wealth compounds.</div>
+    </div>
+  </div>
+
+  <h3 class="sub">AUM Projection — Annual GP Income</h3>
+  <table class="data-table">
+    <thead><tr><th>AUM Level</th><th>Mgmt Fee (2%/yr)</th><th>Est. Carry (20% of excess)</th><th>Total GP Income</th></tr></thead>
+    <tbody>
+      <tr><td>$5M</td><td>$100K/yr</td><td>$50K–$100K per cycle</td><td class="gold">~$150K–$200K</td></tr>
+      <tr><td>$10M</td><td>$200K/yr</td><td>$100K–$200K per cycle</td><td class="gold">~$300K–$400K</td></tr>
+      <tr><td>$25M</td><td>$500K/yr</td><td>$250K–$500K per cycle</td><td class="gold">~$750K–$1M</td></tr>
+      <tr><td>$50M</td><td>$1M/yr</td><td>$500K–$1M per cycle</td><td class="gold">~$1.5M–$2M</td></tr>
+      <tr class="hl"><td>$100M</td><td>$2M/yr</td><td>$1M–$3M per cycle</td><td class="gold">~$3M–$5M</td></tr>
+    </tbody>
+  </table>
+
+  <!-- INVESTOR WATERFALL -->
+  <h2 class="sec">Standard Investor Waterfall</h2>
+  <p class="body">All Ironwood fund vehicles use the same waterfall structure. Capital flows in this order on every deal or fund distribution.</p>
+  <div class="waterfall">
+    <div class="wf-row">
+      <div class="wf-label">1. Return of Capital</div>
+      <div class="wf-bar return">100% to LP investors — all capital returned before any profit split</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-label">2. Preferred Return</div>
+      <div class="wf-bar pref">8% cumulative preferred return — 100% to LP investors</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-label">3. LP Profit Share</div>
+      <div class="wf-bar lp">70% of remaining profits to LP investors</div>
+    </div>
+    <div class="wf-row">
+      <div class="wf-label">4. GP Promote (Ironwood)</div>
+      <div class="wf-bar gp">30% of remaining profits to Ironwood Capital Group — the "carry"</div>
+    </div>
+  </div>
+
+  <!-- CAPITAL RAISE TRACKS -->
+  <h2 class="sec">Capital Raise Tracks</h2>
+  <div class="two-col">
+    <div class="info-card">
+      <h3 class="sub">Track 1 — Reg D 506(c)</h3>
+      <ul class="body" style="font-size:13px;">
+        <li><strong>Investors:</strong> Accredited only ($1M+ net worth or $200K+ income)</li>
+        <li><strong>Advertising:</strong> Public solicitation permitted — social media, YouTube, podcasts</li>
+        <li><strong>Minimum:</strong> $5,000 per investor</li>
+        <li><strong>Documents required:</strong> PPM, LPA, Subscription Agreement</li>
+        <li><strong>Use case:</strong> Standard BRRRR deals, new construction, commercial acquisitions</li>
+        <li><strong>Filing:</strong> Form D with SEC within 15 days of first sale</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3 class="sub">Track 2 — Reg CF Crowdfunding</h3>
+      <ul class="body" style="font-size:13px;">
+        <li><strong>Investors:</strong> Anyone — no accreditation required</li>
+        <li><strong>Advertising:</strong> Public solicitation permitted through registered portal</li>
+        <li><strong>Minimum:</strong> $100 per investor</li>
+        <li><strong>Portal:</strong> Wefunder, Republic, or StartEngine (SEC-registered)</li>
+        <li><strong>Use case:</strong> Veteran housing, affordable housing, community mission projects</li>
+        <li><strong>Annual raise limit:</strong> Up to $5M/year</li>
+      </ul>
+    </div>
+  </div>
+  <p class="body">Track 1 and Track 2 are not competing — they serve different deal types and different investor audiences simultaneously. Every social media post about a veteran housing project is both a marketing asset AND a Reg CF offering promotion. The community mission and the capital strategy are the same activity.</p>
+
+  <!-- REIT PATH -->
+  <h2 class="sec">REIT — The Long Game</h2>
+  <p class="body">When Ironwood's portfolio reaches 100+ residential doors or a substantial commercial portfolio, a Real Estate Investment Trust (REIT) election becomes a structural option. A REIT must distribute 90% of taxable income to shareholders as dividends, which eliminates corporate income tax. In exchange, it can raise equity from the general public through a public or non-traded offering structure.</p>
+  <div class="step-list">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Non-Traded REIT (Phase 3–4)</div><div class="step-desc">Raise capital from retail investors without going public. Minimum investment $1K–$5K. Same model as Fundrise and RealtyMogul. Opens the capital raise to tens of millions of potential investors. Realistic at $50M+ AUM.</div></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">UpREIT Structure</div><div class="step-desc">Allows Ironwood to contribute appreciated properties from subsidiary LLCs into the REIT in exchange for operating partnership units — a tax-deferred transaction. No capital gains triggered on contribution. Properties consolidate into the REIT without selling.</div></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Publicly Traded REIT (Phase 4+)</div><div class="step-desc">Full SEC registration, quarterly earnings, public market liquidity for investors. This is the institutional end game — a 10-year horizon decision, not immediate. But every real estate acquisition made today should be made with REIT eligibility in mind.</div></div></div>
+  </div>
+
+  <!-- PREREQUISITES -->
+  <h2 class="sec">Prerequisites — What Must Be in Place First</h2>
+  <div class="step-list">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Track Record (Phase 1–2)</div><div class="step-desc">Document every deal from day one. Deal Summary Tearsheets showing purchase price, rehab cost, ARV, refi proceeds, cash flow, and equity. This file becomes the offering document for Fund II and institutional LPs.</div></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Audited Financials</div><div class="step-desc">Hire a CPA firm to audit Fund I annually once the first fund vehicle closes. Audited returns are the difference between "I trust you" capital and "I've verified you" institutional capital. Budget $5K–$15K/year — it unlocks 10x that in new commitments.</div></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">PPM + Securities Attorney</div><div class="step-desc">A Private Placement Memorandum, Limited Partnership Agreement, and Subscription Agreement are required before Fund I closes to investors. Use a securities attorney experienced in real estate private placements. Budget $15K–$25K one time per fund vehicle.</div></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">Georgia GC License (Jeff)</div><div class="step-desc">Required for new construction permits, Fund the Flip financing, and institutional lender requirements. Must be in place before the first new construction fund deal closes. File through the Georgia Secretary of State — qualifying agent exam required.</div></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><div class="step-title">ADV Filing at $25M AUM</div><div class="step-desc">Once Ironwood Capital Group manages $25M+ in assets, SEC Investment Adviser registration (Form ADV) is required. Below $25M, register with the Georgia Securities Division. Budget $5K–$10K for compliance counsel when approaching this threshold.</div></div></div>
+    <div class="step"><div class="step-num">6</div><div class="step-body"><div class="step-title">Investor Portal (20+ LPs)</div><div class="step-desc">Manual reporting breaks down at scale. Use Juniper Square, AppFolio Investment Management, or IMS to deliver quarterly reports, K-1s, and capital account statements automatically. Signals institutional-grade operations to LPs and retains relationships for future funds.</div></div></div>
+  </div>
+
+  <!-- RISKS -->
+  <h2 class="sec">Risk Factors</h2>
+  <div class="risk-box"><div class="risk-title">Securities Compliance</div><p class="body">Never accept investor capital before a PPM is in place and a securities attorney has reviewed the offering structure. Reg D and Reg CF provide exemptions from SEC registration — they are not optional guidelines. One mistake creates personal liability for the managing members.</p></div>
+  <div class="risk-box"><div class="risk-title">Track Record Gap</div><p class="body">Institutional investors will not commit $500K+ without 3–5 years of audited returns. Skipping Phase 1 to raise Fund II capital will fail. The track record is the product. Document every deal, audit every year, and the capital conversations become easy by Year 3.</p></div>
+  <div class="risk-box"><div class="risk-title">Commercial Underwriting Discipline</div><p class="body">Gas stations require Phase I environmental studies. Car washes require equipment inspection and membership data verification. Strip malls require tenant credit quality review. Never acquire commercial real estate without a commercial real estate attorney reviewing the lease and a licensed inspector on the property.</p></div>
+  <div class="risk-box"><div class="risk-title">OZ Regulatory Risk</div><p class="body">Opportunity Zone tax benefits are governed by IRS regulations created by the 2017 Tax Cuts and Jobs Act. Congress can modify or eliminate these benefits. All OZ fund documents must disclose this risk. Underwrite every OZ deal to work without the tax benefit — the OZ treatment is upside, not the foundation.</p></div>
+  <div class="risk-box"><div class="risk-title">Scaling Ahead of Infrastructure</div><p class="body">Moving from residential to funds to commercial before legal, compliance, and accounting infrastructure is in place creates exposure. Each phase has prerequisites. A missed step at $5M AUM is manageable. The same mistake at $50M is a legal and reputational event with LP and SEC implications.</p></div>
+
+  <div class="callout-green">
+    <div class="callout-label">The Vision</div>
+    <p class="body">Ironwood starts as a renovation company in Atlanta. It becomes a BRRRR operator. Then a commercial real estate acquirer. Then a private equity real estate fund manager. Then a multi-asset capital management platform. At $100M AUM, the management fees alone generate $2M/year regardless of market conditions. The carried interest generates another $1M–$3M per fund cycle. That is not income from a job, not income from a deal — it is income from a permanent, compounding machine that runs on institutional capital deployed into real assets that Ironwood controls, operates, and grows forever.</p>
+  </div>
+
+</div><!-- end container -->
+
+<footer>Ironwood Capital Group · Ironwood Renovations LLC · Internal Use Only · Atlanta Metro</footer>
+
+</body>
+</html>
