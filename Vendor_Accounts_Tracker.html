@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood Renovations — Vendor Accounts Tracker</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
+    --green: #4caf50; --red: #e53935; --yellow: #f9a825; --blue: #42a5f5;
+  }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  .header {
+    background: linear-gradient(160deg, #0a0a0a 0%, #141008 50%, #1a1408 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 32px 32px 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .logo-box {
+    width: 48px; height: 48px; background: var(--gold); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px; color: #0a0a0a; flex-shrink: 0;
+  }
+  .header-text h1 { font-size: 22px; font-weight: 800; }
+  .header-text p { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+  .toolbar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 14px 24px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .toolbar input[type="text"] {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    border-radius: 6px; padding: 8px 12px; font-size: 13px; width: 240px; outline: none;
+  }
+  .toolbar input[type="text"]:focus { border-color: var(--gold); }
+  .toolbar select {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none; cursor: pointer;
+  }
+  .toolbar select:focus { border-color: var(--gold); }
+  .btn {
+    padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; transition: opacity .15s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn-gold { background: var(--gold); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--cream); }
+  .btn-outline:hover { border-color: var(--gold); }
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+  .container { max-width: 1300px; margin: 0 auto; padding: 28px 24px 60px; }
+
+  .stats-row { display: flex; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+  .stat-pill {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 18px; font-size: 12px; color: var(--muted);
+  }
+  .stat-pill strong { color: var(--cream); font-size: 18px; display: block; margin-bottom: 2px; }
+  .stat-pill.gold strong { color: var(--gold); }
+  .stat-pill.green strong { color: var(--green); }
+
+  .phase-section { margin-bottom: 32px; }
+  .phase-label {
+    font-size: 10px; color: var(--gold); text-transform: uppercase;
+    letter-spacing: 2px; font-weight: 700; margin-bottom: 12px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .phase-count { color: var(--muted); font-size: 11px; letter-spacing: 0; font-weight: 400; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    background: var(--surface2); color: var(--muted); font-size: 10px;
+    text-transform: uppercase; letter-spacing: .08em; font-weight: 700;
+    padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td { padding: 11px 12px; vertical-align: middle; }
+
+  .vendor-name { font-weight: 700; color: var(--cream); }
+  .vendor-category { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+  .badge {
+    display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px;
+    border-radius: 20px; text-transform: uppercase; letter-spacing: .04em; white-space: nowrap;
+  }
+  .badge-open { background: rgba(76,175,80,.15); color: var(--green); border: 1px solid rgba(76,175,80,.3); }
+  .badge-applied { background: rgba(249,168,37,.15); color: var(--yellow); border: 1px solid rgba(249,168,37,.3); }
+  .badge-target { background: rgba(66,165,245,.15); color: var(--blue); border: 1px solid rgba(66,165,245,.3); }
+  .badge-closed { background: rgba(229,57,53,.15); color: var(--red); border: 1px solid rgba(229,57,53,.3); }
+
+  .bureau-dots { display: flex; gap: 4px; flex-wrap: wrap; }
+  .bureau-dot {
+    font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;
+    background: rgba(184,147,62,.12); color: var(--gold); border: 1px solid rgba(184,147,62,.25);
+  }
+  .bureau-dot.none { background: rgba(136,136,136,.1); color: var(--muted); border-color: var(--border); }
+
+  .due-soon { color: var(--yellow); font-weight: 600; }
+  .overdue { color: var(--red); font-weight: 600; }
+
+  .actions-cell { display: flex; gap: 6px; }
+
+  .progress-bar-wrap { background: var(--surface2); border-radius: 4px; height: 6px; width: 100px; overflow: hidden; }
+  .progress-bar { height: 100%; border-radius: 4px; background: var(--gold); transition: width .3s; }
+  .progress-bar.danger { background: var(--red); }
+  .progress-bar.warn { background: var(--yellow); }
+  .util-label { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.8); z-index: 200;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 28px; width: 100%; max-width: 600px; max-height: 92vh;
+    overflow-y: auto; position: relative;
+  }
+  .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 20px; }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer;
+  }
+  .modal-close:hover { color: var(--cream); }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+  .field input, .field select, .field textarea {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 13px;
+    font-family: inherit; outline: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+  .field textarea { resize: vertical; min-height: 60px; }
+
+  .bureau-checkboxes { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 4px; }
+  .bureau-checkboxes label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; color: var(--cream); text-transform: none; letter-spacing: 0;
+    cursor: pointer;
+  }
+  .bureau-checkboxes input[type="checkbox"] { accent-color: var(--gold); width: 14px; height: 14px; }
+
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  .empty-state { text-align: center; padding: 60px 24px; color: var(--muted); }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+
+  .section-divider {
+    font-size: 11px; color: var(--muted); padding: 8px 12px;
+    background: rgba(184,147,62,.04); border-bottom: 1px solid var(--border);
+    font-style: italic;
+  }
+
+  .due-alert-banner {
+    background: rgba(229,57,53,.08); border: 1px solid rgba(229,57,53,.25);
+    border-radius: 8px; padding: 12px 16px; margin-bottom: 20px;
+    font-size: 13px; color: var(--red); display: none;
+  }
+  .due-alert-banner.visible { display: block; }
+
+  footer { text-align: center; padding: 24px; font-size: 11px; color: #444; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-box">IW</div>
+  <div class="header-text">
+    <h1>Vendor Accounts Tracker</h1>
+    <p>Ironwood Renovations — Net 30 / 60 / 90 Business Credit</p>
+  </div>
+</div>
+
+<div class="toolbar">
+  <input type="text" id="search-input" placeholder="Search vendor, category…" oninput="renderAll()"/>
+  <select id="status-filter" onchange="renderAll()">
+    <option value="">All Statuses</option>
+    <option value="open">Open</option>
+    <option value="applied">Applied — Pending</option>
+    <option value="target">Target — Not Yet Applied</option>
+    <option value="closed">Closed</option>
+  </select>
+  <select id="phase-filter" onchange="renderAll()">
+    <option value="">All Phases</option>
+    <option value="Day 1">Day 1</option>
+    <option value="Month 1-2">Month 1–2</option>
+    <option value="Month 3-6">Month 3–6</option>
+    <option value="Month 6+">Month 6+</option>
+  </select>
+  <button class="btn btn-gold" onclick="openModal()">+ Add Account</button>
+  <button class="btn btn-outline" onclick="exportCSV()">Export CSV</button>
+</div>
+
+<div class="container">
+  <div id="due-alert" class="due-alert-banner"></div>
+  <div class="stats-row" id="stats-row"></div>
+  <div id="tracker-root"></div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2 id="modal-title">Add Vendor Account</h2>
+    <div class="form-grid">
+      <div class="field full">
+        <label>Vendor Name *</label>
+        <input type="text" id="f-name" placeholder="e.g. Sherwin-Williams"/>
+      </div>
+      <div class="field full">
+        <label>Category</label>
+        <select id="f-category">
+          <option value="">Select category…</option>
+          <option>Building Materials</option>
+          <option>Plumbing Supplies</option>
+          <option>Electrical Supplies</option>
+          <option>Flooring</option>
+          <option>Paint &amp; Coatings</option>
+          <option>HVAC Supplies</option>
+          <option>Appliances</option>
+          <option>Tools &amp; Equipment Rental</option>
+          <option>Cleaning Supplies</option>
+          <option>Landscaping &amp; Lawn</option>
+          <option>Pool Supplies</option>
+          <option>Office &amp; Business Supplies</option>
+          <option>Safety Equipment</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="f-status">
+          <option value="target">Target — Not Yet Applied</option>
+          <option value="applied">Applied — Pending</option>
+          <option value="open">Open</option>
+          <option value="closed">Closed</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Priority Phase</label>
+        <select id="f-phase">
+          <option value="Day 1">Day 1</option>
+          <option value="Month 1-2">Month 1–2</option>
+          <option value="Month 3-6">Month 3–6</option>
+          <option value="Month 6+">Month 6+</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Terms</label>
+        <select id="f-terms">
+          <option value="">Select…</option>
+          <option value="Net 30">Net 30</option>
+          <option value="Net 60">Net 60</option>
+          <option value="Net 90">Net 90</option>
+          <option value="Revolving">Revolving</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Credit Limit ($)</label>
+        <input type="number" id="f-limit" placeholder="0"/>
+      </div>
+      <div class="field">
+        <label>Current Balance ($)</label>
+        <input type="number" id="f-balance" placeholder="0"/>
+      </div>
+      <div class="field">
+        <label>Next Payment Due</label>
+        <input type="date" id="f-due"/>
+      </div>
+      <div class="field">
+        <label>Date Opened</label>
+        <input type="date" id="f-opened"/>
+      </div>
+      <div class="field">
+        <label>Account # (optional)</label>
+        <input type="text" id="f-acct" placeholder="Account number"/>
+      </div>
+      <div class="field">
+        <label>Phone / Contact</label>
+        <input type="text" id="f-phone" placeholder="e.g. 1-800-321-8194"/>
+      </div>
+      <div class="field full">
+        <label>Website</label>
+        <input type="text" id="f-website" placeholder="e.g. sherwin-williams.com/contractors"/>
+      </div>
+      <div class="field full">
+        <label>Bureau Reporting</label>
+        <div class="bureau-checkboxes">
+          <label><input type="checkbox" id="f-dnb"/> Dun &amp; Bradstreet (D&amp;B)</label>
+          <label><input type="checkbox" id="f-experian"/> Experian Business</label>
+          <label><input type="checkbox" id="f-equifax"/> Equifax Business</label>
+          <label><input type="checkbox" id="f-nacm"/> NACM</label>
+        </div>
+      </div>
+      <div class="field full">
+        <label>Notes</label>
+        <textarea id="f-notes" placeholder="e.g. 15–40% off retail. Applied in-store Buckhead location. Need to pay before 25th each month."></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveAccount()">Save Account</button>
+    </div>
+  </div>
+</div>
+
+<footer>Ironwood Renovations · Vendor Accounts Tracker · Internal Use Only</footer>
+
+<script>
+const STORAGE_KEY = 'ironwood-vendors-v1';
+let accounts = [];
+let editingId = null;
+
+const DEFAULT_ACCOUNTS = [
+  { id: uid(), name: 'Uline', category: 'Cleaning Supplies', status: 'target', phase: 'Day 1', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-800-295-5510', website: 'uline.com', dnb: true, experian: false, equifax: false, nacm: false, notes: 'Easiest net 30 approval. Great for cleaning/turnover supplies. $50 min order. Apply online.' },
+  { id: uid(), name: 'Quill', category: 'Office & Business Supplies', status: 'target', phase: 'Day 1', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-800-982-3400', website: 'quill.com', dnb: true, experian: false, equifax: false, nacm: false, notes: 'Second easiest approval. Office supplies. Apply online. Pair with Uline as Day 1 accounts.' },
+  { id: uid(), name: 'Grainger', category: 'Safety Equipment', status: 'target', phase: 'Day 1', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-800-472-4643', website: 'grainger.com', dnb: true, experian: true, equifax: false, nacm: false, notes: 'HVAC parts, safety gear, tools, MRO. Easy approval. Norcross branch: 770-448-3030.' },
+  { id: uid(), name: 'Fastenal', category: 'Safety Equipment', status: 'target', phase: 'Day 1', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-877-508-4140', website: 'fastenal.com', dnb: true, experian: true, equifax: false, nacm: false, notes: 'Fasteners, tools, safety, PPE. Easy approval. Doraville: 770-455-5801. Norcross: 770-409-1803.' },
+  { id: uid(), name: 'Zoro Tools', category: 'Tools & Equipment Rental', status: 'target', phase: 'Day 1', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-855-289-9676', website: 'zoro.com', dnb: true, experian: false, equifax: false, nacm: false, notes: 'Online-only. Grainger subsidiary. Tools, hardware, safety. Easy online approval.' },
+  { id: uid(), name: 'Sherwin-Williams', category: 'Paint & Coatings', status: 'target', phase: 'Month 1-2', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-800-321-8194', website: 'sherwin-williams.com/contractors', dnb: true, experian: true, equifax: false, nacm: false, notes: '15–40% contractor discount. Apply in-store or online. Dozens of Atlanta locations. High utility for every renovation.' },
+  { id: uid(), name: 'Floor & Decor Pro', category: 'Flooring', status: 'target', phase: 'Month 1-2', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-877-675-0002', website: 'flooranddecor.com/pro', dnb: true, experian: true, equifax: false, nacm: false, notes: 'HQ in Atlanta. Tile, LVP, hardwood, setting materials. 6+ metro locations. Must-have for renovations.' },
+  { id: uid(), name: 'Home Depot Pro', category: 'Building Materials', status: 'target', phase: 'Month 1-2', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-800-685-6691', website: 'homedepot.com/c/Pro_Xtra', dnb: false, experian: true, equifax: false, nacm: false, notes: 'Universal utility. 30+ Atlanta locations. Apply at Pro Desk or online.' },
+  { id: uid(), name: "Lowe's for Pros", category: 'Building Materials', status: 'target', phase: 'Month 1-2', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-800-445-6937', website: 'lowes.com/l/pro/business-credit', dnb: true, experian: true, equifax: false, nacm: false, notes: '5% off everyday. 20+ Atlanta locations. Via Synchrony Bank.' },
+  { id: uid(), name: 'SiteOne Landscape Supply', category: 'Landscaping & Lawn', status: 'target', phase: 'Month 1-2', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '770-447-6464', website: 'siteone.com/credit', dnb: true, experian: true, equifax: false, nacm: false, notes: 'Mulch, stone, plants, irrigation, hardscape. Norcross: 770-447-6464. Smyrna: 770-433-5960.' },
+  { id: uid(), name: 'Ferguson', category: 'Plumbing Supplies', status: 'target', phase: 'Month 3-6', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '770-441-2040', website: 'ferguson.com', dnb: true, experian: true, equifax: false, nacm: false, notes: 'One account covers plumbing, HVAC, and fixtures. Norcross: 770-441-2040. Marietta: 770-952-6800.' },
+  { id: uid(), name: 'Graybar Electric', category: 'Electrical Supplies', status: 'target', phase: 'Month 3-6', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '404-344-5700', website: 'graybar.com', dnb: true, experian: true, equifax: false, nacm: false, notes: 'Wire, conduit, panels, lighting. Atlanta: 404-344-5700. Norcross and Duluth branches also.' },
+  { id: uid(), name: 'Builders FirstSource', category: 'Building Materials', status: 'target', phase: 'Month 3-6', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '770-432-0400', website: 'buildersfirstsource.com', dnb: true, experian: false, equifax: false, nacm: false, notes: 'Pro-grade lumber, trusses, engineered wood, doors. Smyrna: 770-432-0400.' },
+  { id: uid(), name: '84 Lumber', category: 'Building Materials', status: 'target', phase: 'Month 3-6', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '724-228-8820', website: '84lumber.com', dnb: true, experian: true, equifax: false, nacm: false, notes: 'Lumber, drywall, roofing, windows, doors. Kennesaw location. Apply at Pro Desk.' },
+  { id: uid(), name: 'Sunbelt Rentals', category: 'Tools & Equipment Rental', status: 'target', phase: 'Month 3-6', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-800-667-9328', website: 'sunbeltrentals.com', dnb: true, experian: false, equifax: false, nacm: false, notes: 'Lifts, compactors, generators, concrete equipment. Multiple Atlanta locations.' },
+  { id: uid(), name: 'United Rentals', category: 'Tools & Equipment Rental', status: 'target', phase: 'Month 3-6', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-800-873-7368', website: 'unitedrentals.com', dnb: true, experian: true, equifax: false, nacm: false, notes: 'Largest equipment rental company. Smyrna: 770-434-0010. Norcross and Lithonia branches.' },
+  { id: uid(), name: 'SCP Distributors (PoolCorp)', category: 'Pool Supplies', status: 'target', phase: 'Month 6+', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '770-409-4242', website: 'poolcorp.com', dnb: true, experian: false, equifax: false, nacm: false, notes: 'Wholesale pool chemicals, pumps, filters. Requires licensed pool contractor. Norcross: 770-409-4242. Doraville: 770-455-7850.' },
+  { id: uid(), name: "Leslie's Pro", category: 'Pool Supplies', status: 'target', phase: 'Month 6+', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '1-800-537-5437', website: 'lesliespool.com/pro', dnb: true, experian: false, equifax: false, nacm: false, notes: 'Pool chemicals and equipment. Pro account tier. Multiple Atlanta locations.' },
+  { id: uid(), name: 'ProSource Wholesale', category: 'Flooring', status: 'target', phase: 'Month 6+', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '770-424-0220', website: 'prosourcewholesale.com', dnb: true, experian: false, equifax: false, nacm: false, notes: 'Flooring, tile, countertops, cabinets. Members-only wholesale. Kennesaw: 770-424-0220. Norcross: 770-447-7003.' },
+  { id: uid(), name: 'GMS (Gypsum Mgmt & Supply)', category: 'Building Materials', status: 'target', phase: 'Month 6+', terms: 'Net 30', limit: 0, balance: 0, due: '', opened: '', acct: '', phone: '770-457-5800', website: 'gms.com', dnb: true, experian: false, equifax: false, nacm: false, notes: 'Drywall, insulation, ceilings. Doraville: 770-457-5800. Largest drywall distributor in Southeast.' },
+];
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+
+function load() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) { accounts = JSON.parse(saved); }
+    else { accounts = DEFAULT_ACCOUNTS.map(a => ({...a, id: uid()})); save(); }
+  } catch(e) { accounts = []; }
+}
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(accounts)); }
+
+function esc(v) { return (v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function fmt$(v) { return v ? '$' + Number(v).toLocaleString() : '—'; }
+
+function daysUntil(dateStr) {
+  if (!dateStr) return null;
+  const diff = new Date(dateStr) - new Date();
+  return Math.ceil(diff / 86400000);
+}
+
+function dueCellHTML(dateStr) {
+  if (!dateStr) return '<span style="color:var(--muted)">—</span>';
+  const days = daysUntil(dateStr);
+  const d = new Date(dateStr);
+  const label = d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+  if (days < 0) return `<span class="overdue">⚠ ${label} (${Math.abs(days)}d overdue)</span>`;
+  if (days <= 7) return `<span class="due-soon">⏰ ${label} (${days}d)</span>`;
+  return `<span>${label}</span>`;
+}
+
+function utilHTML(limit, balance) {
+  if (!limit || limit == 0) return '<span style="color:var(--muted)">—</span>';
+  const pct = Math.min(100, Math.round((balance / limit) * 100));
+  const cls = pct >= 80 ? 'danger' : pct >= 50 ? 'warn' : '';
+  return `<div class="progress-bar-wrap"><div class="progress-bar ${cls}" style="width:${pct}%"></div></div><div class="util-label">${fmt$(balance)} / ${fmt$(limit)} (${pct}%)</div>`;
+}
+
+function bureauHTML(a) {
+  const list = [];
+  if (a.dnb) list.push('D&B');
+  if (a.experian) list.push('Experian');
+  if (a.equifax) list.push('Equifax');
+  if (a.nacm) list.push('NACM');
+  if (!list.length) return '<span class="bureau-dot none">Unknown</span>';
+  return list.map(b => `<span class="bureau-dot">${b}</span>`).join('');
+}
+
+function statusBadge(s) {
+  const map = {
+    open: ['badge-open', 'Open'],
+    applied: ['badge-applied', 'Applied'],
+    target: ['badge-target', 'Target'],
+    closed: ['badge-closed', 'Closed'],
+  };
+  const [cls, label] = map[s] || ['badge-target', s];
+  return `<span class="badge ${cls}">${label}</span>`;
+}
+
+function filtered() {
+  const q = (document.getElementById('search-input').value||'').toLowerCase();
+  const st = document.getElementById('status-filter').value;
+  const ph = document.getElementById('phase-filter').value;
+  return accounts.filter(a => {
+    const matchQ = !q || [a.name, a.category, a.notes, a.phone].join(' ').toLowerCase().includes(q);
+    const matchSt = !st || a.status === st;
+    const matchPh = !ph || a.phase === ph;
+    return matchQ && matchSt && matchPh;
+  });
+}
+
+function groupByPhase(list) {
+  const order = ['Day 1', 'Month 1-2', 'Month 3-6', 'Month 6+'];
+  const map = {};
+  list.forEach(a => {
+    const p = a.phase || 'Other';
+    if (!map[p]) map[p] = [];
+    map[p].push(a);
+  });
+  const sorted = {};
+  order.forEach(p => { if (map[p]) sorted[p] = map[p]; });
+  Object.keys(map).forEach(p => { if (!sorted[p]) sorted[p] = map[p]; });
+  return sorted;
+}
+
+function phaseLabel(p) {
+  const map = {
+    'Day 1': 'Day 1 — Open First (Easiest Approvals)',
+    'Month 1-2': 'Month 1–2 — Core Renovation Accounts',
+    'Month 3-6': 'Month 3–6 — After Credit Is Established',
+    'Month 6+': 'Month 6+ — Specialty & Advanced Accounts',
+  };
+  return map[p] || p;
+}
+
+function renderRow(a) {
+  const website = a.website ? `<a href="https://${a.website.replace(/^https?:\/\//,'')}" target="_blank" style="color:var(--gold);font-size:11px;">${esc(a.website)}</a>` : '—';
+  return `<tr>
+    <td>
+      <div class="vendor-name">${esc(a.name)}</div>
+      <div class="vendor-category">${esc(a.category||'')}</div>
+    </td>
+    <td>${statusBadge(a.status)}</td>
+    <td><span style="color:var(--cream)">${esc(a.terms||'—')}</span></td>
+    <td>${utilHTML(a.limit, a.balance)}</td>
+    <td>${dueCellHTML(a.due)}</td>
+    <td><div class="bureau-dots">${bureauHTML(a)}</div></td>
+    <td>${a.phone ? `<a href="tel:${(a.phone).replace(/\D/g,'')}" style="color:var(--gold)">${esc(a.phone)}</a>` : '—'}</td>
+    <td style="max-width:180px; font-size:12px; color:var(--muted);">${esc((a.notes||'').substring(0,80))}${a.notes && a.notes.length > 80 ? '…' : ''}</td>
+    <td>
+      <div class="actions-cell">
+        <button class="btn btn-outline btn-sm" onclick="openModal('${a.id}')">Edit</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--red);border-color:rgba(229,57,53,.3);" onclick="deleteAccount('${a.id}')">×</button>
+      </div>
+    </td>
+  </tr>`;
+}
+
+function renderStats() {
+  const total = accounts.length;
+  const open = accounts.filter(a => a.status === 'open').length;
+  const totalLimit = accounts.filter(a => a.status === 'open').reduce((s, a) => s + (Number(a.limit)||0), 0);
+  const totalBal = accounts.filter(a => a.status === 'open').reduce((s, a) => s + (Number(a.balance)||0), 0);
+  const overdue = accounts.filter(a => a.due && daysUntil(a.due) < 0 && a.status === 'open').length;
+  const dueSoon = accounts.filter(a => a.due && daysUntil(a.due) >= 0 && daysUntil(a.due) <= 7 && a.status === 'open').length;
+
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-pill"><strong>${total}</strong>Total Vendors</div>
+    <div class="stat-pill green"><strong>${open}</strong>Open Accounts</div>
+    <div class="stat-pill gold"><strong>${fmt$(totalLimit)}</strong>Total Credit</div>
+    <div class="stat-pill"><strong>${fmt$(totalBal)}</strong>Total Balance</div>
+    <div class="stat-pill"><strong>${accounts.filter(a=>a.status==='target').length}</strong>Targets</div>
+    ${overdue ? `<div class="stat-pill" style="border-color:rgba(229,57,53,.4)"><strong style="color:var(--red)">${overdue}</strong>Overdue</div>` : ''}
+    ${dueSoon ? `<div class="stat-pill" style="border-color:rgba(249,168,37,.4)"><strong style="color:var(--yellow)">${dueSoon}</strong>Due This Week</div>` : ''}
+  `;
+
+  const alert = document.getElementById('due-alert');
+  const overdueAccts = accounts.filter(a => a.due && daysUntil(a.due) < 0 && a.status === 'open');
+  if (overdueAccts.length) {
+    alert.classList.add('visible');
+    alert.innerHTML = `⚠ Overdue payments: ${overdueAccts.map(a => `<strong>${esc(a.name)}</strong>`).join(', ')} — pay immediately to protect your business credit.`;
+  } else {
+    alert.classList.remove('visible');
+  }
+}
+
+function renderAll() {
+  renderStats();
+  const root = document.getElementById('tracker-root');
+  const list = filtered();
+
+  if (!list.length) {
+    root.innerHTML = `<div class="empty-state"><div class="icon">💳</div><p>No accounts match your search.</p></div>`;
+    return;
+  }
+
+  const grouped = groupByPhase(list);
+  let html = '';
+
+  Object.entries(grouped).forEach(([phase, items]) => {
+    html += `<div class="phase-section">
+      <div class="phase-label">${phaseLabel(phase)} <span class="phase-count">${items.length} vendor${items.length !== 1 ? 's' : ''}</span></div>
+      <table>
+        <thead>
+          <tr>
+            <th>Vendor</th>
+            <th>Status</th>
+            <th>Terms</th>
+            <th style="min-width:130px">Utilization</th>
+            <th>Next Due</th>
+            <th>Reports To</th>
+            <th>Phone</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${items.map(renderRow).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  });
+
+  root.innerHTML = html;
+}
+
+function openModal(id) {
+  editingId = id || null;
+  const a = id ? accounts.find(x => x.id === id) : null;
+  document.getElementById('modal-title').textContent = a ? 'Edit Account' : 'Add Vendor Account';
+  document.getElementById('f-name').value = a ? a.name : '';
+  document.getElementById('f-category').value = a ? (a.category||'') : '';
+  document.getElementById('f-status').value = a ? (a.status||'target') : 'target';
+  document.getElementById('f-phase').value = a ? (a.phase||'Day 1') : 'Day 1';
+  document.getElementById('f-terms').value = a ? (a.terms||'') : '';
+  document.getElementById('f-limit').value = a ? (a.limit||0) : 0;
+  document.getElementById('f-balance').value = a ? (a.balance||0) : 0;
+  document.getElementById('f-due').value = a ? (a.due||'') : '';
+  document.getElementById('f-opened').value = a ? (a.opened||'') : '';
+  document.getElementById('f-acct').value = a ? (a.acct||'') : '';
+  document.getElementById('f-phone').value = a ? (a.phone||'') : '';
+  document.getElementById('f-website').value = a ? (a.website||'') : '';
+  document.getElementById('f-dnb').checked = a ? !!a.dnb : false;
+  document.getElementById('f-experian').checked = a ? !!a.experian : false;
+  document.getElementById('f-equifax').checked = a ? !!a.equifax : false;
+  document.getElementById('f-nacm').checked = a ? !!a.nacm : false;
+  document.getElementById('f-notes').value = a ? (a.notes||'') : '';
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('f-name').focus(), 50);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function saveAccount() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { alert('Vendor name is required.'); return; }
+  const data = {
+    name,
+    category: document.getElementById('f-category').value,
+    status: document.getElementById('f-status').value,
+    phase: document.getElementById('f-phase').value,
+    terms: document.getElementById('f-terms').value,
+    limit: parseFloat(document.getElementById('f-limit').value) || 0,
+    balance: parseFloat(document.getElementById('f-balance').value) || 0,
+    due: document.getElementById('f-due').value,
+    opened: document.getElementById('f-opened').value,
+    acct: document.getElementById('f-acct').value.trim(),
+    phone: document.getElementById('f-phone').value.trim(),
+    website: document.getElementById('f-website').value.trim(),
+    dnb: document.getElementById('f-dnb').checked,
+    experian: document.getElementById('f-experian').checked,
+    equifax: document.getElementById('f-equifax').checked,
+    nacm: document.getElementById('f-nacm').checked,
+    notes: document.getElementById('f-notes').value.trim(),
+  };
+  if (editingId) {
+    const idx = accounts.findIndex(a => a.id === editingId);
+    accounts[idx] = { ...accounts[idx], ...data };
+  } else {
+    accounts.push({ id: uid(), ...data });
+  }
+  save(); closeModal(); renderAll();
+}
+
+function deleteAccount(id) {
+  const a = accounts.find(x => x.id === id);
+  if (!confirm(`Remove ${a.name}?`)) return;
+  accounts = accounts.filter(x => x.id !== id);
+  save(); renderAll();
+}
+
+function exportCSV() {
+  if (!accounts.length) { alert('No accounts to export.'); return; }
+  const cols = ['Vendor','Category','Status','Phase','Terms','Credit Limit','Balance','Next Due','Date Opened','Account #','Phone','Website','D&B','Experian','Equifax','NACM','Notes'];
+  const rows = accounts.map(a => [
+    a.name, a.category||'', a.status||'', a.phase||'', a.terms||'',
+    a.limit||0, a.balance||0, a.due||'', a.opened||'', a.acct||'',
+    a.phone||'', a.website||'',
+    a.dnb?'Yes':'No', a.experian?'Yes':'No', a.equifax?'Yes':'No', a.nacm?'Yes':'No',
+    a.notes||''
+  ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+  const csv = [cols.join(','), ...rows].join('\n');
+  const el = document.createElement('a');
+  el.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  el.download = 'Ironwood_Vendor_Accounts.csv';
+  el.click();
+}
+
+document.getElementById('modal-overlay').addEventListener('click', e => { if (e.target === document.getElementById('modal-overlay')) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+load();
+renderAll();
+</script>
+</body>
+</html>
