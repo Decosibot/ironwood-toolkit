@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood Renovations — Lien Waiver</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:    #0a0a0a;
+    --cream:  #f5f0e8;
+    --gold:   #c9a84c;
+    --border: #d0c8b8;
+    --muted:  #777;
+    --light:  #faf7f2;
+  }
+
+  body {
+    background: #e8e4dc;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 13px;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .toolbar-brand { font-family: 'Segoe UI', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--gold); }
+  .toolbar-actions { display: flex; gap: 8px; }
+  .btn { border: none; cursor: pointer; padding: 7px 16px; border-radius: 4px; font-family: 'Segoe UI', sans-serif; font-size: 12px; font-weight: 600; }
+  .btn-gold { background: var(--gold); color: var(--ink); }
+  .btn-outline { background: transparent; border: 1px solid #555; color: var(--cream); }
+  @media print { .toolbar { display: none !important; } }
+
+  /* ── PAGE ── */
+  .page-wrap {
+    max-width: 760px;
+    margin: 28px auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0,0,0,.12);
+    padding: 60px 70px;
+  }
+  @media print {
+    body { background: #fff; }
+    .page-wrap { margin: 0; box-shadow: none; border: none; padding: 48px 56px; max-width: 100%; }
+    .fill-line { border-bottom: 1px solid #000 !important; }
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    text-align: center;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+  }
+  .doc-brand {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .doc-brand-sub {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  .doc-type {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin: 18px 0 4px;
+  }
+  .doc-variant {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+  }
+
+  /* ── VARIANT TABS ── */
+  .variant-tabs {
+    display: flex;
+    gap: 0;
+    margin-bottom: 28px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .variant-tab {
+    flex: 1;
+    padding: 10px 12px;
+    text-align: center;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    cursor: pointer;
+    background: #fff;
+    color: var(--muted);
+    border-right: 1px solid var(--border);
+    transition: all .15s;
+  }
+  .variant-tab:last-child { border-right: none; }
+  .variant-tab.active { background: var(--ink); color: var(--cream); }
+  @media print { .variant-tabs { display: none; } }
+
+  /* ── BODY TEXT ── */
+  h2 {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+    margin: 20px 0 10px;
+  }
+
+  p { line-height: 1.85; margin-bottom: 10px; font-size: 12.5px; }
+  .legal-block { font-size: 12.5px; line-height: 1.9; margin-bottom: 16px; }
+
+  /* ── FILL ── */
+  .fill-line {
+    border: none;
+    border-bottom: 1px solid #aaa;
+    display: inline-block;
+    height: 20px;
+    background: transparent;
+    font-family: 'Georgia', serif;
+    font-size: 12.5px;
+    color: var(--ink);
+    outline: none;
+    vertical-align: bottom;
+  }
+  .fill-line:focus { border-bottom-color: var(--gold); }
+  .fill-block {
+    margin-bottom: 12px;
+  }
+  .fill-label {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .fill-block input.fill-full {
+    border: none;
+    border-bottom: 1px solid #aaa;
+    width: 100%;
+    height: 24px;
+    background: transparent;
+    font-family: 'Georgia', serif;
+    font-size: 12.5px;
+    color: var(--ink);
+    outline: none;
+  }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 12px; }
+  .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 12px; }
+
+  /* ── LEGAL NOTICE ── */
+  .legal-notice {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    padding: 14px 18px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px;
+    line-height: 1.75;
+    margin: 16px 0;
+  }
+  .legal-notice strong { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; display: block; margin-bottom: 4px; }
+
+  /* ── SIG ── */
+  .sig-section { margin-top: 28px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .sig-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-bottom: 20px;
+  }
+  .sig-party-label {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .sig-line { border-bottom: 1px solid var(--ink); height: 36px; margin-bottom: 5px; }
+  .sig-sub { font-family: 'Segoe UI', sans-serif; font-size: 10px; color: var(--muted); }
+
+  /* ── NOTARY ── */
+  .notary-block {
+    margin-top: 24px;
+    padding: 16px 20px;
+    border: 1px solid var(--border);
+    background: var(--light);
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px;
+  }
+  .notary-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .09em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+  .notary-line { border-bottom: 1px solid #aaa; height: 20px; margin-bottom: 4px; margin-top: 2px; }
+
+  /* ── DOC ID ── */
+  .doc-meta-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    margin-top: 28px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: .03em;
+    line-height: 1.7;
+  }
+
+  /* ── VARIANT CONTENT ── */
+  .variant-section { display: none; }
+  .variant-section.active { display: block; }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="toolbar-brand">Ironwood Renovations — Lien Waiver</span>
+  <div class="toolbar-actions">
+    <button class="btn btn-outline" onclick="window.print()">Print / Save PDF</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-brand">Ironwood Renovations</div>
+    <div class="doc-brand-sub">Licensed Contractor · Georgia</div>
+    <div class="doc-type">Lien Waiver</div>
+    <div class="doc-variant" id="variantLabel">Conditional Waiver Upon Final Payment</div>
+  </div>
+
+  <!-- DOC META -->
+  <div class="doc-meta-row">
+    <span>Document No. <strong id="docNum">LW-1001</strong></span>
+    <span>Date: <strong id="docDate">__________</strong></span>
+  </div>
+
+  <!-- VARIANT TABS -->
+  <div class="variant-tabs">
+    <div class="variant-tab active" onclick="setVariant('conditional_final')">Conditional — Final</div>
+    <div class="variant-tab" onclick="setVariant('unconditional_final')">Unconditional — Final</div>
+    <div class="variant-tab" onclick="setVariant('conditional_progress')">Conditional — Progress</div>
+    <div class="variant-tab" onclick="setVariant('unconditional_progress')">Unconditional — Progress</div>
+  </div>
+
+  <!-- PROPERTY & JOB INFO (shared) -->
+  <h2>Property &amp; Job Information</h2>
+  <div class="field-row">
+    <div class="fill-block">
+      <div class="fill-label">Property Owner / Client Name</div>
+      <input class="fill-full" id="ownerName" placeholder="Full legal name(s)"/>
+    </div>
+    <div class="fill-block">
+      <div class="fill-label">Property Address</div>
+      <input class="fill-full" id="propAddr" placeholder="Street, City, State, ZIP"/>
+    </div>
+  </div>
+  <div class="field-row-3">
+    <div class="fill-block">
+      <div class="fill-label">Invoice / Application No.</div>
+      <input class="fill-full" id="invNum" placeholder="INV-_____"/>
+    </div>
+    <div class="fill-block">
+      <div class="fill-label">Contract / Agreement No.</div>
+      <input class="fill-full" id="contractNum" placeholder="CSA-_____"/>
+    </div>
+    <div class="fill-block">
+      <div class="fill-label">Through Date (Work Covered)</div>
+      <input class="fill-full" id="throughDate" placeholder="MM/DD/YYYY"/>
+    </div>
+  </div>
+
+  <!-- ══ CONDITIONAL FINAL ══ -->
+  <div class="variant-section active" id="sect-conditional_final">
+    <h2>Conditional Waiver and Release Upon Final Payment</h2>
+    <div class="legal-notice">
+      <strong>Georgia Lien Law Notice</strong>
+      This waiver is conditioned upon receipt and clearance of payment. Signing this document does not extinguish any lien or right to claim unless and until payment clears.
+    </div>
+    <div class="legal-block">
+      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Renovations</strong>, "Claimant") has furnished labor, services, materials, and/or equipment for the improvement of the real property described above, under contract with the Owner or Owner's authorized agent.</p>
+
+      <p>Upon receipt by Claimant of a check from <span class="fill-line" id="cf_payor" style="width:200px;" contenteditable="true" oninput="syncField(this,'cf_payor_val')"></span> in the sum of <strong>$<span class="fill-line" id="cf_amount" style="width:100px;" contenteditable="true"></span></strong>, payable to Ironwood LLC, and when the check has been properly endorsed and has been paid by the bank upon which it is drawn, this document shall become effective to release any mechanic's lien, stop notice, or bond right the Claimant has on the above-described property for labor, services, equipment, or materials furnished through the date stated above.</p>
+
+      <p>This release covers the final payment for all labor, services, equipment, and materials furnished on this job. <strong>EXCEPTION:</strong> Disputed claims (if any): <span class="fill-line" style="width:260px;" contenteditable="true"></span> (write "None" if no exceptions).</p>
+
+      <div class="field-row" style="margin-top:14px;">
+        <div class="fill-block">
+          <div class="fill-label">Amount of This Waiver</div>
+          <input class="fill-full" id="cf_amtField" placeholder="$"/>
+        </div>
+        <div class="fill-block">
+          <div class="fill-label">Check / Payment No.</div>
+          <input class="fill-full" id="cf_checkNum" placeholder="Check # or ACH Ref"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ UNCONDITIONAL FINAL ══ -->
+  <div class="variant-section" id="sect-unconditional_final">
+    <h2>Unconditional Waiver and Release Upon Final Payment</h2>
+    <div class="legal-notice">
+      <strong>Important — This Is an Unconditional Release</strong>
+      Signing this document releases all lien and bond rights regardless of whether payment actually clears. Use only after payment has been confirmed received and cleared.
+    </div>
+    <div class="legal-block">
+      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Renovations</strong>, "Claimant") has furnished labor, services, materials, and/or equipment for the improvement of the real property described above.</p>
+
+      <p>The Claimant hereby releases and waives any and all claims, demands, actions, and rights to a mechanic's lien, stop notice, or payment bond on the above property. This release covers all labor, services, equipment, and materials furnished on the above job through the date stated above. Claimant acknowledges receipt of the final payment in full and is fully satisfied.</p>
+
+      <div class="field-row" style="margin-top:14px;">
+        <div class="fill-block">
+          <div class="fill-label">Final Amount Received</div>
+          <input class="fill-full" id="uf_finalAmt" placeholder="$"/>
+        </div>
+        <div class="fill-block">
+          <div class="fill-label">Payment Date Received</div>
+          <input class="fill-full" id="uf_payDate" placeholder="MM/DD/YYYY"/>
+        </div>
+      </div>
+
+      <p style="margin-top:12px;"><strong>EXCEPTION:</strong> Disputed claims (if any): <input class="fill-full" id="uf_exception" placeholder='Write "None" if no exceptions'/></p>
+    </div>
+  </div>
+
+  <!-- ══ CONDITIONAL PROGRESS ══ -->
+  <div class="variant-section" id="sect-conditional_progress">
+    <h2>Conditional Waiver and Release Upon Progress Payment</h2>
+    <div class="legal-notice">
+      <strong>Progress Payment — Partial Release</strong>
+      This waiver covers only labor and materials furnished through the date stated above. Rights are preserved for work not yet billed or future work on this project.
+    </div>
+    <div class="legal-block">
+      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Renovations</strong>) has furnished labor, services, materials, and/or equipment for the improvement of the property above. Upon receipt and clearance of the progress payment identified below, this document releases all lien and bond rights on the described property for work completed through the date stated above only.</p>
+
+      <p>Rights are reserved for all work performed after the through date stated above, and for any retention or disputed amounts not included in this payment.</p>
+
+      <div class="field-row" style="margin-top:14px;">
+        <div class="fill-block">
+          <div class="fill-label">Progress Payment Amount</div>
+          <input class="fill-full" id="cp_amt" placeholder="$"/>
+        </div>
+        <div class="fill-block">
+          <div class="fill-label">Retention Withheld (if any)</div>
+          <input class="fill-full" id="cp_retention" placeholder="$ or 'None'"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ UNCONDITIONAL PROGRESS ══ -->
+  <div class="variant-section" id="sect-unconditional_progress">
+    <h2>Unconditional Waiver and Release Upon Progress Payment</h2>
+    <div class="legal-notice">
+      <strong>Important — Unconditional Release on Progress</strong>
+      Use only after the progress payment has been confirmed received and cleared. Covers work through the through date only; rights are reserved for future work.
+    </div>
+    <div class="legal-block">
+      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Renovations</strong>) acknowledges receipt and clearance of the progress payment described below, and releases all lien and bond rights on the above-described property for labor, services, equipment, and materials furnished through the stated date. Rights are reserved for all future work on this project not covered by this waiver.</p>
+
+      <div class="field-row" style="margin-top:14px;">
+        <div class="fill-block">
+          <div class="fill-label">Progress Payment Received</div>
+          <input class="fill-full" id="up_amt" placeholder="$"/>
+        </div>
+        <div class="fill-block">
+          <div class="fill-label">Date Payment Cleared</div>
+          <input class="fill-full" id="up_clearDate" placeholder="MM/DD/YYYY"/>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGNATURES -->
+  <div class="sig-section">
+    <h2>Execution</h2>
+    <div class="sig-grid">
+      <div>
+        <div class="sig-party-label">Ironwood LLC dba Ironwood Renovations — Claimant</div>
+        <div class="sig-line"></div>
+        <div class="sig-sub">Authorized Signature</div>
+        <div style="margin-top:10px;">
+          <div class="fill-block" style="margin-bottom:6px;">
+            <div class="fill-label">Printed Name</div>
+            <input class="fill-full" placeholder=""/>
+          </div>
+          <div class="fill-block" style="margin-bottom:6px;">
+            <div class="fill-label">Title</div>
+            <input class="fill-full" placeholder="Authorized Representative"/>
+          </div>
+          <div class="fill-block">
+            <div class="fill-label">Date Signed</div>
+            <input class="fill-full" id="sigDateContractor" placeholder="MM/DD/YYYY"/>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sig-party-label">Property Owner / Client — Acknowledgment</div>
+        <div class="sig-line"></div>
+        <div class="sig-sub">Signature (acknowledgment of receipt)</div>
+        <div style="margin-top:10px;">
+          <div class="fill-block" style="margin-bottom:6px;">
+            <div class="fill-label">Printed Name</div>
+            <input class="fill-full" id="ownerSigName" placeholder=""/>
+          </div>
+          <div class="fill-block">
+            <div class="fill-label">Date Signed</div>
+            <input class="fill-full" id="sigDateOwner" placeholder="MM/DD/YYYY"/>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTARY -->
+    <div class="notary-block">
+      <div class="notary-title">Notarization (if required)</div>
+      <p style="font-size:11px;line-height:1.8;margin-bottom:10px;">
+        State of Georgia, County of ___________________________
+        <br/>
+        Subscribed and sworn before me on _________________________ by _________________________.
+        <br/>
+        Notary Public: _________________________ &nbsp;&nbsp; Commission Expires: _________________
+      </p>
+      <div style="display:flex;gap:20px;margin-top:10px;">
+        <div style="flex:1;">
+          <div class="notary-line"></div>
+          <div style="font-size:10px;color:var(--muted);">Notary Signature</div>
+        </div>
+        <div style="width:80px;height:80px;border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;font-size:9px;color:var(--muted);">NOTARY<br/>SEAL</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    Ironwood LLC dba Ironwood Renovations · Georgia<br/>
+    Lien waivers are legal documents — retain copies for all parties · Consult an attorney for complex lien situations<br/>
+    Prepared under Georgia O.C.G.A. § 44-14-366
+  </div>
+
+</div>
+
+<script>
+  let currentVariant = 'conditional_final';
+
+  const VARIANT_LABELS = {
+    conditional_final:     'Conditional Waiver and Release Upon Final Payment',
+    unconditional_final:   'Unconditional Waiver and Release Upon Final Payment',
+    conditional_progress:  'Conditional Waiver and Release Upon Progress Payment',
+    unconditional_progress:'Unconditional Waiver and Release Upon Progress Payment',
+  };
+
+  function setVariant(v) {
+    currentVariant = v;
+    // tabs
+    document.querySelectorAll('.variant-tab').forEach((el, i) => {
+      const keys = ['conditional_final','unconditional_final','conditional_progress','unconditional_progress'];
+      el.classList.toggle('active', keys[i] === v);
+    });
+    // sections
+    document.querySelectorAll('.variant-section').forEach(el => el.classList.remove('active'));
+    document.getElementById('sect-' + v).classList.add('active');
+    document.getElementById('variantLabel').textContent = VARIANT_LABELS[v];
+  }
+
+  // Init
+  (function() {
+    const today = new Date();
+    const mo = String(today.getMonth()+1).padStart(2,'0');
+    const dy = String(today.getDate()).padStart(2,'0');
+    const yr = today.getFullYear();
+    document.getElementById('docDate').textContent = `${mo}/${dy}/${yr}`;
+
+    const n = parseInt(localStorage.getItem('ironwood_lw_counter') || '1000') + 1;
+    localStorage.setItem('ironwood_lw_counter', n);
+    document.getElementById('docNum').textContent = 'LW-' + n;
+
+    // default sig date
+    document.getElementById('sigDateContractor').value = `${mo}/${dy}/${yr}`;
+  })();
+</script>
+
+</body>
+</html>

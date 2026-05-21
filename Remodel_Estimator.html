@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood LLC — Remodel Job Estimator</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --gold: #c9a84c; --gold-dim: #a07c30;
+    --cream: #f5f0e8; --muted: #888; --danger: #c0392b;
+    --success: #27ae60; --warn: #e67e22;
+  }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+
+  /* ── TOPBAR ── */
+  .topbar { background: linear-gradient(135deg,#1a1a1a,#0a0a0a); border-bottom: 1px solid var(--gold); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+  .topbar-brand { display: flex; align-items: center; gap: 12px; }
+  .topbar-logo { width: 36px; height: 36px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
+  .topbar-title { font-size: 16px; font-weight: 700; color: var(--cream); }
+  .topbar-sub { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+  .topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ── LAYOUT ── */
+  .app { display: grid; grid-template-columns: 340px 1fr; min-height: calc(100vh - 65px); }
+  .sidebar { background: var(--surface); border-right: 1px solid var(--border); padding: 20px; overflow-y: auto; }
+  .main { padding: 24px; overflow-y: auto; }
+
+  /* ── BUTTONS ── */
+  .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; letter-spacing: .5px; transition: opacity .15s; }
+  .btn:hover { opacity: .85; }
+  .btn-gold { background: var(--gold); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+  .btn-danger { background: var(--danger); color: #fff; }
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+  .btn-block { width: 100%; margin-top: 8px; padding: 10px; }
+
+  /* ── FORMS ── */
+  .field-group { margin-bottom: 14px; }
+  .field-group label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; font-weight: 600; }
+  .field-group input, .field-group select, .field-group textarea {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit;
+  }
+  .field-group input:focus, .field-group select:focus, .field-group textarea:focus { outline: 1px solid var(--gold); }
+  .field-row { display: flex; gap: 8px; }
+  .field-row .field-group { flex: 1; }
+
+  /* ── SECTION HEADERS ── */
+  .section-head { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+
+  /* ── LINE ITEMS ── */
+  .line-items-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
+  .li-header { display: grid; grid-template-columns: 2fr 1fr 80px 80px 90px 180px 36px; gap: 8px; padding: 8px 12px; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; font-weight: 600; align-items: center; }
+  .li-row { display: grid; grid-template-columns: 2fr 1fr 80px 80px 90px 180px 36px; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--border); align-items: center; transition: background .1s; }
+  .li-row:last-child { border-bottom: none; }
+  .li-row:hover { background: var(--surface2); }
+  .li-input { background: transparent; border: none; color: var(--cream); font-size: 13px; font-family: inherit; width: 100%; padding: 3px 4px; border-radius: 4px; }
+  .li-input:focus { outline: 1px solid var(--gold); background: var(--surface2); }
+  .li-input.num { text-align: right; }
+  .li-total { text-align: right; font-weight: 700; color: var(--gold); font-size: 13px; }
+  .li-del { background: none; border: none; cursor: pointer; color: #444; font-size: 16px; padding: 2px 6px; border-radius: 4px; transition: color .15s; }
+  .li-del:hover { color: var(--danger); }
+
+  .add-line-row { display: flex; gap: 8px; padding: 10px 12px; background: var(--surface2); border-top: 1px solid var(--border); flex-wrap: wrap; align-items: flex-end; }
+  .add-line-row input, .add-line-row select { background: var(--surface); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
+  .add-line-row input:focus, .add-line-row select:focus { outline: 1px solid var(--gold); }
+  .add-line-row .mini-label { font-size: 10px; color: var(--muted); display: block; margin-bottom: 3px; text-transform: uppercase; }
+
+  /* ── CATEGORY TABS ── */
+  .cat-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+  .cat-tab { padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: 600; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); transition: all .15s; }
+  .cat-tab.active { background: var(--gold); color: #0a0a0a; border-color: var(--gold); }
+  .cat-tab:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+
+  /* ── TOTALS PANEL ── */
+  .totals-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 20px; }
+  .totals-panel h3 { font-size: 12px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 14px; }
+  .totals-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .totals-row:last-child { border-bottom: none; }
+  .totals-row.subtotal { color: var(--muted); }
+  .totals-row.total { font-weight: 700; font-size: 16px; color: var(--gold); border-top: 2px solid var(--gold); margin-top: 8px; padding-top: 10px; }
+  .totals-row.split { color: var(--success); font-size: 12px; }
+
+  /* ── MARKUP CONTROLS ── */
+  .markup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .markup-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+  .markup-card label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 6px; }
+  .markup-card input { background: var(--surface); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 6px 8px; font-size: 14px; font-weight: 700; width: 70px; text-align: right; }
+  .markup-card input:focus { outline: 1px solid var(--gold); }
+  .markup-card .pct-label { color: var(--gold); margin-left: 4px; font-size: 13px; }
+
+  /* ── PREVIEW / PROPOSAL ── */
+  .preview-wrap { display: none; }
+  .preview-wrap.visible { display: block; }
+
+  @media print {
+    .topbar, .sidebar, .topbar-actions, .btn, .cat-tabs, .add-line-row, .li-del { display: none !important; }
+    .app { display: block; }
+    .main { padding: 0; }
+    .preview-wrap { display: block !important; }
+    .form-view { display: none !important; }
+    body { background: #fff; color: #000; }
+  }
+
+  /* ── PROPOSAL PREVIEW ── */
+  .proposal {
+    background: #fff; color: #111; max-width: 820px; margin: 0 auto;
+    font-family: 'Segoe UI', Arial, sans-serif; border-radius: 10px; overflow: hidden;
+    box-shadow: 0 4px 40px rgba(0,0,0,.5);
+  }
+  .prop-header {
+    background: linear-gradient(135deg, #0a0a0a, #1a1410, #2a1f0a);
+    color: #f5f0e8; padding: 36px 40px;
+  }
+  .prop-header .co-name { font-size: 11px; color: #c9a84c; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .prop-header h1 { font-size: 26px; font-weight: 800; margin-bottom: 4px; }
+  .prop-header .prop-sub { font-size: 13px; color: #aaa; }
+  .prop-meta { display: grid; grid-template-columns: repeat(4,1fr); gap: 0; border-bottom: 3px solid #c9a84c; }
+  .prop-meta-item { padding: 14px 20px; background: #f9f7f2; border-right: 1px solid #e0d9cc; }
+  .prop-meta-item:last-child { border-right: none; }
+  .prop-meta-item .m-label { font-size: 10px; color: #888; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 3px; }
+  .prop-meta-item .m-val { font-size: 14px; font-weight: 700; color: #111; }
+  .prop-body { padding: 30px 40px; }
+  .prop-section { margin-bottom: 28px; }
+  .prop-section h3 { font-size: 12px; color: #c9a84c; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid #e0d9cc; }
+  .prop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .prop-info-block .pi-label { font-size: 11px; color: #888; margin-bottom: 2px; }
+  .prop-info-block .pi-val { font-size: 14px; font-weight: 600; color: #111; }
+  .prop-info-block p { font-size: 13px; color: #333; line-height: 1.6; }
+
+  .prop-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .prop-table thead th { background: #0a0a0a; color: #c9a84c; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  .prop-table tbody tr { border-bottom: 1px solid #e8e0d0; }
+  .prop-table tbody tr:last-child { border-bottom: none; }
+  .prop-table tbody td { padding: 9px 12px; color: #333; }
+  .prop-table tbody tr:nth-child(even) { background: #f9f7f2; }
+  .prop-table .cat-row td { background: #f0ece3; font-weight: 700; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: .5px; padding: 6px 12px; }
+  .prop-table .num { text-align: right; }
+  .prop-table .total-row td { background: #0a0a0a; color: #f5f0e8; font-weight: 700; padding: 10px 12px; }
+  .prop-table .total-row .num { color: #c9a84c; font-size: 15px; }
+
+  .prop-totals { margin-top: 16px; }
+  .pt-row { display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #e8e0d0; font-size: 13px; color: #444; }
+  .pt-row:last-child { border-bottom: none; }
+  .pt-row.grand { font-weight: 800; font-size: 17px; color: #0a0a0a; border-top: 2px solid #c9a84c; padding-top: 10px; margin-top: 6px; }
+  .pt-row.grand span:last-child { color: #c9a84c; }
+
+  .prop-terms { background: #f9f7f2; border: 1px solid #e0d9cc; border-radius: 8px; padding: 16px 20px; font-size: 12px; color: #555; line-height: 1.7; }
+  .prop-terms strong { color: #111; }
+
+  .prop-sig { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+  .sig-line-wrap .sl-line { border-bottom: 1px solid #999; margin-bottom: 4px; height: 36px; }
+  .sig-line-wrap .sl-label { font-size: 11px; color: #888; }
+
+  .prop-footer { background: #0a0a0a; color: #666; font-size: 10px; padding: 12px 40px; display: flex; justify-content: space-between; }
+  .prop-footer span { color: #c9a84c; }
+
+  .empty-state { text-align: center; padding: 30px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">IW</div>
+    <div>
+      <div class="topbar-title">Remodel Job Estimator</div>
+      <div class="topbar-sub">Ironwood Renovations</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-outline btn-sm" onclick="loadFromFile()">&#8599; Import</button>
+    <button class="btn btn-outline btn-sm" onclick="exportJSON()">&#8595; Export</button>
+    <button class="btn btn-outline btn-sm" onclick="toggleView()" id="view-toggle-btn">&#128196; Preview Proposal</button>
+    <button class="btn btn-outline btn-sm" onclick="window.print()">&#128424; Print / PDF</button>
+    <button class="btn btn-gold btn-sm" onclick="saveJob()">&#10003; Save</button>
+  </div>
+</div>
+
+<div class="app">
+
+  <!-- ── SIDEBAR ── -->
+  <div class="sidebar">
+
+    <div class="section-head">Job Information</div>
+
+    <div class="field-group">
+      <label>Job Name / Address</label>
+      <input type="text" id="jobName" placeholder="123 Main St — Kitchen Remodel"/>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label>Client Name</label>
+        <input type="text" id="clientName" placeholder="John Smith"/>
+      </div>
+      <div class="field-group">
+        <label>Phone</label>
+        <input type="text" id="clientPhone" placeholder="(555) 000-0000"/>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Client Email</label>
+      <input type="text" id="clientEmail" placeholder="client@email.com"/>
+    </div>
+    <div class="field-group">
+      <label>Job Address</label>
+      <input type="text" id="jobAddress" placeholder="123 Main St, Macon, GA 31201"/>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label>Est. Start Date</label>
+        <input type="date" id="startDate"/>
+      </div>
+      <div class="field-group">
+        <label>Est. Duration</label>
+        <input type="text" id="duration" placeholder="2 weeks"/>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Job Type</label>
+      <select id="jobType">
+        <option>Kitchen Remodel</option>
+        <option>Bathroom Remodel</option>
+        <option>Full Home Renovation</option>
+        <option>Deck / Porch Build</option>
+        <option>Flooring</option>
+        <option>Painting (Interior)</option>
+        <option>Painting (Exterior)</option>
+        <option>Basement Finish</option>
+        <option>Addition / Room Build</option>
+        <option>Roofing</option>
+        <option>BRRRR Rehab (Internal)</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label>Scope Summary (shown on proposal)</label>
+      <textarea id="scopeSummary" rows="3" placeholder="Full kitchen gut and remodel including new cabinets, countertops, backsplash, flooring, and appliance hookups..."></textarea>
+    </div>
+
+    <div class="section-head">Markup Settings</div>
+    <div class="markup-grid">
+      <div class="markup-card">
+        <label>Materials Markup</label>
+        <input type="number" id="matMarkup" value="25" min="0" max="100" oninput="recalc()"/>
+        <span class="pct-label">%</span>
+      </div>
+      <div class="markup-card">
+        <label>Labor Markup</label>
+        <input type="number" id="labMarkup" value="35" min="0" max="100" oninput="recalc()"/>
+        <span class="pct-label">%</span>
+      </div>
+      <div class="markup-card">
+        <label>Jeff's Mode</label>
+        <select id="jeffMode" onchange="recalc()" style="background:var(--surface);border:1px solid var(--border);color:var(--cream);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;">
+          <option value="hourly">Hourly ($50/hr)</option>
+          <option value="pct">30% Gross Profit</option>
+        </select>
+      </div>
+      <div class="markup-card" id="jeffHoursCard">
+        <label>Jeff's Hours</label>
+        <input type="number" id="jeffHours" value="0" min="0" oninput="recalc()"/>
+        <span class="pct-label">hrs</span>
+      </div>
+      <div class="markup-card" id="jeffPctCard" style="display:none;">
+        <label>Jeff's Cut (% Gross Profit)</label>
+        <input type="number" id="jeffPct" value="30" min="0" max="100" oninput="recalc()"/>
+        <span class="pct-label">%</span>
+      </div>
+      <div class="markup-card">
+        <label>Contingency</label>
+        <input type="number" id="contingency" value="10" min="0" max="30" oninput="recalc()"/>
+        <span class="pct-label">%</span>
+      </div>
+      <div class="markup-card">
+        <label>Jordan (% Gross Revenue)</label>
+        <input type="number" id="jordanPct" value="3" min="0" max="20" oninput="recalc()"/>
+        <span class="pct-label">%</span>
+      </div>
+      <div class="markup-card">
+        <label>Ty — Marketing (% Revenue)</label>
+        <input type="number" id="tyPct" value="3" min="0" max="20" oninput="recalc()"/>
+        <span class="pct-label">%</span>
+      </div>
+      <div class="markup-card">
+        <label>Ty — Field Labor (hrs)</label>
+        <input type="number" id="tyHours" value="0" min="0" oninput="recalc()"/>
+        <span class="pct-label">× $30</span>
+      </div>
+    </div>
+
+    <div class="section-head">Marketing</div>
+    <div class="markup-card" style="grid-column:span 2;">
+      <label>Ad Spend Allocated to This Job ($)</label>
+      <input type="number" id="adSpend" value="0" min="0" oninput="recalc()" style="width:120px;"/>
+      <span class="pct-label" style="font-size:11px;color:var(--muted);margin-left:6px;">pre-waterfall · Meta / Google / mail</span>
+    </div>
+
+    <div class="section-head">Deposit &amp; Terms</div>
+    <div class="field-row">
+      <div class="field-group">
+        <label>Deposit %</label>
+        <input type="number" id="depositPct" value="40" min="0" max="100" oninput="recalc()"/>
+      </div>
+      <div class="field-group">
+        <label>Valid For (days)</label>
+        <input type="number" id="validDays" value="30"/>
+      </div>
+    </div>
+    <div class="field-group">
+      <label>Payment Terms</label>
+      <select id="payTerms">
+        <option>40% deposit · 60% on completion</option>
+        <option>50% deposit · 50% on completion</option>
+        <option>30% deposit · 40% at milestone · 30% on completion</option>
+        <option>100% on completion</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label>Additional Notes (internal)</label>
+      <textarea id="internalNotes" rows="2" placeholder="Permit needed, HOA approval required, etc."></textarea>
+    </div>
+
+    <button class="btn btn-gold btn-block" onclick="saveJob()">&#10003; Save Job</button>
+    <button class="btn btn-outline btn-block" onclick="newJob()">+ New Job</button>
+
+  </div>
+
+  <!-- ── MAIN ── -->
+  <div class="main">
+
+    <!-- FORM VIEW -->
+    <div class="form-view" id="formView">
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+        <div>
+          <div style="font-size:18px; font-weight:700; color:var(--cream);" id="mainJobTitle">New Estimate</div>
+          <div style="font-size:12px; color:var(--muted);" id="mainJobSub">Fill in job info on the left, then add line items below</div>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn btn-outline btn-sm" onclick="addCategory()">+ Category</button>
+          <button class="btn btn-gold btn-sm" onclick="toggleView()">Preview Proposal &#8594;</button>
+        </div>
+      </div>
+
+      <!-- CATEGORY TABS -->
+      <div class="cat-tabs" id="catTabs"></div>
+
+      <!-- LINE ITEMS TABLE -->
+      <div class="line-items-wrap">
+        <div class="li-header">
+          <span>Description</span>
+          <span>Type</span>
+          <span style="text-align:right">Qty</span>
+          <span style="text-align:right">Unit Cost</span>
+          <span style="text-align:right">Total</span>
+          <span style="color:#666">Supplier / Notes (internal)</span>
+          <span></span>
+        </div>
+        <div id="lineItemsBody"></div>
+        <div class="add-line-row">
+          <div>
+            <span class="mini-label">Description</span>
+            <input type="text" id="newDesc" placeholder="e.g. Remove existing cabinets" style="width:200px;"/>
+          </div>
+          <div>
+            <span class="mini-label">Type</span>
+            <select id="newType">
+              <option value="labor">Labor (hrs)</option>
+              <option value="material">Material</option>
+              <option value="sub">Subcontractor</option>
+              <option value="permit">Permit / Fee</option>
+            </select>
+          </div>
+          <div>
+            <span class="mini-label">Qty</span>
+            <input type="number" id="newQty" placeholder="1" step="0.5" style="width:70px;"/>
+          </div>
+          <div>
+            <span class="mini-label">Unit Cost ($)</span>
+            <input type="number" id="newCost" placeholder="0.00" step="0.01" style="width:90px;"/>
+          </div>
+          <button class="btn btn-gold btn-sm" onclick="addLineItem()" style="align-self:flex-end;">+ Add Line</button>
+        </div>
+      </div>
+
+      <!-- QUICK ADD TEMPLATES -->
+      <div style="margin-bottom: 20px;">
+        <div class="section-head" style="margin-top:0;">Quick Add — Common Items</div>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm" onclick="quickAdd('Demo existing fixtures','labor',4,50)">Demo (4hrs)</button>
+          <button class="btn btn-outline btn-sm" onclick="quickAdd('Framing labor','labor',8,50)">Framing (8hrs)</button>
+          <button class="btn btn-outline btn-sm" onclick="quickAdd('Drywall installation','labor',6,50)">Drywall (6hrs)</button>
+          <button class="btn btn-outline btn-sm" onclick="quickAdd('Paint — interior (per room)','labor',4,50)">Paint (4hrs)</button>
+          <button class="btn btn-outline btn-sm" onclick="quickAdd('Flooring installation (per 100sqft)','labor',3,50)">Flooring (3hrs)</button>
+          <button class="btn btn-outline btn-sm" onclick="quickAdd('Lumber / framing materials','material',1,0)">Lumber</button>
+          <button class="btn btn-outline btn-sm" onclick="quickAdd('Paint &amp; supplies','material',1,0)">Paint &amp; Supplies</button>
+          <button class="btn btn-outline btn-sm" onclick="quickAdd('Drywall sheets &amp; mud','material',1,0)">Drywall Materials</button>
+          <button class="btn btn-outline btn-sm" onclick="quickAdd('Electrician (licensed sub)','sub',1,0)">Electrician</button>
+          <button class="btn btn-outline btn-sm" onclick="quickAdd('Plumber (licensed sub)','sub',1,0)">Plumber</button>
+          <button class="btn btn-outline btn-sm" onclick="quickAdd('Building permit','permit',1,0)">Permit</button>
+        </div>
+      </div>
+
+      <!-- TOTALS -->
+      <div class="totals-panel">
+        <h3>Estimate Summary</h3>
+        <div class="totals-row subtotal"><span>Raw Materials Cost</span><span id="t-mat-raw">$0</span></div>
+        <div class="totals-row subtotal"><span>Materials + Markup (<span id="t-mat-pct">25</span>%)</span><span id="t-mat-marked">$0</span></div>
+        <div class="totals-row subtotal"><span>Raw Labor Cost</span><span id="t-lab-raw">$0</span></div>
+        <div class="totals-row subtotal"><span>Labor + Markup (<span id="t-lab-pct">35</span>%)</span><span id="t-lab-marked">$0</span></div>
+        <div class="totals-row subtotal"><span>Subcontractors / Permits</span><span id="t-sub">$0</span></div>
+        <div class="totals-row subtotal"><span>Contingency (<span id="t-cont-pct">10</span>%)</span><span id="t-cont">$0</span></div>
+        <div class="totals-row total"><span>TOTAL ESTIMATE</span><span id="t-total">$0</span></div>
+        <div class="totals-row split"><span>Deposit Due (<span id="t-dep-pct">40</span>%)</span><span id="t-deposit">$0</span></div>
+        <div class="totals-row split" style="color:var(--muted)"><span>Balance on Completion</span><span id="t-balance">$0</span></div>
+        <div style="border-top:1px solid var(--border); margin-top:12px; padding-top:12px;">
+          <div style="font-size:10px; color:var(--gold); text-transform:uppercase; letter-spacing:1px; font-weight:700; margin-bottom:8px;">Internal — Profit Waterfall Preview</div>
+          <div class="totals-row subtotal"><span>Ad Spend (pre-waterfall)</span><span id="t-ad-spend">$0</span></div>
+          <div class="totals-row subtotal"><span>Gross Profit (Revenue − Materials − Subs − Ad Spend)</span><span id="t-gross-profit">$0</span></div>
+          <div class="totals-row subtotal"><span id="t-jeff-label">Jeff's Cut (hourly · 0 hrs × $50)</span><span id="t-jeff-cut">$0</span></div>
+          <div class="totals-row subtotal"><span>Mgmt Fee (5% of revenue)</span><span id="t-mgmt-fee">$0</span></div>
+          <div class="totals-row subtotal"><span>Jordan (<span id="t-jordan-pct">3</span>% of revenue)</span><span id="t-jordan-fee">$0</span></div>
+          <div class="totals-row subtotal"><span>Ty — Marketing (<span id="t-ty-pct">3</span>% of revenue)</span><span id="t-ty-fee">$0</span></div>
+          <div class="totals-row subtotal"><span id="t-ty-labor-label">Ty — Field Labor (0 hrs × $30)</span><span id="t-ty-labor">$0</span></div>
+          <div class="totals-row subtotal"><span>Net Distributable (50/50 split)</span><span id="t-net-dist">$0</span></div>
+          <div class="totals-row" style="color:var(--success);"><span>Est. Ty Total (Mgmt + Marketing + 50%)</span><span id="t-anchor-est">$0</span></div>
+          <div class="totals-row" style="color:#64b5f6;"><span>Est. Jeff Total (Labor + Jordan + 50%)</span><span id="t-landon-est">$0</span></div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- PREVIEW VIEW -->
+    <div class="preview-wrap" id="previewView">
+      <div style="display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+        <button class="btn btn-outline" onclick="toggleView()">&#8592; Back to Editor</button>
+        <button class="btn btn-gold" onclick="window.print()">&#128424; Print / Save as PDF</button>
+      </div>
+      <div class="proposal" id="proposalDoc"></div>
+    </div>
+
+  </div>
+</div>
+
+<input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleFileLoad(event)"/>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let job = newJobObj();
+let activeCategory = null;
+let viewMode = 'form'; // 'form' | 'preview'
+
+function newJobObj() {
+  return {
+    id: uid(),
+    jobName: '', clientName: '', clientPhone: '', clientEmail: '',
+    jobAddress: '', startDate: '', duration: '', jobType: 'Kitchen Remodel',
+    scopeSummary: '', internalNotes: '', payTerms: '40% deposit · 60% on completion',
+    validDays: 30, depositPct: 40,
+    matMarkup: 25, labMarkup: 35, jeffMode: 'hourly', jeffHours: 0, jeffPct: 30, jordanPct: 3, tyPct: 3, tyHours: 0, adSpend: 0, contingency: 10,
+    categories: [{ id: uid(), name: 'Labor' }, { id: uid(), name: 'Materials' }, { id: uid(), name: 'Subcontractors' }],
+    items: []
+  };
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+window.onload = function() {
+  const saved = localStorage.getItem('ironwood_estimator_job');
+  if (saved) job = JSON.parse(saved);
+  if (!job.categories || job.categories.length === 0) {
+    job.categories = [{ id: uid(), name: 'Labor' }, { id: uid(), name: 'Materials' }, { id: uid(), name: 'Subcontractors' }];
+  }
+  activeCategory = job.categories[0].id;
+  populateSidebar();
+  renderCatTabs();
+  renderItems();
+  recalc();
+};
+
+function populateSidebar() {
+  setVal('jobName', job.jobName);
+  setVal('clientName', job.clientName);
+  setVal('clientPhone', job.clientPhone);
+  setVal('clientEmail', job.clientEmail);
+  setVal('jobAddress', job.jobAddress);
+  setVal('startDate', job.startDate);
+  setVal('duration', job.duration);
+  setVal('jobType', job.jobType);
+  setVal('scopeSummary', job.scopeSummary);
+  setVal('internalNotes', job.internalNotes);
+  setVal('payTerms', job.payTerms);
+  setVal('validDays', job.validDays);
+  setVal('depositPct', job.depositPct);
+  setVal('matMarkup', job.matMarkup);
+  setVal('labMarkup', job.labMarkup);
+  setVal('jeffMode',   job.jeffMode   ?? 'hourly');
+  setVal('jeffHours',  job.jeffHours  ?? 0);
+  setVal('jeffPct',    job.jeffPct    ?? 30);
+  setVal('jordanPct',  job.jordanPct  ?? 3);
+  setVal('tyPct',      job.tyPct      ?? 3);
+  setVal('tyHours',    job.tyHours    ?? 0);
+  setVal('adSpend',    job.adSpend    ?? 0);
+  setVal('contingency', job.contingency);
+}
+
+// ─── CATEGORIES ──────────────────────────────────────────────────────────────
+function renderCatTabs() {
+  const tabs = document.getElementById('catTabs');
+  tabs.innerHTML = job.categories.map(c => `
+    <div class="cat-tab ${c.id === activeCategory ? 'active' : ''}" onclick="switchCat('${c.id}')">
+      ${c.name}
+    </div>
+  `).join('');
+}
+
+function switchCat(id) {
+  activeCategory = id;
+  renderCatTabs();
+  renderItems();
+}
+
+function addCategory() {
+  const name = prompt('Category name (e.g. Demolition, Electrical, Flooring):');
+  if (!name) return;
+  const cat = { id: uid(), name: name.trim() };
+  job.categories.push(cat);
+  activeCategory = cat.id;
+  renderCatTabs();
+  renderItems();
+}
+
+// ─── LINE ITEMS ───────────────────────────────────────────────────────────────
+function renderItems() {
+  const body = document.getElementById('lineItemsBody');
+  const items = job.items.filter(i => i.catId === activeCategory);
+  const catName = (job.categories.find(c => c.id === activeCategory) || {}).name || '';
+
+  document.getElementById('mainJobTitle').textContent = getVal('jobName') || 'New Estimate';
+  document.getElementById('mainJobSub').textContent = `${catName} — ${items.length} line item${items.length === 1 ? '' : 's'}`;
+
+  if (items.length === 0) {
+    body.innerHTML = `<div class="empty-state">No items in ${catName} yet. Add one below or use Quick Add.</div>`;
+    return;
+  }
+
+  body.innerHTML = items.map(item => {
+    const raw = (parseFloat(item.qty) || 0) * (parseFloat(item.cost) || 0);
+    const markup = item.type === 'material' ? (parseFloat(getVal('matMarkup')) || 0) / 100
+                 : item.type === 'labor'    ? (parseFloat(getVal('labMarkup')) || 0) / 100 : 0;
+    const total = raw * (1 + markup);
+    const typeLabel = { labor: '⚒ Labor', material: '📦 Material', sub: '🔧 Sub', permit: '📋 Permit' }[item.type] || item.type;
+    return `
+      <div class="li-row">
+        <input class="li-input" value="${esc(item.desc)}" onchange="updateItem('${item.id}','desc',this.value)" placeholder="Description"/>
+        <span style="font-size:11px; color:var(--muted)">${typeLabel}</span>
+        <input class="li-input num" type="number" value="${item.qty}" onchange="updateItem('${item.id}','qty',this.value);recalc()" style="width:70px;"/>
+        <input class="li-input num" type="number" value="${item.cost}" onchange="updateItem('${item.id}','cost',this.value);recalc()" style="width:80px;"/>
+        <span class="li-total">${fmt(total)}</span>
+        <input class="li-input" value="${esc(item.supplier||'')}" onchange="updateItem('${item.id}','supplier',this.value)" placeholder="e.g. Home Depot, Ferguson…" style="font-size:11px; color:var(--muted);"/>
+        <button class="li-del" onclick="deleteItem('${item.id}')">×</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function addLineItem() {
+  const desc = document.getElementById('newDesc').value.trim();
+  const type = document.getElementById('newType').value;
+  const qty  = parseFloat(document.getElementById('newQty').value) || 1;
+  const cost = parseFloat(document.getElementById('newCost').value) || 0;
+  if (!desc) { alert('Enter a description.'); return; }
+  job.items.push({ id: uid(), catId: activeCategory, desc, type, qty, cost });
+  document.getElementById('newDesc').value = '';
+  document.getElementById('newQty').value = '';
+  document.getElementById('newCost').value = '';
+  renderItems();
+  recalc();
+}
+
+function quickAdd(desc, type, qty, cost) {
+  job.items.push({ id: uid(), catId: activeCategory, desc, type, qty, cost });
+  renderItems();
+  recalc();
+}
+
+function updateItem(id, field, val) {
+  const item = job.items.find(i => i.id === id);
+  if (item) item[field] = field === 'qty' || field === 'cost' ? parseFloat(val) || 0 : val;
+  recalc();
+}
+
+function deleteItem(id) {
+  job.items = job.items.filter(i => i.id !== id);
+  renderItems();
+  recalc();
+}
+
+// ─── RECALC ───────────────────────────────────────────────────────────────────
+function recalc() {
+  const matMu   = (parseFloat(getVal('matMarkup')) || 0) / 100;
+  const labMu   = (parseFloat(getVal('labMarkup')) || 0) / 100;
+  const jeffMode  = getVal('jeffMode') || 'hourly';
+  const jeffHours = parseFloat(getVal('jeffHours')) || 0;
+  const jeffPct   = parseFloat(getVal('jeffPct')) || 30;
+  const jordanPct = parseFloat(getVal('jordanPct')) || 3;
+  const tyPct     = parseFloat(getVal('tyPct')) || 3;
+  const tyHours   = parseFloat(getVal('tyHours')) || 0;
+  const adSpend   = parseFloat(getVal('adSpend')) || 0;
+  const contPct   = (parseFloat(getVal('contingency')) || 0) / 100;
+  const depPct    = (parseFloat(getVal('depositPct')) || 0) / 100;
+
+  // Toggle visibility of Jeff's input cards
+  document.getElementById('jeffHoursCard').style.display = jeffMode === 'hourly' ? '' : 'none';
+  document.getElementById('jeffPctCard').style.display   = jeffMode === 'pct'    ? '' : 'none';
+
+  let matRaw = 0, labRaw = 0, subTotal = 0;
+  job.items.forEach(i => {
+    const raw = (i.qty || 0) * (i.cost || 0);
+    if (i.type === 'material') matRaw += raw;
+    else if (i.type === 'labor') labRaw += raw;
+    else subTotal += raw;
+  });
+
+  const matMarked  = matRaw * (1 + matMu);
+  const labMarked  = labRaw * (1 + labMu);
+  const subtotal   = matMarked + labMarked + subTotal;
+  const cont       = subtotal * contPct;
+  const total      = subtotal + cont;
+  const deposit    = total * depPct;
+  const balance    = total - deposit;
+
+  // Profit waterfall preview
+  const grossProfit  = Math.max(0, total - matRaw - subTotal - adSpend);
+  const jeffCut      = jeffMode === 'hourly' ? jeffHours * 50 : grossProfit * (jeffPct / 100);
+  const mgmtFee      = total * 0.05;
+  const jordanFee    = total * (jordanPct / 100);
+  const tyFee        = total * (tyPct / 100);
+  const tyLabor      = tyHours * 30;
+  const netDist      = Math.max(0, grossProfit - jeffCut - mgmtFee - jordanFee - tyFee - tyLabor);
+  const splitEach    = netDist * 0.50;
+  const anchorEst    = mgmtFee + tyFee + tyLabor + splitEach;
+  const landonEst    = jeffCut + jordanFee + splitEach;
+
+  setText('t-mat-raw',     fmt(matRaw));
+  setText('t-mat-pct',     getVal('matMarkup'));
+  setText('t-mat-marked',  fmt(matMarked));
+  setText('t-lab-raw',     fmt(labRaw));
+  setText('t-lab-pct',     getVal('labMarkup'));
+  setText('t-lab-marked',  fmt(labMarked));
+  setText('t-sub',         fmt(subTotal));
+  setText('t-cont-pct',    getVal('contingency'));
+  setText('t-cont',        fmt(cont));
+  setText('t-total',       fmt(total));
+  setText('t-dep-pct',     getVal('depositPct'));
+  setText('t-deposit',     fmt(deposit));
+  setText('t-balance',     fmt(balance));
+  setText('t-ad-spend',    fmt(adSpend));
+  setText('t-gross-profit',fmt(grossProfit));
+  setText('t-jeff-label',  jeffMode === 'hourly'
+    ? `Jeff's Cut (hourly · ${jeffHours} hrs × $50)`
+    : `Jeff's Cut (${jeffPct}% of gross profit)`);
+  setText('t-jeff-cut',    fmt(jeffCut));
+  setText('t-mgmt-fee',    fmt(mgmtFee));
+  setText('t-jordan-pct',  jordanPct);
+  setText('t-jordan-fee',  fmt(jordanFee));
+  setText('t-ty-pct',        tyPct);
+  setText('t-ty-fee',        fmt(tyFee));
+  setText('t-ty-labor-label',`Ty — Field Labor (${tyHours} hrs × $30)`);
+  setText('t-ty-labor',      fmt(tyLabor));
+  setText('t-net-dist',      fmt(netDist));
+  setText('t-anchor-est',  fmt(anchorEst));
+  setText('t-landon-est',  fmt(landonEst));
+}
+
+// ─── VIEW TOGGLE ─────────────────────────────────────────────────────────────
+function toggleView() {
+  collectSidebar();
+  viewMode = viewMode === 'form' ? 'preview' : 'form';
+  document.getElementById('formView').style.display    = viewMode === 'form'    ? 'block' : 'none';
+  document.getElementById('previewView').classList.toggle('visible', viewMode === 'preview');
+  document.getElementById('view-toggle-btn').textContent = viewMode === 'form' ? '📄 Preview Proposal' : '✏️ Back to Editor';
+  if (viewMode === 'preview') buildProposal();
+}
+
+// ─── BUILD PROPOSAL ───────────────────────────────────────────────────────────
+function buildProposal() {
+  collectSidebar();
+  const matMu   = (parseFloat(job.matMarkup) || 0) / 100;
+  const labMu   = (parseFloat(job.labMarkup) || 0) / 100;
+  const jeffPct = parseFloat(job.jeffPct) || 30;
+  const contPct = (parseFloat(job.contingency) || 0) / 100;
+  const depPct  = (parseFloat(job.depositPct) || 0) / 100;
+
+  let matRaw = 0, labRaw = 0, subTotal = 0;
+  job.items.forEach(i => {
+    const raw = (i.qty || 0) * (i.cost || 0);
+    if (i.type === 'material') matRaw += raw;
+    else if (i.type === 'labor') labRaw += raw;
+    else subTotal += raw;
+  });
+  const matMarked = matRaw * (1 + matMu);
+  const labMarked = labRaw * (1 + labMu);
+  const subtotal  = matMarked + labMarked + subTotal;
+  const cont      = subtotal * contPct;
+  const total     = subtotal + cont;
+  const deposit   = total * depPct;
+  const balance   = total - deposit;
+
+  const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+  const validUntil = new Date(Date.now() + (job.validDays || 30) * 86400000).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+  // Build line items by category
+  let itemsHTML = '';
+  job.categories.forEach(cat => {
+    const catItems = job.items.filter(i => i.catId === cat.id);
+    if (catItems.length === 0) return;
+    itemsHTML += `<tr class="cat-row"><td colspan="4">${cat.name}</td></tr>`;
+    catItems.forEach(item => {
+      const raw    = (item.qty || 0) * (item.cost || 0);
+      const markup = item.type === 'material' ? matMu : item.type === 'labor' ? labMu : 0;
+      const total  = raw * (1 + markup);
+      const unitLabel = item.type === 'labor' ? 'hrs' : 'ea';
+      itemsHTML += `
+        <tr>
+          <td>${esc(item.desc)}</td>
+          <td class="num">${item.qty} ${unitLabel}</td>
+          <td class="num">${fmt(item.cost * (1 + markup))}</td>
+          <td class="num">${fmt(total)}</td>
+        </tr>`;
+    });
+  });
+
+  if (!itemsHTML) itemsHTML = `<tr><td colspan="4" style="text-align:center; color:#888; padding:20px;">No line items added yet.</td></tr>`;
+
+  document.getElementById('proposalDoc').innerHTML = `
+    <div class="prop-header">
+      <div class="co-name">Ironwood Renovations</div>
+      <h1>Project Estimate</h1>
+      <div class="prop-sub">${esc(job.jobType)} · Prepared ${today}</div>
+    </div>
+
+    <div class="prop-meta">
+      <div class="prop-meta-item">
+        <div class="m-label">Prepared For</div>
+        <div class="m-val">${esc(job.clientName) || '—'}</div>
+      </div>
+      <div class="prop-meta-item">
+        <div class="m-label">Project</div>
+        <div class="m-val">${esc(job.jobName) || '—'}</div>
+      </div>
+      <div class="prop-meta-item">
+        <div class="m-label">Est. Start</div>
+        <div class="m-val">${job.startDate ? new Date(job.startDate+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—'}</div>
+      </div>
+      <div class="prop-meta-item">
+        <div class="m-label">Total Estimate</div>
+        <div class="m-val" style="color:#c9a84c;">${fmt(total)}</div>
+      </div>
+    </div>
+
+    <div class="prop-body">
+
+      <div class="prop-grid">
+        <div class="prop-section">
+          <h3>Client Information</h3>
+          <div class="prop-info-block" style="margin-bottom:6px;"><div class="pi-label">Name</div><div class="pi-val">${esc(job.clientName) || '—'}</div></div>
+          <div class="prop-info-block" style="margin-bottom:6px;"><div class="pi-label">Phone</div><div class="pi-val">${esc(job.clientPhone) || '—'}</div></div>
+          <div class="prop-info-block" style="margin-bottom:6px;"><div class="pi-label">Email</div><div class="pi-val">${esc(job.clientEmail) || '—'}</div></div>
+          <div class="prop-info-block"><div class="pi-label">Job Address</div><div class="pi-val">${esc(job.jobAddress) || '—'}</div></div>
+        </div>
+        <div class="prop-section">
+          <h3>Contractor Information</h3>
+          <div class="prop-info-block" style="margin-bottom:6px;"><div class="pi-label">Company</div><div class="pi-val">Ironwood LLC</div></div>
+          <div class="prop-info-block" style="margin-bottom:6px;"><div class="pi-label">Lead</div><div class="pi-val">Jeff Sarabia</div></div>
+          <div class="prop-info-block" style="margin-bottom:6px;"><div class="pi-label">Est. Duration</div><div class="pi-val">${esc(job.duration) || '—'}</div></div>
+          <div class="prop-info-block"><div class="pi-label">Quote Valid Until</div><div class="pi-val">${validUntil}</div></div>
+        </div>
+      </div>
+
+      <div class="prop-section">
+        <h3>Scope of Work</h3>
+        <div class="prop-info-block"><p>${esc(job.scopeSummary) || 'See line items below for full scope detail.'}</p></div>
+      </div>
+
+      <div class="prop-section">
+        <h3>Line Item Breakdown</h3>
+        <table class="prop-table">
+          <thead><tr><th>Description</th><th class="num">Qty</th><th class="num">Unit Price</th><th class="num">Total</th></tr></thead>
+          <tbody>${itemsHTML}</tbody>
+          <tfoot>
+            <tr class="total-row">
+              <td colspan="3"><strong>TOTAL ESTIMATE</strong></td>
+              <td class="num"><strong>${fmt(total)}</strong></td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div class="prop-totals">
+          ${matRaw > 0 ? `<div class="pt-row"><span>Materials</span><span>${fmt(matMarked)}</span></div>` : ''}
+          ${labRaw > 0 ? `<div class="pt-row"><span>Labor</span><span>${fmt(labMarked)}</span></div>` : ''}
+          ${subTotal > 0 ? `<div class="pt-row"><span>Subcontractors &amp; Permits</span><span>${fmt(subTotal)}</span></div>` : ''}
+          <div class="pt-row"><span>Contingency Reserve</span><span>${fmt(cont)}</span></div>
+          <div class="pt-row grand"><span>TOTAL</span><span>${fmt(total)}</span></div>
+          <div class="pt-row" style="color:#c0392b;"><span><strong>Deposit Required (${job.depositPct}%)</strong></span><span><strong>${fmt(deposit)}</strong></span></div>
+          <div class="pt-row" style="color:#555;"><span>Balance Due on Completion</span><span>${fmt(balance)}</span></div>
+        </div>
+      </div>
+
+      <div class="prop-section">
+        <h3>Payment Terms</h3>
+        <div class="prop-terms">
+          <strong>Payment Schedule:</strong> ${esc(job.payTerms)}<br/>
+          <strong>Accepted Methods:</strong> Check, Zelle, bank transfer. No cash accepted on jobs over $1,000.<br/>
+          <strong>Quote Validity:</strong> This estimate is valid for ${job.validDays} days from the date issued (${today}).<br/>
+          <strong>Change Orders:</strong> Any changes to the scope of work after signing require a written change order and may affect the total price and timeline.<br/>
+          <strong>Materials:</strong> All materials are supplied and managed by Ironwood LLC. Pricing is all-inclusive — no separate material invoices. Client-supplied materials must be approved in advance and on-site before the scheduled work date.<br/>
+          <strong>Warranty:</strong> Ironwood LLC warrants all labor for 1 year from project completion date. Manufacturer warranties apply to all installed materials.
+        </div>
+      </div>
+
+      <div class="prop-section">
+        <h3>Authorization &amp; Acceptance</h3>
+        <p style="font-size:13px; color:#555; margin-bottom:20px;">By signing below, the client authorizes Ironwood LLC to proceed with the work described in this estimate under the terms stated above.</p>
+        <div class="prop-sig">
+          <div class="sig-line-wrap">
+            <div class="sl-line"></div>
+            <div class="sl-label">Client Signature &amp; Date</div>
+          </div>
+          <div class="sig-line-wrap">
+            <div class="sl-line"></div>
+            <div class="sl-label">Jeff Sarabia — Ironwood LLC</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="prop-footer">
+      <span>Ironwood Renovations</span>
+      <span>Confidential Estimate · ${today}</span>
+    </div>
+  `;
+}
+
+// ─── PERSISTENCE ──────────────────────────────────────────────────────────────
+function collectSidebar() {
+  job.jobName      = getVal('jobName');
+  job.clientName   = getVal('clientName');
+  job.clientPhone  = getVal('clientPhone');
+  job.clientEmail  = getVal('clientEmail');
+  job.jobAddress   = getVal('jobAddress');
+  job.startDate    = getVal('startDate');
+  job.duration     = getVal('duration');
+  job.jobType      = getVal('jobType');
+  job.scopeSummary = getVal('scopeSummary');
+  job.internalNotes= getVal('internalNotes');
+  job.payTerms     = getVal('payTerms');
+  job.validDays    = parseInt(getVal('validDays')) || 30;
+  job.depositPct   = parseFloat(getVal('depositPct')) || 40;
+  job.matMarkup    = parseFloat(getVal('matMarkup')) || 25;
+  job.labMarkup    = parseFloat(getVal('labMarkup')) || 35;
+  job.jeffMode     = getVal('jeffMode') || 'hourly';
+  job.jeffHours    = parseFloat(getVal('jeffHours'))  || 0;
+  job.jeffPct      = parseFloat(getVal('jeffPct'))    || 30;
+  job.jordanPct    = parseFloat(getVal('jordanPct'))  || 3;
+  job.tyPct        = parseFloat(getVal('tyPct'))      || 3;
+  job.tyHours      = parseFloat(getVal('tyHours'))    || 0;
+  job.adSpend      = parseFloat(getVal('adSpend'))    || 0;
+  job.contingency  = parseFloat(getVal('contingency')) || 10;
+}
+
+function saveJob() {
+  collectSidebar();
+  localStorage.setItem('ironwood_estimator_job', JSON.stringify(job));
+  const btn = event.target;
+  btn.textContent = '✓ Saved';
+  setTimeout(() => btn.textContent = '✓ Save', 1500);
+}
+
+function newJob() {
+  if (!confirm('Start a new estimate? Current data will be cleared.')) return;
+  job = newJobObj();
+  activeCategory = job.categories[0].id;
+  populateSidebar();
+  renderCatTabs();
+  renderItems();
+  recalc();
+}
+
+function exportJSON() {
+  collectSidebar();
+  const blob = new Blob([JSON.stringify(job, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const name = (job.jobName || 'estimate').replace(/[^a-z0-9]/gi, '_');
+  a.download = `IronwoodLLC_${name}.json`;
+  a.click();
+}
+
+function loadFromFile() { document.getElementById('fileInput').click(); }
+function handleFileLoad(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      job = JSON.parse(ev.target.result);
+      activeCategory = job.categories[0]?.id || null;
+      populateSidebar();
+      renderCatTabs();
+      renderItems();
+      recalc();
+    } catch { alert('Invalid file.'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ─── UTILS ───────────────────────────────────────────────────────────────────
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function fmt(n) { return '$' + (parseFloat(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
+function setVal(id, v) { const el = document.getElementById(id); if (el) el.value = v || ''; }
+function setText(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+</script>
+</body>
+</html>

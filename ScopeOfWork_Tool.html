@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Scope of Work Tool — Ironwood Renovations</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:Arial,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;}
+
+  /* ── HEADER ── */
+  #app-header{
+    background:#080808;border-bottom:2px solid #2a2a2a;
+    padding:12px 24px;display:flex;align-items:center;justify-content:space-between;
+    position:sticky;top:0;z-index:100;
+  }
+  #app-header .brand{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#b8b0a0;}
+  #app-header .title{font-size:17px;font-weight:bold;color:#fff;margin-top:2px;}
+  .hdr-btns{display:flex;gap:8px;flex-wrap:wrap;}
+  .hdr-btn{
+    padding:7px 14px;border-radius:6px;border:none;cursor:pointer;font-size:11px;
+    font-weight:bold;letter-spacing:1px;text-transform:uppercase;transition:opacity .2s;
+  }
+  .hdr-btn:hover{opacity:.82;}
+  .btn-new{background:#c9a84c;color:#fff;}
+  .btn-print{background:#2a2a2a;color:#f5f0e8;border:1px solid #c9a84c;}
+  .btn-save{background:#5a8a5a;color:#0a0a0a;}
+  .btn-load{background:#c9843a;color:#0a0a0a;}
+
+  /* ── TAB BAR ── */
+  #tab-bar{
+    background:#080808;border-bottom:2px solid #2a2a2a;
+    display:flex;overflow-x:auto;
+    position:sticky;top:55px;z-index:99;
+  }
+  .tab-btn{
+    padding:12px 20px;background:transparent;border:none;cursor:pointer;
+    color:#b8b0a0;font-size:12px;font-weight:bold;letter-spacing:.5px;
+    border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;
+  }
+  .tab-btn:hover{color:#f5f0e8;background:#0a0a0a;}
+  .tab-btn.active{color:#b8b0a0;border-bottom:3px solid #b8b0a0;background:#0a0a0a;}
+
+  /* ── TAB CONTENT ── */
+  .tab-panel{display:none;padding:20px 22px;max-width:1700px;margin:0 auto;}
+  .tab-panel.active{display:block;}
+
+  /* ── CARDS ── */
+  .card{background:#111111;border-radius:10px;border:1px solid #2a2a2a;padding:18px 22px;margin-bottom:16px;}
+  .card-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#b8b0a0;margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid #2a2a2a;}
+
+  /* ── FORMS ── */
+  .form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px 18px;}
+  .form-group{display:flex;flex-direction:column;gap:4px;}
+  .form-group label{font-size:10px;color:#b8b0a0;text-transform:uppercase;letter-spacing:.5px;}
+  .form-group input,.form-group select,.form-group textarea{
+    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:6px;
+    color:#fff;padding:7px 9px;font-size:13px;font-family:Arial;transition:border-color .2s;
+  }
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#c9a84c;}
+  .form-group select option{background:#111111;}
+  .form-group textarea{resize:vertical;min-height:75px;}
+
+  /* ── SUMMARY STRIP ── */
+  #summary-strip{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px;}
+  .sum-box{background:#111111;border:1px solid #2a2a2a;border-radius:8px;padding:11px 14px;flex:1;min-width:120px;text-align:center;}
+  .sum-box .sum-label{font-size:9px;color:#b8b0a0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+  .sum-box .sum-val{font-size:17px;font-weight:bold;color:#b8b0a0;}
+  .sum-box.green .sum-val{color:#5a8a5a;}
+  .sum-box.red .sum-val{color:#8a3a3a;}
+  .sum-box.yellow .sum-val{color:#c9843a;}
+
+  /* ── LAYOUT: sidebar + main ── */
+  #budget-layout{display:flex;gap:18px;align-items:flex-start;}
+  #cat-sidebar{
+    width:210px;flex-shrink:0;
+    position:sticky;top:103px;
+    max-height:calc(100vh - 115px);overflow-y:auto;
+  }
+  #cat-sidebar::-webkit-scrollbar{width:4px;}
+  #cat-sidebar::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:2px;}
+  #budget-main{flex:1;min-width:0;}
+  .sidebar-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:8px 10px;border-radius:6px;cursor:pointer;
+    color:#f5f0e8;font-size:11px;margin-bottom:3px;
+    border:1px solid transparent;transition:all .2s;
+  }
+  .sidebar-item:hover{background:#2a2a2a;border-color:#c9a84c;}
+  .sidebar-item .si-total{color:#b8b0a0;font-size:10px;font-weight:bold;}
+
+  /* ── SECTION CARDS ── */
+  .section-card{background:#111111;border:1px solid #2a2a2a;border-radius:10px;margin-bottom:12px;overflow:hidden;}
+  .section-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:11px 16px;cursor:pointer;background:#111111;border-bottom:1px solid #2a2a2a;
+  }
+  .section-header:hover{background:#111111;}
+  .section-header .sec-title{font-size:11px;font-weight:bold;color:#b8b0a0;letter-spacing:1px;text-transform:uppercase;}
+  .section-header .sec-total{font-size:12px;font-weight:bold;color:#5a8a5a;}
+  .section-header .toggle-icon{color:#b8b0a0;font-size:14px;transition:transform .2s;margin-left:10px;}
+  .section-body.collapsed{display:none;}
+
+  /* ── BUDGET TABLE ── */
+  .budget-table{width:100%;border-collapse:collapse;font-size:11.5px;}
+  .budget-table th{
+    background:#0a0a0a;color:#b8b0a0;text-transform:uppercase;
+    letter-spacing:.5px;font-size:9.5px;padding:7px 7px;
+    border-bottom:1px solid #2a2a2a;text-align:left;white-space:nowrap;
+  }
+  .budget-table td{padding:4px 5px;border-bottom:1px solid #2a2a2a;vertical-align:middle;}
+  .budget-table tr:last-child td{border-bottom:none;}
+  .budget-table tr:hover td{background:#111111;}
+  .budget-table input{
+    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:4px;
+    color:#fff;padding:3px 5px;font-size:11.5px;width:100%;font-family:Arial;
+  }
+  .budget-table input:focus{outline:none;border-color:#c9a84c;}
+  .num-input{width:88px !important;text-align:right;}
+  .desc-input{width:100%;min-width:170px;}
+  .date-input{width:108px !important;}
+  .line-total-cell{color:#c9843a;font-weight:bold;white-space:nowrap;font-size:11.5px;}
+  .actual-total-cell{color:#5a8a5a;font-weight:bold;font-size:11.5px;}
+  .del-btn{background:none;border:none;color:#8a3a3a;cursor:pointer;font-size:15px;padding:1px 5px;border-radius:4px;}
+  .del-btn:hover{background:#8a3a3a22;}
+  .add-row-btn{
+    margin:8px 12px;padding:5px 12px;background:#0a0a0a;
+    border:1px dashed #c9a84c;border-radius:5px;color:#b8b0a0;
+    cursor:pointer;font-size:11px;display:inline-flex;align-items:center;gap:4px;
+  }
+  .add-row-btn:hover{background:#2a2a2a;}
+
+  /* ── CONTINGENCY / NOTES ── */
+  .conting-row{display:flex;align-items:center;gap:14px;padding:11px 16px;border-top:1px solid #2a2a2a;flex-wrap:wrap;}
+  .conting-row label{font-size:12px;color:#b8b0a0;}
+  .conting-row input{
+    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:5px;
+    color:#fff;padding:5px 9px;font-size:14px;width:68px;text-align:right;
+  }
+  .conting-row input:focus{outline:none;border-color:#c9a84c;}
+  .conting-row .conting-val{color:#c9843a;font-weight:bold;font-size:14px;}
+
+  /* ── LEDGER TABLE ── */
+  .ledger-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .ledger-table th{
+    background:#0a0a0a;color:#b8b0a0;text-transform:uppercase;
+    letter-spacing:.5px;font-size:9.5px;padding:8px 9px;
+    border-bottom:1px solid #2a2a2a;text-align:left;white-space:nowrap;
+    position:sticky;top:0;z-index:2;
+  }
+  .ledger-table td{padding:6px 9px;border-bottom:1px solid #2a2a2a;vertical-align:middle;}
+  .ledger-table tr:hover td{background:#111111;}
+  .ledger-table input,.ledger-table select{
+    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:4px;
+    color:#fff;padding:4px 6px;font-size:11.5px;width:100%;font-family:Arial;
+  }
+  .ledger-table input:focus,.ledger-table select:focus{outline:none;border-color:#c9a84c;}
+  .amount-cell{color:#c9843a;font-weight:bold;text-align:right;}
+  .total-row td{background:#080808;font-weight:bold;border-top:2px solid #2a2a2a;}
+  .total-row .amount-cell{color:#5a8a5a;font-size:14px;}
+
+  .add-btn{
+    display:inline-flex;align-items:center;gap:5px;
+    padding:7px 16px;background:#c9a84c;color:#fff;
+    border:none;border-radius:6px;cursor:pointer;font-size:11px;font-weight:bold;
+    letter-spacing:.5px;text-transform:uppercase;transition:opacity .2s;margin-top:11px;
+  }
+  .add-btn:hover{opacity:.85;}
+
+  /* ── TWO PANELS ── */
+  .two-panels{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  @media(max-width:820px){.two-panels{grid-template-columns:1fr;}}
+
+  /* ── ACTION ITEMS ── */
+  .filter-bar{display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap;}
+  .filter-btn{
+    padding:5px 13px;border-radius:5px;border:1px solid #2a2a2a;
+    background:#111111;color:#b8b0a0;cursor:pointer;font-size:11px;
+    font-weight:bold;text-transform:uppercase;letter-spacing:.5px;transition:all .2s;
+  }
+  .filter-btn:hover{border-color:#c9a84c;color:#f5f0e8;}
+  .filter-btn.active{background:#c9a84c;color:#fff;border-color:#c9a84c;}
+  .status-new{color:#b8b0a0;}
+  .status-inprogress{color:#c9843a;}
+  .status-complete{color:#5a8a5a;}
+  .status-blocked{color:#8a3a3a;}
+  tr.row-new td:first-child{border-left:3px solid #c9a84c;}
+  tr.row-inprogress td:first-child{border-left:3px solid #c9843a;}
+  tr.row-complete td:first-child{border-left:3px solid #5a8a5a;}
+  tr.row-blocked td:first-child{border-left:3px solid #8a3a3a;}
+  .action-status-sel{
+    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:4px;
+    color:#fff;padding:4px 6px;font-size:11px;font-family:Arial;width:100%;
+  }
+  .action-status-sel:focus{outline:none;border-color:#c9a84c;}
+
+  /* ── BUILD PROCESS ── */
+  .overall-block{margin-bottom:22px;}
+  .prog-bar-outer{background:#0a0a0a;border-radius:8px;height:22px;border:1px solid #2a2a2a;overflow:hidden;}
+  .prog-bar-inner{height:100%;background:linear-gradient(90deg,#c9a84c,#5a8a5a);border-radius:8px;transition:width .4s;}
+  .prog-pct{font-size:21px;font-weight:bold;color:#5a8a5a;margin-top:6px;}
+  .step-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;}
+  .step-card{background:#111111;border:1px solid #2a2a2a;border-radius:10px;padding:14px 16px;position:relative;}
+  .step-card.complete{border-color:#5a8a5a;}
+  .step-card.inprogress{border-color:#c9843a;}
+  .step-num{position:absolute;top:12px;right:14px;font-size:26px;font-weight:bold;color:#2a2a2a;}
+  .step-name{font-size:13px;font-weight:bold;color:#f5f0e8;margin-bottom:5px;padding-right:34px;}
+  .step-desc{font-size:10px;color:#b8b0a0;margin-bottom:10px;line-height:1.45;}
+  .step-card select{
+    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:5px;
+    color:#fff;padding:5px 7px;font-size:11.5px;width:100%;margin-bottom:8px;font-family:Arial;
+  }
+  .step-card select:focus{outline:none;border-color:#c9a84c;}
+  .step-prog-outer{background:#0a0a0a;border-radius:4px;height:5px;margin-bottom:9px;}
+  .step-prog-inner{height:100%;border-radius:4px;background:#c9a84c;transition:width .4s;}
+  .step-card.complete .step-prog-inner{background:#5a8a5a;}
+  .step-card.inprogress .step-prog-inner{background:#c9843a;}
+  .step-card textarea{
+    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:5px;
+    color:#f5f0e8;padding:5px 7px;font-size:10.5px;width:100%;
+    font-family:Arial;resize:vertical;min-height:48px;
+  }
+  .step-card textarea:focus{outline:none;border-color:#c9a84c;}
+
+  /* ── DRAG DROP ── */
+  #drop-zone{
+    position:fixed;inset:0;background:#0a0a0acc;
+    display:none;align-items:center;justify-content:center;
+    z-index:999;font-size:22px;color:#b8b0a0;
+    border:3px dashed #c9a84c;pointer-events:none;
+  }
+
+  /* ── COMBO TOTAL ── */
+  .combo-total{
+    display:flex;justify-content:flex-end;align-items:center;gap:16px;
+    padding:11px 14px;border-top:2px solid #2a2a2a;font-size:13px;color:#f5f0e8;
+  }
+  .combo-total span{color:#5a8a5a;font-size:15px;font-weight:bold;}
+
+  /* ── TABLE WRAP ── */
+  .table-wrap{overflow-x:auto;}
+
+  /* ── PRINT ── */
+  @media print{
+    body{background:#fff !important;color:#000 !important;}
+    #app-header,#tab-bar,#cat-sidebar,.hdr-btns,
+    .add-btn,.add-row-btn,.del-btn,.filter-bar,
+    #drop-zone{display:none !important;}
+    .tab-panel{display:none !important;}
+    .tab-panel.active{display:block !important;padding:0 !important;}
+    .card,.section-card,.step-card,.sum-box{
+      background:#fff !important;border-color:#ccc !important;color:#000 !important;
+    }
+    .sum-box .sum-val,.sec-total,.line-total-cell,.actual-total-cell,
+    .amount-cell,.total-row .amount-cell,
+    .status-new,.status-inprogress,.status-complete,.status-blocked,
+    .prog-pct,.step-name,.step-desc,.sum-label,.card-title,
+    .sec-title{color:#000 !important;}
+    .budget-table th,.ledger-table th{background:#eee !important;color:#333 !important;}
+    .budget-table input,.budget-table td,
+    .ledger-table input,.ledger-table select,.ledger-table td,
+    .step-card select,.step-card textarea,
+    .form-group input,.form-group select,.form-group textarea{
+      background:#fff !important;color:#000 !important;border-color:#ccc !important;
+    }
+    .section-body.collapsed{display:block !important;}
+    #budget-layout{flex-direction:column !important;}
+    .two-panels{grid-template-columns:1fr 1fr !important;}
+    .prog-bar-outer,.step-prog-outer{border-color:#999 !important;background:#eee !important;}
+    .prog-bar-inner,.step-prog-inner{background:#999 !important;}
+    .overall-block,.step-grid{break-inside:avoid;}
+    /* Client view: hide internal cost columns */
+    body.client-print .internal-col{display:none !important;}
+    body.client-print .client-price-col{display:table-cell !important;}
+  }
+  .client-price-col{display:none;}
+  body.client-print .internal-col{visibility:hidden;}
+  body.client-print .client-price-col{display:table-cell !important;}
+
+  /* Scrollbars */
+  ::-webkit-scrollbar{width:6px;height:6px;}
+  ::-webkit-scrollbar-track{background:#0a0a0a;}
+  ::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:3px;}
+  ::-webkit-scrollbar-thumb:hover{background:#c9a84c;}
+</style>
+</head>
+<body>
+
+<div id="drop-zone">Drop JSON file to restore project data</div>
+
+<!-- HEADER -->
+<div id="app-header">
+  <div>
+    <div class="brand">Ironwood Renovations</div>
+    <div class="title">Construction Budget &amp; Scope of Work</div>
+  </div>
+  <div class="hdr-btns">
+    <button class="hdr-btn btn-new" onclick="newProject()">+ New Project</button>
+    <button class="hdr-btn btn-print" onclick="printActive()">Print / PDF (Internal)</button>
+    <button class="hdr-btn btn-print" onclick="printClientView()" style="background:#2a2a2a;color:#f5f0e8;border:1px solid #5a8a5a;">Print (Client View)</button>
+    <button class="hdr-btn btn-load" onclick="document.getElementById('file-load').click()">Load JSON</button>
+    <input type="file" id="file-load" accept=".json" style="display:none" onchange="loadFromFile(event)">
+    <button class="hdr-btn btn-save" onclick="saveProject()">Save JSON</button>
+  </div>
+</div>
+
+<!-- TAB BAR -->
+<div id="tab-bar">
+  <button class="tab-btn active" onclick="switchTab(0,this)">1. Construction Budget</button>
+  <button class="tab-btn" onclick="switchTab(1,this)">2. Soft Cost Expenses</button>
+  <button class="tab-btn" onclick="switchTab(2,this)">3. Deposits</button>
+  <button class="tab-btn" onclick="switchTab(3,this)">4. Action Items</button>
+  <button class="tab-btn" onclick="switchTab(4,this)">5. Comps (Homes Sold)</button>
+  <button class="tab-btn" onclick="switchTab(5,this)">6. Build Process</button>
+</div>
+
+<!-- ═══════════════════ TAB 1: CONSTRUCTION BUDGET ═══════════════════ -->
+<div class="tab-panel active" id="tab0">
+
+  <div class="card">
+    <div class="card-title">Property Information</div>
+    <div class="form-grid">
+      <div class="form-group" style="grid-column:span 2">
+        <label>Property Address</label>
+        <input type="text" id="prop-address" placeholder="123 Main St, City, State ZIP">
+      </div>
+      <div class="form-group">
+        <label>Project Type</label>
+        <select id="prop-type">
+          <option>BRRRR Renovation</option>
+          <option>New Construction</option>
+          <option>Flip</option>
+          <option>Rental Rehab</option>
+          <option>Deck/Addition</option>
+          <option>Client Remodel</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Seller's Asking Price</label>
+        <input type="number" id="prop-asking" placeholder="0.00">
+      </div>
+      <div class="form-group">
+        <label>Estimated ARV</label>
+        <input type="number" id="prop-arv" placeholder="0.00" oninput="recalcSummary()">
+      </div>
+      <div class="form-group">
+        <label>Total Sq Footage</label>
+        <input type="number" id="prop-sqft" placeholder="0" oninput="recalcSummary()">
+      </div>
+      <div class="form-group">
+        <label>Bedrooms</label>
+        <input type="number" id="prop-beds" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Bathrooms</label>
+        <input type="number" id="prop-baths" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label>Start Date</label>
+        <input type="date" id="prop-start">
+      </div>
+      <div class="form-group">
+        <label>Target Completion</label>
+        <input type="date" id="prop-end">
+      </div>
+      <div class="form-group">
+        <label>General Contractor</label>
+        <input type="text" id="prop-gc" placeholder="Name / Company">
+      </div>
+      <div class="form-group">
+        <label>Material Markup % <span style="color:#c9843a;font-size:9px;font-weight:bold;">INTERNAL</span></label>
+        <input type="number" id="mat-markup-pct" value="20" min="0" max="100" placeholder="20" oninput="S.matMarkupPct=parseFloat(this.value)||0;recalcSummary();autoSave();" style="width:90px;">
+      </div>
+    </div>
+  </div>
+
+  <div id="summary-strip">
+    <div class="sum-box"><div class="sum-label">Internal Cost (Budget)</div><div class="sum-val" id="s-budget">$0</div></div>
+    <div class="sum-box yellow"><div class="sum-label">+ Contingency</div><div class="sum-val" id="s-conting">$0</div></div>
+    <div class="sum-box"><div class="sum-label">Internal Total w/ Contingency</div><div class="sum-val" id="s-total">$0</div></div>
+    <div class="sum-box" style="border-color:#5a8a5a;"><div class="sum-label">Client Price (w/ Mat Markup)</div><div class="sum-val" id="s-client-price" style="color:#c9a84c;">$0</div></div>
+    <div class="sum-box green"><div class="sum-label">Actual Spent</div><div class="sum-val" id="s-actual">$0</div></div>
+    <div class="sum-box red"><div class="sum-label">Remaining</div><div class="sum-val" id="s-remain">$0</div></div>
+    <div class="sum-box"><div class="sum-label">ARV Margin</div><div class="sum-val" id="s-arv">0%</div></div>
+    <div class="sum-box"><div class="sum-label">Cost / Sq Ft</div><div class="sum-val" id="s-sqft">$0</div></div>
+  </div>
+
+  <div id="budget-layout">
+    <div id="cat-sidebar">
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#b8b0a0;padding:6px 4px 8px;border-bottom:1px solid #2a2a2a;margin-bottom:7px;">Categories</div>
+    </div>
+    <div id="budget-main">
+      <!-- section cards injected by JS before #conting-wrap -->
+      <div id="conting-wrap">
+        <div class="card" style="padding:0;overflow:hidden;">
+          <div class="conting-row">
+            <label>Contingency %</label>
+            <input type="number" id="conting-pct" value="15" min="0" max="100" oninput="recalcSummary();autoSave()">
+            <label>% &nbsp;→&nbsp; Amount:</label>
+            <span class="conting-val" id="conting-amt">$0</span>
+          </div>
+          <div style="padding:12px 16px 16px;">
+            <div class="form-group">
+              <label>Project Notes</label>
+              <textarea id="proj-notes" rows="4" placeholder="General notes, special requirements, reminders…"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TAB 2: SOFT COST EXPENSES ═══════════════════ -->
+<div class="tab-panel" id="tab1">
+  <div class="card">
+    <div class="card-title">Soft Cost Expenses Ledger</div>
+    <div class="table-wrap">
+      <table class="ledger-table">
+        <thead><tr>
+          <th style="min-width:95px">Date</th>
+          <th style="min-width:260px">Expense</th>
+          <th style="min-width:155px">Paid From</th>
+          <th style="min-width:70px">Paid By</th>
+          <th style="min-width:100px">Amount</th>
+          <th style="min-width:200px">Notes</th>
+          <th style="width:36px"></th>
+        </tr></thead>
+        <tbody id="soft-tbody"></tbody>
+        <tfoot><tr class="total-row">
+          <td colspan="4" style="padding:9px 9px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#b8b0a0;">Total</td>
+          <td class="amount-cell" id="soft-total" style="padding:9px 9px;">$0.00</td>
+          <td colspan="2"></td>
+        </tr></tfoot>
+      </table>
+    </div>
+    <button class="add-btn" onclick="addSoftRow()">+ Add Expense</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ TAB 3: DEPOSITS ═══════════════════ -->
+<div class="tab-panel" id="tab2">
+  <div class="two-panels">
+    <div class="card">
+      <div class="card-title">Ironwood Renovations Deposits — Ty</div>
+      <div class="table-wrap">
+        <table class="ledger-table">
+          <thead><tr>
+            <th style="min-width:95px">Date</th>
+            <th style="min-width:110px">Amount</th>
+            <th style="min-width:200px">Notes</th>
+            <th style="width:36px"></th>
+          </tr></thead>
+          <tbody id="dep1-tbody"></tbody>
+          <tfoot><tr class="total-row">
+            <td style="padding:9px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#b8b0a0;">Total</td>
+            <td class="amount-cell" id="dep1-total" style="padding:9px;">$0.00</td>
+            <td colspan="2"></td>
+          </tr></tfoot>
+        </table>
+      </div>
+      <button class="add-btn" onclick="addDepRow(1)">+ Add Deposit</button>
+    </div>
+    <div class="card">
+      <div class="card-title">Ironwood Renovations Deposits — Jeff</div>
+      <div class="table-wrap">
+        <table class="ledger-table">
+          <thead><tr>
+            <th style="min-width:95px">Date</th>
+            <th style="min-width:110px">Amount</th>
+            <th style="min-width:200px">Notes</th>
+            <th style="width:36px"></th>
+          </tr></thead>
+          <tbody id="dep2-tbody"></tbody>
+          <tfoot><tr class="total-row">
+            <td style="padding:9px;font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#b8b0a0;">Total</td>
+            <td class="amount-cell" id="dep2-total" style="padding:9px;">$0.00</td>
+            <td colspan="2"></td>
+          </tr></tfoot>
+        </table>
+      </div>
+      <button class="add-btn" onclick="addDepRow(2)">+ Add Deposit</button>
+    </div>
+  </div>
+  <div class="combo-total">Combined Total Deposits: <span id="dep-combined">$0.00</span></div>
+</div>
+
+<!-- ═══════════════════ TAB 4: ACTION ITEMS ═══════════════════ -->
+<div class="tab-panel" id="tab3">
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px;flex-wrap:wrap;gap:10px;">
+    <div class="filter-bar">
+      <button class="filter-btn active" onclick="filterActions('all',this)">All</button>
+      <button class="filter-btn" onclick="filterActions('New',this)">New</button>
+      <button class="filter-btn" onclick="filterActions('In Progress',this)">In Progress</button>
+      <button class="filter-btn" onclick="filterActions('Complete',this)">Complete</button>
+      <button class="filter-btn" onclick="filterActions('Blocked',this)">Blocked</button>
+    </div>
+    <button class="add-btn" style="margin-top:0" onclick="addActionRow()">+ Add Action Item</button>
+  </div>
+  <div class="card">
+    <div class="table-wrap">
+      <table class="ledger-table" id="action-table">
+        <thead><tr>
+          <th style="min-width:75px">Owner</th>
+          <th style="min-width:280px">Task</th>
+          <th style="min-width:105px">Due Date</th>
+          <th style="min-width:115px">Status</th>
+          <th style="min-width:230px">Result / Notes</th>
+          <th style="width:36px"></th>
+        </tr></thead>
+        <tbody id="action-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TAB 5: COMPS ═══════════════════ -->
+<div class="tab-panel" id="tab4">
+  <div class="card">
+    <div class="card-title">Comparable Home Sales</div>
+    <div class="table-wrap">
+      <table class="ledger-table">
+        <thead><tr>
+          <th style="min-width:95px">Date Sold</th>
+          <th style="min-width:215px">Address</th>
+          <th style="min-width:48px">Beds</th>
+          <th style="min-width:52px">Baths</th>
+          <th style="min-width:63px">Sq Ft</th>
+          <th style="min-width:65px">Yr Built</th>
+          <th style="min-width:78px">Basement</th>
+          <th style="min-width:100px">Sale Price</th>
+          <th style="min-width:190px">Notes</th>
+          <th style="width:36px"></th>
+        </tr></thead>
+        <tbody id="comps-tbody"></tbody>
+      </table>
+    </div>
+    <button class="add-btn" onclick="addCompRow()">+ Add Comp</button>
+  </div>
+
+  <div class="two-panels">
+    <div class="card">
+      <div class="card-title">Target Build Specs</div>
+      <div class="form-grid">
+        <div class="form-group"><label>Sq Footage</label><input type="text" id="tgt-sqft"></div>
+        <div class="form-group"><label>Bedrooms</label><input type="text" id="tgt-beds"></div>
+        <div class="form-group"><label>Bathrooms</label><input type="text" id="tgt-baths"></div>
+        <div class="form-group"><label>Year Built</label><input type="text" id="tgt-yr"></div>
+        <div class="form-group"><label>Basement</label><input type="text" id="tgt-bsmt"></div>
+        <div class="form-group"><label>Garage</label><input type="text" id="tgt-garage"></div>
+        <div class="form-group"><label>Style</label><input type="text" id="tgt-style"></div>
+        <div class="form-group"><label>Target Price</label><input type="text" id="tgt-price"></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Hard Money Lender Comparison</div>
+      <div class="table-wrap">
+        <table class="ledger-table">
+          <thead><tr>
+            <th>Lender</th><th>Contact</th><th>Rate</th><th>LTV</th><th>Points</th><th>Notes</th><th style="width:36px"></th>
+          </tr></thead>
+          <tbody id="lender-tbody"></tbody>
+        </table>
+      </div>
+      <button class="add-btn" onclick="addLenderRow()">+ Add Lender</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════ TAB 6: BUILD PROCESS ═══════════════════ -->
+<div class="tab-panel" id="tab5">
+  <div class="card overall-block">
+    <div class="card-title">Overall Project Completion</div>
+    <div class="prog-bar-outer"><div class="prog-bar-inner" id="overall-bar" style="width:0%"></div></div>
+    <div class="prog-pct" id="overall-pct">0% Complete</div>
+  </div>
+  <div class="step-grid" id="step-grid"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════
+//  STATIC DATA
+// ══════════════════════════════════════════════════════════════════════
+const CATEGORIES=[
+  {id:'soft-costs',label:'Soft Costs',items:[
+    {num:'1000-1',desc:'County Water Permit'},
+    {num:'1000-2',desc:'Temp Power'},
+    {num:'1000-3',desc:'Architectural Fees'},
+    {num:'1000-4',desc:'Civil Engineering Fees'},
+    {num:'1000-5',desc:'Building Permit Fee'},
+    {num:'1000-6',desc:'Impact Fee'},
+    {num:'1000-7',desc:'Land Survey'},
+    {num:'1000-8',desc:'Stake Foundation & Foundation Survey'},
+    {num:'1000-9',desc:'Soil Test'},
+    {num:'1000-10',desc:'Septic/Sewer Fee (12 month fee coverage)'},
+    {num:'1000-11',desc:'Pre-Construction Appraisal Report'},
+    {num:'1000-12',desc:'Draw Fees (4-6 draws)'},
+    {num:'1000-13',desc:'Land Disturbance Fee'},
+    {num:'1000-14',desc:'Porta Potty Rental'},
+    {num:'1000-15',desc:'HOA Dues'},
+    {num:'1000-16',desc:'Property Taxes (County & City)'},
+    {num:'1000-17',desc:'Purchase of Land'},
+  ]},
+  {id:'demolition',label:'Demolition',items:[
+    {num:'2000-1',desc:'Removal of Trash'},
+    {num:'2000-2',desc:'Construction Entrance'},
+    {num:'2000-3',desc:'Demolition — Exterior'},
+    {num:'2000-4',desc:'Dumpster Rental'},
+    {num:'2000-5',desc:'Silt Fence Installation'},
+    {num:'2000-6',desc:'Site Preparation'},
+    {num:'2000-7',desc:'Clearing Land'},
+    {num:'2000-8',desc:'Stump Grinding'},
+  ]},
+  {id:'foundation',label:'Foundation',items:[
+    {num:'3000-1',desc:'Excavation'},
+    {num:'3000-2',desc:'Slab Foundation (est. 105 yards of concrete)'},
+    {num:'3000-3',desc:'Crawl Space — Footing'},
+    {num:'3000-4',desc:'Crawl Space — Wall'},
+    {num:'3000-5',desc:'Basement — Slab'},
+    {num:'3000-6',desc:'Contingency for Foundation (10-15%)'},
+    {num:'3000-7',desc:'Post Tension Cables / Rebar'},
+    {num:'3000-8',desc:'Concrete Pump Truck'},
+    {num:'3000-9',desc:'Waterproofing Outside of Foundation'},
+  ]},
+  {id:'structure',label:'Structure',items:[
+    {num:'4000-1',desc:'Framing (8559 total sqft, labor $6/sqft)'},
+    {num:'4000-2',desc:'Roof Trusses'},
+    {num:'4000-3',desc:'Windows (owner purchase)'},
+    {num:'4000-4',desc:'Floor I-Joist'},
+    {num:'4000-5',desc:'Framing Inspection'},
+    {num:'4000-6',desc:'[Open line item]'},
+    {num:'4000-7',desc:'[Open line item]'},
+  ]},
+  {id:'mechanicals',label:'Mechanicals',items:[
+    {num:'5000-1',desc:'HVAC — Permit'},
+    {num:'5000-2',desc:'HVAC — Rough-in / Finish ($3,200 per ton)'},
+    {num:'5000-3',desc:'Plumbing / Gas — Permit'},
+    {num:'5000-4',desc:'Plumbing / Gas — Rough-in'},
+    {num:'5000-5',desc:'Plumbing / Trim'},
+    {num:'5000-6',desc:'Electrical — Permit'},
+    {num:'5000-7',desc:'Electrical — Rough-in / Finish (labor & materials, owner purchase fixtures)'},
+    {num:'5000-8',desc:'Electrical — Trim'},
+    {num:'5000-9',desc:'Smoke & CO Detectors / Doorbell'},
+    {num:'5000-10',desc:'3rd Party Inspections (HVAC, Plumbing, Electrical)'},
+    {num:'5000-11',desc:'Water Meter Installation'},
+    {num:'5000-12',desc:'Sewer Tap'},
+  ]},
+  {id:'interior',label:'Interior',items:[
+    {num:'6000-1',desc:'Accent Walls'},
+    {num:'6000-4',desc:'Drywall'},
+    {num:'6000-5',desc:'Fireplace'},
+    {num:'6000-6',desc:'Fireplace Wall'},
+    {num:'6000-7',desc:'Interior Room Doors'},
+    {num:'6000-8',desc:'Barn Door'},
+    {num:'6000-10',desc:'Interior Door Knobs'},
+    {num:'6000-11',desc:'Insulation — Wall & Basement'},
+    {num:'6000-12',desc:'Insulation — Attic'},
+    {num:'6000-13',desc:'Insulation — Crawl Space'},
+    {num:'6000-15',desc:'Trim, Baseboard, Crown Molding'},
+    {num:'6000-16',desc:'Paint — Interior'},
+    {num:'6000-17',desc:'Interior Designer / Finishes'},
+    {num:'6000-18',desc:'Cabinets'},
+    {num:'6000-19',desc:'Cabinet Knobs'},
+    {num:'6000-20',desc:'Countertop (Quartz, Granite, Marble)'},
+    {num:'6000-21',desc:'Backsplash Tile'},
+    {num:'6000-22',desc:'Sink'},
+    {num:'6000-24',desc:'Garbage Disposal'},
+    {num:'6000-25',desc:'Appliance Package'},
+    {num:'6000-26',desc:'Vanity'},
+    {num:'6000-28',desc:'Mirror'},
+    {num:'6000-30',desc:'Tile for Shower Walls and Floor'},
+    {num:'6000-31',desc:'Soaking Tub w/ Faucet'},
+    {num:'6000-32',desc:'Bathroom Flooring'},
+    {num:'6000-33',desc:'Laundry Tub'},
+    {num:'6000-42',desc:'[Open line item]'},
+    {num:'6000-43',desc:'[Open line item]'},
+    {num:'6000-44',desc:'[Open line item]'},
+  ]},
+  {id:'exterior',label:'Exterior',items:[
+    {num:'7000-1',desc:'Roofing (Shingles, Felt, Ridge Vent, Flashing — approx 30 squares × $165)'},
+    {num:'7000-2',desc:'Fascia and Soffit'},
+    {num:'7000-3',desc:'Gutters'},
+    {num:'7000-4',desc:'Siding'},
+    {num:'7000-5',desc:'Brick / Masonry'},
+    {num:'7000-6',desc:'House Wrap ($275/roll, approx 5 rolls)'},
+    {num:'7000-7',desc:'Paint — Exterior'},
+    {num:'7000-8',desc:'Landscaping (Sod front, seed sides/back, 2 trees/shrubs, labor $2,000)'},
+    {num:'7000-9',desc:'Driveway'},
+    {num:'7000-10',desc:'Walkway to Front Door & Sidewalk'},
+    {num:'7000-12',desc:'Deck / Porch / Patio Installation'},
+    {num:'7000-13',desc:'Shutters for Front Windows'},
+    {num:'7000-14',desc:'Front Railing & Column Post'},
+    {num:'7000-15',desc:'Garage Door'},
+    {num:'7000-16',desc:'Exterior Doors (Front $1000, Rear $350, Garage-side $350, Basement $350 + $200 labor/door)'},
+    {num:'7000-18',desc:'Fence'},
+    {num:'7000-19',desc:'Mailbox (purchase from HOA)'},
+  ]},
+  {id:'flooring',label:'Flooring',items:[
+    {num:'8000-1',desc:'Tile / Marble / Stone'},
+    {num:'8000-2',desc:'Laminate / Vinyl / Hardwood'},
+    {num:'8000-3',desc:'Carpet and Underpad'},
+    {num:'8000-5',desc:'[Open line item]'},
+    {num:'8000-6',desc:'[Open line item]'},
+    {num:'8000-7',desc:'[Open line item]'},
+    {num:'8000-8',desc:'[Open line item]'},
+  ]},
+  {id:'final-misc',label:'Final / Misc',items:[
+    {num:'9000-1',desc:'Post Construction Home Inspection'},
+    {num:'9000-2',desc:'Post Construction Appraisal'},
+    {num:'9000-3',desc:'Interior Cleaning'},
+    {num:'9000-4',desc:'Staging'},
+    {num:'9000-5',desc:'Professional Listing Pictures'},
+    {num:'9000-6',desc:"Seller's Fee (Realtor)"},
+    {num:'9000-7',desc:'Contingency'},
+  ]},
+];
+
+const BUILD_STEPS=[
+  {num:1,name:'Plans & Permits',desc:'Architectural plans, engineering, all permits pulled and approved'},
+  {num:2,name:'Site Work',desc:'Clearing, grading, demolition, construction entrance, silt fence'},
+  {num:3,name:'Foundation',desc:'Excavation, concrete pour, waterproofing, cure time'},
+  {num:4,name:'Framing & Dry-In',desc:'Structural framing, roof trusses, sheathing, windows, doors, house wrap'},
+  {num:5,name:'Mechanicals',desc:'Rough-in HVAC, plumbing, electrical — all rough inspected'},
+  {num:6,name:'Exterior',desc:'Roofing, siding, masonry, gutters, exterior doors, paint'},
+  {num:7,name:'Interior',desc:'Insulation, drywall, paint, flooring, cabinets, countertops, fixtures, trim'},
+  {num:8,name:'Utilities',desc:'Final plumbing connections, electrical trim, HVAC trim, meter installation'},
+  {num:9,name:'Outdoor & Landscaping',desc:'Driveway, walkways, sod/seed, deck/porch, fence, mailbox'},
+  {num:10,name:'Project Completion',desc:'Final inspections, punch-list, deep clean, staging, listing photos'},
+];
+
+// ══════════════════════════════════════════════════════════════════════
+//  DEFAULT DATA
+// ══════════════════════════════════════════════════════════════════════
+function defaultBudget(){
+  const b={};
+  CATEGORIES.forEach(cat=>{
+    b[cat.id]=cat.items.map(it=>({num:it.num,desc:it.desc,matBudget:'',labBudget:'',matActual:'',labActual:'',compDate:''}));
+  });
+  return b;
+}
+
+const DEFAULT_SOFT=[
+  {date:'',expense:'Earnest Money Deposit',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:1000,notes:'Refundable during due diligence'},
+  {date:'',expense:'Title Search',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:250,notes:''},
+  {date:'',expense:'Home Inspection',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:350,notes:'Pre-close walkthrough with Jeff'},
+  {date:'',expense:'Appraisal Fee',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:500,notes:'Required for refi'},
+  {date:'',expense:'Hard Money Origination Fee',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:0,notes:'Typically 1.5–2.5 points of loan'},
+  {date:'',expense:'Closing Costs — Buy Side',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:0,notes:'~3% of purchase price'},
+  {date:'',expense:'Building Permit',paidFrom:'Ironwood Renovations Checking',paidBy:'Jeff',amount:0,notes:'Pulled by Jeff Week 1 post-close'},
+  {date:'',expense:'HML Interest (monthly carry)',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:0,notes:'10–14%/yr while holding'},
+  {date:'',expense:'Property Insurance (rehab period)',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:0,notes:'Builder\'s risk policy'},
+  {date:'',expense:'Utilities during rehab',paidFrom:'Ironwood Renovations Checking',paidBy:'Jeff',amount:0,notes:'Electric, water'},
+  {date:'',expense:'Professional Photography',paidFrom:'Ironwood Renovations Checking',paidBy:'Jordan',amount:200,notes:'Same day as final walk'},
+  {date:'',expense:'Refi Closing Costs',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:0,notes:'~2–3% of refi loan amount'},
+];
+
+const DEFAULT_DEP1=[
+  {date:'',amount:30000,notes:'Ironwood Renovations initial capital contribution — formation'},
+];
+
+const DEFAULT_DEP2=[
+  {date:'',amount:0,notes:'Ironwood Renovations — sweat equity Deal #1 (document separately)'},
+];
+
+const DEFAULT_ACTIONS=[
+  {owner:'Ty',task:'Pull property comps — confirm ARV',due:'',status:'New',notes:''},
+  {owner:'Ty',task:'Run MAO Calculator — confirm deal is ≤ 70% ARV',due:'',status:'New',notes:''},
+  {owner:'Ty',task:'Secure hard money / DSCR loan commitment',due:'',status:'New',notes:''},
+  {owner:'Ty',task:'Order title search',due:'',status:'New',notes:''},
+  {owner:'Ty',task:'Open Ironwood Renovations business checking for this deal',due:'',status:'New',notes:''},
+  {owner:'Jeff',task:'Pre-close walkthrough — lock scope before closing',due:'',status:'New',notes:''},
+  {owner:'Jeff',task:'Confirm rehab budget and timeline',due:'',status:'New',notes:''},
+  {owner:'Jeff',task:'Pull building permit',due:'',status:'New',notes:'Week 1 post-close'},
+  {owner:'Jeff',task:'Complete demo and rough work',due:'',status:'New',notes:'Structural, mechanical, electrical rough-in'},
+  {owner:'Jeff',task:'Pass rough-in inspections',due:'',status:'New',notes:'Required before close-up'},
+  {owner:'Jeff',task:'Complete finishes — flooring, paint, fixtures, cabinets',due:'',status:'New',notes:''},
+  {owner:'Jeff',task:'Final walkthrough and punch list',due:'',status:'New',notes:''},
+  {owner:'Jordan',task:'Professional photos — same day as final walk',due:'',status:'New',notes:''},
+  {owner:'Jordan',task:'List unit for rent — tenant marketing begins',due:'',status:'New',notes:''},
+  {owner:'Jordan',task:'Screen tenant — credit ≥ 620, income ≥ 3× rent',due:'',status:'New',notes:''},
+  {owner:'Ty',task:'Post job progress content to social media',due:'',status:'New',notes:'Before/after, time-lapse'},
+  {owner:'Ty',task:'Update YouTube channel with project walkthrough',due:'',status:'New',notes:''},
+  {owner:'Ty',task:'Order appraisal for refi (after rehab complete)',due:'',status:'New',notes:''},
+  {owner:'Ty',task:'Submit refi application — target 75% LTV',due:'',status:'New',notes:'After 6 months seasoning'},
+  {owner:'Both',task:'Review and distribute profit waterfall at project close',due:'',status:'New',notes:''},
+];
+
+const DEFAULT_COMPS=[
+  {sold:'',address:'123 Meadow Lane',beds:'4',baths:'3',sqft:'3,200',yr:'2021',bsmt:'No',price:'$495,000',notes:'Similar lot size, no basement'},
+  {sold:'',address:'456 Sycamore Dr',beds:'4',baths:'3.5',sqft:'3,450',yr:'2020',bsmt:'No',price:'$525,000',notes:'Craftsman style, 2-car garage'},
+  {sold:'',address:'789 Oak Ridge Way',beds:'5',baths:'4',sqft:'3,800',yr:'2022',bsmt:'No',price:'$568,000',notes:'Larger sq footage, premium finishes'},
+  {sold:'',address:'321 Birchwood Ct',beds:'4',baths:'3',sqft:'3,100',yr:'2019',bsmt:'No',price:'$480,000',notes:'Slightly older build'},
+  {sold:'',address:'654 Willow Creek Rd',beds:'4',baths:'3.5',sqft:'3,500',yr:'2021',bsmt:'No',price:'$540,000',notes:'Very similar specs, best comp'},
+];
+
+const DEFAULT_LENDERS=[
+  {lender:'Anchor Loans',contact:'',rate:'10.99%',ltv:'70% ARV',points:'2',notes:'Interest only'},
+  {lender:'Lima One Capital',contact:'',rate:'10.5%',ltv:'75% ARV',points:'2.5',notes:'New construction friendly'},
+  {lender:'Kiavi (LendingHome)',contact:'',rate:'10.25%',ltv:'70% ARV',points:'1.5',notes:'Online portal, fast close'},
+  {lender:'RCN Capital',contact:'',rate:'10.75%',ltv:'75% ARV',points:'2',notes:''},
+  {lender:'Local Private Lender',contact:'',rate:'12%',ltv:'65% ARV',points:'3',notes:'Flexible draw schedule'},
+];
+
+const DEFAULT_TARGET={sqft:'3,500',beds:'4',baths:'3.5',yr:'2023',bsmt:'No',garage:'2-Car Attached',style:'Craftsman / Traditional',price:'$540,000'};
+
+const DEFAULT_STEPS=BUILD_STEPS.map(s=>({...s,status:'Not Started',notes:''}));
+
+// ══════════════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════════════
+let S={
+  prop:{address:'',type:'BRRRR Renovation',asking:'',arv:'',sqft:'',beds:'',baths:'',start:'',end:'',gc:''},
+  notes:'',
+  contingPct:15,
+  matMarkupPct:20,
+  budget:defaultBudget(),
+  soft:cloneArr(DEFAULT_SOFT),
+  dep1:cloneArr(DEFAULT_DEP1),
+  dep2:cloneArr(DEFAULT_DEP2),
+  actions:cloneArr(DEFAULT_ACTIONS),
+  comps:cloneArr(DEFAULT_COMPS),
+  lenders:cloneArr(DEFAULT_LENDERS),
+  target:{...DEFAULT_TARGET},
+  steps:cloneArr(DEFAULT_STEPS),
+};
+
+function cloneArr(a){return JSON.parse(JSON.stringify(a));}
+
+// ══════════════════════════════════════════════════════════════════════
+//  UTILITIES
+// ══════════════════════════════════════════════════════════════════════
+function pv(s){return parseFloat((s||'').toString().replace(/[^0-9.\-]/g,''))||0;}
+function fmt(n){const v=parseFloat(n)||0;return '$'+v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function fmtSh(n){const v=parseFloat(n)||0;if(Math.abs(v)>=1000)return '$'+(v/1000).toFixed(1)+'k';return '$'+v.toFixed(0);}
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+// ══════════════════════════════════════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════════════════════════════════════
+function switchTab(idx,btn){
+  document.querySelectorAll('.tab-panel').forEach((p,i)=>p.classList.toggle('active',i===idx));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  TAB 1 — CONSTRUCTION BUDGET
+// ══════════════════════════════════════════════════════════════════════
+function buildBudgetUI(){
+  const sidebar=document.getElementById('cat-sidebar');
+  const main=document.getElementById('budget-main');
+  const wrap=document.getElementById('conting-wrap');
+
+  // Clear old section cards
+  main.querySelectorAll('.section-card').forEach(el=>el.remove());
+  // Clear old sidebar items (keep title)
+  [...sidebar.children].forEach((el,i)=>{if(i>0)el.remove();});
+
+  CATEGORIES.forEach(cat=>{
+    // Sidebar
+    const si=document.createElement('div');
+    si.className='sidebar-item';
+    si.id='si-'+cat.id;
+    si.innerHTML=`<span>${cat.label}</span><span class="si-total" id="sit-${cat.id}">$0</span>`;
+    si.onclick=()=>{const sec=document.getElementById('sec-'+cat.id);if(sec)sec.scrollIntoView({behavior:'smooth',block:'start'});};
+    sidebar.appendChild(si);
+
+    // Section card
+    const card=document.createElement('div');
+    card.className='section-card';
+    card.id='sec-'+cat.id;
+
+    const hdr=document.createElement('div');
+    hdr.className='section-header';
+    hdr.innerHTML=`<span class="sec-title">${cat.label}</span><span class="sec-total" id="sect-${cat.id}">$0</span><span class="toggle-icon" id="ti-${cat.id}">▲</span>`;
+    hdr.onclick=()=>toggleSection(cat.id);
+    card.appendChild(hdr);
+
+    const body=document.createElement('div');
+    body.className='section-body';
+    body.id='sb-'+cat.id;
+
+    const tw=document.createElement('div');
+    tw.className='table-wrap';
+    const tbl=document.createElement('table');
+    tbl.className='budget-table';
+    tbl.innerHTML=`<thead><tr>
+      <th style="width:78px">Item #</th>
+      <th>Description</th>
+      <th class="internal-col" style="width:90px">Mat Cost <span style="color:#c9843a;font-size:8px;">(Internal)</span></th>
+      <th class="internal-col" style="width:90px">Labor Budget</th>
+      <th class="internal-col" style="width:88px">Internal Total</th>
+      <th class="client-price-col" style="width:100px;display:none;background:#1a2a1a;">Client Price</th>
+      <th class="internal-col" style="width:90px">Mat Actual</th>
+      <th class="internal-col" style="width:90px">Labor Actual</th>
+      <th class="internal-col" style="width:88px">Actual Total</th>
+      <th style="width:108px">Comp Date</th>
+      <th style="width:34px"></th>
+    </tr></thead><tbody id="bb-${cat.id}"></tbody>`;
+    tw.appendChild(tbl);
+    body.appendChild(tw);
+
+    const addBtn=document.createElement('button');
+    addBtn.className='add-row-btn';
+    addBtn.textContent='+ Add Row';
+    addBtn.onclick=()=>addBudgetRow(cat.id);
+    body.appendChild(addBtn);
+    card.appendChild(body);
+    main.insertBefore(card,wrap);
+
+    renderBudgetRows(cat.id);
+  });
+  recalcSummary();
+}
+
+function renderBudgetRows(catId){
+  const tbody=document.getElementById('bb-'+catId);
+  if(!tbody) return;
+  tbody.innerHTML='';
+  const mu=(S.matMarkupPct||0)/100;
+  (S.budget[catId]||[]).forEach((row,i)=>{
+    const lt=pv(row.matBudget)+pv(row.labBudget);
+    const at=pv(row.matActual)+pv(row.labActual);
+    const clientPrice=pv(row.matBudget)*(1+mu)+pv(row.labBudget);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><input style="width:72px" value="${esc(row.num)}" onchange="S.budget['${catId}'][${i}].num=this.value;autoSave()"></td>
+      <td><input class="desc-input" value="${esc(row.desc)}" onchange="S.budget['${catId}'][${i}].desc=this.value;autoSave()"></td>
+      <td class="internal-col"><input class="num-input" type="number" value="${row.matBudget}" placeholder="0" oninput="S.budget['${catId}'][${i}].matBudget=this.value;updateBudgetRow(this,'${catId}',${i})"></td>
+      <td class="internal-col"><input class="num-input" type="number" value="${row.labBudget}" placeholder="0" oninput="S.budget['${catId}'][${i}].labBudget=this.value;updateBudgetRow(this,'${catId}',${i})"></td>
+      <td class="line-total-cell internal-col" id="lt-${catId}-${i}">${fmtSh(lt)}</td>
+      <td class="client-price-col" id="cp-${catId}-${i}" style="display:none;color:#c9a84c;font-weight:bold;white-space:nowrap;font-size:11.5px;">${fmtSh(clientPrice)}</td>
+      <td class="internal-col"><input class="num-input" type="number" value="${row.matActual}" placeholder="0" oninput="S.budget['${catId}'][${i}].matActual=this.value;updateBudgetRow(this,'${catId}',${i})"></td>
+      <td class="internal-col"><input class="num-input" type="number" value="${row.labActual}" placeholder="0" oninput="S.budget['${catId}'][${i}].labActual=this.value;updateBudgetRow(this,'${catId}',${i})"></td>
+      <td class="actual-total-cell internal-col" id="at-${catId}-${i}">${fmtSh(at)}</td>
+      <td><input class="date-input" type="date" value="${row.compDate||''}" onchange="S.budget['${catId}'][${i}].compDate=this.value;autoSave()"></td>
+      <td><button class="del-btn" onclick="delBudgetRow('${catId}',${i})">×</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  recalcCatTotal(catId);
+}
+
+function updateBudgetRow(input,catId,idx){
+  const tr=input.closest('tr');
+  if(!tr) return;
+  const nums=[...tr.querySelectorAll('input[type=number]')];
+  const mat=pv(nums[0]&&nums[0].value);
+  const lab=pv(nums[1]&&nums[1].value);
+  const matA=pv(nums[2]&&nums[2].value);
+  const labA=pv(nums[3]&&nums[3].value);
+  const mu=(S.matMarkupPct||0)/100;
+  const lt=tr.querySelector('.line-total-cell');
+  const at=tr.querySelector('.actual-total-cell');
+  const cp=tr.querySelector('.client-price-col');
+  if(lt) lt.textContent=fmtSh(mat+lab);
+  if(at) at.textContent=fmtSh(matA+labA);
+  if(cp) cp.textContent=fmtSh(mat*(1+mu)+lab);
+  recalcCatTotal(catId);
+  recalcSummary();
+  autoSave();
+}
+
+function recalcCatTotal(catId){
+  const rows=S.budget[catId]||[];
+  let bTotal=0,aTotal=0,matBTotal=0,labBTotal=0;
+  rows.forEach(r=>{
+    matBTotal+=pv(r.matBudget);
+    labBTotal+=pv(r.labBudget);
+    bTotal+=pv(r.matBudget)+pv(r.labBudget);
+    aTotal+=pv(r.matActual)+pv(r.labActual);
+  });
+  const e1=document.getElementById('sect-'+catId);
+  const e2=document.getElementById('sit-'+catId);
+  if(e1)e1.textContent=fmt(bTotal);
+  if(e2)e2.textContent=fmtSh(bTotal);
+  return{bTotal,aTotal,matBTotal,labBTotal};
+}
+
+function recalcSummary(){
+  let totalB=0,totalA=0,totalMatB=0,totalLabB=0;
+  CATEGORIES.forEach(cat=>{
+    const{bTotal,aTotal,matBTotal,labBTotal}=recalcCatTotal(cat.id);
+    totalB+=bTotal;totalA+=aTotal;totalMatB+=matBTotal;totalLabB+=labBTotal;
+  });
+  const mu=(S.matMarkupPct||0)/100;
+  const clientPrice=totalMatB*(1+mu)+totalLabB;
+  const pct=pv(document.getElementById('conting-pct')&&document.getElementById('conting-pct').value)||15;
+  const conting=totalB*(pct/100);
+  const totalWC=totalB+conting;
+  const remain=totalWC-totalA;
+  const arv=pv(document.getElementById('prop-arv')&&document.getElementById('prop-arv').value);
+  const sqft=pv(document.getElementById('prop-sqft')&&document.getElementById('prop-sqft').value);
+  const arvM=arv>0?((arv-totalWC)/arv*100):0;
+  const cSqft=sqft>0?(totalB/sqft):0;
+  const g=id=>document.getElementById(id);
+  const sv=(id,v)=>{const e=g(id);if(e)e.textContent=v;};
+  sv('s-budget',fmt(totalB));
+  sv('s-conting',fmt(conting));
+  sv('s-total',fmt(totalWC));
+  sv('s-client-price',fmt(clientPrice));
+  sv('s-actual',fmt(totalA));
+  sv('s-remain',fmt(remain));
+  sv('s-arv',arvM.toFixed(1)+'%');
+  sv('s-sqft','$'+cSqft.toFixed(0));
+  sv('conting-amt',fmt(conting));
+  const remEl=g('s-remain');
+  if(remEl) remEl.style.color=remain>=0?'#5a8a5a':'#8a3a3a';
+}
+
+function addBudgetRow(catId){
+  S.budget[catId].push({num:'',desc:'',matBudget:'',labBudget:'',matActual:'',labActual:'',compDate:''});
+  renderBudgetRows(catId);
+  autoSave();
+}
+
+function delBudgetRow(catId,idx){
+  S.budget[catId].splice(idx,1);
+  renderBudgetRows(catId);
+  recalcSummary();
+  autoSave();
+}
+
+function toggleSection(catId){
+  const body=document.getElementById('sb-'+catId);
+  const icon=document.getElementById('ti-'+catId);
+  if(!body)return;
+  const c=body.classList.toggle('collapsed');
+  if(icon)icon.textContent=c?'▼':'▲';
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  TAB 2 — SOFT COST EXPENSES
+// ══════════════════════════════════════════════════════════════════════
+function renderSoft(){
+  const tbody=document.getElementById('soft-tbody');
+  if(!tbody)return;
+  tbody.innerHTML='';
+  let total=0;
+  S.soft.forEach((r,i)=>{
+    total+=pv(r.amount);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><input style="width:92px" value="${esc(r.date)}" onchange="S.soft[${i}].date=this.value;autoSave()"></td>
+      <td><input style="min-width:230px;width:100%" value="${esc(r.expense)}" onchange="S.soft[${i}].expense=this.value;autoSave()"></td>
+      <td><input style="width:148px" value="${esc(r.paidFrom)}" onchange="S.soft[${i}].paidFrom=this.value;autoSave()"></td>
+      <td><input style="width:66px" value="${esc(r.paidBy)}" onchange="S.soft[${i}].paidBy=this.value;autoSave()"></td>
+      <td class="amount-cell"><input class="num-input" type="number" style="width:96px" value="${r.amount}" oninput="S.soft[${i}].amount=parseFloat(this.value)||0;renderSoft();autoSave()"></td>
+      <td><input style="min-width:185px;width:100%" value="${esc(r.notes)}" onchange="S.soft[${i}].notes=this.value;autoSave()"></td>
+      <td><button class="del-btn" onclick="S.soft.splice(${i},1);renderSoft();autoSave()">×</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  const te=document.getElementById('soft-total');
+  if(te)te.textContent=fmt(total);
+}
+
+function addSoftRow(){S.soft.push({date:'',expense:'',paidFrom:'',paidBy:'',amount:0,notes:''});renderSoft();autoSave();}
+
+// ══════════════════════════════════════════════════════════════════════
+//  TAB 3 — DEPOSITS
+// ══════════════════════════════════════════════════════════════════════
+function renderDeposits(){
+  renderDepPanel(1);
+  renderDepPanel(2);
+  const t1=S.dep1.reduce((s,r)=>s+pv(r.amount),0);
+  const t2=S.dep2.reduce((s,r)=>s+pv(r.amount),0);
+  const ce=document.getElementById('dep-combined');
+  if(ce)ce.textContent=fmt(t1+t2);
+}
+
+function renderDepPanel(p){
+  const arr=p===1?S.dep1:S.dep2;
+  const tbody=document.getElementById('dep'+p+'-tbody');
+  if(!tbody)return;
+  tbody.innerHTML='';
+  let total=0;
+  arr.forEach((r,i)=>{
+    total+=pv(r.amount);
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><input style="width:92px" value="${esc(r.date)}" onchange="S.dep${p}[${i}].date=this.value;autoSave()"></td>
+      <td class="amount-cell"><input class="num-input" type="number" style="width:108px" value="${r.amount}" oninput="S.dep${p}[${i}].amount=parseFloat(this.value)||0;renderDeposits();autoSave()"></td>
+      <td><input style="min-width:185px;width:100%" value="${esc(r.notes)}" onchange="S.dep${p}[${i}].notes=this.value;autoSave()"></td>
+      <td><button class="del-btn" onclick="S.dep${p}.splice(${i},1);renderDeposits();autoSave()">×</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+  const te=document.getElementById('dep'+p+'-total');
+  if(te)te.textContent=fmt(total);
+}
+
+function addDepRow(p){
+  if(p===1)S.dep1.push({date:'',amount:0,notes:''});
+  else S.dep2.push({date:'',amount:0,notes:''});
+  renderDeposits();autoSave();
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  TAB 4 — ACTION ITEMS
+// ══════════════════════════════════════════════════════════════════════
+let actionFilter='all';
+
+function renderActions(){
+  const tbody=document.getElementById('action-tbody');
+  if(!tbody)return;
+  tbody.innerHTML='';
+  S.actions.forEach((r,i)=>{
+    const st=r.status||'New';
+    const show=actionFilter==='all'||actionFilter===st;
+    const rowCls=st==='Complete'?'row-complete':st==='In Progress'?'row-inprogress':st==='Blocked'?'row-blocked':'row-new';
+    const tr=document.createElement('tr');
+    tr.className=rowCls;
+    tr.style.display=show?'':'none';
+    tr.innerHTML=`
+      <td><input style="width:72px" value="${esc(r.owner)}" onchange="S.actions[${i}].owner=this.value;autoSave()"></td>
+      <td><input style="min-width:265px;width:100%" value="${esc(r.task)}" onchange="S.actions[${i}].task=this.value;autoSave()"></td>
+      <td><input type="date" style="width:126px" value="${r.due||''}" onchange="S.actions[${i}].due=this.value;autoSave()"></td>
+      <td>
+        <select class="action-status-sel" onchange="S.actions[${i}].status=this.value;renderActions();autoSave()">
+          ${['New','In Progress','Complete','Blocked'].map(opt=>`<option${opt===st?' selected':''}>${opt}</option>`).join('')}
+        </select>
+      </td>
+      <td><input style="min-width:215px;width:100%" value="${esc(r.notes)}" onchange="S.actions[${i}].notes=this.value;autoSave()"></td>
+      <td><button class="del-btn" onclick="S.actions.splice(${i},1);renderActions();autoSave()">×</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function filterActions(f,btn){
+  actionFilter=f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderActions();
+}
+
+function addActionRow(){S.actions.push({owner:'',task:'',due:'',status:'New',notes:''});renderActions();autoSave();}
+
+// ══════════════════════════════════════════════════════════════════════
+//  TAB 5 — COMPS
+// ══════════════════════════════════════════════════════════════════════
+function renderComps(){
+  const tbody=document.getElementById('comps-tbody');
+  if(!tbody)return;
+  tbody.innerHTML='';
+  S.comps.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><input style="width:92px" value="${esc(r.sold)}" onchange="S.comps[${i}].sold=this.value;autoSave()"></td>
+      <td><input style="min-width:205px;width:100%" value="${esc(r.address)}" onchange="S.comps[${i}].address=this.value;autoSave()"></td>
+      <td><input style="width:44px" value="${esc(r.beds)}" onchange="S.comps[${i}].beds=this.value;autoSave()"></td>
+      <td><input style="width:48px" value="${esc(r.baths)}" onchange="S.comps[${i}].baths=this.value;autoSave()"></td>
+      <td><input style="width:60px" value="${esc(r.sqft)}" onchange="S.comps[${i}].sqft=this.value;autoSave()"></td>
+      <td><input style="width:62px" value="${esc(r.yr)}" onchange="S.comps[${i}].yr=this.value;autoSave()"></td>
+      <td><input style="width:72px" value="${esc(r.bsmt)}" onchange="S.comps[${i}].bsmt=this.value;autoSave()"></td>
+      <td class="amount-cell"><input style="width:96px" value="${esc(r.price)}" onchange="S.comps[${i}].price=this.value;autoSave()"></td>
+      <td><input style="min-width:180px;width:100%" value="${esc(r.notes)}" onchange="S.comps[${i}].notes=this.value;autoSave()"></td>
+      <td><button class="del-btn" onclick="S.comps.splice(${i},1);renderComps();autoSave()">×</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function addCompRow(){S.comps.push({sold:'',address:'',beds:'',baths:'',sqft:'',yr:'',bsmt:'',price:'',notes:''});renderComps();autoSave();}
+
+function renderLenders(){
+  const tbody=document.getElementById('lender-tbody');
+  if(!tbody)return;
+  tbody.innerHTML='';
+  S.lenders.forEach((r,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`
+      <td><input style="min-width:120px" value="${esc(r.lender)}" onchange="S.lenders[${i}].lender=this.value;autoSave()"></td>
+      <td><input style="min-width:110px" value="${esc(r.contact)}" onchange="S.lenders[${i}].contact=this.value;autoSave()"></td>
+      <td><input style="width:70px" value="${esc(r.rate)}" onchange="S.lenders[${i}].rate=this.value;autoSave()"></td>
+      <td><input style="width:76px" value="${esc(r.ltv)}" onchange="S.lenders[${i}].ltv=this.value;autoSave()"></td>
+      <td><input style="width:60px" value="${esc(r.points)}" onchange="S.lenders[${i}].points=this.value;autoSave()"></td>
+      <td><input style="min-width:155px;width:100%" value="${esc(r.notes)}" onchange="S.lenders[${i}].notes=this.value;autoSave()"></td>
+      <td><button class="del-btn" onclick="S.lenders.splice(${i},1);renderLenders();autoSave()">×</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function addLenderRow(){S.lenders.push({lender:'',contact:'',rate:'',ltv:'',points:'',notes:''});renderLenders();autoSave();}
+
+// ══════════════════════════════════════════════════════════════════════
+//  TAB 6 — BUILD PROCESS
+// ══════════════════════════════════════════════════════════════════════
+function renderSteps(){
+  const grid=document.getElementById('step-grid');
+  if(!grid)return;
+  grid.innerHTML='';
+  let doneCount=0;
+  S.steps.forEach((s,i)=>{
+    const st=s.status||'Not Started';
+    if(st==='Complete')doneCount++;
+    const pct=st==='Complete'?100:st==='In Progress'?50:0;
+    const cls=st==='Complete'?'complete':st==='In Progress'?'inprogress':'';
+    const card=document.createElement('div');
+    card.className='step-card '+cls;
+    card.innerHTML=`
+      <div class="step-num">${s.num}</div>
+      <div class="step-name">${esc(s.name)}</div>
+      <div class="step-desc">${esc(s.desc)}</div>
+      <select onchange="S.steps[${i}].status=this.value;renderSteps();autoSave()">
+        ${['Not Started','In Progress','Complete'].map(opt=>`<option${opt===st?' selected':''}>${opt}</option>`).join('')}
+      </select>
+      <div class="step-prog-outer"><div class="step-prog-inner" style="width:${pct}%"></div></div>
+      <textarea placeholder="Notes…" onchange="S.steps[${i}].notes=this.value;autoSave()">${esc(s.notes||'')}</textarea>
+    `;
+    grid.appendChild(card);
+  });
+  const overall=Math.round(doneCount/S.steps.length*100);
+  const bar=document.getElementById('overall-bar');
+  const pctEl=document.getElementById('overall-pct');
+  if(bar)bar.style.width=overall+'%';
+  if(pctEl)pctEl.textContent=overall+'% Complete';
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  PROPERTY FIELD BINDINGS
+// ══════════════════════════════════════════════════════════════════════
+function bindPropFields(){
+  const map=[
+    ['prop-address','address'],['prop-type','type'],['prop-asking','asking'],
+    ['prop-arv','arv'],['prop-sqft','sqft'],['prop-beds','beds'],
+    ['prop-baths','baths'],['prop-start','start'],['prop-end','end'],['prop-gc','gc'],
+  ];
+  map.forEach(([id,key])=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.value=S.prop[key]||'';
+    el.addEventListener('input',()=>{S.prop[key]=el.value;autoSave();});
+    el.addEventListener('change',()=>{S.prop[key]=el.value;autoSave();});
+  });
+  const na=document.getElementById('proj-notes');
+  if(na){na.value=S.notes||'';na.addEventListener('input',()=>{S.notes=na.value;autoSave();});}
+}
+
+function bindTargetFields(){
+  const map=[
+    ['tgt-sqft','sqft'],['tgt-beds','beds'],['tgt-baths','baths'],['tgt-yr','yr'],
+    ['tgt-bsmt','bsmt'],['tgt-garage','garage'],['tgt-style','style'],['tgt-price','price'],
+  ];
+  map.forEach(([id,key])=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.value=S.target[key]||'';
+    el.addEventListener('input',()=>{S.target[key]=el.value;autoSave();});
+    el.addEventListener('change',()=>{S.target[key]=el.value;autoSave();});
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  SAVE / LOAD / RESTORE
+// ══════════════════════════════════════════════════════════════════════
+function autoSave(){
+  try{localStorage.setItem('ironwood-sow-v2',JSON.stringify(S));}catch(e){}
+}
+
+function loadFromStorage(){
+  try{
+    const raw=localStorage.getItem('ironwood-sow-v2');
+    if(raw) mergeState(JSON.parse(raw));
+  }catch(e){}
+}
+
+function mergeState(saved){
+  if(!saved)return;
+  const keys=['prop','notes','contingPct','matMarkupPct','budget','soft','dep1','dep2','actions','comps','lenders','target','steps'];
+  keys.forEach(k=>{if(saved[k]!==undefined)S[k]=saved[k];});
+}
+
+function saveProject(){
+  const blob=new Blob([JSON.stringify(S,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  const addr=(S.prop.address||'project').replace(/[^a-z0-9]/gi,'_').replace(/_+/g,'_').toLowerCase().slice(0,40);
+  a.download='APS_ScopeOfWork_'+addr+'_'+new Date().toISOString().slice(0,10)+'.json';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+}
+
+function loadFromFile(evt){
+  const file=evt.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      mergeState(JSON.parse(e.target.result));
+      reinitAll();
+      alert('Project loaded successfully.');
+    }catch(err){alert('Error loading file: '+err.message);}
+  };
+  reader.readAsText(file);
+  evt.target.value='';
+}
+
+function newProject(){
+  if(!confirm('Start a new project? All unsaved data will be cleared.'))return;
+  localStorage.removeItem('ironwood-sow-v2');
+  location.reload();
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  PRINT
+// ══════════════════════════════════════════════════════════════════════
+function printActive(){
+  document.querySelectorAll('.section-body.collapsed').forEach(el=>el.classList.remove('collapsed'));
+  setTimeout(()=>window.print(),100);
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  DRAG-DROP
+// ══════════════════════════════════════════════════════════════════════
+function initDragDrop(){
+  const dz=document.getElementById('drop-zone');
+  let dragTimer;
+  document.addEventListener('dragover',e=>{
+    e.preventDefault();
+    clearTimeout(dragTimer);
+    dz.style.display='flex';
+  });
+  document.addEventListener('dragleave',e=>{
+    dragTimer=setTimeout(()=>{dz.style.display='none';},80);
+  });
+  document.addEventListener('drop',e=>{
+    e.preventDefault();
+    dz.style.display='none';
+    const file=e.dataTransfer&&e.dataTransfer.files[0];
+    if(!file||!file.name.endsWith('.json')){alert('Please drop a .json project file.');return;}
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try{mergeState(JSON.parse(ev.target.result));reinitAll();alert('Project restored.');}
+      catch(err){alert('Error: '+err.message);}
+    };
+    reader.readAsText(file);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════════════════════════
+function printClientView(){
+  document.querySelectorAll('.section-body.collapsed').forEach(el=>el.classList.remove('collapsed'));
+  document.body.classList.add('client-print');
+  document.querySelectorAll('.internal-col').forEach(el=>el.style.display='none');
+  document.querySelectorAll('.client-price-col').forEach(el=>el.style.display='');
+  setTimeout(()=>{
+    window.print();
+    document.body.classList.remove('client-print');
+    document.querySelectorAll('.internal-col').forEach(el=>el.style.display='');
+    document.querySelectorAll('.client-price-col').forEach(el=>el.style.display='none');
+  },150);
+}
+
+function reinitAll(){
+  buildBudgetUI();
+  bindPropFields();
+  const muEl=document.getElementById('mat-markup-pct');
+  if(muEl){
+    muEl.value=S.matMarkupPct||20;
+    muEl.oninput=()=>{S.matMarkupPct=pv(muEl.value);buildBudgetUI();recalcSummary();autoSave();};
+  }
+  const cpEl=document.getElementById('conting-pct');
+  if(cpEl){
+    cpEl.value=S.contingPct||15;
+    cpEl.oninput=()=>{S.contingPct=pv(cpEl.value);recalcSummary();autoSave();};
+  }
+  renderSoft();
+  renderDeposits();
+  renderActions();
+  renderComps();
+  renderLenders();
+  bindTargetFields();
+  renderSteps();
+  recalcSummary();
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  loadFromStorage();
+  reinitAll();
+  initDragDrop();
+});
+</script>
+</body>
+</html>

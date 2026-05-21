@@ -1,0 +1,1506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Free Renovation Estimate — Ironwood Renovations</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:  #0a0a0a;
+    --cream:  #f5f0e8;
+    --gold:   #c9a84c;
+    --gold-lt: #e8d48a;
+    --gold-dim: #a0832e;
+    --surface: #111111;
+    --surface-2: #181818;
+    --surface-3: #202020;
+    --border: #2a2a2a;
+    --muted:  #888880;
+    --green:  #3a9c6d;
+    --blue:   #4a7fc1;
+    --text:   #f5f0e8;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    min-height: 100vh;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(10,10,10,0.97);
+    border-bottom: 1px solid #1e1e1e;
+    padding: 0 32px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .nav-brand {
+    font-family: 'Arial', sans-serif;
+    font-size: 15px;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+
+  .nav-brand span {
+    color: var(--cream);
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    margin-left: 10px;
+  }
+
+  .nav-cta {
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 8px 20px;
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 2px;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    background: var(--surface);
+    border-bottom: 1px solid #1a1a1a;
+    padding: 64px 32px 52px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .hero-eyebrow {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .hero h1 {
+    font-size: clamp(26px, 5vw, 44px);
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.15;
+    margin-bottom: 14px;
+    letter-spacing: .5px;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+
+  .hero-sub {
+    font-family: 'Arial', sans-serif;
+    font-size: 15px;
+    color: var(--muted);
+    max-width: 540px;
+    margin: 0 auto 28px;
+    line-height: 1.7;
+  }
+
+  .trust-row {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .trust-item::before {
+    content: '✓';
+    color: var(--green);
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  /* ── LAYOUT ── */
+  .page-body {
+    max-width: 1060px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+    display: grid;
+    grid-template-columns: 1fr 440px;
+    gap: 40px;
+    align-items: start;
+  }
+
+  @media (max-width: 820px) {
+    .page-body { grid-template-columns: 1fr; }
+  }
+
+  /* ── LEFT ── */
+  .left-col {}
+
+  .section-eyebrow {
+    font-family: 'Arial', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .left-col h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.25;
+    margin-bottom: 12px;
+  }
+
+  .left-col > p {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.75;
+    margin-bottom: 28px;
+  }
+
+  /* Services grid */
+  .services-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+
+  .svc-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 12px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .svc-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+
+  .svc-text {
+    font-family: 'Arial', sans-serif;
+  }
+
+  .svc-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 2px;
+  }
+
+  .svc-desc {
+    font-size: 10.5px;
+    color: var(--muted);
+    line-height: 1.4;
+  }
+
+  /* Process */
+  .process-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .proc-step {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    width: 32px;
+    height: 32px;
+    background: var(--gold);
+    color: var(--black);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    font-weight: 900;
+    flex-shrink: 0;
+  }
+
+  .step-body h4 {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 3px;
+  }
+
+  .step-body p {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* Testimonial */
+  .testimonial {
+    background: var(--surface-2);
+    border-left: 3px solid var(--gold);
+    padding: 16px 20px;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .testimonial p {
+    font-size: 13px;
+    font-style: italic;
+    color: var(--cream);
+    line-height: 1.65;
+    margin-bottom: 8px;
+  }
+
+  .testimonial-attr {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .05em;
+  }
+
+  /* ── FORM CARD ── */
+  .form-card {
+    background: var(--surface);
+    border: 1px solid #222;
+    border-top: 3px solid var(--gold);
+    border-radius: 4px;
+    padding: 26px 26px 30px;
+    position: sticky;
+    top: 76px;
+  }
+
+  .form-card-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--cream);
+    letter-spacing: .5px;
+    margin-bottom: 4px;
+  }
+
+  .form-card-sub {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* Progress bar */
+  .progress-bar {
+    height: 3px;
+    background: #1e1e1e;
+    border-radius: 2px;
+    margin-bottom: 22px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 2px;
+    transition: width .4s ease;
+    width: 0%;
+  }
+
+  /* Steps indicator */
+  .steps-indicator {
+    display: flex;
+    gap: 0;
+    margin-bottom: 22px;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .step-ind {
+    flex: 1;
+    text-align: center;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .8px;
+    text-transform: uppercase;
+    padding: 6px 4px;
+    color: var(--muted);
+    border-bottom: 2px solid #1e1e1e;
+    transition: color .2s, border-color .2s;
+  }
+
+  .step-ind.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .step-ind.done   { color: var(--green); border-bottom-color: var(--green); }
+
+  /* Form fields */
+  .form-step { display: none; }
+  .form-step.active { display: block; }
+
+  .field-group { margin-bottom: 13px; }
+
+  .field-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+    display: block;
+  }
+
+  .field-label .req { color: var(--gold); margin-left: 2px; }
+
+  .field-input,
+  .field-select,
+  .field-textarea {
+    width: 100%;
+    background: #0d0d0d;
+    border: 1px solid #2e2e2e;
+    border-radius: 3px;
+    padding: 10px 12px;
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    color: var(--cream);
+    outline: none;
+    transition: border-color .15s;
+    -webkit-appearance: none;
+  }
+
+  .field-input:focus,
+  .field-select:focus,
+  .field-textarea:focus { border-color: var(--gold); }
+
+  .field-input::placeholder,
+  .field-textarea::placeholder { color: #444; }
+
+  .field-select option { background: #111; color: var(--cream); }
+  .field-textarea { resize: vertical; min-height: 64px; }
+
+  .field-row-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  /* Detected scope tags */
+  .detected-scope {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+    min-height: 0;
+  }
+
+  .scope-tag {
+    background: rgba(201,168,76,0.12);
+    border: 1px solid rgba(201,168,76,0.35);
+    color: var(--gold);
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .5px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+  }
+
+  .detect-hint {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 8px;
+    line-height: 1.5;
+    font-style: italic;
+  }
+
+  .detect-hint.has-tags { color: var(--green); font-style: normal; }
+
+  /* Photo upload */
+  .photo-upload-zone {
+    border: 1.5px dashed #333;
+    border-radius: 4px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color .15s, background .15s;
+    position: relative;
+  }
+
+  .photo-upload-zone:hover {
+    border-color: var(--gold);
+    background: rgba(201,168,76,0.04);
+  }
+
+  .photo-upload-zone input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+  }
+
+  .upload-icon { font-size: 20px; margin-bottom: 5px; }
+
+  .upload-text {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .upload-text strong { color: var(--gold); }
+
+  .photo-preview {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 10px;
+  }
+
+  .photo-thumb {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 3px;
+    border: 1px solid var(--border);
+  }
+
+  /* Nav buttons */
+  .form-nav {
+    display: flex;
+    gap: 10px;
+    margin-top: 14px;
+  }
+
+  .btn-back {
+    flex: 0 0 auto;
+    background: transparent;
+    border: 1px solid #333;
+    color: var(--muted);
+    padding: 11px 18px;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: border-color .15s, color .15s;
+  }
+
+  .btn-back:hover { border-color: var(--muted); color: var(--cream); }
+
+  .btn-next {
+    flex: 1;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 12px;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background .15s;
+  }
+
+  .btn-next:hover { background: var(--gold-lt); }
+  .btn-next:disabled { opacity: .4; cursor: not-allowed; }
+
+  .form-privacy {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: #444;
+    text-align: center;
+    margin-top: 10px;
+    line-height: 1.5;
+  }
+
+  /* ── ESTIMATE PANEL ── */
+  #estimate-panel {
+    display: none;
+  }
+
+  .estimate-header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .estimate-header .est-icon {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .estimate-header h3 {
+    font-family: 'Arial', sans-serif;
+    font-size: 15px;
+    font-weight: 900;
+    color: var(--cream);
+    margin-bottom: 4px;
+  }
+
+  .estimate-header p {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .estimate-range-card {
+    background: var(--surface-3);
+    border: 1px solid #2e2e2e;
+    border-top: 3px solid var(--gold);
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .est-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+
+  .est-range {
+    font-family: 'Georgia', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: .5px;
+    margin-bottom: 6px;
+  }
+
+  .est-disclaimer {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  .estimate-breakdown {
+    background: #0d0d0d;
+    border: 1px solid #1e1e1e;
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+
+  .breakdown-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid #1a1a1a;
+    font-family: 'Arial', sans-serif;
+    font-size: 11.5px;
+  }
+
+  .breakdown-row:last-child { border-bottom: none; }
+  .breakdown-row .br-label { color: var(--muted); }
+  .breakdown-row .br-value { color: var(--cream); font-weight: 600; }
+
+  .est-next-box {
+    background: rgba(58,156,109,0.08);
+    border: 1px solid rgba(58,156,109,0.2);
+    border-radius: 4px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+  }
+
+  .est-next-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--green);
+    margin-bottom: 6px;
+  }
+
+  .est-next-text {
+    font-family: 'Arial', sans-serif;
+    font-size: 11.5px;
+    color: var(--cream);
+    line-height: 1.6;
+  }
+
+  .ref-badge {
+    display: inline-block;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    padding: 7px 16px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--gold);
+    margin: 8px 0;
+  }
+
+  .est-cta-btn {
+    width: 100%;
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 13px;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background .15s;
+  }
+
+  .est-cta-btn:hover { background: var(--gold-lt); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--surface);
+    border-top: 1px solid #1a1a1a;
+    padding: 24px 32px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: #333;
+    letter-spacing: .05em;
+    line-height: 1.8;
+  }
+
+  /* ── GHL GUIDE ── */
+  #webhook-guide {
+    max-width: 1060px;
+    margin: 0 auto 60px;
+    padding: 24px 32px 28px;
+    background: #0d0d0d;
+    border: 1px solid #1e1e1e;
+    border-left: 3px solid #8a5fc1;
+    font-family: 'Arial', sans-serif;
+  }
+
+  #webhook-guide h3 {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #c0a0f0;
+    margin-bottom: 16px;
+  }
+
+  .webhook-step {
+    display: flex;
+    gap: 14px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+  }
+
+  .wh-num {
+    width: 22px;
+    height: 22px;
+    background: rgba(138,95,193,0.2);
+    border: 1px solid rgba(138,95,193,0.4);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: #c0a0f0;
+    flex-shrink: 0;
+  }
+
+  .wh-text {
+    font-size: 12px;
+    color: #888;
+    line-height: 1.6;
+  }
+
+  .wh-text strong { color: var(--cream); }
+  .wh-text code {
+    background: #1a1a1a;
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #c0a0f0;
+  }
+
+  @media (max-width: 600px) {
+    .services-grid { grid-template-columns: 1fr; }
+    .scope-grid { grid-template-columns: 1fr; }
+    .field-row-2 { grid-template-columns: 1fr; }
+    nav { padding: 0 16px; }
+    .hero { padding: 44px 20px 36px; }
+    .page-body { padding: 32px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Ironwood <span>Renovations</span></div>
+  <button class="nav-cta" onclick="document.getElementById('reno-form-card').scrollIntoView({behavior:'smooth'})">Get My Estimate</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Ironwood Renovations · Georgia</div>
+  <h1>Get a <em>Free Estimate</em><br/>in Minutes</h1>
+  <p class="hero-sub">Remodel, deck, pergola, shed, land clearing, equipment rental — whatever the project, just describe it and get an instant ballpark range. No pressure, no obligation.</p>
+  <div class="trust-row">
+    <div class="trust-item">Instant estimate online</div>
+    <div class="trust-item">Free in-home consultation</div>
+    <div class="trust-item">Written scope before any work begins</div>
+    <div class="trust-item">Licensed &amp; insured · Georgia</div>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="page-body">
+
+  <!-- LEFT -->
+  <div class="left-col">
+
+    <div class="section-eyebrow">What we do</div>
+    <h2>Every Room.<br/>Every Project.</h2>
+    <p>From kitchen remodels to full-home transformations, decks, pergolas, sheds, land clearing, equipment rentals, and more — Ironwood handles it. We bring the crew, the expertise, and the accountability so you don't have to chase anyone down.</p>
+
+    <div class="services-grid">
+      <div class="svc-card"><div class="svc-icon">🍳</div><div class="svc-text"><div class="svc-name">Kitchen Remodels</div><div class="svc-desc">Cabinets, countertops, layout changes, full builds</div></div></div>
+      <div class="svc-card"><div class="svc-icon">🛁</div><div class="svc-text"><div class="svc-name">Bathroom Remodels</div><div class="svc-desc">Tile, vanities, showers, full gut renovations</div></div></div>
+      <div class="svc-card"><div class="svc-icon">🏠</div><div class="svc-text"><div class="svc-name">Full Home Remodels</div><div class="svc-desc">Whole-house transformations start to finish</div></div></div>
+      <div class="svc-card"><div class="svc-icon">🪵</div><div class="svc-text"><div class="svc-name">Flooring</div><div class="svc-desc">Hardwood, LVP, tile, carpet — all types</div></div></div>
+      <div class="svc-card"><div class="svc-icon">🎨</div><div class="svc-text"><div class="svc-name">Painting</div><div class="svc-desc">Interior and exterior, prep and finish</div></div></div>
+      <div class="svc-card"><div class="svc-icon">🏗️</div><div class="svc-text"><div class="svc-name">Additions &amp; Buildouts</div><div class="svc-desc">Room additions, garage conversions, expansions</div></div></div>
+      <div class="svc-card"><div class="svc-icon">🔧</div><div class="svc-text"><div class="svc-name">Plumbing &amp; Electrical</div><div class="svc-desc">Rough-in through finish, permitted work</div></div></div>
+      <div class="svc-card"><div class="svc-icon">🪟</div><div class="svc-text"><div class="svc-name">Windows &amp; Doors</div><div class="svc-desc">Replacement windows, exterior doors, trim</div></div></div>
+      <div class="svc-card"><div class="svc-icon">🪵</div><div class="svc-text"><div class="svc-name">Decks</div><div class="svc-desc">New builds, replacements, composite &amp; wood</div></div></div>
+      <div class="svc-card"><div class="svc-icon">⛺</div><div class="svc-text"><div class="svc-name">Pergolas</div><div class="svc-desc">Custom shade structures, covered patios, arbors</div></div></div>
+      <div class="svc-card"><div class="svc-icon">🏚️</div><div class="svc-text"><div class="svc-name">Sheds &amp; Outbuildings</div><div class="svc-desc">Storage sheds, workshops, detached structures</div></div></div>
+      <div class="svc-card"><div class="svc-icon">🌲</div><div class="svc-text"><div class="svc-name">Land Clearing</div><div class="svc-desc">Tree removal, brush clearing, grading, site prep</div></div></div>
+      <div class="svc-card"><div class="svc-icon">🚜</div><div class="svc-text"><div class="svc-name">Equipment Rentals</div><div class="svc-desc">Excavators, skid steers, trenchers, trailers &amp; more</div></div></div>
+      <div class="svc-card"><div class="svc-icon">💬</div><div class="svc-text"><div class="svc-name">Other / Not Sure</div><div class="svc-desc">Just describe it — we'll figure out what's needed</div></div></div>
+    </div>
+
+    <div class="section-eyebrow">Our process</div>
+    <h2>Simple from Start<br/>to Finish.</h2>
+
+    <div class="process-steps">
+      <div class="proc-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Get an Instant Estimate</h4>
+          <p>Fill out the form — takes about 3 minutes. Get a ballpark range immediately based on your project details.</p>
+        </div>
+      </div>
+      <div class="proc-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>We Schedule a Free Consultation</h4>
+          <p>We come to your home, walk through the project, and listen to what you actually want.</p>
+        </div>
+      </div>
+      <div class="proc-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>You Receive a Written Scope &amp; Price</h4>
+          <p>No vague estimates. A detailed written scope with a fixed price before any work begins.</p>
+        </div>
+      </div>
+      <div class="proc-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>We Build It Right</h4>
+          <p>Our crew handles every phase. You get updates throughout. Walkthrough together before it's done.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial">
+      <p>"The estimate form gave me a real number before anyone even called me — that's the kind of transparency I was looking for. They came out, matched the range almost exactly, and the kitchen came out better than I imagined."</p>
+      <div class="testimonial-attr">— Priya S. &nbsp;·&nbsp; Marietta, GA</div>
+    </div>
+
+  </div>
+
+  <!-- FORM CARD -->
+  <div class="form-card" id="reno-form-card">
+
+    <!-- STEP INDICATORS -->
+    <div class="steps-indicator">
+      <div class="step-ind active" id="ind-1">Project</div>
+      <div class="step-ind" id="ind-2">Details</div>
+      <div class="step-ind" id="ind-3">Contact</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+
+    <!-- STEP 1 — PROJECT DESCRIPTION -->
+    <div class="form-step active" id="step-1">
+      <div class="form-card-title">Describe Your Project</div>
+      <div class="form-card-sub">Just tell us what you want done — in your own words. We'll figure out the rest.</div>
+
+      <div class="field-group">
+        <label class="field-label">What would you like done? <span class="req">*</span></label>
+        <textarea class="field-textarea" id="r-description" rows="5" placeholder="Example: I want to redo my kitchen — new cabinets, countertops, and I think the plumbing under the sink needs work. Also want to repaint the whole thing and maybe add a backsplash." oninput="parseDescription(this.value)" style="min-height:110px;"></textarea>
+      </div>
+
+      <div class="field-group" id="detected-wrap" style="display:none;">
+        <div style="font-family:'Arial',sans-serif;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;">What we picked up from your description</div>
+        <div class="detected-scope" id="detected-tags"></div>
+        <div class="detect-hint has-tags" id="detect-hint">✓ Scope detected — we'll use this to build your estimate. You can always add more detail on the next screen.</div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Approximate Size of the Space</label>
+        <select class="field-select" id="r-size">
+          <option value="">Not sure / I'll describe it</option>
+          <option value="small">Small — Under 150 sqft (half bath, small room)</option>
+          <option value="medium">Medium — 150–400 sqft (full bath, average kitchen)</option>
+          <option value="large">Large — 400–800 sqft (primary suite, open floor plan)</option>
+          <option value="xlarge">Extra Large — 800+ sqft (full floor, large addition)</option>
+          <option value="whole_home">Whole Home</option>
+        </select>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-next" onclick="goStep(2)">Next — More Details →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 — DETAILS -->
+    <div class="form-step" id="step-2">
+      <div class="form-card-title">A Bit More Detail</div>
+      <div class="form-card-sub">A few quick answers help us sharpen the estimate.</div>
+
+      <div class="field-group">
+        <label class="field-label">Current Condition of the Space <span class="req">*</span></label>
+        <select class="field-select" id="r-condition" required>
+          <option value="">Select condition</option>
+          <option value="good">Good — Just updating / refreshing</option>
+          <option value="fair">Fair — Functional but outdated, some repairs needed</option>
+          <option value="poor">Poor — Major updates needed, some damage</option>
+          <option value="gut">Full Gut — Starting from scratch</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Material / Finish Level</label>
+        <select class="field-select" id="r-finish">
+          <option value="">Select finish level</option>
+          <option value="standard">Standard — Builder grade, functional and clean</option>
+          <option value="mid">Mid-Range — Better materials, upgraded fixtures</option>
+          <option value="high">High-End — Premium materials, custom work</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Target Budget Range</label>
+        <select class="field-select" id="r-budget">
+          <option value="">Select budget range</option>
+          <option value="under10">Under $10,000</option>
+          <option value="10to25">$10,000 – $25,000</option>
+          <option value="25to50">$25,000 – $50,000</option>
+          <option value="50to100">$50,000 – $100,000</option>
+          <option value="over100">$100,000+</option>
+          <option value="unsure">Not sure yet</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">When Are You Looking to Start?</label>
+        <select class="field-select" id="r-timeline">
+          <option value="">Select timeline</option>
+          <option>As soon as possible</option>
+          <option>Within 30 days</option>
+          <option>1 – 3 months</option>
+          <option>3 – 6 months</option>
+          <option>Just planning / getting prices</option>
+        </select>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Property Address <span class="req">*</span></label>
+        <input class="field-input" id="r-address" type="text" placeholder="123 Main St, Atlanta, GA" required/>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Project Photos (optional — helps a lot)</label>
+        <div class="photo-upload-zone" onclick="document.getElementById('r-photos').click()">
+          <input type="file" id="r-photos" accept="image/*" multiple onchange="previewPhotos(this,'r-preview')" style="display:none;"/>
+          <div class="upload-icon">📷</div>
+          <div class="upload-text">
+            <strong>Tap to upload photos</strong><br/>
+            Current state of the space — up to 10 photos
+          </div>
+        </div>
+        <div class="photo-preview" id="r-preview"></div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Anything else we should know?</label>
+        <textarea class="field-textarea" id="r-notes" placeholder="Style preferences, specific brands, access limitations, HOA, timeline flexibility, anything…"></textarea>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="goStep(1)">← Back</button>
+        <button class="btn-next" onclick="goStep(3)">Next — Your Info →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 — CONTACT -->
+    <div class="form-step" id="step-3">
+      <div class="form-card-title">Almost Done</div>
+      <div class="form-card-sub">Where should we send your estimate and follow up?</div>
+
+      <div class="field-row-2">
+        <div class="field-group">
+          <label class="field-label">First Name <span class="req">*</span></label>
+          <input class="field-input" id="r-fname" type="text" placeholder="John" required/>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Last Name <span class="req">*</span></label>
+          <input class="field-input" id="r-lname" type="text" placeholder="Smith" required/>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Phone <span class="req">*</span></label>
+        <input class="field-input" id="r-phone" type="tel" placeholder="(404) 555-0100" required/>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Email <span class="req">*</span></label>
+        <input class="field-input" id="r-email" type="email" placeholder="john@email.com" required/>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">How Did You Hear About Us?</label>
+        <select class="field-select" id="r-source">
+          <option value="">Select</option>
+          <option value="facebook_ad">Facebook / Instagram Ad</option>
+          <option value="google_ad">Google Ad</option>
+          <option value="google_search">Google Search</option>
+          <option value="referral">Friend / Family Referral</option>
+          <option value="yard_sign">Yard Sign</option>
+          <option value="direct_mail">Direct Mail / Postcard</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div class="form-nav">
+        <button class="btn-back" onclick="goStep(2)">← Back</button>
+        <button class="btn-next" id="r-submit-btn" onclick="handleRenoSubmit()">Get My Estimate →</button>
+      </div>
+
+      <div class="form-privacy">🔒 Your information is private. We never sell or share your data.</div>
+    </div>
+
+    <!-- ESTIMATE PANEL -->
+    <div id="estimate-panel">
+
+      <div class="estimate-header">
+        <div class="est-icon">📋</div>
+        <h3>Your Instant Estimate</h3>
+        <p>Based on your project details — this is a ballpark range only.<br/>Your actual quote comes after a free in-person walkthrough.</p>
+      </div>
+
+      <div class="estimate-range-card">
+        <div class="est-label">Estimated Project Range</div>
+        <div class="est-range" id="est-range-display">$0 – $0</div>
+        <div class="est-disclaimer">Estimate based on scope, size, condition, and finish level entered. Final price determined after site visit.</div>
+      </div>
+
+      <div class="estimate-breakdown" id="est-breakdown"></div>
+
+      <div class="est-next-box">
+        <div class="est-next-title">What Happens Next</div>
+        <div class="est-next-text">
+          A member of the Ironwood team will contact you <strong>within 24 hours</strong> to schedule your free in-home consultation. We'll walk through the project together and provide a detailed written scope and firm price.
+        </div>
+      </div>
+
+      <div style="text-align:center; margin-bottom:14px;">
+        <div style="font-family:'Arial',sans-serif;font-size:10px;color:var(--muted);margin-bottom:4px;">Your Reference Number</div>
+        <div class="ref-badge" id="r-ref-num">RE-000000</div>
+      </div>
+
+      <button class="est-cta-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+        ✓ We'll Be in Touch Within 24 Hours
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+<!-- GHL WEBHOOK GUIDE -->
+<div id="webhook-guide">
+  <h3>⚙️ GHL Webhook Integration Guide — Renovation Pre-Estimate Page</h3>
+
+  <div class="webhook-step">
+    <div class="wh-num">1</div>
+    <div class="wh-text"><strong>Create GHL Webhook Trigger</strong><br/>GHL → Automation → New Workflow → Trigger: <code>Inbound Webhook</code>. Copy the webhook URL provided.</div>
+  </div>
+  <div class="webhook-step">
+    <div class="wh-num">2</div>
+    <div class="wh-text"><strong>Paste Webhook URL</strong><br/>Replace <code>YOUR_GHL_RENO_WEBHOOK_URL</code> in the JS. Payload includes: firstName, lastName, phone, email, address, <code>projectDescription</code> (raw text the client typed), <code>projectType</code> + <code>projectLabel</code> (auto-detected), <code>scope</code> (array of detected items), <code>scopeLabels</code> (readable names), spaceSize, condition, finishLevel, budget, timeline, notes, estimateLow, estimateHigh, estimateRange, source, refNum, submittedAt, all UTM params.</div>
+  </div>
+  <div class="webhook-step">
+    <div class="wh-num">3</div>
+    <div class="wh-text"><strong>Map GHL Fields + Custom Fields</strong><br/>Standard: firstName, lastName, phone, email, address. Custom fields: projectType, estimateRange (<code>estimateLow</code> – <code>estimateHigh</code>), scope, condition, finishLevel, budget, timeline.</div>
+  </div>
+  <div class="webhook-step">
+    <div class="wh-num">4</div>
+    <div class="wh-text"><strong>Pipeline Action</strong><br/><code>Add to Pipeline</code> → Pipeline: <strong>Reno Leads</strong> → Stage: <strong>New Lead</strong>. Tag: <code>website-reno-lead</code>. If <code>utm_source = facebook_ad</code> add tag <code>fb-ad-lead</code> for attribution tracking.</div>
+  </div>
+  <div class="webhook-step">
+    <div class="wh-num">5</div>
+    <div class="wh-text"><strong>Automation Sequence</strong><br/>SMS: <em>"Hi [firstName], your Ironwood estimate for your [projectType] is $[estimateLow]–$[estimateHigh]. We'll be in touch within 24 hours to schedule your free walkthrough. Ref: [refNum]"</em>. Email: full estimate summary. 24hr follow-up if no response.</div>
+  </div>
+  <div class="webhook-step">
+    <div class="wh-num">6</div>
+    <div class="wh-text"><strong>Ad UTM Tracking</strong><br/>Append to ad destination URL: <code>?utm_source=facebook&utm_medium=paid&utm_campaign=reno-leads-atlanta</code>. JS captures and includes in payload automatically for full ad-to-lead attribution in GHL.</div>
+  </div>
+  <div class="webhook-step">
+    <div class="wh-num">7</div>
+    <div class="wh-text"><strong>Lead Scoring Tip</strong><br/>Use GHL workflow conditions: if <code>budget = over100</code> → assign to Ty immediately (high-value lead). If <code>timeline = as_soon_as_possible</code> → send SMS within 2 minutes not 5. Prioritize hot leads automatically.</div>
+  </div>
+</div>
+
+<footer>
+  © 2026 Ironwood LLC dba Ironwood Renovations &nbsp;·&nbsp; Licensed Real Estate Professional · Georgia &nbsp;·&nbsp; Privacy Policy · Terms of Service
+</footer>
+
+<script>
+  const GHL_RENO_WEBHOOK = 'YOUR_GHL_RENO_WEBHOOK_URL'; // ← replace with GHL webhook URL
+
+  let currentStep = 1;
+  let detectedType = 'other';
+  let detectedScope = new Set();
+
+  // ── ESTIMATE DATA ──
+  const BASE = {
+    kitchen:            [12000, 55000],
+    bathroom:           [6000,  28000],
+    full_remodel:       [40000, 180000],
+    flooring:           [3000,  18000],
+    painting:           [2000,  12000],
+    addition:           [30000, 120000],
+    plumbing_electrical:[4000,  22000],
+    windows_doors:      [3000,  20000],
+    deck:               [8000,  45000],
+    pergola:            [6000,  35000],
+    shed:               [4000,  25000],
+    land_clearing:      [1500,  18000],
+    equipment_rental:   [300,   3500],
+    multiple:           [15000, 80000],
+    other:              [5000,  40000],
+  };
+  const SIZE_MULT   = { small:.7, medium:1.0, large:1.4, xlarge:1.8, whole_home:2.5 };
+  const COND_MULT   = { good:.8, fair:1.0, poor:1.25, gut:1.5 };
+  const FINISH_MULT = { standard:.85, mid:1.0, high:1.45 };
+  const SCOPE_ADD   = {
+    demo:600, framing:1800, plumbing:3500, electrical:3000, drywall:1400,
+    tile:2800, flooring:2200, cabinets:4500, countertops:2500, painting:1800,
+    fixtures:900, exterior:3200,
+    deck_build:8000, pergola_build:6000, shed_build:4500,
+    land_clearing:3500, equipment_rental:0,
+  };
+
+  // ── DESCRIPTION PARSER ──
+  // Maps keywords → detected type and scope items
+  const TYPE_RULES = [
+    { type:'full_remodel',       keywords:['whole house','whole home','entire house','entire home','full home','full house','full remodel','full renovation','gut the house','gut the home','everything','top to bottom','head to toe'] },
+    { type:'addition',           keywords:['addition','add a room','add room','add on','addout','garage conversion','convert garage','sunroom','bonus room','build out','buildout'] },
+    { type:'kitchen',            keywords:['kitchen','cook','cooking'] },
+    { type:'bathroom',           keywords:['bathroom','bath room','restroom','shower','bathtub','tub','toilet','vanity'] },
+    { type:'flooring',           keywords:['floor','flooring','hardwood','lvp','vinyl plank','carpet','laminate','tile floor','tile the floor'] },
+    { type:'painting',           keywords:['paint','painting','repaint','color','interior paint','exterior paint','walls'] },
+    { type:'windows_doors',      keywords:['window','door','entry door','front door','sliding door','patio door','french door'] },
+    { type:'plumbing_electrical',keywords:['plumbing','electrical','wiring','rewire','outlets','breaker','panel','pipes','leaking','leak'] },
+    { type:'deck',               keywords:['deck','decking','deck build','build a deck','new deck','wood deck','composite deck','trex','pressure treated deck'] },
+    { type:'pergola',            keywords:['pergola','pergolas','arbor','shade structure','covered patio','outdoor cover','lattice cover'] },
+    { type:'shed',               keywords:['shed','storage shed','workshop','outbuilding','garage shed','detached garage'] },
+    { type:'land_clearing',      keywords:['land clearing','clear land','clear the land','clear lot','clear a lot','tree removal','remove trees','cut trees','brush clearing','clear brush','grading','grade the land','grade lot','site prep','site preparation','excavate','excavation','clear property'] },
+    { type:'equipment_rental',   keywords:['equipment rental','rent equipment','equipment rent','excavator','skid steer','mini excavator','trencher','backhoe','bulldozer','tractor rental','machine rental','rent a machine','heavy equipment'] },
+    { type:'multiple',           keywords:['multiple','several rooms','couple of rooms','few rooms','bedrooms and','bathrooms and'] },
+    { type:'other',              keywords:['not sure','not certain','other','misc','miscellaneous','general','handyman','fix up','fix it','repairs','repair','honey do','honey-do','small job','small project','various'] },
+  ];
+
+  const SCOPE_RULES = [
+    { scope:'demo',        keywords:['demo','tear out','tearout','tear down','remove','gut','rip out'] },
+    { scope:'framing',     keywords:['framing','frame','structural','load bearing','wall removal','open up','open concept','remove wall','move wall'] },
+    { scope:'plumbing',    keywords:['plumbing','pipes','water line','drain','faucet','sink','toilet','shower plumbing','relocate plumbing','move plumbing','leak','leaking'] },
+    { scope:'electrical',  keywords:['electrical','wiring','electric','outlets','switches','lighting','recessed lights','can lights','panel','breaker','rewire','ceiling fan'] },
+    { scope:'drywall',     keywords:['drywall','sheetrock','patch','walls','plaster','mud'] },
+    { scope:'tile',        keywords:['tile','tiling','backsplash','mosaic','ceramic','porcelain','subway tile','grout'] },
+    { scope:'flooring',    keywords:['floor','flooring','hardwood','lvp','vinyl plank','laminate','carpet','linoleum','wood floor'] },
+    { scope:'cabinets',    keywords:['cabinet','cabinets','cabinetry','cupboard','pantry','storage','built-in','built in'] },
+    { scope:'countertops', keywords:['counter','countertop','countertops','granite','quartz','marble','butcher block','surface','island'] },
+    { scope:'painting',    keywords:['paint','painting','repaint','color','primer','stain','finish'] },
+    { scope:'fixtures',    keywords:['fixture','fixtures','hardware','knobs','pulls','handles','faucet','light fixture','chandelier','sconce','switch plate'] },
+    { scope:'exterior',    keywords:['exterior','outside','siding','roof','porch','patio','fence','driveway','landscaping','curb appeal','pressure wash','power wash'] },
+    { scope:'deck_build',  keywords:['deck','decking','new deck','build a deck','wood deck','composite deck','trex','pressure treated'] },
+    { scope:'pergola_build',keywords:['pergola','arbor','shade structure','covered patio','outdoor cover','lattice'] },
+    { scope:'shed_build',      keywords:['shed','storage shed','workshop','outbuilding'] },
+    { scope:'land_clearing',   keywords:['land clearing','clear land','clear lot','tree removal','remove trees','cut trees','brush clearing','clear brush','grading','grade','site prep','site preparation','excavate','excavation','clear property'] },
+    { scope:'equipment_rental',keywords:['equipment rental','rent equipment','excavator','skid steer','mini excavator','trencher','backhoe','bulldozer','tractor rental','machine rental','heavy equipment'] },
+  ];
+
+  // Friendly display labels for scope items
+  const SCOPE_LABELS = {
+    demo:'Demo / Tearout', framing:'Framing / Structural', plumbing:'Plumbing',
+    electrical:'Electrical', drywall:'Drywall', tile:'Tile Work',
+    flooring:'Flooring', cabinets:'Cabinets', countertops:'Countertops',
+    painting:'Painting', fixtures:'Fixtures / Hardware', exterior:'Exterior Work',
+    deck_build:'Deck Build', pergola_build:'Pergola / Shade Structure', shed_build:'Shed / Outbuilding',
+    land_clearing:'Land Clearing', equipment_rental:'Equipment Rental',
+  };
+
+  const TYPE_LABELS = {
+    kitchen:'Kitchen Remodel', bathroom:'Bathroom Remodel', full_remodel:'Full Home Remodel',
+    flooring:'Flooring', painting:'Painting', addition:'Addition / Buildout',
+    plumbing_electrical:'Plumbing / Electrical', windows_doors:'Windows & Doors',
+    deck:'Deck Build', pergola:'Pergola / Shade Structure', shed:'Shed / Outbuilding',
+    land_clearing:'Land Clearing', equipment_rental:'Equipment Rental',
+    multiple:'Multiple Rooms', other:'General Renovation',
+  };
+
+  function parseDescription(text) {
+    const t = text.toLowerCase();
+
+    // Detect project type — first match wins (ordered most specific → least)
+    detectedType = 'other';
+    for (const rule of TYPE_RULES) {
+      if (rule.keywords.some(kw => t.includes(kw))) {
+        detectedType = rule.type;
+        break;
+      }
+    }
+
+    // Detect scope items — all matches collected
+    detectedScope = new Set();
+    for (const rule of SCOPE_RULES) {
+      if (rule.keywords.some(kw => t.includes(kw))) {
+        detectedScope.add(rule.scope);
+      }
+    }
+
+    // If no scope detected but we have a type, infer likely scope
+    if (detectedScope.size === 0 && detectedType !== 'other') {
+      const defaultScope = {
+        kitchen:            ['demo','cabinets','countertops','plumbing','electrical','painting'],
+        bathroom:           ['demo','tile','plumbing','fixtures','drywall'],
+        full_remodel:       ['demo','framing','plumbing','electrical','drywall','flooring','painting'],
+        flooring:           ['flooring'],
+        painting:           ['painting'],
+        addition:           ['framing','plumbing','electrical','drywall','flooring','painting'],
+        plumbing_electrical:['plumbing','electrical'],
+        windows_doors:      ['exterior'],
+        deck:               ['deck_build','framing'],
+        pergola:            ['pergola_build','framing'],
+        shed:               ['shed_build','framing'],
+        land_clearing:      ['land_clearing'],
+        equipment_rental:   ['equipment_rental'],
+        multiple:           ['flooring','painting','drywall'],
+      };
+      (defaultScope[detectedType] || []).forEach(s => detectedScope.add(s));
+    }
+
+    renderDetectedTags(text.trim());
+  }
+
+  function renderDetectedTags(rawText) {
+    const wrap = document.getElementById('detected-wrap');
+    const tagsEl = document.getElementById('detected-tags');
+    const hint = document.getElementById('detect-hint');
+
+    if (!rawText || rawText.length < 10) {
+      wrap.style.display = 'none';
+      return;
+    }
+
+    wrap.style.display = 'block';
+    tagsEl.innerHTML = '';
+
+    // Type tag
+    const typeTag = document.createElement('div');
+    typeTag.className = 'scope-tag';
+    typeTag.style.background = 'rgba(201,168,76,0.2)';
+    typeTag.textContent = TYPE_LABELS[detectedType] || 'General Work';
+    tagsEl.appendChild(typeTag);
+
+    // Scope tags
+    detectedScope.forEach(s => {
+      const tag = document.createElement('div');
+      tag.className = 'scope-tag';
+      tag.textContent = SCOPE_LABELS[s] || s;
+      tagsEl.appendChild(tag);
+    });
+
+    const count = detectedScope.size;
+    hint.textContent = count > 0
+      ? `✓ We detected ${count} scope item${count > 1 ? 's' : ''} from your description — these will be included in your estimate.`
+      : '✓ Got it. We\'ll use your description to build your estimate.';
+  }
+
+  // ── ESTIMATE CALCULATOR ──
+  function calcEstimate() {
+    const size   = document.getElementById('r-size').value || 'medium';
+    const cond   = document.getElementById('r-condition').value || 'fair';
+    const finish = document.getElementById('r-finish').value || 'mid';
+
+    let [lo, hi] = BASE[detectedType] || BASE['other'];
+
+    lo *= (SIZE_MULT[size]    || 1);
+    hi *= (SIZE_MULT[size]    || 1);
+    lo *= (COND_MULT[cond]    || 1);
+    hi *= (COND_MULT[cond]    || 1);
+    lo *= (FINISH_MULT[finish] || 1);
+    hi *= (FINISH_MULT[finish] || 1);
+
+    let scopeAdd = 0;
+    detectedScope.forEach(s => { scopeAdd += (SCOPE_ADD[s] || 0); });
+    lo += scopeAdd * 0.7;
+    hi += scopeAdd * 1.1;
+
+    lo = Math.round(lo / 500) * 500;
+    hi = Math.round(hi / 500) * 500;
+
+    return { lo, hi };
+  }
+
+  function fmt(n) { return '$' + n.toLocaleString('en-US'); }
+
+  // ── STEP NAVIGATION ──
+  function goStep(n) {
+    if (n === 2) {
+      const desc = document.getElementById('r-description').value.trim();
+      if (desc.length < 10) {
+        alert('Please describe your project so we can build your estimate.');
+        return;
+      }
+      // Ensure parse ran
+      parseDescription(desc);
+    }
+    if (n === 3) {
+      if (!document.getElementById('r-condition').value) {
+        alert('Please select the current condition of the space.');
+        return;
+      }
+      if (!document.getElementById('r-address').value.trim()) {
+        alert('Please enter the property address.');
+        return;
+      }
+    }
+
+    document.getElementById('step-' + currentStep).classList.remove('active');
+    document.getElementById('ind-' + currentStep).classList.remove('active');
+    document.getElementById('ind-' + currentStep).classList.add('done');
+    currentStep = n;
+    document.getElementById('step-' + n).classList.add('active');
+    document.getElementById('ind-' + n).classList.remove('done');
+    document.getElementById('ind-' + n).classList.add('active');
+    document.getElementById('progress-fill').style.width = ((n - 1) / 3 * 100) + '%';
+    document.getElementById('reno-form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ── PHOTO PREVIEW ──
+  function previewPhotos(input, previewId) {
+    const preview = document.getElementById(previewId);
+    preview.innerHTML = '';
+    Array.from(input.files).slice(0, 10).forEach(file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = document.createElement('img');
+        img.src = e.target.result;
+        img.className = 'photo-thumb';
+        preview.appendChild(img);
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  // ── UTM CAPTURE ──
+  function getUTM() {
+    const p = new URLSearchParams(window.location.search);
+    return {
+      utm_source:   p.get('utm_source')   || 'direct',
+      utm_medium:   p.get('utm_medium')   || '',
+      utm_campaign: p.get('utm_campaign') || '',
+      utm_content:  p.get('utm_content')  || '',
+    };
+  }
+
+  // ── REFERENCE NUMBER ──
+  function genRef() {
+    const n = (parseInt(localStorage.getItem('iw_reno_ref') || '10000') + 1);
+    localStorage.setItem('iw_reno_ref', n);
+    return 'RE-' + n;
+  }
+
+  // ── SAVE LOCALLY ──
+  function saveLeadLocally(data) {
+    const leads = JSON.parse(localStorage.getItem('iw_reno_leads') || '[]');
+    leads.unshift(data);
+    if (leads.length > 200) leads.pop();
+    localStorage.setItem('iw_reno_leads', JSON.stringify(leads));
+  }
+
+  // ── SUBMIT ──
+  async function handleRenoSubmit() {
+    const fname = document.getElementById('r-fname').value.trim();
+    const lname = document.getElementById('r-lname').value.trim();
+    const phone = document.getElementById('r-phone').value.trim();
+    const email = document.getElementById('r-email').value.trim();
+
+    if (!fname || !lname || !phone || !email) {
+      alert('Please fill in all required contact fields.');
+      return;
+    }
+
+    const { lo, hi } = calcEstimate();
+    const refNum = genRef();
+    const utm = getUTM();
+    const now = new Date().toISOString();
+
+    const payload = {
+      refNum,
+      firstName:    fname,
+      lastName:     lname,
+      fullName:     fname + ' ' + lname,
+      phone,
+      email,
+      address:      document.getElementById('r-address').value.trim(),
+      projectDescription: document.getElementById('r-description').value.trim(),
+      projectType:  detectedType,
+      projectLabel: TYPE_LABELS[detectedType] || detectedType,
+      spaceSize:    document.getElementById('r-size').value,
+      scope:        Array.from(detectedScope),
+      scopeLabels:  Array.from(detectedScope).map(s => SCOPE_LABELS[s] || s),
+      condition:    document.getElementById('r-condition').value,
+      finishLevel:  document.getElementById('r-finish').value,
+      budget:       document.getElementById('r-budget').value,
+      timeline:     document.getElementById('r-timeline').value,
+      notes:        document.getElementById('r-notes').value.trim(),
+      howHeard:     document.getElementById('r-source').value,
+      estimateLow:  lo,
+      estimateHigh: hi,
+      estimateRange: fmt(lo) + ' – ' + fmt(hi),
+      source:       'website-reno-lead',
+      submittedAt:  now,
+      ...utm,
+    };
+
+    saveLeadLocally(payload);
+
+    const btn = document.getElementById('r-submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Calculating…';
+
+    try {
+      if (GHL_RENO_WEBHOOK !== 'YOUR_GHL_RENO_WEBHOOK_URL') {
+        await fetch(GHL_RENO_WEBHOOK, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      }
+    } catch(err) {
+      console.warn('Webhook error (lead still saved locally):', err);
+    }
+
+    showEstimate(payload);
+  }
+
+  function showEstimate(payload) {
+    document.querySelectorAll('.form-step').forEach(s => s.style.display = 'none');
+    document.querySelector('.steps-indicator').style.display = 'none';
+    document.querySelector('.progress-bar').style.display = 'none';
+
+    const sizeLabels   = { small:'Small', medium:'Medium', large:'Large', xlarge:'Extra Large', whole_home:'Whole Home' };
+    const condLabels   = { good:'Good — Light Updates', fair:'Fair — Moderate Work', poor:'Poor — Major Updates', gut:'Full Gut' };
+    const finishLabels = { standard:'Standard / Builder Grade', mid:'Mid-Range', high:'High-End / Premium' };
+
+    const scopeDisplay = payload.scopeLabels && payload.scopeLabels.length > 0
+      ? payload.scopeLabels.join(', ')
+      : 'Based on your description';
+
+    const descSnippet = payload.projectDescription.length > 80
+      ? payload.projectDescription.slice(0, 80) + '…'
+      : payload.projectDescription;
+
+    document.getElementById('est-breakdown').innerHTML = `
+      <div class="breakdown-title">What We Detected &amp; Used for Your Estimate</div>
+      <div class="breakdown-row"><span class="br-label">Your Description</span><span class="br-value" style="font-style:italic;font-size:11px;max-width:200px;text-align:right">"${descSnippet}"</span></div>
+      <div class="breakdown-row"><span class="br-label">Project Category</span><span class="br-value">${TYPE_LABELS[payload.projectType] || payload.projectType}</span></div>
+      <div class="breakdown-row"><span class="br-label">Space Size</span><span class="br-value">${sizeLabels[payload.spaceSize] || 'Not specified'}</span></div>
+      <div class="breakdown-row"><span class="br-label">Current Condition</span><span class="br-value">${condLabels[payload.condition] || '—'}</span></div>
+      <div class="breakdown-row"><span class="br-label">Finish Level</span><span class="br-value">${finishLabels[payload.finishLevel] || '—'}</span></div>
+      <div class="breakdown-row"><span class="br-label">Detected Scope</span><span class="br-value" style="font-size:10.5px;max-width:200px;text-align:right;line-height:1.4">${scopeDisplay}</span></div>
+    `;
+
+    document.getElementById('est-range-display').textContent = fmt(payload.estimateLow) + ' – ' + fmt(payload.estimateHigh);
+    document.getElementById('r-ref-num').textContent = payload.refNum;
+    document.getElementById('estimate-panel').style.display = 'block';
+    document.getElementById('reno-form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+
+</body>
+</html>

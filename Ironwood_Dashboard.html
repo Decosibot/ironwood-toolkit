@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ironwood LLC — Command Center</title>
+<style>
+  :root {
+    --black: #0a0a0a;
+    --cream: #f5f0e8;
+    --gold: #c9a84c;
+    --gold-dim: #a0832e;
+    --gold-light: #e8c96a;
+    --surface: #111111;
+    --surface-2: #191919;
+    --surface-3: #222222;
+    --border: #2a2a2a;
+    --muted: #888880;
+    --blue: #4a7fc1;
+    --green: #4a9c6d;
+    --purple: #8a5fc1;
+    --teal: #3a9c9c;
+    --text: #f5f0e8;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── TOP BAR ── */
+  #topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #0d0d0d;
+    border-bottom: 1px solid #2a2a2a;
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .iw-box {
+    width: 42px;
+    height: 42px;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 700;
+    color: #0a0a0a;
+    letter-spacing: 1px;
+    flex-shrink: 0;
+  }
+
+  .logo-text h1 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cream);
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  .logo-text p {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .topbar-right {
+    text-align: right;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .topbar-right .date {
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 1px;
+  }
+
+  .topbar-right .cc-label {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 2px;
+  }
+
+  /* ── MAIN CONTENT ── */
+  main {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 36px 32px 60px;
+  }
+
+  /* ── SECTION HEADER ── */
+  .section-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── SNAPSHOT CARDS ── */
+  #snapshot {
+    margin-bottom: 48px;
+  }
+
+  .snapshot-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 1000px) {
+    .snapshot-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 640px) {
+    .snapshot-grid { grid-template-columns: repeat(2, 1fr); }
+    main { padding: 24px 16px 60px; }
+    #topbar { padding: 0 16px; }
+  }
+
+  .snap-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px 20px 18px;
+    position: relative;
+    transition: border-color 0.2s;
+  }
+
+  .snap-card:hover { border-color: var(--gold-dim); }
+
+  .snap-card .snap-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  .snap-value-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .snap-value {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: -0.5px;
+    cursor: default;
+    font-family: 'Arial', sans-serif;
+    min-width: 10px;
+  }
+
+  .snap-input {
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--gold);
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--gold);
+    outline: none;
+    width: 100%;
+    font-family: 'Arial', sans-serif;
+    padding: 0;
+  }
+
+  .snap-input:focus { border-bottom-color: var(--gold-light); }
+
+  .edit-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--muted);
+    font-size: 13px;
+    padding: 2px 4px;
+    opacity: 0;
+    transition: opacity 0.2s, color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .snap-card:hover .edit-btn { opacity: 1; }
+  .edit-btn:hover { color: var(--gold); }
+
+  /* ── TOOL GRID ── */
+  #tools {
+    margin-bottom: 48px;
+  }
+
+  .category-block {
+    margin-bottom: 36px;
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+
+  .cat-accent {
+    width: 4px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  .cat-accent.gold { background: var(--gold); }
+  .cat-accent.blue { background: var(--blue); }
+  .cat-accent.green { background: var(--green); }
+  .cat-accent.purple { background: var(--purple); }
+
+  .category-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--cream);
+    font-weight: 700;
+  }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  @media (max-width: 1100px) {
+    .tool-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 760px) {
+    .tool-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 480px) {
+    .tool-grid { grid-template-columns: 1fr; }
+  }
+
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 18px 18px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s;
+    position: relative;
+  }
+
+  .tool-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+  }
+
+  .tool-card.gold-card:hover { border-color: var(--gold-dim); }
+  .tool-card.blue-card:hover { border-color: var(--blue); }
+  .tool-card.green-card:hover { border-color: var(--green); }
+  .tool-card.purple-card:hover { border-color: var(--purple); }
+
+  .tool-icon {
+    font-size: 22px;
+    line-height: 1;
+  }
+
+  .tool-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--cream);
+    font-family: 'Arial', sans-serif;
+    letter-spacing: 0.3px;
+    line-height: 1.3;
+  }
+
+  .tool-desc {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'Arial', sans-serif;
+    line-height: 1.4;
+    flex: 1;
+  }
+
+  .open-btn {
+    display: inline-block;
+    margin-top: 4px;
+    padding: 6px 14px;
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s;
+    align-self: flex-start;
+  }
+
+  .open-btn:hover {
+    background: var(--gold);
+    color: #0a0a0a;
+  }
+
+  .blue-card .open-btn { border-color: var(--blue); color: var(--blue); }
+  .blue-card .open-btn:hover { background: var(--blue); color: #fff; }
+
+  .green-card .open-btn { border-color: var(--green); color: var(--green); }
+  .green-card .open-btn:hover { background: var(--green); color: #fff; }
+
+  .purple-card .open-btn { border-color: var(--purple); color: var(--purple); }
+  .purple-card .open-btn:hover { background: var(--purple); color: #fff; }
+
+  /* ── QUICK NOTES ── */
+  #notes-section {
+    margin-bottom: 48px;
+  }
+
+  .notes-area {
+    width: 100%;
+    min-height: 120px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--cream);
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    padding: 16px 18px;
+    resize: vertical;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .notes-area:focus { border-color: var(--gold); }
+  .notes-area::placeholder { color: var(--muted); }
+
+  /* ── PHASE TRACKER ── */
+  #phase-section {
+    margin-bottom: 48px;
+  }
+
+  .phase-bar {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+  }
+
+  .phase-btn {
+    flex: 1;
+    padding: 10px 4px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .phase-btn .p-num {
+    display: block;
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 3px;
+  }
+
+  .phase-btn:hover { border-color: #555; color: var(--cream); }
+
+  .phase-btn.active-1 { background: rgba(201,168,76,0.15); border-color: var(--gold); color: var(--gold); }
+  .phase-btn.active-2 { background: rgba(74,127,193,0.15); border-color: var(--blue); color: var(--blue); }
+  .phase-btn.active-3 { background: rgba(74,156,109,0.15); border-color: var(--green); color: var(--green); }
+  .phase-btn.active-4 { background: rgba(138,95,193,0.15); border-color: var(--purple); color: var(--purple); }
+  .phase-btn.active-5 { background: rgba(58,156,156,0.15); border-color: var(--teal); color: var(--teal); }
+
+  .phase-info {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 14px 18px;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .phase-info .pi-name {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: 1px;
+  }
+
+  .phase-info .pi-trigger {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 640px) {
+    .phase-btn { padding: 8px 2px; font-size: 10px; }
+    .phase-btn .p-num { font-size: 15px; }
+  }
+
+  /* ── ACTIVITY LOG ── */
+  #activity-section {
+    margin-bottom: 48px;
+  }
+
+  .log-input-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+
+  .log-text-input {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--cream);
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .log-text-input:focus { border-color: var(--gold); }
+  .log-text-input::placeholder { color: var(--muted); }
+
+  .log-submit {
+    padding: 10px 22px;
+    background: var(--gold);
+    border: none;
+    color: #0a0a0a;
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+  }
+
+  .log-submit:hover { background: var(--gold-light); }
+
+  .log-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .log-entry {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 10px 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .log-ts {
+    font-size: 10px;
+    color: var(--gold-dim);
+    white-space: nowrap;
+    letter-spacing: 0.5px;
+    padding-top: 2px;
+    flex-shrink: 0;
+  }
+
+  .log-text {
+    font-size: 13px;
+    color: var(--cream);
+    flex: 1;
+    line-height: 1.5;
+  }
+
+  .log-del {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+    padding: 0 4px;
+    transition: color 0.2s;
+    flex-shrink: 0;
+  }
+
+  .log-del:hover { color: #c0392b; }
+
+  .log-empty {
+    font-family: 'Arial', sans-serif;
+    font-size: 12px;
+    color: var(--muted);
+    text-align: center;
+    padding: 24px;
+    border: 1px dashed var(--border);
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 20px 32px;
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+
+  footer span { color: var(--gold-dim); }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 0 0 36px;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header id="topbar">
+  <div class="logo-group">
+    <div class="iw-box">IW</div>
+    <div class="logo-text">
+      <h1>Ironwood LLC</h1>
+      <p>Anchor Pro Solutions &times; Landon Renovations</p>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="date" id="topbar-date"></div>
+    <div class="cc-label">Command Center</div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── SECTION 1: SNAPSHOT ── -->
+  <section id="snapshot">
+    <div class="section-label">Business Snapshot</div>
+    <div class="snapshot-grid" id="snap-grid">
+      <!-- injected by JS -->
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ── SECTION 2: TOOL GRID ── -->
+  <section id="tools">
+    <div class="section-label">Tools &amp; Documents</div>
+
+    <!-- Category 1: Calculators -->
+    <div class="category-block">
+      <div class="category-header">
+        <div class="cat-accent gold"></div>
+        <span class="category-title">Calculators</span>
+      </div>
+      <div class="tool-grid">
+        <div class="tool-card gold-card">
+          <div class="tool-icon">🧮</div>
+          <div class="tool-name">Remodel Estimator</div>
+          <div class="tool-desc">Job estimator with full waterfall</div>
+          <a class="open-btn" href="Remodel_Estimator.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card gold-card">
+          <div class="tool-icon">💧</div>
+          <div class="tool-name">Profit Waterfall</div>
+          <div class="tool-desc">Standalone waterfall + deal history</div>
+          <a class="open-btn" href="Profit_Waterfall.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card gold-card">
+          <div class="tool-icon">🎯</div>
+          <div class="tool-name">MAO Calculator</div>
+          <div class="tool-desc">Max allowable offer (70% ARV rule)</div>
+          <a class="open-btn" href="MAO_Calculator.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card gold-card">
+          <div class="tool-icon">📄</div>
+          <div class="tool-name">Deal Summary Tearsheet</div>
+          <div class="tool-desc">Per-deal printable tearsheet with waterfall</div>
+          <a class="open-btn" href="Deal_Summary_Tearsheet.html" target="_blank">Open &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category 2: Operations -->
+    <div class="category-block">
+      <div class="category-header">
+        <div class="cat-accent blue"></div>
+        <span class="category-title">Operations</span>
+      </div>
+      <div class="tool-grid">
+        <div class="tool-card blue-card">
+          <div class="tool-icon">📊</div>
+          <div class="tool-name">Operational Costs Tracker</div>
+          <div class="tool-desc">Monthly expenses + Jeff &amp; Ty labor logs</div>
+          <a class="open-btn" href="OperationalCosts_Tracker.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card blue-card">
+          <div class="tool-icon">🔄</div>
+          <div class="tool-name">Change Order Form</div>
+          <div class="tool-desc">Change order builder with history</div>
+          <a class="open-btn" href="ChangeOrder_Form.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card blue-card">
+          <div class="tool-icon">📋</div>
+          <div class="tool-name">Scope of Work Tool</div>
+          <div class="tool-desc">Scope of work builder</div>
+          <a class="open-btn" href="ScopeOfWork_Tool.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card blue-card">
+          <div class="tool-icon">🏗️</div>
+          <div class="tool-name">Property Pipeline</div>
+          <div class="tool-desc">Deal pipeline kanban + deal score</div>
+          <a class="open-btn" href="Property_Pipeline.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card blue-card">
+          <div class="tool-icon">🏠</div>
+          <div class="tool-name">Rental Dashboard</div>
+          <div class="tool-desc">LTR + STR portfolio tracker</div>
+          <a class="open-btn" href="Rental_Dashboard.html" target="_blank">Open &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category 3: Client Documents -->
+    <div class="category-block">
+      <div class="category-header">
+        <div class="cat-accent green"></div>
+        <span class="category-title">Client Documents</span>
+      </div>
+      <div class="tool-grid">
+        <div class="tool-card green-card">
+          <div class="tool-icon">📝</div>
+          <div class="tool-name">Client Service Agreement</div>
+          <div class="tool-desc">Homeowner contract — CSA-XXXX</div>
+          <a class="open-btn" href="ClientServiceAgreement.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card green-card">
+          <div class="tool-icon">🧾</div>
+          <div class="tool-name">Invoice Template</div>
+          <div class="tool-desc">Deposit / progress / final invoices</div>
+          <a class="open-btn" href="InvoiceTemplate.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card green-card">
+          <div class="tool-icon">🔏</div>
+          <div class="tool-name">Lien Waiver</div>
+          <div class="tool-desc">4-variant lien waiver</div>
+          <a class="open-btn" href="LienWaiver.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card green-card">
+          <div class="tool-icon">🤝</div>
+          <div class="tool-name">Referral Agreement</div>
+          <div class="tool-desc">Licensed agent referral fee agreement</div>
+          <a class="open-btn" href="ReferralAgreement.html" target="_blank">Open &rarr;</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category 4: Partnership & Strategy -->
+    <div class="category-block">
+      <div class="category-header">
+        <div class="cat-accent purple"></div>
+        <span class="category-title">Partnership &amp; Strategy</span>
+      </div>
+      <div class="tool-grid">
+        <div class="tool-card purple-card">
+          <div class="tool-icon">🏛️</div>
+          <div class="tool-name">Partnership Proposal</div>
+          <div class="tool-desc">Full 21-section partnership proposal</div>
+          <a class="open-btn" href="AnchorPro_Partnership_Proposal.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card purple-card">
+          <div class="tool-icon">⚖️</div>
+          <div class="tool-name">Operating Agreement</div>
+          <div class="tool-desc">Delaware LLC operating agreement</div>
+          <a class="open-btn" href="Ironwood_Operating_Agreement.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card purple-card">
+          <div class="tool-icon">🗺️</div>
+          <div class="tool-name">Evolution Map</div>
+          <div class="tool-desc">5-phase company evolution roadmap</div>
+          <a class="open-btn" href="Ironwood_EvolutionMap.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card purple-card">
+          <div class="tool-icon">📬</div>
+          <div class="tool-name">Homeowner One-Pager</div>
+          <div class="tool-desc">Seller-facing marketing one-pager</div>
+          <a class="open-btn" href="Ironwood_HomeownerOnePager.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card purple-card">
+          <div class="tool-icon">💼</div>
+          <div class="tool-name">Lender Pitch Deck</div>
+          <div class="tool-desc">Lender &amp; investor pitch deck</div>
+          <a class="open-btn" href="Ironwood_LenderPitchDeck.html" target="_blank">Open &rarr;</a>
+        </div>
+        <div class="tool-card purple-card">
+          <div class="tool-icon">🗓️</div>
+          <div class="tool-name">Master Timeline</div>
+          <div class="tool-desc">Full company roadmap — all phases, all initiatives, difficulty ratings</div>
+          <a class="open-btn" href="Ironwood_MasterTimeline.html" target="_blank">Open &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ── SECTION 3: QUICK NOTES ── -->
+  <section id="notes-section">
+    <div class="section-label">Quick Notes / Action Items</div>
+    <textarea
+      class="notes-area"
+      id="quick-notes"
+      placeholder="Type notes, action items, reminders…"
+      spellcheck="false"
+    ></textarea>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ── SECTION 4: PHASE TRACKER ── -->
+  <section id="phase-section">
+    <div class="section-label">Company Phase</div>
+    <div class="phase-bar" id="phase-bar">
+      <button class="phase-btn" data-phase="1"><span class="p-num">1</span>Foundation</button>
+      <button class="phase-btn" data-phase="2"><span class="p-num">2</span>Momentum</button>
+      <button class="phase-btn" data-phase="3"><span class="p-num">3</span>Portfolio Build</button>
+      <button class="phase-btn" data-phase="4"><span class="p-num">4</span>Holding Structure</button>
+      <button class="phase-btn" data-phase="5"><span class="p-num">5</span>Capital Access</button>
+    </div>
+    <div class="phase-info" id="phase-info">
+      <div class="pi-name" id="pi-name"></div>
+      <div class="pi-trigger" id="pi-trigger"></div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ── SECTION 5: ACTIVITY LOG ── -->
+  <section id="activity-section">
+    <div class="section-label">Recent Activity Log</div>
+    <div class="log-input-row">
+      <input
+        type="text"
+        class="log-text-input"
+        id="log-input"
+        placeholder="Log a deal note, win, reminder…"
+        maxlength="300"
+      />
+      <button class="log-submit" id="log-submit">Log It</button>
+    </div>
+    <div class="log-list" id="log-list"></div>
+  </section>
+
+</main>
+
+<footer>
+  <span>Ironwood LLC</span> &middot; Command Center &middot; All data saved locally &middot; <span id="footer-year"></span>
+</footer>
+
+<script>
+// ── UTILITIES ──────────────────────────────────────────────────────────────
+function $(id) { return document.getElementById(id); }
+function ls(key) { try { return localStorage.getItem(key); } catch(e) { return null; } }
+function lsSet(key, val) { try { localStorage.setItem(key, val); } catch(e) {} }
+function lsGetJSON(key, def) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; }
+  catch(e) { return def; }
+}
+function lsSetJSON(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch(e) {} }
+
+// ── DATES ──────────────────────────────────────────────────────────────────
+(function() {
+  const now = new Date();
+  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const months = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+  const str = days[now.getDay()] + ', ' + months[now.getMonth()] + ' ' + now.getDate() + ', ' + now.getFullYear();
+  $('topbar-date').textContent = str;
+  $('footer-year').textContent = now.getFullYear();
+})();
+
+// ── SNAPSHOT CARDS ─────────────────────────────────────────────────────────
+const SNAP_CONFIG = [
+  { key: 'active_deals',     label: 'Active Deals',      type: 'number', default: '0',      prefix: '',  suffix: '' },
+  { key: 'monthly_revenue',  label: 'Monthly Revenue',   type: 'dollar', default: '0',      prefix: '$', suffix: '' },
+  { key: 'doors_owned',      label: 'Doors Owned',       type: 'number', default: '0',      prefix: '',  suffix: '' },
+  { key: 'vr_properties',    label: 'VR Properties',     type: 'number', default: '0',      prefix: '',  suffix: '' },
+  { key: 'op_reserve',       label: 'Operating Reserve', type: 'dollar', default: '10000',  prefix: '$', suffix: '' },
+];
+
+function loadSnap() {
+  return lsGetJSON('ironwood_snapshot', {});
+}
+
+function saveSnap(data) {
+  lsSetJSON('ironwood_snapshot', data);
+}
+
+function formatSnapValue(cfg, rawVal) {
+  const num = parseFloat(rawVal) || 0;
+  if (cfg.type === 'dollar') {
+    return '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+  }
+  return String(Math.round(num));
+}
+
+function buildSnapCards() {
+  const grid = $('snap-grid');
+  const data = loadSnap();
+  grid.innerHTML = '';
+
+  SNAP_CONFIG.forEach(cfg => {
+    const raw = data[cfg.key] !== undefined ? data[cfg.key] : cfg.default;
+    const card = document.createElement('div');
+    card.className = 'snap-card';
+    card.innerHTML = `
+      <div class="snap-label">${cfg.label}</div>
+      <div class="snap-value-wrap">
+        <div class="snap-value" id="sv-${cfg.key}">${formatSnapValue(cfg, raw)}</div>
+        <button class="edit-btn" title="Edit" data-key="${cfg.key}">✏️</button>
+      </div>`;
+    grid.appendChild(card);
+  });
+
+  grid.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.addEventListener('click', () => startEditSnap(btn.dataset.key));
+  });
+}
+
+function startEditSnap(key) {
+  const cfg = SNAP_CONFIG.find(c => c.key === key);
+  const data = loadSnap();
+  const raw = data[key] !== undefined ? data[key] : cfg.default;
+  const valEl = $('sv-' + key);
+  const wrap = valEl.parentElement;
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'snap-input';
+  input.value = raw;
+  input.inputMode = 'numeric';
+  valEl.replaceWith(input);
+  input.focus();
+  input.select();
+
+  function commit() {
+    const newRaw = input.value.replace(/[^0-9.]/g, '') || '0';
+    data[key] = newRaw;
+    saveSnap(data);
+    buildSnapCards();
+  }
+
+  input.addEventListener('blur', commit);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { input.blur(); }
+    if (e.key === 'Escape') { buildSnapCards(); }
+  });
+}
+
+buildSnapCards();
+
+// ── QUICK NOTES ────────────────────────────────────────────────────────────
+(function() {
+  const ta = $('quick-notes');
+  ta.value = ls('ironwood_dashboard_notes') || '';
+  ta.addEventListener('input', () => lsSet('ironwood_dashboard_notes', ta.value));
+})();
+
+// ── PHASE TRACKER ──────────────────────────────────────────────────────────
+const PHASES = [
+  {
+    name: 'Phase 1 — Foundation',
+    color: 'gold',
+    trigger: 'Trigger: LLC formed, banking open, first deal under contract, SOPs drafted.'
+  },
+  {
+    name: 'Phase 2 — Momentum',
+    color: 'blue',
+    trigger: 'Trigger: 3+ closed deals, consistent lead flow, Ty & Jeff operational rhythm established.'
+  },
+  {
+    name: 'Phase 3 — Portfolio Build',
+    color: 'green',
+    trigger: 'Trigger: 5+ doors owned or managed, STR/LTR strategy deployed, recurring cash flow positive.'
+  },
+  {
+    name: 'Phase 4 — Holding Structure',
+    color: 'purple',
+    trigger: 'Trigger: Entity separation complete, assets in LLC(s), bookkeeping & tax structure in place.'
+  },
+  {
+    name: 'Phase 5 — Capital Access',
+    color: 'teal',
+    trigger: 'Trigger: DSCR/commercial lending relationships active, investor deck deployed, fund structure explored.'
+  },
+];
+
+function setPhase(n) {
+  lsSet('ironwood_current_phase', String(n));
+  renderPhase(n);
+}
+
+function renderPhase(n) {
+  document.querySelectorAll('.phase-btn').forEach(btn => {
+    const p = parseInt(btn.dataset.phase);
+    btn.className = 'phase-btn' + (p === n ? ' active-' + p : '');
+  });
+  const ph = PHASES[n - 1];
+  $('pi-name').textContent = ph.name;
+  $('pi-name').style.color = getPhaseColor(ph.color);
+  $('pi-trigger').textContent = ph.trigger;
+}
+
+function getPhaseColor(c) {
+  return { gold:'#c9a84c', blue:'#4a7fc1', green:'#4a9c6d', purple:'#8a5fc1', teal:'#3a9c9c' }[c] || '#c9a84c';
+}
+
+(function() {
+  const saved = parseInt(ls('ironwood_current_phase')) || 1;
+  document.querySelectorAll('.phase-btn').forEach(btn => {
+    btn.addEventListener('click', () => setPhase(parseInt(btn.dataset.phase)));
+  });
+  renderPhase(saved);
+})();
+
+// ── ACTIVITY LOG ──────────────────────────────────────────────────────────
+const MAX_ENTRIES = 20;
+
+function loadLog() { return lsGetJSON('ironwood_activity_log', []); }
+function saveLog(entries) { lsSetJSON('ironwood_activity_log', entries); }
+
+function formatTS(iso) {
+  const d = new Date(iso);
+  const mo = String(d.getMonth() + 1).padStart(2, '0');
+  const da = String(d.getDate()).padStart(2, '0');
+  const yr = String(d.getFullYear()).slice(-2);
+  const hr = String(d.getHours()).padStart(2, '0');
+  const mi = String(d.getMinutes()).padStart(2, '0');
+  return `${mo}/${da}/${yr} ${hr}:${mi}`;
+}
+
+function renderLog() {
+  const list = $('log-list');
+  const entries = loadLog();
+  list.innerHTML = '';
+
+  if (entries.length === 0) {
+    list.innerHTML = '<div class="log-empty">No entries yet. Log a note above.</div>';
+    return;
+  }
+
+  entries.forEach((entry, idx) => {
+    const row = document.createElement('div');
+    row.className = 'log-entry';
+    row.innerHTML = `
+      <span class="log-ts">${formatTS(entry.ts)}</span>
+      <span class="log-text">${escapeHtml(entry.text)}</span>
+      <button class="log-del" title="Delete" data-idx="${idx}">&#x2715;</button>`;
+    list.appendChild(row);
+  });
+
+  list.querySelectorAll('.log-del').forEach(btn => {
+    btn.addEventListener('click', () => deleteLogEntry(parseInt(btn.dataset.idx)));
+  });
+}
+
+function addLogEntry(text) {
+  text = text.trim();
+  if (!text) return;
+  const entries = loadLog();
+  entries.unshift({ ts: new Date().toISOString(), text });
+  if (entries.length > MAX_ENTRIES) entries.splice(MAX_ENTRIES);
+  saveLog(entries);
+  renderLog();
+}
+
+function deleteLogEntry(idx) {
+  const entries = loadLog();
+  entries.splice(idx, 1);
+  saveLog(entries);
+  renderLog();
+}
+
+function escapeHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+(function() {
+  const input = $('log-input');
+  const btn = $('log-submit');
+  btn.addEventListener('click', () => {
+    addLogEntry(input.value);
+    input.value = '';
+    input.focus();
+  });
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { btn.click(); }
+  });
+  renderLog();
+})();
+</script>
+</body>
+</html>

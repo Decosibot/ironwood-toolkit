@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood LLC — Company Evolution Map</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:      #0a0a0a;
+    --surface: #111111;
+    --s2:      #1a1a1a;
+    --s3:      #222222;
+    --border:  #2a2a2a;
+    --gold:    #c9a84c;
+    --gold2:   #e8c96a;
+    --cream:   #f5f0e8;
+    --muted:   #888;
+    --dim:     #555;
+    --blue:    #4a9eda;
+    --green:   #4caf7d;
+    --orange:  #e0874a;
+    --purple:  #9b7fd4;
+    --teal:    #4ab8c1;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── TOPBAR ── */
+  .topbar {
+    background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+    border-bottom: 1px solid var(--gold);
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 200;
+  }
+  .topbar-brand { display: flex; align-items: center; gap: 12px; }
+  .topbar-logo {
+    width: 36px; height: 36px;
+    background: var(--gold);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 16px; color: #0a0a0a;
+  }
+  .topbar-name { font-size: 15px; font-weight: 700; letter-spacing: .05em; color: var(--cream); }
+  .topbar-sub  { font-size: 10px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+  .btn-print { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 7px 18px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+  .btn-print:hover { background: var(--gold); color: var(--bg); }
+
+  @media print {
+    .topbar { display: none; }
+    body { background: #fff; color: #0a0a0a; }
+    :root { --bg:#fff; --surface:#f9f9f9; --s2:#f2f2f2; --s3:#eee; --border:#ddd; --cream:#0a0a0a; --muted:#666; --dim:#999; }
+  }
+
+  /* ── HERO ── */
+  .hero {
+    text-align: center;
+    padding: 56px 32px 40px;
+    position: relative;
+  }
+  .hero-tag {
+    display: inline-block;
+    background: var(--s2);
+    border: 1px solid var(--border);
+    color: var(--gold);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 900;
+    letter-spacing: .04em;
+    color: var(--cream);
+    margin-bottom: 8px;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero-sub {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: .04em;
+    margin-bottom: 28px;
+  }
+
+  /* ── SECTION WRAPPER ── */
+  .section-wrap { max-width: 1100px; margin: 0 auto; padding: 0 28px 60px; }
+
+  /* ══════════════════════════════════════
+     PHASE TIMELINE (horizontal scroll on mobile)
+  ══════════════════════════════════════ */
+  .timeline {
+    display: flex;
+    gap: 0;
+    position: relative;
+    margin-bottom: 56px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    top: 38px;
+    left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), var(--blue), var(--green), var(--purple), var(--teal));
+    z-index: 0;
+  }
+
+  .phase-node {
+    flex: 1;
+    min-width: 180px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    z-index: 1;
+    cursor: pointer;
+  }
+  .phase-dot {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    font-weight: 900;
+    margin-bottom: 12px;
+    border: 3px solid;
+    transition: transform .2s, box-shadow .2s;
+    position: relative;
+    z-index: 2;
+  }
+  .phase-node:hover .phase-dot { transform: scale(1.08); }
+  .phase-dot .phase-num { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
+  .phase-dot .phase-icon { font-size: 22px; line-height: 1; }
+  .phase-label { font-size: 12px; font-weight: 700; text-align: center; letter-spacing: .03em; color: var(--cream); margin-bottom: 2px; }
+  .phase-range { font-size: 10px; color: var(--muted); text-align: center; letter-spacing: .04em; }
+
+  /* phase colors */
+  .p1 .phase-dot { background: #1a1500; border-color: var(--gold); color: var(--gold); box-shadow: 0 0 20px rgba(201,168,76,.25); }
+  .p2 .phase-dot { background: #0d1e2a; border-color: var(--blue);   color: var(--blue);  box-shadow: 0 0 20px rgba(74,158,218,.2); }
+  .p3 .phase-dot { background: #0d1f16; border-color: var(--green);  color: var(--green); box-shadow: 0 0 20px rgba(76,175,125,.2); }
+  .p4 .phase-dot { background: #1a0e28; border-color: var(--purple); color: var(--purple); box-shadow: 0 0 20px rgba(155,127,212,.2); }
+  .p5 .phase-dot { background: #0d1e1f; border-color: var(--teal);   color: var(--teal);  box-shadow: 0 0 20px rgba(74,184,193,.2); }
+
+  /* ══════════════════════════════════════
+     PHASE DETAIL CARDS
+  ══════════════════════════════════════ */
+  .phases-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    margin-bottom: 56px;
+  }
+
+  .phase-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color .2s;
+  }
+  .phase-card:hover { border-color: var(--dim); }
+
+  .pc-header {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 22px 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pc-badge {
+    width: 52px; height: 52px;
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .pc-badge.gold   { background: #1a1500; }
+  .pc-badge.blue   { background: #0d1e2a; }
+  .pc-badge.green  { background: #0d1f16; }
+  .pc-badge.purple { background: #1a0e28; }
+  .pc-badge.teal   { background: #0d1e1f; }
+
+  .pc-title-wrap { flex: 1; }
+  .pc-phase-tag {
+    font-size: 9px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    margin-bottom: 3px;
+    opacity: .85;
+  }
+  .gold-text   { color: var(--gold); }
+  .blue-text   { color: var(--blue); }
+  .green-text  { color: var(--green); }
+  .purple-text { color: var(--purple); }
+  .teal-text   { color: var(--teal); }
+
+  .pc-title { font-size: 18px; font-weight: 900; color: var(--cream); letter-spacing: .02em; }
+  .pc-trigger {
+    font-size: 11px;
+    color: var(--muted);
+    padding: 5px 12px;
+    background: var(--s2);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    text-align: right;
+    white-space: nowrap;
+  }
+  .pc-trigger strong { color: var(--cream); }
+
+  .pc-body {
+    padding: 22px 28px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 760px) { .pc-body { grid-template-columns: 1fr; } }
+
+  .pc-col-title {
+    font-size: 9px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px; padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .pc-list { list-style: none; padding: 0; }
+  .pc-list li {
+    font-size: 12px;
+    color: var(--cream);
+    line-height: 1.6;
+    padding: 4px 0;
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .pc-list li::before { content: '›'; color: var(--muted); flex-shrink: 0; margin-top: 1px; }
+
+  .pc-list li.highlight::before { content: '★'; color: var(--gold); }
+  .pc-list li.new::before { content: '+'; color: var(--green); font-weight: 900; }
+
+  /* ── TY LICENSE BANNER ── */
+  .ty-bar {
+    background: linear-gradient(135deg, #1a1500, #111);
+    border: 1px solid var(--gold);
+    border-radius: 10px;
+    padding: 18px 24px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .ty-bar-icon { font-size: 28px; flex-shrink: 0; }
+  .ty-bar-text { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .ty-bar-text strong { color: var(--gold); font-size: 13px; display: block; margin-bottom: 2px; }
+
+  /* ── STRUCTURE DIAGRAM ── */
+  .struct-section { margin-bottom: 56px; }
+  .section-title {
+    font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+  }
+  .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .struct-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    row-gap: 12px;
+  }
+  .struct-entity {
+    background: var(--s2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    text-align: center;
+    min-width: 140px;
+    transition: border-color .15s;
+  }
+  .struct-entity.active-now { border-color: var(--gold); }
+  .struct-entity.future     { border-color: var(--border); opacity: .55; }
+  .struct-entity.investor   { border-color: var(--purple); }
+  .struct-entity .e-icon { font-size: 20px; margin-bottom: 4px; }
+  .struct-entity .e-name { font-size: 12px; font-weight: 700; color: var(--cream); }
+  .struct-entity .e-sub  { font-size: 10px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+  .struct-entity .e-tag  {
+    display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .07em;
+    text-transform: uppercase; padding: 2px 8px; border-radius: 10px; margin-top: 6px;
+  }
+  .tag-live    { background: #1a2e1a; color: var(--green); }
+  .tag-future  { background: #1a1a2a; color: var(--muted); }
+  .tag-phase   { background: #1a1500; color: var(--gold); }
+
+  .struct-arrow { font-size: 20px; color: var(--muted); padding: 0 8px; flex-shrink: 0; }
+  .struct-arrow.down-arrow { width: 100%; text-align: center; font-size: 18px; color: var(--muted); margin: 4px 0; }
+
+  .struct-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .struct-col-row { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* ── COMPENSATION STRIP ── */
+  .comp-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-bottom: 56px;
+  }
+  .comp-card {
+    background: var(--s2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .comp-card .cc-person { font-size: 11px; font-weight: 700; color: var(--cream); margin-bottom: 4px; letter-spacing: .03em; }
+  .comp-card .cc-role   { font-size: 10px; color: var(--muted); margin-bottom: 10px; }
+  .comp-card .cc-item   { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 4px 0; border-bottom: 1px solid var(--border); }
+  .comp-card .cc-item:last-child { border-bottom: none; }
+  .comp-card .cc-item .ci-label { color: var(--muted); }
+  .comp-card .cc-item .ci-val   { color: var(--gold); font-weight: 700; }
+  .comp-card .cc-item .ci-val.blue  { color: var(--blue); }
+  .comp-card .cc-item .ci-val.green { color: var(--green); }
+
+  /* ── METRICS ── */
+  .metrics-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .metric-card {
+    background: var(--s2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    text-align: center;
+  }
+  .metric-card .mc-val { font-size: 22px; font-weight: 900; color: var(--gold); }
+  .metric-card .mc-label { font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; margin-top: 4px; }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    text-align: center;
+    padding: 24px 32px 40px;
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: .04em;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── CONNECTOR ── */
+  .connector-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 8px 0;
+    flex-wrap: wrap;
+  }
+  .conn-line {
+    height: 2px;
+    flex: 1;
+    max-width: 60px;
+    background: var(--border);
+  }
+  .conn-arrow { color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">IW</div>
+    <div>
+      <div class="topbar-name">Ironwood LLC</div>
+      <div class="topbar-sub">Company Evolution Map · Anchor Pro Solutions × Landon Renovations</div>
+    </div>
+  </div>
+  <button class="btn-print" onclick="window.print()">Print / Save PDF</button>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">Strategic Roadmap</div>
+  <h1>Ironwood <span>Evolution</span> Map</h1>
+  <div class="hero-sub">From first deal to holding company — five phases, one vision</div>
+</div>
+
+<div class="section-wrap">
+
+  <!-- PHASE TIMELINE NODES -->
+  <div class="timeline">
+    <div class="phase-node p1">
+      <div class="phase-dot"><div class="phase-num">Phase 1</div><div class="phase-icon">🔨</div></div>
+      <div class="phase-label">Foundation</div>
+      <div class="phase-range">Now → Deal #3</div>
+    </div>
+    <div class="phase-node p2">
+      <div class="phase-dot"><div class="phase-num">Phase 2</div><div class="phase-icon">📈</div></div>
+      <div class="phase-label">Momentum</div>
+      <div class="phase-range">$25K/mo × 2 mo</div>
+    </div>
+    <div class="phase-node p3">
+      <div class="phase-dot"><div class="phase-num">Phase 3</div><div class="phase-icon">🏘️</div></div>
+      <div class="phase-label">Portfolio Build</div>
+      <div class="phase-range">3–5 Doors</div>
+    </div>
+    <div class="phase-node p4">
+      <div class="phase-dot"><div class="phase-num">Phase 4</div><div class="phase-icon">🏛️</div></div>
+      <div class="phase-label">Holding Structure</div>
+      <div class="phase-range">$1M+ Portfolio</div>
+    </div>
+    <div class="phase-node p5">
+      <div class="phase-dot"><div class="phase-num">Phase 5</div><div class="phase-icon">🌐</div></div>
+      <div class="phase-label">Capital Access</div>
+      <div class="phase-range">Outside Investors</div>
+    </div>
+  </div>
+
+  <!-- TY LICENSE BANNER -->
+  <div class="ty-bar">
+    <div class="ty-bar-icon">🏡</div>
+    <div class="ty-bar-text">
+      <strong>Ty Jackson — Active Georgia Real Estate License · Active Across All Phases</strong>
+      Buyer-side commissions (2.5–3%) on acquisitions · Listing-side commissions on dispositions · MLS access for deal sourcing and comps · Property management rights for Company rentals (no separate PM fee up to 5 doors) · Referral income in personal capacity
+    </div>
+  </div>
+
+  <!-- PHASE DETAIL CARDS -->
+  <div class="phases-grid">
+
+    <!-- PHASE 1 -->
+    <div class="phase-card">
+      <div class="pc-header">
+        <div class="pc-badge gold">🔨</div>
+        <div class="pc-title-wrap">
+          <div class="pc-phase-tag gold-text">Phase 1 — Foundation</div>
+          <div class="pc-title">First Deals · System Building · Brand Launch</div>
+        </div>
+        <div class="pc-trigger">Trigger: <strong>Active Now</strong></div>
+      </div>
+      <div class="pc-body">
+        <div>
+          <div class="pc-col-title">Operations</div>
+          <ul class="pc-list">
+            <li class="highlight">Single operating entity — Ironwood LLC</li>
+            <li>Flips and remodels only — no rentals yet</li>
+            <li>Jeff $50/hr field labor (Phase 1 compensation)</li>
+            <li>All deals flow through one LLC waterfall</li>
+            <li>Ops Tracker, Estimator, SOW tools active</li>
+          </ul>
+        </div>
+        <div>
+          <div class="pc-col-title">Marketing &amp; Sales</div>
+          <ul class="pc-list">
+            <li class="highlight">Ty's license — buyer agent on every acquisition (2.5–3% commission)</li>
+            <li>Social media + autoposting (Ty, 3% fee)</li>
+            <li>YouTube channel launch — Ironwood Renovations</li>
+            <li>Direct mail + Meta/Google ads (pre-waterfall ad spend)</li>
+            <li>Jordan 3% — marketing ops &amp; admin</li>
+          </ul>
+        </div>
+        <div>
+          <div class="pc-col-title">Goals &amp; Milestones</div>
+          <ul class="pc-list">
+            <li>Close Deal #1 — validate the system</li>
+            <li>Build brand presence in Georgia market</li>
+            <li>Establish lender relationships (HML, conventional)</li>
+            <li>Reach $25K revenue in a single month</li>
+            <li>Seed operating reserve ($10K minimum)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 2 -->
+    <div class="phase-card">
+      <div class="pc-header">
+        <div class="pc-badge blue">📈</div>
+        <div class="pc-title-wrap">
+          <div class="pc-phase-tag blue-text">Phase 2 — Momentum</div>
+          <div class="pc-title">Jeff Converts · Parallel Deals · BRRRR Begins</div>
+        </div>
+        <div class="pc-trigger">Trigger: <strong>$25K/mo × 2 consecutive months</strong></div>
+      </div>
+      <div class="pc-body">
+        <div>
+          <div class="pc-col-title">Operations</div>
+          <ul class="pc-list">
+            <li class="highlight">Jeff converts — 30% of gross profit per project</li>
+            <li>Running 2+ projects simultaneously</li>
+            <li>First BRRRR acquisition evaluated</li>
+            <li>DSCR loan research begins (qualify on rental income)</li>
+            <li>Change Order and Pipeline tools at full use</li>
+          </ul>
+        </div>
+        <div>
+          <div class="pc-col-title">Marketing &amp; Sales</div>
+          <ul class="pc-list">
+            <li class="highlight">Ty's license — listing agent on dispositions (2.5–3%)</li>
+            <li>Ad spend scales to $1,000–$1,500/mo</li>
+            <li>YouTube content builds audience</li>
+            <li>MLS used for off-market leads and comps</li>
+            <li>Referral network grows — Ty refers out non-fit leads</li>
+          </ul>
+        </div>
+        <div>
+          <div class="pc-col-title">Goals &amp; Milestones</div>
+          <ul class="pc-list">
+            <li>3+ flips completed in portfolio</li>
+            <li>Identify first BRRRR candidate property</li>
+            <li>Lock DSCR lender relationship</li>
+            <li>$50K+ operating reserve target</li>
+            <li>Consistent monthly marketing ROI tracked</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3 -->
+    <div class="phase-card">
+      <div class="pc-header">
+        <div class="pc-badge green">🏘️</div>
+        <div class="pc-title-wrap">
+          <div class="pc-phase-tag green-text">Phase 3 — Portfolio Build</div>
+          <div class="pc-title">Rental Accumulation · BRRRR Cycles · Liability Isolation</div>
+        </div>
+        <div class="pc-trigger">Trigger: <strong>3–5 Rental Doors Acquired</strong></div>
+      </div>
+      <div class="pc-body">
+        <div>
+          <div class="pc-col-title">Operations</div>
+          <ul class="pc-list">
+            <li class="highlight">Individual Property LLCs formed per rental (liability isolation)</li>
+            <li>Ironwood LLC holds membership in each Property LLC</li>
+            <li>Rental Dashboard actively managed</li>
+            <li>BRRRR recycle — cash out refi funds next deal</li>
+            <li>Ty PM rights active — no separate PM fee (≤5 doors)</li>
+            <li>Vacation rental acquisitions — Blue Ridge / Ellijay / Dahlonega (GA) + Destin / 30A / PCB (FL)</li>
+            <li>STR managed by Ty under RE license — 25% PM fee + 3% platform fee</li>
+          </ul>
+        </div>
+        <div>
+          <div class="pc-col-title">Marketing &amp; Sales</div>
+          <ul class="pc-list">
+            <li class="highlight">Ty's license — PM authority on all Company rentals (9% PM + 3.5% processing = 12.5% total)</li>
+            <li>YouTube channel driving inbound seller leads</li>
+            <li>Brand recognition in target Georgia market(s)</li>
+            <li>Client referral pipeline established</li>
+            <li>Ironwood Renovations as recognized local brand</li>
+          </ul>
+        </div>
+        <div>
+          <div class="pc-col-title">Goals &amp; Milestones</div>
+          <ul class="pc-list">
+            <li>$3K–$5K/mo net rental cash flow</li>
+            <li>Portfolio value approaching $500K–$750K</li>
+            <li>PM supplement negotiated if &gt;20 units (per Operating Agreement)</li>
+            <li>Begin Ironwood Holdings activation planning</li>
+            <li>Annual CPA review — evaluate S-Corp election</li>
+            <li>First VR property cash-flow positive within 60 days of acquisition</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 4 -->
+    <div class="phase-card">
+      <div class="pc-header">
+        <div class="pc-badge purple">🏛️</div>
+        <div class="pc-title-wrap">
+          <div class="pc-phase-tag purple-text">Phase 4 — Holding Structure</div>
+          <div class="pc-title">Ironwood Holdings Activated · Multi-Entity · Investor-Ready</div>
+        </div>
+        <div class="pc-trigger">Trigger: <strong>$1M+ Portfolio Value</strong></div>
+      </div>
+      <div class="pc-body">
+        <div>
+          <div class="pc-col-title">Operations</div>
+          <ul class="pc-list">
+            <li class="highlight">Ironwood Holdings LLC activated as parent entity</li>
+            <li>Ironwood LLC (ops) sits below Holdings</li>
+            <li>Each rental property in its own sub-LLC</li>
+            <li>Dedicated bookkeeper / CPA on retainer</li>
+            <li>Quarterly financial reviews formalized</li>
+          </ul>
+        </div>
+        <div>
+          <div class="pc-col-title">Marketing &amp; Sales</div>
+          <ul class="pc-list">
+            <li class="highlight">Ty's license — buyer/listing agent across full portfolio</li>
+            <li>Ironwood Holdings used for lender &amp; JV pitches</li>
+            <li>One-pager investor deck live</li>
+            <li>Established agent referral network</li>
+            <li>Ironwood brand operates in multiple Georgia markets</li>
+          </ul>
+        </div>
+        <div>
+          <div class="pc-col-title">Goals &amp; Milestones</div>
+          <ul class="pc-list">
+            <li>10+ doors in rental portfolio</li>
+            <li>$8K–$15K/mo net rental income</li>
+            <li>Portfolio value $1M–$3M</li>
+            <li>Evaluate REIT conversion with counsel</li>
+            <li>JV deal structure ready for Phase 5</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 5 -->
+    <div class="phase-card">
+      <div class="pc-header">
+        <div class="pc-badge teal">🌐</div>
+        <div class="pc-title-wrap">
+          <div class="pc-phase-tag teal-text">Phase 5 — Capital Access</div>
+          <div class="pc-title">Outside Investors · JV Structures · Market Expansion</div>
+        </div>
+        <div class="pc-trigger">Trigger: <strong>Unanimous Consent + Proven Track Record</strong></div>
+      </div>
+      <div class="pc-body">
+        <div>
+          <div class="pc-col-title">Operations</div>
+          <ul class="pc-list">
+            <li class="highlight">Project-level LLCs accept outside passive capital</li>
+            <li>Core Ironwood LLC 50/50 structure protected</li>
+            <li>Outside investors in sub-entities only (never in Ironwood LLC without amendment)</li>
+            <li>GP/LP structures per deal if needed</li>
+            <li>REIT evaluated if 20+ doors / $5M+ portfolio</li>
+          </ul>
+        </div>
+        <div>
+          <div class="pc-col-title">Marketing &amp; Sales</div>
+          <ul class="pc-list">
+            <li class="highlight">Ty's license — broker potential (upgrade from salesperson)</li>
+            <li>Investor relations managed through Ironwood Holdings brand</li>
+            <li>YouTube / social proof supports capital raises</li>
+            <li>Ty can refer investor clients for fees</li>
+            <li>Brand recognized regionally</li>
+          </ul>
+        </div>
+        <div>
+          <div class="pc-col-title">Goals &amp; Milestones</div>
+          <ul class="pc-list">
+            <li>20+ doors managed</li>
+            <li>$3M–$5M+ portfolio valuation</li>
+            <li>Multi-market Georgia presence</li>
+            <li>Full-time employee(s) if warranted</li>
+            <li>Legacy wealth — generational hold assets</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ENTITY STRUCTURE DIAGRAM -->
+  <div class="struct-section">
+    <div class="section-title">Entity Structure — Now vs. Future</div>
+
+    <!-- NOW -->
+    <div style="margin-bottom:28px;">
+      <div style="font-size:10px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;font-weight:700;">Phase 1–2 · Current Structure</div>
+      <div class="struct-row">
+        <div class="struct-entity active-now">
+          <div class="e-icon">🏛️</div>
+          <div class="e-name">Ironwood LLC</div>
+          <div class="e-sub">Delaware · GA Qualified<br/>All operations</div>
+          <div class="e-tag tag-live">Live Now</div>
+        </div>
+        <div class="struct-arrow">→</div>
+        <div class="struct-entity active-now">
+          <div class="e-icon">🔨</div>
+          <div class="e-name">Ironwood Renovations</div>
+          <div class="e-sub">Fictitious name<br/>Consumer-facing brand</div>
+          <div class="e-tag tag-live">Live Now</div>
+        </div>
+        <div class="struct-arrow">→</div>
+        <div class="struct-entity active-now">
+          <div class="e-icon">📊</div>
+          <div class="e-name">Ironwood Holdings</div>
+          <div class="e-sub">DBA only<br/>Lender / investor brand</div>
+          <div class="e-tag tag-live">DBA Active</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 3-4 -->
+    <div style="margin-bottom:28px;">
+      <div style="font-size:10px;color:var(--blue);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;font-weight:700;">Phase 3–4 · Portfolio + Holding Structure</div>
+      <div class="struct-col">
+        <div class="struct-entity" style="border-color:var(--purple);min-width:200px;">
+          <div class="e-icon">🏛️</div>
+          <div class="e-name">Ironwood Holdings LLC</div>
+          <div class="e-sub">Parent entity<br/>Activated at $1M+ portfolio</div>
+          <div class="e-tag tag-future">Phase 4</div>
+        </div>
+        <div style="text-align:center;color:var(--muted);font-size:18px;padding:4px 0;">↓</div>
+        <div class="struct-col-row">
+          <div class="struct-entity" style="border-color:var(--gold);">
+            <div class="e-icon">⚙️</div>
+            <div class="e-name">Ironwood LLC</div>
+            <div class="e-sub">Operating entity<br/>Flips + Renovations</div>
+            <div class="e-tag tag-phase">Phase 1–2 Core</div>
+          </div>
+          <div class="struct-entity" style="border-color:var(--green);">
+            <div class="e-icon">🏠</div>
+            <div class="e-name">Property LLC #1</div>
+            <div class="e-sub">123 Main St<br/>Single-purpose</div>
+            <div class="e-tag tag-future">Phase 3</div>
+          </div>
+          <div class="struct-entity" style="border-color:var(--green);">
+            <div class="e-icon">🏠</div>
+            <div class="e-name">Property LLC #2</div>
+            <div class="e-sub">456 Oak Ave<br/>Single-purpose</div>
+            <div class="e-tag tag-future">Phase 3</div>
+          </div>
+          <div class="struct-entity future">
+            <div class="e-icon">🏠</div>
+            <div class="e-name">Property LLC #3+</div>
+            <div class="e-sub">Additional rentals<br/>As portfolio grows</div>
+            <div class="e-tag tag-future">Future</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PHASE 5 -->
+    <div>
+      <div style="font-size:10px;color:var(--teal);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;font-weight:700;">Phase 5 · Outside Capital Layer</div>
+      <div class="struct-col">
+        <div class="struct-entity future" style="min-width:200px;">
+          <div class="e-icon">🌐</div>
+          <div class="e-name">Ironwood Holdings LLC</div>
+          <div class="e-sub">+ Outside passive investors<br/>(project-level only)</div>
+          <div class="e-tag tag-future">Phase 5</div>
+        </div>
+        <div style="text-align:center;color:var(--muted);font-size:18px;padding:4px 0;">↓</div>
+        <div class="struct-col-row">
+          <div class="struct-entity future">
+            <div class="e-icon">💼</div>
+            <div class="e-name">Project LLC (GP/LP)</div>
+            <div class="e-sub">Deal-by-deal<br/>Investor capital here</div>
+            <div class="e-tag tag-future">Phase 5</div>
+          </div>
+          <div class="struct-entity future" style="border-color:var(--purple);">
+            <div class="e-icon">👥</div>
+            <div class="e-name">Passive Investors</div>
+            <div class="e-sub">Limited partners<br/>Project-level only</div>
+            <div class="e-tag tag-future">Phase 5</div>
+          </div>
+          <div class="struct-entity future">
+            <div class="e-icon">🏦</div>
+            <div class="e-name">REIT (Optional)</div>
+            <div class="e-sub">20+ doors / $5M+<br/>Evaluated with counsel</div>
+            <div class="e-tag tag-future">Phase 5+</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPENSATION ACROSS PHASES -->
+  <div class="struct-section">
+    <div class="section-title">Compensation Summary — All Phases</div>
+    <div class="comp-strip">
+      <div class="comp-card">
+        <div class="cc-person">Ty Jackson</div>
+        <div class="cc-role">Managing Member · Anchor Pro Solutions</div>
+        <div class="cc-item"><span class="ci-label">Mgmt Fee</span><span class="ci-val">5% gross revenue</span></div>
+        <div class="cc-item"><span class="ci-label">Marketing</span><span class="ci-val">3% gross revenue</span></div>
+        <div class="cc-item"><span class="ci-label">Field Labor</span><span class="ci-val">$30/hr (pre-approved)</span></div>
+        <div class="cc-item"><span class="ci-label">PM Fee</span><span class="ci-val green">9% of monthly rent</span></div>
+        <div class="cc-item"><span class="ci-label">Processing Fee</span><span class="ci-val green">3.5% of monthly rent</span></div>
+        <div class="cc-item"><span class="ci-label">Buyer Commission</span><span class="ci-val green">2.5–3% (license)</span></div>
+        <div class="cc-item"><span class="ci-label">Listing Commission</span><span class="ci-val green">2.5–3% (license)</span></div>
+        <div class="cc-item"><span class="ci-label">VR PM Fee</span><span class="ci-val green">25% gross VR revenue</span></div>
+        <div class="cc-item"><span class="ci-label">VR Platform Fee passthrough</span><span class="ci-val green">3% (Airbnb/VRBO)</span></div>
+        <div class="cc-item"><span class="ci-label">50/50 Split</span><span class="ci-val">Net distributable</span></div>
+      </div>
+      <div class="comp-card">
+        <div class="cc-person">Jeff Sarabia</div>
+        <div class="cc-role">Field Operations · Landon Renovations</div>
+        <div class="cc-item"><span class="ci-label">Phase 1 Labor</span><span class="ci-val">$50/hr</span></div>
+        <div class="cc-item"><span class="ci-label">Phase 2 Trigger</span><span class="ci-val blue">$25K/mo × 2 mo</span></div>
+        <div class="cc-item"><span class="ci-label">Phase 2 Rate</span><span class="ci-val">30% gross profit</span></div>
+        <div class="cc-item"><span class="ci-label">50/50 Split</span><span class="ci-val">Net distributable</span></div>
+      </div>
+      <div class="comp-card">
+        <div class="cc-person">Jordan Sarabia</div>
+        <div class="cc-role">Marketing Ops · Landon Renovations</div>
+        <div class="cc-item"><span class="ci-label">Marketing Fee</span><span class="ci-val">3% gross revenue</span></div>
+        <div class="cc-item"><span class="ci-label">50/50 Split</span><span class="ci-val">Net distributable (via Landon)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY METRICS TABLE -->
+  <div class="struct-section">
+    <div class="section-title">Phase Trigger Metrics</div>
+    <div class="metrics-row">
+      <div class="metric-card">
+        <div class="mc-val">70%</div>
+        <div class="mc-label">ARV Rule<br/>Max all-in cost</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-val">$25K</div>
+        <div class="mc-label">Monthly Revenue<br/>Jeff Phase 2 trigger</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-val">2×</div>
+        <div class="mc-label">Consecutive months<br/>required to convert</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-val">5</div>
+        <div class="mc-label">Doors before<br/>PM fee kicks in</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-val">$1M</div>
+        <div class="mc-label">Portfolio value<br/>Holdings activation</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-val">$10K</div>
+        <div class="mc-label">Operating reserve<br/>Minimum at all times</div>
+      </div>
+      <div class="metric-card">
+        <div class="mc-val">25%</div>
+        <div class="mc-label">VR PM Fee<br/>STR management rate</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="doc-footer">
+  Ironwood LLC dba Ironwood Holdings · Ironwood Renovations · Delaware LLC · Georgia Foreign Qualification<br/>
+  Anchor Pro Solutions (Ty Jackson, Managing Member) × Landon Renovations (Jeff &amp; Jordan Sarabia)<br/>
+  Operating Agreement Sections 8.9–8.10 govern licensing and phase transitions · Confidential · May 2026
+</div>
+
+</body>
+</html>

@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Tenant Screener — Anchor Pro Solutions</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:Arial,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;}
+
+/* ── TOP BAR ── */
+.topbar{
+  background:#080808;border-bottom:2px solid #2a2a2a;
+  padding:12px 24px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px;
+}
+.topbar .brand{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#b8b0a0;}
+.topbar .title{font-size:17px;font-weight:bold;}
+.topbar-btns{display:flex;gap:8px;flex-wrap:wrap;}
+.btn{padding:7px 16px;border-radius:6px;border:none;cursor:pointer;font-size:11px;
+  font-weight:bold;letter-spacing:1px;text-transform:uppercase;font-family:Arial;transition:opacity .2s;}
+.btn:hover{opacity:.85;}
+.btn-primary{background:#c9a84c;color:#fff;}
+.btn-success{background:#5a8a5a;color:#0a0a0a;}
+.btn-warn{background:#c9843a;color:#0a0a0a;}
+.btn-danger{background:#8a3a3a;color:#fff;}
+.btn-outline{background:transparent;color:#b8b0a0;border:1px solid #2a2a2a;}
+
+/* ── LAYOUT ── */
+.layout{display:flex;min-height:calc(100vh - 57px);}
+
+/* ── SIDEBAR — applicant list ── */
+.sidebar{
+  width:240px;flex-shrink:0;background:#080808;
+  border-right:1px solid #2a2a2a;display:flex;flex-direction:column;
+  position:sticky;top:57px;height:calc(100vh - 57px);overflow:hidden;
+}
+.sidebar-head{
+  padding:14px 16px;border-bottom:1px solid #2a2a2a;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.sidebar-head .sh-label{font-size:9px;letter-spacing:3px;text-transform:uppercase;color:#b8b0a0;}
+.applicant-list{flex:1;overflow-y:auto;padding:8px;}
+.applicant-list::-webkit-scrollbar{width:3px;}
+.applicant-list::-webkit-scrollbar-thumb{background:#2a2a2a;}
+
+.app-card{
+  background:#111111;border:1px solid #2a2a2a;border-radius:8px;
+  padding:10px 12px;margin-bottom:8px;cursor:pointer;transition:all .15s;
+  border-left:3px solid transparent;
+}
+.app-card:hover{background:#111111;}
+.app-card.active{border-left-color:#c9a84c;background:#111111;}
+.app-card.status-approved{border-left-color:#5a8a5a;}
+.app-card.status-denied{border-left-color:#8a3a3a;}
+.app-card.status-pending{border-left-color:#c9843a;}
+.app-card.status-screening{border-left-color:#b8b0a0;}
+
+.app-name{font-size:12px;font-weight:bold;color:#fff;margin-bottom:3px;}
+.app-address{font-size:10px;color:#b8b0a0;margin-bottom:4px;}
+.app-status{display:inline-block;padding:2px 8px;border-radius:10px;font-size:9px;font-weight:bold;letter-spacing:1px;text-transform:uppercase;}
+.status-pill-approved{background:#1e3a1e;color:#5a8a5a;}
+.status-pill-denied{background:#3a1a1a;color:#8a3a3a;}
+.status-pill-pending{background:#3a2e1a;color:#c9843a;}
+.status-pill-screening{background:#2a2a2a;color:#b8b0a0;}
+.status-pill-new{background:#2a2a2a;color:#f5f0e8;}
+
+/* ── MAIN ── */
+.main{flex:1;padding:22px 26px;overflow-y:auto;max-width:900px;}
+
+/* ── EMPTY STATE ── */
+.empty-state{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  height:400px;color:#6b6560;text-align:center;gap:12px;
+}
+.empty-state .es-icon{font-size:48px;}
+.empty-state h3{font-size:16px;color:#b8b0a0;}
+.empty-state p{font-size:12px;max-width:300px;}
+
+/* ── CARD ── */
+.card{background:#111111;border:1px solid #2a2a2a;border-radius:10px;padding:18px 22px;margin-bottom:16px;}
+.card-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#b8b0a0;
+  margin-bottom:14px;padding-bottom:9px;border-bottom:1px solid #2a2a2a;
+  display:flex;justify-content:space-between;align-items:center;}
+
+/* ── FORM ── */
+.form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px 16px;}
+.form-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:12px 16px;}
+.field{display:flex;flex-direction:column;gap:4px;}
+.field.full{grid-column:1/-1;}
+.field label{font-size:10px;color:#b8b0a0;text-transform:uppercase;letter-spacing:.5px;}
+.field input,.field select,.field textarea{
+  background:#0a0a0a;border:1px solid #2a2a2a;border-radius:6px;
+  color:#fff;padding:7px 10px;font-size:12.5px;font-family:Arial;
+}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:#c9a84c;}
+.field select option{background:#0a0a0a;}
+.field textarea{resize:vertical;min-height:65px;}
+
+/* ── CHECKLIST ── */
+.check-list{list-style:none;}
+.check-item{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:10px 0;border-bottom:1px solid #2a2a2a;
+}
+.check-item:last-child{border-bottom:none;}
+.check-box{
+  flex-shrink:0;width:20px;height:20px;
+  border:2px solid #2a2a2a;border-radius:4px;
+  background:#0a0a0a;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .15s;margin-top:1px;
+}
+.check-box.checked{background:#c9a84c;border-color:#c9a84c;}
+.check-box.checked::after{content:'✓';font-size:12px;color:#fff;font-weight:bold;}
+.check-box.fail{background:#8a3a3a44;border-color:#8a3a3a;}
+.check-box.fail::after{content:'✗';font-size:12px;color:#8a3a3a;font-weight:bold;}
+.check-label{flex:1;}
+.check-label .cl-title{font-size:12px;color:#f5f0e8;margin-bottom:2px;}
+.check-label .cl-sub{font-size:10px;color:#b8b0a0;}
+.check-label .cl-input{
+  margin-top:5px;background:#0a0a0a;border:1px solid #2a2a2a;
+  border-radius:4px;color:#fff;padding:4px 8px;font-size:11.5px;
+  font-family:Arial;width:100%;
+}
+.check-label .cl-input:focus{outline:none;border-color:#c9a84c;}
+.check-status{flex-shrink:0;}
+
+/* ── VERDICT ── */
+.verdict-bar{
+  border-radius:10px;padding:20px 24px;
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  flex-wrap:wrap;
+}
+.verdict-bar.approved{background:#0d1e0d;border:1px solid #1e3a1e;}
+.verdict-bar.denied{background:#1e0d0d;border:1px solid #3a1a1a;}
+.verdict-bar.pending{background:#1e180d;border:1px solid #3a2e1a;}
+.verdict-bar.screening{background:#0d0d1e;border:1px solid #2a2a2a;}
+
+.verdict-label{font-size:11px;letter-spacing:3px;text-transform:uppercase;font-weight:bold;}
+.verdict-bar.approved .verdict-label{color:#5a8a5a;}
+.verdict-bar.denied .verdict-label{color:#8a3a3a;}
+.verdict-bar.pending .verdict-label{color:#c9843a;}
+.verdict-bar.screening .verdict-label{color:#b8b0a0;}
+
+.verdict-score{font-size:32px;font-weight:bold;font-family:Arial;}
+.verdict-bar.approved .verdict-score{color:#5a8a5a;}
+.verdict-bar.denied .verdict-score{color:#8a3a3a;}
+.verdict-bar.pending .verdict-score{color:#c9843a;}
+.verdict-bar.screening .verdict-score{color:#b8b0a0;}
+
+.verdict-detail{font-size:11px;color:#b8b0a0;line-height:1.7;}
+
+/* ── SCORE CRITERIA ── */
+.criteria-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:12px;}
+.criteria-item{
+  background:#0a0a0a;border:1px solid #2a2a2a;border-radius:8px;
+  padding:10px 12px;text-align:center;
+}
+.criteria-item .ci-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#6b6560;margin-bottom:5px;}
+.criteria-item .ci-val{font-size:16px;font-weight:bold;}
+.criteria-item .ci-status{font-size:9px;margin-top:3px;}
+.pass .ci-val,.pass .ci-status{color:#5a8a5a;}
+.fail-c .ci-val,.fail-c .ci-status{color:#8a3a3a;}
+.warn .ci-val,.warn .ci-status{color:#c9843a;}
+.neutral .ci-val{color:#b8b0a0;}
+
+/* ── NOTES ── */
+.note-timestamp{font-size:9px;color:#6b6560;margin-bottom:8px;}
+
+/* ── PRINT ── */
+@media print{
+  body{background:#fff;color:#000;}
+  .topbar,.sidebar,.topbar-btns{display:none;}
+  .layout{display:block;}
+  .main{padding:10px;max-width:100%;}
+  .card{background:#f4f8fc;border:1px solid #ddd;}
+  .field input,.field select,.field textarea{background:#f9f9f9;color:#000;border-color:#ddd;}
+  .check-box{border-color:#999;}
+  .check-box.checked{background:#c9a84c;}
+  .verdict-bar{background:#f4f8fc !important;border:1px solid #ddd !important;}
+  .verdict-label,.verdict-score,.verdict-detail{color:#000 !important;}
+}
+
+@media(max-width:640px){
+  .sidebar{display:none;}
+  .main{padding:14px;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <div class="brand">Anchor Pro Solutions × Landon Renovations</div>
+    <div class="title">Tenant Screening Tracker</div>
+  </div>
+  <div class="topbar-btns">
+    <button class="btn btn-primary" onclick="newApplicant()">+ New Applicant</button>
+    <button class="btn btn-outline" onclick="window.print()">Print / PDF</button>
+    <button class="btn btn-success" onclick="saveAll()">Save</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sidebar-head">
+      <span class="sh-label">Applicants</span>
+      <span id="app-count" style="font-size:10px;color:#6b6560;">0</span>
+    </div>
+    <div class="applicant-list" id="applicant-list">
+      <div style="padding:20px;text-align:center;color:#6b6560;font-size:11px;">No applicants yet.<br/>Click + New Applicant.</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main" id="main-area">
+    <div class="empty-state">
+      <div class="es-icon">🏠</div>
+      <h3>Tenant Screening</h3>
+      <p>Add an applicant to begin the screening process. Every applicant gets a full checklist and automatic scoring.</p>
+      <button class="btn btn-primary" onclick="newApplicant()" style="margin-top:8px;">+ New Applicant</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ─── STATE ───────────────────────────────────────
+let applicants = [];
+let currentId  = null;
+
+// ─── CRITERIA THRESHOLDS ─────────────────────────
+const CRITERIA = {
+  creditScore:   { pass: 620, warn: 580, label: 'Credit Score',        unit: '' },
+  incomeRatio:   { pass: 3,   warn: 2.5, label: 'Income / Rent Ratio', unit: 'x' },
+};
+
+// ─── CHECKLIST ITEMS ─────────────────────────────
+const CHECKLIST = [
+  { id:'cl-app',        title:'Completed application received',           sub:'Full rental application with signature',             hasInput:false },
+  { id:'cl-id',         title:'Government-issued photo ID verified',       sub:'Driver\'s license or passport',                     hasInput:false },
+  { id:'cl-credit',     title:'Credit check authorized & run',            sub:'Minimum score: 620',                                hasInput:true,  inputLabel:'Score' },
+  { id:'cl-income',     title:'Income verified — 3× monthly rent',        sub:'Pay stubs, bank statements, or tax returns',        hasInput:true,  inputLabel:'Monthly income $' },
+  { id:'cl-employment', title:'Employment verified',                      sub:'Current employer name and contact',                 hasInput:true,  inputLabel:'Employer' },
+  { id:'cl-ref1',       title:'Landlord reference #1 contacted',          sub:'Previous landlord — payment history & behavior',    hasInput:true,  inputLabel:'LL name & phone' },
+  { id:'cl-ref2',       title:'Landlord reference #2 contacted',          sub:'Prior landlord if available',                      hasInput:true,  inputLabel:'LL name & phone' },
+  { id:'cl-eviction',   title:'Eviction history check completed',         sub:'No evictions in last 5 years',                     hasInput:true,  inputLabel:'Result' },
+  { id:'cl-criminal',   title:'Background / criminal check completed',    sub:'No felonies related to property crimes',            hasInput:true,  inputLabel:'Result' },
+  { id:'cl-pets',       title:'Pet policy discussed & documented',        sub:'Breed/size restrictions, pet deposit agreed',       hasInput:true,  inputLabel:'Pet details / none' },
+  { id:'cl-vehicles',   title:'Vehicles documented',                      sub:'Plate numbers for parking assignment',              hasInput:true,  inputLabel:'Plate #s' },
+  { id:'cl-deposit',    title:'Security deposit collected & receipted',   sub:'Equal to 1–2 months rent',                        hasInput:true,  inputLabel:'Amount $' },
+  { id:'cl-lease',      title:'Lease signed by all adult occupants',      sub:'State-compliant lease, all adults named',           hasInput:true,  inputLabel:'Move-in date' },
+  { id:'cl-utilities',  title:'Utility transfer / setup confirmed',       sub:'Electric, gas, water responsibilities documented',  hasInput:false },
+  { id:'cl-walkin',     title:'Move-in walkthrough completed & signed',   sub:'Condition checklist signed by tenant',              hasInput:false },
+];
+
+// ─── HELPERS ─────────────────────────────────────
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function fmt(n) { return n ? '$' + Number(n).toLocaleString() : '—'; }
+
+function statusPill(s) {
+  const map = {
+    approved: 'status-pill-approved', denied: 'status-pill-denied',
+    pending: 'status-pill-pending', screening: 'status-pill-screening', new: 'status-pill-new'
+  };
+  return `<span class="app-status ${map[s]||'status-pill-new'}">${s||'new'}</span>`;
+}
+
+// ─── NEW APPLICANT ────────────────────────────────
+function newApplicant() {
+  const a = {
+    id: uid(),
+    name: '',  email: '', phone: '',
+    address: '', unit: '', rent: '', moveIn: '',
+    creditScore: '', monthlyIncome: '', employer: '',
+    occupants: '', notes: '',
+    status: 'new',
+    checks: {},   // { cl-id: 'checked'|'fail'|'' }
+    inputs: {},   // { cl-credit: '720' }
+    createdAt: new Date().toISOString()
+  };
+  applicants.push(a);
+  currentId = a.id;
+  renderSidebar();
+  renderMain(a);
+  saveLocal();
+}
+
+// ─── SCORE ───────────────────────────────────────
+function scoreApplicant(a) {
+  const total   = CHECKLIST.length;
+  const checked = CHECKLIST.filter(c => a.checks[c.id] === 'checked').length;
+  const failed  = CHECKLIST.filter(c => a.checks[c.id] === 'fail').length;
+  const pct     = Math.round((checked / total) * 100);
+
+  const credit  = parseFloat(a.creditScore) || 0;
+  const rent    = parseFloat(a.rent) || 0;
+  const income  = parseFloat(a.monthlyIncome) || 0;
+  const ratio   = rent > 0 ? income / rent : 0;
+
+  const creditPass = credit >= 620;
+  const creditWarn = credit >= 580 && credit < 620;
+  const ratioPass  = ratio >= 3;
+  const ratioWarn  = ratio >= 2.5 && ratio < 3;
+
+  let verdict = 'screening';
+  if (failed > 0 || (!creditPass && credit > 0) || (!ratioPass && ratio > 0)) {
+    if (failed >= 2 || credit < 580 || ratio < 2) verdict = 'denied';
+    else verdict = 'pending';
+  } else if (pct === 100 && creditPass && ratioPass) {
+    verdict = 'approved';
+  } else if (pct >= 70) {
+    verdict = 'screening';
+  }
+
+  if (a.status === 'approved' || a.status === 'denied') verdict = a.status;
+
+  return { pct, checked, total, failed, credit, creditPass, creditWarn, ratio, ratioPass, ratioWarn, verdict };
+}
+
+// ─── RENDER SIDEBAR ──────────────────────────────
+function renderSidebar() {
+  const list = document.getElementById('applicant-list');
+  document.getElementById('app-count').textContent = applicants.length;
+
+  if (!applicants.length) {
+    list.innerHTML = '<div style="padding:20px;text-align:center;color:#6b6560;font-size:11px;">No applicants yet.</div>';
+    return;
+  }
+
+  list.innerHTML = applicants.map(a => {
+    const sc = scoreApplicant(a);
+    const isCurrent = a.id === currentId;
+    return `<div class="app-card status-${sc.verdict}${isCurrent?' active':''}" onclick="selectApplicant('${a.id}')">
+      <div class="app-name">${a.name || 'New Applicant'}</div>
+      <div class="app-address">${a.address ? a.address + (a.unit?' #'+a.unit:'') : 'No property yet'}</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px;">
+        ${statusPill(sc.verdict)}
+        <span style="font-size:10px;color:#6b6560;">${sc.pct}% complete</span>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ─── SELECT APPLICANT ─────────────────────────────
+function selectApplicant(id) {
+  currentId = id;
+  const a = applicants.find(x => x.id === id);
+  if (a) renderMain(a);
+  renderSidebar();
+}
+
+// ─── RENDER MAIN ─────────────────────────────────
+function renderMain(a) {
+  const sc = scoreApplicant(a);
+  document.getElementById('main-area').innerHTML = `
+
+    <!-- VERDICT -->
+    <div class="verdict-bar ${sc.verdict}" id="verdict-bar">
+      <div>
+        <div class="verdict-label">${sc.verdict.toUpperCase()}</div>
+        <div class="verdict-detail">
+          ${sc.checked} of ${sc.total} checks complete · ${sc.failed} failed items<br/>
+          Credit: ${a.creditScore||'—'} ${sc.creditPass?'✓ Passes':sc.creditWarn?'⚠ Marginal':'—'} &nbsp;|&nbsp;
+          Income ratio: ${sc.ratio>0?sc.ratio.toFixed(1)+'×':'—'} ${sc.ratioPass?'✓ Passes':sc.ratioWarn?'⚠ Marginal':'—'}
+        </div>
+      </div>
+      <div class="verdict-score">${sc.pct}%</div>
+      <div>
+        <select onchange="setStatus('${a.id}',this.value)" style="background:#0a0a0a;border:1px solid #2a2a2a;border-radius:6px;color:#fff;padding:7px 10px;font-family:Arial;font-size:12px;">
+          <option value="new"       ${a.status==='new'?'selected':''}>New</option>
+          <option value="screening" ${a.status==='screening'?'selected':''}>Screening</option>
+          <option value="pending"   ${a.status==='pending'?'selected':''}>Pending</option>
+          <option value="approved"  ${a.status==='approved'?'selected':''}>Approved</option>
+          <option value="denied"    ${a.status==='denied'?'selected':''}>Denied</option>
+        </select>
+        <button class="btn btn-danger btn-outline" style="margin-left:8px;padding:6px 12px;" onclick="deleteApplicant('${a.id}')">Delete</button>
+      </div>
+    </div>
+
+    <!-- SCORE CRITERIA -->
+    <div class="criteria-grid" style="margin-bottom:16px;">
+      <div class="criteria-item ${sc.creditPass?'pass':sc.creditWarn?'warn':'fail-c'}">
+        <div class="ci-label">Credit Score</div>
+        <div class="ci-val">${a.creditScore||'—'}</div>
+        <div class="ci-status">${sc.creditPass?'✓ Meets 620 min':sc.creditWarn?'⚠ Below 620':'✗ Does not qualify'}</div>
+      </div>
+      <div class="criteria-item ${sc.ratioPass?'pass':sc.ratioWarn?'warn':'fail-c'}">
+        <div class="ci-label">Income / Rent</div>
+        <div class="ci-val">${sc.ratio>0?sc.ratio.toFixed(1)+'×':'—'}</div>
+        <div class="ci-status">${sc.ratioPass?'✓ Meets 3× min':sc.ratioWarn?'⚠ Below 3×':'✗ Below minimum'}</div>
+      </div>
+      <div class="criteria-item neutral">
+        <div class="ci-label">Monthly Rent</div>
+        <div class="ci-val">${a.rent?'$'+Number(a.rent).toLocaleString():'—'}</div>
+        <div class="ci-status">Required income: ${a.rent?'$'+(Number(a.rent)*3).toLocaleString()+'/mo':'—'}</div>
+      </div>
+      <div class="criteria-item neutral">
+        <div class="ci-label">Checklist Progress</div>
+        <div class="ci-val">${sc.checked}/${sc.total}</div>
+        <div class="ci-status">${sc.failed} items failed</div>
+      </div>
+    </div>
+
+    <!-- APPLICANT INFO -->
+    <div class="card">
+      <div class="card-title">Applicant Information</div>
+      <div class="form-grid">
+        <div class="field"><label>Full Name</label>
+          <input type="text" value="${esc(a.name)}" oninput="updateField('${a.id}','name',this.value)" placeholder="Jane Smith"/>
+        </div>
+        <div class="field"><label>Email</label>
+          <input type="email" value="${esc(a.email)}" oninput="updateField('${a.id}','email',this.value)" placeholder="jane@email.com"/>
+        </div>
+        <div class="field"><label>Phone</label>
+          <input type="tel" value="${esc(a.phone)}" oninput="updateField('${a.id}','phone',this.value)" placeholder="(555) 555-5555"/>
+        </div>
+        <div class="field"><label>Desired Move-In Date</label>
+          <input type="date" value="${a.moveIn}" oninput="updateField('${a.id}','moveIn',this.value)"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROPERTY INFO -->
+    <div class="card">
+      <div class="card-title">Property & Rent</div>
+      <div class="form-grid">
+        <div class="field full"><label>Property Address</label>
+          <input type="text" value="${esc(a.address)}" oninput="updateField('${a.id}','address',this.value)" placeholder="123 Main St, Macon, GA"/>
+        </div>
+        <div class="field"><label>Unit</label>
+          <input type="text" value="${esc(a.unit)}" oninput="updateField('${a.id}','unit',this.value)" placeholder="Unit A"/>
+        </div>
+        <div class="field"><label>Monthly Rent ($)</label>
+          <input type="number" value="${a.rent}" oninput="updateField('${a.id}','rent',this.value)" placeholder="1100"/>
+        </div>
+        <div class="field"><label>Number of Occupants</label>
+          <input type="number" value="${a.occupants}" oninput="updateField('${a.id}','occupants',this.value)" placeholder="2"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANCIALS -->
+    <div class="card">
+      <div class="card-title">Financial Qualification</div>
+      <div class="form-grid">
+        <div class="field"><label>Credit Score</label>
+          <input type="number" value="${a.creditScore}" oninput="updateField('${a.id}','creditScore',this.value)" placeholder="Minimum 620"/>
+        </div>
+        <div class="field"><label>Monthly Gross Income ($)</label>
+          <input type="number" value="${a.monthlyIncome}" oninput="updateField('${a.id}','monthlyIncome',this.value)" placeholder="3300"/>
+        </div>
+        <div class="field"><label>Employer / Income Source</label>
+          <input type="text" value="${esc(a.employer)}" oninput="updateField('${a.id}','employer',this.value)" placeholder="Company name"/>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCREENING CHECKLIST -->
+    <div class="card">
+      <div class="card-title">Screening Checklist — Jordan</div>
+      <ul class="check-list">
+        ${CHECKLIST.map(item => renderCheckItem(a, item)).join('')}
+      </ul>
+    </div>
+
+    <!-- NOTES -->
+    <div class="card">
+      <div class="card-title">Internal Notes</div>
+      <div class="note-timestamp">Last updated: ${new Date(a.createdAt).toLocaleDateString()}</div>
+      <textarea style="width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:6px;color:#fff;padding:10px;font-family:Arial;font-size:12px;min-height:100px;resize:vertical;"
+        oninput="updateField('${a.id}','notes',this.value)"
+        placeholder="Internal notes — credit report observations, reference call notes, anything Jordan wants to document...">${esc(a.notes)}</textarea>
+    </div>
+
+  `;
+}
+
+function renderCheckItem(a, item) {
+  const state = a.checks[item.id] || '';
+  const boxClass = state === 'checked' ? 'checked' : state === 'fail' ? 'fail' : '';
+  const inputVal = a.inputs[item.id] || '';
+
+  return `<li class="check-item">
+    <div class="check-box ${boxClass}" onclick="cycleCheck('${a.id}','${item.id}')"></div>
+    <div class="check-label">
+      <div class="cl-title">${item.title}</div>
+      <div class="cl-sub">${item.sub}</div>
+      ${item.hasInput ? `<input class="cl-input" type="text" placeholder="${item.inputLabel}" value="${esc(inputVal)}" oninput="updateCheckInput('${a.id}','${item.id}',this.value)"/>` : ''}
+    </div>
+    <div class="check-status">
+      ${state === 'checked' ? '<span style="color:#5a8a5a;font-size:11px;font-weight:bold;">PASS</span>' :
+        state === 'fail'    ? '<span style="color:#8a3a3a;font-size:11px;font-weight:bold;">FAIL</span>' :
+        '<span style="color:#6b6560;font-size:11px;">—</span>'}
+    </div>
+  </li>`;
+}
+
+function esc(s) { return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ─── INTERACTIONS ─────────────────────────────────
+function cycleCheck(id, checkId) {
+  const a = applicants.find(x => x.id === id);
+  const cur = a.checks[checkId] || '';
+  a.checks[checkId] = cur === '' ? 'checked' : cur === 'checked' ? 'fail' : '';
+  renderMain(a);
+  renderSidebar();
+  saveLocal();
+}
+
+function updateCheckInput(id, checkId, val) {
+  const a = applicants.find(x => x.id === id);
+  a.inputs[checkId] = val;
+
+  // Auto-sync credit score and income
+  if (checkId === 'cl-credit') { a.creditScore = val; refreshVerdict(a); }
+  saveLocal();
+}
+
+function updateField(id, field, val) {
+  const a = applicants.find(x => x.id === id);
+  a[field] = val;
+  refreshVerdict(a);
+  renderSidebar();
+  saveLocal();
+}
+
+function refreshVerdict(a) {
+  const sc = scoreApplicant(a);
+  const vb = document.getElementById('verdict-bar');
+  if (!vb) return;
+  vb.className = 'verdict-bar ' + sc.verdict;
+  // update score display
+  const vs = vb.querySelector('.verdict-score');
+  if (vs) vs.textContent = sc.pct + '%';
+  const vd = vb.querySelector('.verdict-detail');
+  if (vd) vd.innerHTML = `
+    ${sc.checked} of ${sc.total} checks complete · ${sc.failed} failed items<br/>
+    Credit: ${a.creditScore||'—'} ${sc.creditPass?'✓ Passes':sc.creditWarn?'⚠ Marginal':'—'} &nbsp;|&nbsp;
+    Income ratio: ${sc.ratio>0?sc.ratio.toFixed(1)+'×':'—'} ${sc.ratioPass?'✓ Passes':sc.ratioWarn?'⚠ Marginal':'—'}
+  `;
+  const vl = vb.querySelector('.verdict-label');
+  if (vl) vl.textContent = sc.verdict.toUpperCase();
+}
+
+function setStatus(id, status) {
+  const a = applicants.find(x => x.id === id);
+  a.status = status;
+  const sc = scoreApplicant(a);
+  const vb = document.getElementById('verdict-bar');
+  if (vb) vb.className = 'verdict-bar ' + status;
+  renderSidebar();
+  saveLocal();
+}
+
+function deleteApplicant(id) {
+  if (!confirm('Remove this applicant?')) return;
+  applicants = applicants.filter(x => x.id !== id);
+  currentId = applicants.length ? applicants[0].id : null;
+  renderSidebar();
+  if (currentId) { renderMain(applicants.find(x => x.id === currentId)); }
+  else { document.getElementById('main-area').innerHTML = `<div class="empty-state"><div class="es-icon">🏠</div><h3>No applicants</h3><p>Click + New Applicant to begin.</p></div>`; }
+  saveLocal();
+}
+
+// ─── SAVE / LOAD ──────────────────────────────────
+function saveLocal() { localStorage.setItem('anchorpro-tenants', JSON.stringify(applicants)); }
+
+function saveAll() {
+  const blob = new Blob([JSON.stringify(applicants,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `AnchorPro_Tenants_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+// ─── DRAG DROP LOAD ───────────────────────────────
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (!file || !file.name.endsWith('.json')) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      applicants = JSON.parse(ev.target.result);
+      currentId = applicants.length ? applicants[0].id : null;
+      renderSidebar();
+      if (currentId) renderMain(applicants.find(x => x.id === currentId));
+    } catch { alert('Could not load file.'); }
+  };
+  reader.readAsText(file);
+});
+
+// ─── BOOT ─────────────────────────────────────────
+const saved = localStorage.getItem('anchorpro-tenants');
+if (saved) {
+  try {
+    applicants = JSON.parse(saved);
+    if (applicants.length) {
+      currentId = applicants[0].id;
+      renderSidebar();
+      renderMain(applicants[0]);
+    }
+  } catch { /* start fresh */ }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,2365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anchor Pro Solutions — Real Estate Partnership Proposal</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Georgia', serif;
+      color: #1a1a1a;
+      background: #faf8f4;
+      font-size: 13px;
+      line-height: 1.7;
+    }
+
+    /* COVER PAGE */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      min-height: 700px;
+      background: linear-gradient(160deg, #0a0a0a 0%, #1a1410 60%, #2a1f0a 100%);
+      color: #fff;
+      text-align: center;
+      padding: 60px 40px;
+      page-break-after: always;
+    }
+
+    .cover .logo-area {
+      border: 2px solid rgba(255,255,255,0.3);
+      padding: 18px 40px;
+      margin-bottom: 40px;
+      letter-spacing: 6px;
+      font-size: 11px;
+      text-transform: uppercase;
+      color: #f5f0e8;
+    }
+
+    .cover h1 {
+      font-size: 38px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .cover h2 {
+      font-size: 18px;
+      font-weight: normal;
+      color: #f5f0e8;
+      margin-bottom: 50px;
+      letter-spacing: 1px;
+    }
+
+    .cover .divider {
+      width: 60px;
+      height: 3px;
+      background: #c9a84c;
+      margin: 0 auto 40px;
+    }
+
+    .cover .meta {
+      font-size: 12px;
+      color: #b8b0a0;
+      line-height: 2.2;
+      letter-spacing: 0.5px;
+    }
+
+    .cover .meta strong {
+      color: #fff;
+      font-weight: normal;
+    }
+
+    .cover .confidential {
+      margin-top: 60px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    /* GENERAL LAYOUT */
+    .page {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 60px 70px;
+      page-break-after: always;
+    }
+
+    .page:last-child {
+      page-break-after: auto;
+    }
+
+    /* SECTION HEADERS */
+    .section-label {
+      font-size: 9px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #c9a84c;
+      margin-bottom: 8px;
+      font-family: 'Arial', sans-serif;
+    }
+
+    h2.section-title {
+      font-size: 26px;
+      color: #0a0a0a;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    .title-rule {
+      width: 50px;
+      height: 3px;
+      background: #c9a84c;
+      margin-bottom: 30px;
+    }
+
+    h3.sub-title {
+      font-size: 14px;
+      color: #0a0a0a;
+      margin: 28px 0 10px;
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
+      border-left: 3px solid #c9a84c;
+      padding-left: 10px;
+    }
+
+    p {
+      margin-bottom: 14px;
+      color: #2a2a2a;
+    }
+
+    /* TABLE OF CONTENTS */
+    .toc-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 10px 0;
+      border-bottom: 1px dotted #ddd;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .toc-item:last-child { border-bottom: none; }
+
+    .toc-num {
+      font-size: 10px;
+      color: #c9a84c;
+      letter-spacing: 2px;
+      margin-right: 14px;
+      font-weight: bold;
+    }
+
+    .toc-title { font-size: 13px; color: #1a1a1a; flex: 1; }
+    .toc-page { font-size: 11px; color: #999; }
+
+    /* CARDS / BOXES */
+    .card {
+      background: #f5f0e0;
+      border-left: 4px solid #c9a84c;
+      padding: 18px 22px;
+      margin: 18px 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .card-dark {
+      background: #0a0a0a;
+      color: #f5f0e8;
+      border-left: 4px solid #c9a84c;
+      padding: 22px 28px;
+      margin: 18px 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .card-dark p, .card-dark li { color: #f5f0e8; }
+    .card-dark h4 { color: #fff; margin-bottom: 10px; font-family: 'Arial', sans-serif; }
+
+    .highlight-box {
+      background: #f5f0e0;
+      border: 1px solid #c9a84c;
+      border-radius: 4px;
+      padding: 16px 20px;
+      margin: 16px 0;
+    }
+
+    .alert-box {
+      background: #f5f0e0;
+      border: 1px solid #c9843a;
+      border-radius: 4px;
+      padding: 14px 20px;
+      margin: 16px 0;
+      font-size: 12px;
+      color: #c9843a;
+    }
+
+    /* TABLES */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 18px 0;
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+    }
+
+    thead tr {
+      background: #0a0a0a;
+      color: #f5f0e8;
+    }
+
+    thead th {
+      padding: 10px 14px;
+      text-align: left;
+      font-weight: normal;
+      letter-spacing: 0.5px;
+      font-size: 11px;
+    }
+
+    tbody tr { border-bottom: 1px solid #d4cfc0; }
+    tbody tr:nth-child(even) { background: #f5f0e0; }
+
+    tbody td {
+      padding: 10px 14px;
+      color: #2a2a2a;
+      vertical-align: top;
+    }
+
+    td.label { font-weight: bold; color: #0a0a0a; width: 35%; }
+    td.value { color: #c9a84c; font-weight: bold; }
+
+    /* CODE / FORMULA BLOCKS */
+    .formula {
+      background: #080808;
+      color: #b8b0a0;
+      font-family: 'Courier New', monospace;
+      font-size: 11.5px;
+      padding: 20px 24px;
+      border-radius: 4px;
+      margin: 18px 0;
+      line-height: 2;
+    }
+
+    .formula .comment { color: #6b6560; }
+    .formula .highlight { color: #c9843a; font-weight: bold; }
+    .formula .positive { color: #5a8a5a; }
+    .formula .negative { color: #8a3a3a; }
+    .formula .separator {
+      border-top: 1px solid #6b6560;
+      margin: 6px 0;
+      display: block;
+    }
+
+    /* TEAM GRID */
+    .team-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .team-card {
+      background: #f5f0e0;
+      border-top: 4px solid #c9a84c;
+      padding: 18px 16px;
+      border-radius: 0 0 4px 4px;
+      text-align: center;
+    }
+
+    .team-card .initials {
+      width: 52px;
+      height: 52px;
+      background: #0a0a0a;
+      color: #f5f0e8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
+      margin: 0 auto 12px;
+    }
+
+    .team-card .name {
+      font-weight: bold;
+      font-size: 13px;
+      color: #0a0a0a;
+      font-family: 'Arial', sans-serif;
+      margin-bottom: 4px;
+    }
+
+    .team-card .role {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #c9a84c;
+      font-family: 'Arial', sans-serif;
+      margin-bottom: 10px;
+    }
+
+    .team-card ul {
+      list-style: none;
+      text-align: left;
+      font-size: 11px;
+      color: #3a3a3a;
+    }
+
+    .team-card ul li::before {
+      content: '→ ';
+      color: #c9a84c;
+    }
+
+    /* CHECKLIST */
+    .checklist { list-style: none; margin: 10px 0; }
+
+    .checklist li {
+      padding: 8px 0;
+      border-bottom: 1px solid #eee;
+      font-family: 'Arial', sans-serif;
+      font-size: 12px;
+      color: #2a2a2a;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .checklist li:last-child { border-bottom: none; }
+
+    .check-box {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #c9a84c;
+      border-radius: 3px;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .check-category {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #c9a84c;
+      font-family: 'Arial', sans-serif;
+      margin: 20px 0 8px;
+      font-weight: bold;
+    }
+
+    /* EQUITY VISUAL */
+    .equity-bar {
+      height: 32px;
+      border-radius: 4px;
+      overflow: hidden;
+      display: flex;
+      margin: 16px 0 8px;
+    }
+
+    .eq-a {
+      background: #0a0a0a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 11px;
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
+      width: 50%;
+    }
+
+    .eq-b {
+      background: #c9a84c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 11px;
+      font-family: 'Arial', sans-serif;
+      font-weight: bold;
+      width: 50%;
+    }
+
+    /* TIMELINE */
+    .timeline { margin: 20px 0; }
+
+    .timeline-item {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      align-items: flex-start;
+    }
+
+    .timeline-marker {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      background: #0a0a0a;
+      color: #f5f0e8;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Arial', sans-serif;
+      font-size: 11px;
+      font-weight: bold;
+    }
+
+    .timeline-content h4 {
+      font-family: 'Arial', sans-serif;
+      font-size: 13px;
+      color: #0a0a0a;
+      margin-bottom: 4px;
+    }
+
+    .timeline-content p { font-size: 12px; margin: 0; }
+
+    /* SIGNATURE BLOCK */
+    .sig-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+      margin-top: 40px;
+    }
+
+    .sig-block { border-top: 1px solid #333; padding-top: 10px; }
+
+    .sig-block .sig-name {
+      font-size: 12px;
+      font-family: 'Arial', sans-serif;
+      color: #0a0a0a;
+      font-weight: bold;
+    }
+
+    .sig-block .sig-title {
+      font-size: 10px;
+      color: #888;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .sig-line {
+      height: 50px;
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 8px;
+    }
+
+    /* PRINT */
+    @media print {
+      body { font-size: 12px; }
+      .cover { height: 100vh; }
+      .page { padding: 50px 60px; }
+      @page { margin: 0; size: letter; }
+    }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      font-size: 10px;
+      color: #aaa;
+      font-family: 'Arial', sans-serif;
+      padding-top: 40px;
+      border-top: 1px solid #eee;
+      margin-top: 40px;
+      letter-spacing: 1px;
+    }
+
+    .page-num {
+      position: relative;
+      text-align: right;
+      font-size: 10px;
+      color: #bbb;
+      font-family: 'Arial', sans-serif;
+      margin-bottom: -20px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin: 16px 0;
+    }
+
+    .stat-block {
+      background: #0a0a0a;
+      color: #f5f0e8;
+      padding: 20px;
+      border-radius: 4px;
+      text-align: center;
+    }
+
+    .stat-block .stat-num {
+      font-size: 28px;
+      font-weight: bold;
+      color: #c9a84c;
+      font-family: 'Arial', sans-serif;
+    }
+
+    .stat-block .stat-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #b8b0a0;
+      font-family: 'Arial', sans-serif;
+      margin-top: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════ COVER PAGE -->
+<div class="cover">
+  <div class="logo-area">Anchor Pro Solutions</div>
+  <h1>Real Estate Investment<br/>Partnership Proposal</h1>
+  <h2>Remodeling · BRRRR · Portfolio Growth</h2>
+  <div class="divider"></div>
+  <div class="meta">
+    <strong>Prepared by:</strong> Anchor Pro Solutions<br/>
+    <strong>Partnership:</strong> Anchor Pro Solutions × Landon Renovations<br/>
+    <strong>Phase 1:</strong> Remodeling Contracts — Cash Flow &amp; Capital Build<br/>
+    <strong>Phase 2:</strong> BRRRR Acquisitions — Buy · Rehab · Rent · Refinance · Repeat<br/>
+    <strong>Date:</strong> May 2026<br/>
+    <strong>Initial Capital:</strong> $30,000
+  </div>
+  <div class="confidential">Confidential — Not for Distribution</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ TABLE OF CONTENTS -->
+<div class="page">
+  <div class="page-num">2</div>
+  <div class="section-label">Navigation</div>
+  <h2 class="section-title">Table of Contents</h2>
+  <div class="title-rule"></div>
+
+  <div class="toc-item"><span class="toc-num">01</span><span class="toc-title">Executive Summary</span><span class="toc-page">3</span></div>
+  <div class="toc-item"><span class="toc-num">02</span><span class="toc-title">The Partnership Team</span><span class="toc-page">4</span></div>
+  <div class="toc-item"><span class="toc-num">03</span><span class="toc-title">Business Structure & Legal Framework</span><span class="toc-page">5</span></div>
+  <div class="toc-item"><span class="toc-num">04</span><span class="toc-title">BRRRR Investment Strategy</span><span class="toc-page">6</span></div>
+  <div class="toc-item"><span class="toc-num">05</span><span class="toc-title">Deal Analyzer Framework</span><span class="toc-page">7</span></div>
+  <div class="toc-item"><span class="toc-num">06</span><span class="toc-title">Capital Stack & Financing</span><span class="toc-page">8</span></div>
+  <div class="toc-item"><span class="toc-num">07</span><span class="toc-title">Marketing & Lead Generation</span><span class="toc-page">9</span></div>
+  <div class="toc-item"><span class="toc-num">08</span><span class="toc-title">Supplier Account Strategy</span><span class="toc-page">10</span></div>
+  <div class="toc-item"><span class="toc-num">09</span><span class="toc-title">Bidding & Project Management System</span><span class="toc-page">11</span></div>
+  <div class="toc-item"><span class="toc-num">10</span><span class="toc-title">Portfolio Growth Timeline</span><span class="toc-page">12</span></div>
+  <div class="toc-item"><span class="toc-num">11</span><span class="toc-title">$1 Million Portfolio — Year One Acceleration Plan</span><span class="toc-page">13</span></div>
+  <div class="toc-item"><span class="toc-num">12</span><span class="toc-title">30-Day Launch Checklist</span><span class="toc-page">15</span></div>
+  <div class="toc-item"><span class="toc-num">13</span><span class="toc-title">Exit, Buyout & Dissolution Framework</span><span class="toc-page">16</span></div>
+  <div class="toc-item"><span class="toc-num">14</span><span class="toc-title">Signature & Agreement</span><span class="toc-page">18</span></div>
+  <div class="toc-item"><span class="toc-num">15</span><span class="toc-title">Community Giveback & Nonprofit Initiative</span><span class="toc-page">20</span></div>
+  <div class="toc-item"><span class="toc-num">16</span><span class="toc-title">Employees & Subcontractor Framework</span><span class="toc-page">21</span></div>
+  <div class="toc-item"><span class="toc-num">17</span><span class="toc-title">Operational Cost Framework</span><span class="toc-page">22</span></div>
+  <div class="toc-item"><span class="toc-num">19</span><span class="toc-title">Services Menu & Pricing Guide</span><span class="toc-page">24</span></div>
+  <div class="toc-item"><span class="toc-num">20</span><span class="toc-title">Subsidiary Business Framework</span><span class="toc-page">25</span></div>
+  <div class="toc-item"><span class="toc-num">21</span><span class="toc-title">Company Name Selection</span><span class="toc-page">26</span></div>
+
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 01 EXECUTIVE SUMMARY -->
+<div class="page">
+  <div class="page-num">3</div>
+  <div class="section-label">Section 01</div>
+  <h2 class="section-title">Executive Summary</h2>
+  <div class="title-rule"></div>
+
+  <p>This proposal outlines the formation of a real estate investment partnership between <strong>Anchor Pro Solutions</strong> and <strong>Landon Renovations</strong>, with <strong>Ty Jackson</strong> (Anchor Pro — owner, marketing &amp; business operations) and <strong>Jordan Sarabia</strong> (Landon Renovations — graphic design &amp; brand) providing dual-sided marketing and operational support. The partnership launches in two deliberate phases: <strong>Phase 1</strong> generates immediate cash flow through remodeling and renovation contracts — leveraging Jeff's hands-on construction expertise to build operating capital, establish supplier relationships, and prove the team's execution ability. <strong>Phase 2</strong> deploys that capital into the <strong>BRRRR method</strong> (Buy, Rehab, Rent, Refinance, Repeat) — acquiring distressed properties, renovating them to force appreciation, placing quality tenants, and recycling capital through cash-out refinances to fund ongoing acquisitions.</p>
+
+  <p>Starting with remodeling is not a step back — it is the foundation. Every job builds credit history, supplier accounts, a subcontractor network, and a reputation that makes the first BRRRR acquisition easier to fund and execute.</p>
+
+  <div class="two-col">
+    <div class="stat-block">
+      <div class="stat-num">$30K</div>
+      <div class="stat-label">Initial Capital Committed</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">Phase 1</div>
+      <div class="stat-label">Remodeling &amp; Renovation Contracts</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">Phase 2</div>
+      <div class="stat-label">BRRRR Portfolio Acquisitions</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num">$250+</div>
+      <div class="stat-label">Target Cash Flow / Door / Mo</div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Mission Statement</h3>
+  <p>To build a self-sustaining residential real estate portfolio through strategic acquisitions, in-house renovation, and disciplined refinancing — creating long-term wealth and passive income for all partners while providing quality housing to our communities.</p>
+
+  <h3 class="sub-title">Phase 1 Objectives — Remodeling Launch (Months 1–6)</h3>
+  <table>
+    <thead><tr><th>Objective</th><th>Target</th><th>Timeline</th></tr></thead>
+    <tbody>
+      <tr><td>Entity Formation</td><td>LLC formed, EIN obtained, accounts opened</td><td>Month 1</td></tr>
+      <tr><td>First Remodel Job</td><td>Secured via referral, social, or direct outreach</td><td>Month 1–2</td></tr>
+      <tr><td>Supplier Accounts</td><td>Net-30 accounts with HD Supply, Sherwin-Williams</td><td>Month 1–3</td></tr>
+      <tr><td>Pipeline Built</td><td>3–5 active remodel leads in CRM at all times</td><td>Month 2–4</td></tr>
+      <tr><td>Capital Reserve Hit</td><td>$15K+ operating reserve from remodel profits</td><td>Month 4–6</td></tr>
+      <tr><td>Business Credit Active</td><td>First Net-30 tradelines reporting to Dun &amp; Bradstreet</td><td>Month 3–6</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Phase 2 Objectives — BRRRR Launch (Months 6–18)</h3>
+  <table>
+    <thead><tr><th>Objective</th><th>Target</th><th>Timeline</th></tr></thead>
+    <tbody>
+      <tr><td>First Acquisition</td><td>Distressed property at ≤70% ARV all-in</td><td>Month 6–8</td></tr>
+      <tr><td>First Rehab</td><td>Landon Renovations leads execution</td><td>Month 8–10</td></tr>
+      <tr><td>First Tenant</td><td>Qualified tenant placed, rent flowing</td><td>Month 10–11</td></tr>
+      <tr><td>First Refinance</td><td>Cash-out at ARV, capital recycled</td><td>Month 14–16</td></tr>
+      <tr><td>Deal #2 Initiated</td><td>Redeployed capital into next acquisition</td><td>Month 16–18</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 02 THE TEAM -->
+<div class="page">
+  <div class="page-num">4</div>
+  <div class="section-label">Section 02</div>
+  <h2 class="section-title">The Partnership Team</h2>
+  <div class="title-rule"></div>
+
+  <p>The strength of this venture lies in the completeness of the team. Each partner brings a distinct, non-overlapping skill set that maps directly to a critical function across both the remodeling business and the BRRRR investment cycle.</p>
+
+  <div class="team-grid">
+    <div class="team-card">
+      <div class="initials">AP</div>
+      <div class="name">Anchor Pro Solutions</div>
+      <div class="role">CEO · Finance · Business Dev</div>
+      <ul>
+        <li>Business credit &amp; capital access</li>
+        <li>Deal sourcing &amp; underwriting</li>
+        <li>Lender &amp; investor relations</li>
+        <li>Entity structure &amp; compliance</li>
+        <li>Marketing degree — strategy</li>
+      </ul>
+    </div>
+    <div class="team-card">
+      <div class="initials">TJ</div>
+      <div class="name">Ty Jackson</div>
+      <div class="role">Anchor Pro · Marketing &amp; Business Operations</div>
+      <ul>
+        <li>Paid social media ads (Facebook, Instagram)</li>
+        <li>Auto-posting &amp; content scheduling</li>
+        <li>Comment replies &amp; DM communications</li>
+        <li>Inbound calls routed directly to DMs</li>
+        <li>YouTube channel management &amp; content</li>
+        <li>CRM management &amp; deal pipeline</li>
+      </ul>
+    </div>
+    <div class="team-card">
+      <div class="initials">JS</div>
+      <div class="name">Jeff Sarabia</div>
+      <div class="role">Landon Renovations · COO · Construction</div>
+      <ul>
+        <li>Framing, decks &amp; remodels</li>
+        <li>Subcontractor network</li>
+        <li>Rehab scoping &amp; estimating</li>
+        <li>Project execution &amp; QC</li>
+        <li>Material sourcing &amp; relationships</li>
+      </ul>
+    </div>
+    <div class="team-card">
+      <div class="initials">JO</div>
+      <div class="name">Jordan Sarabia</div>
+      <div class="role">Landon Renovations · Marketing &amp; Business Operations</div>
+      <ul>
+        <li>Brand development</li>
+        <li>Lead generation campaigns</li>
+        <li>Tenant marketing &amp; screening</li>
+        <li>Social media &amp; digital presence</li>
+        <li>Business operations — Landon side</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Phase Ownership — Remodeling &amp; BRRRR</h3>
+  <table>
+    <thead><tr><th>Function</th><th>Primary Owner</th><th>Support</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Remodel Contracts</strong> — Client jobs, decks, kitchens, renovations</td><td>Landon Renovations (Jeff)</td><td>Anchor Pro (bidding, financing)</td></tr>
+      <tr><td><strong>Marketing</strong> — Lead gen, brand, social, content</td><td>Ty Jackson (Anchor Pro) + Jordan Sarabia (Landon)</td><td>Both sides coordinated</td></tr>
+      <tr><td><strong>Business Operations</strong> — Admin, CRM, reporting, compliance</td><td>Ty Jackson (Anchor Pro) + Jordan Sarabia (Landon)</td><td>Both sides coordinated</td></tr>
+      <tr><td><strong>Buy</strong> — Deal sourcing, offers, financing</td><td>Anchor Pro Solutions</td><td>Ty Jackson (pipeline mgmt)</td></tr>
+      <tr><td><strong>Rehab</strong> — Scope, subs, execution, QC</td><td>Landon Renovations (Jeff)</td><td>Anchor Pro (budget oversight)</td></tr>
+      <tr><td><strong>Rent</strong> — Listing, screening, placement</td><td>Jordan Sarabia + Ty Jackson</td><td>Anchor Pro (lease review)</td></tr>
+      <tr><td><strong>Refinance</strong> — Lender relations, cash-out</td><td>Anchor Pro Solutions</td><td>All partners review</td></tr>
+      <tr><td><strong>Repeat</strong> — Redeploy capital, next deal</td><td>All Partners</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Compensation Philosophy</h3>
+  <p>Each partner is compensated for both their <em>work</em> and their <em>equity</em> separately. This prevents resentment and keeps the partnership equitable as roles evolve.</p>
+
+  <div class="card">
+    <strong>Jeff Sarabia (Landon Renovations)</strong> is compensated at <strong>30% of gross profit</strong> per job — gross profit being revenue minus hard material costs and subcontractor invoices. This aligns Jeff's compensation directly with the value he creates, not a flat hourly rate. His equity stake in the 50/50 split rewards his partnership contribution on top of this.<br/><br/>
+    <strong>Anchor Pro Solutions</strong> charges a management/oversight fee (<strong>5% of gross revenue</strong>) per deal for deal sourcing, financing coordination, and business oversight.<br/><br/>
+    <strong>Ty Jackson (Anchor Pro)</strong> is compensated through two separate streams, both flowing through Anchor Pro Solutions: <strong>3% of gross revenue</strong> per job for marketing (paid social ads, auto-posting, DM engagement, inbound call routing, YouTube, CRM); and <strong>$30/hr</strong> for any field labor performed on job sites alongside Jeff, billed as a pre-waterfall labor cost.<br/><br/>
+    <strong>Jordan Sarabia (Landon Renovations)</strong> is compensated at <strong>3% of gross revenue</strong> per job — flowing through Landon Renovations for brand management, lead generation, social media, and Landon-side business operations.
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 03 BUSINESS STRUCTURE -->
+<div class="page">
+  <div class="page-num">5</div>
+  <div class="section-label">Section 03</div>
+  <h2 class="section-title">Business Structure & Legal Framework</h2>
+  <div class="title-rule"></div>
+
+  <h3 class="sub-title">Entity Formation</h3>
+  <p>A new, standalone LLC will be formed exclusively for this partnership. Neither Anchor Pro Solutions nor Jeff's existing business entity will be used — this ensures clean liability separation, accurate financial tracking, and flexibility for future investors.</p>
+
+  <table>
+    <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td class="label">Entity Type</td><td>Multi-Member LLC</td></tr>
+      <tr><td class="label">Recommended Name</td><td>[To be agreed — something neutral and scalable]</td></tr>
+      <tr><td class="label">Tax Election</td><td><strong>S-Corporation election</strong> — LLC taxed as S-Corp. Partners take a reasonable salary; remaining profit distributed to reduce self-employment tax liability. IRS Form 2553 to be filed within 75 days of formation or by the elected effective date.</td></tr>
+      <tr><td class="label">Registered Agent</td><td>Retained legal counsel or registered agent service</td></tr>
+      <tr><td class="label">EIN</td><td>Apply immediately upon formation (IRS.gov — free)</td></tr>
+      <tr><td class="label">Business Bank Account</td><td>Dedicated account, all deal funds flow through LLC</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Ownership Structure</h3>
+  <p>Recommended structure keeps decision-making streamlined while fairly representing the two sides of the partnership:</p>
+
+  <div class="equity-bar">
+    <div class="eq-a">Anchor Pro Solutions — 50%</div>
+    <div class="eq-b">Jeff + Wife Entity — 50%</div>
+  </div>
+  <p style="font-size:11px; color:#888; font-family:Arial,sans-serif;">Jeff and his wife hold their combined 50% through their own entity or as individual members — their internal split is their decision.</p>
+
+  <h3 class="sub-title">Operating Agreement — Key Terms</h3>
+  <p>An attorney-drafted Operating Agreement (budget $500–$1,500) must be completed before the first deal closes. The following terms must be addressed:</p>
+
+  <table>
+    <thead><tr><th>Term</th><th>Recommended Position</th></tr></thead>
+    <tbody>
+      <tr><td class="label">Capital Contributions</td><td>Anchor Pro: $30,000 cash. Jeff: labor credit and sweat equity on Deal #1 rehab.</td></tr>
+      <tr><td class="label">Decision Authority</td><td>Expenses under $5,000 — either managing partner. Over $5,000 — both must approve.</td></tr>
+      <tr><td class="label">Profit Distribution</td><td>After all fees and labor paid — 50/50 split per deal</td></tr>
+      <tr><td class="label">Jeff's Labor</td><td>Paid at prevailing market rate as a subcontractor before profit is split</td></tr>
+      <tr><td class="label">Anchor Pro Management Fee</td><td>5% of gross revenue per deal, paid before profit split</td></tr>
+      <tr><td class="label">Buy-Out Clause</td><td>Either partner may buy out the other at agreed fair value with 90-day notice</td></tr>
+      <tr><td class="label">Deadlock Resolution</td><td>Mediation first, then binding arbitration — no litigation</td></tr>
+      <tr><td class="label">Property Ownership</td><td>All properties held in LLC name — no individual titling</td></tr>
+      <tr><td class="label">New Partners / Investors</td><td>Requires unanimous consent of all managing members</td></tr>
+      <tr><td class="label">Death / Disability</td><td>Estate inherits economic rights; management rights revert to surviving partners</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <strong>Capital Reinvestment Note:</strong> The initial $30,000 investment from Anchor Pro Solutions is treated as contributed capital to the LLC. After all project expenses are covered, profits are distributed to partners according to equity splits. Capital is then reinvested into the next deal — the goal is portfolio growth, not capital extraction. All partners benefit equally from that compounding as equity holders.
+  </div>
+
+  <h3 class="sub-title">Profit Waterfall — How Every Dollar Gets Distributed</h3>
+  <p>Before any net profit is split, each party is made whole for the work they contributed. This is the agreed order of operations on every deal:</p>
+
+  <div class="formula">
+<span class="comment">// PROFIT WATERFALL — Applied to Every Remodel Job &amp; Every BRRRR Deal</span>
+
+<span class="ft-label">GROSS REVENUE (or Gross Profit at Sale / Refi)   </span><span class="ft-value">$X</span>
+
+<span class="comment">// Step 1 — Hard Costs (come off the top, before anything else)</span>
+<span class="ft-label">− Materials &amp; subcontractor invoices              </span><span class="ft-value">− actual cost</span>
+<span class="ft-label">− Closing costs / lender fees                     </span><span class="ft-value">− actual cost</span>
+<span class="ft-label">− Carrying costs (interest, utilities)             </span><span class="ft-value">− actual cost</span>
+<span class="ft-sep"></span>
+<span class="ft-label">= GROSS PROFIT                                    </span><span class="ft-result">= $X</span>
+
+<span class="comment">// Step 2 — Contributor Fees (paid before profit split)</span>
+<span class="ft-label">− Jeff Sarabia labor (30% of gross profit)         </span><span class="ft-value">− $ (Landon Renovations)</span>
+<span class="ft-label">− Anchor Pro management fee (5% gross revenue)    </span><span class="ft-value">− $ (Anchor Pro Solutions)</span>
+<span class="ft-label">− Jordan Sarabia (3% gross revenue → Landon)      </span><span class="ft-value">− $ (Landon Renovations)</span>
+<span class="ft-label">− Ty Jackson (3% gross revenue → Anchor Pro)      </span><span class="ft-value">− $ (Anchor Pro Solutions)</span>
+<span class="ft-sep"></span>
+<span class="ft-label">= NET DISTRIBUTABLE PROFIT                        </span><span class="ft-result">= $X</span>
+
+<span class="comment">// Step 3 — 50/50 Split of Net Distributable Profit</span>
+<span class="ft-label">Anchor Pro Solutions (50%)                        </span><span class="ft-result">+ $X</span>
+<span class="ft-label">Landon Renovations (50%)                          </span><span class="ft-result">+ $X</span>
+  </div>
+
+  <h3 class="sub-title">Example — $150,000 ARV BRRRR Deal</h3>
+  <p style="font-size:12px; color:#888; margin-bottom:10px;">Gross profit: $42,000 (ARV − purchase − hard costs). Revenue base used for % fees: $42,000.</p>
+  <table>
+    <thead><tr><th>Line Item</th><th>Amount</th><th>Goes To</th></tr></thead>
+    <tbody>
+      <tr><td>Gross Profit (ARV − purchase − hard costs)</td><td>$42,000</td><td>LLC</td></tr>
+      <tr><td>− Jeff's Labor (30% of $42,000 gross profit)</td><td>− $12,600</td><td>Landon Renovations</td></tr>
+      <tr><td>− Anchor Pro Management Fee (5% of revenue)</td><td>− $2,100</td><td>Anchor Pro Solutions</td></tr>
+      <tr><td>− Jordan Sarabia (3% of revenue → Landon)</td><td>− $1,260</td><td>Landon Renovations</td></tr>
+      <tr><td>− Ty Jackson (3% of revenue → Anchor Pro)</td><td>− $1,260</td><td>Anchor Pro Solutions</td></tr>
+      <tr><td><strong>= Net Distributable Profit</strong></td><td><strong>$24,780</strong></td><td>Split 50/50</td></tr>
+      <tr style="background:#1a2a1a"><td><strong>Anchor Pro Solutions (50%)</strong></td><td><strong>$12,390</strong></td><td>Anchor Pro (+ $2,100 mgmt + $1,260 Ty = $15,750 total)</td></tr>
+      <tr style="background:#1a2a1a"><td><strong>Landon Renovations (50%)</strong></td><td><strong>$12,390</strong></td><td>Landon (+ $12,600 Jeff + $1,260 Jordan = $26,250 total)</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card-dark" style="margin-top:14px;">
+    <p><strong>Note on Reinvestment:</strong> Partners may elect by unanimous vote to reinvest all or a portion of their 50% share into the next deal rather than take a distribution. This is the preferred approach during Phase 1 and Phase 2 scale-up — compounding the portfolio rather than extracting cash early accelerates the path to $1M in holdings.</p>
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 04 BRRRR STRATEGY -->
+<div class="page">
+  <div class="page-num">6</div>
+  <div class="section-label">Section 04</div>
+  <h2 class="section-title">BRRRR Investment Strategy</h2>
+  <div class="title-rule"></div>
+
+  <p>The BRRRR method is the core wealth-building engine of this partnership. Unlike flipping, which produces taxable income and requires constant deal flow, BRRRR builds an appreciating portfolio while recycling the same capital across multiple acquisitions.</p>
+
+  <h3 class="sub-title">The Five Phases</h3>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-marker">B</div>
+      <div class="timeline-content">
+        <h4>Buy — Acquire Below Market</h4>
+        <p>Target distressed, off-market, or under-valued properties priced so that total cost (purchase + rehab) stays at or below 70% of After Repair Value. Anchor Pro leads acquisition, financing, and offer negotiation.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-marker">R</div>
+      <div class="timeline-content">
+        <h4>Rehab — Force Appreciation</h4>
+        <p>Landon Renovations executes the renovation, maximizing value-add while controlling costs. Scope is defined before closing. Jeff is compensated at 30% of gross profit on each job. Target: rehab complete in 60–90 days.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-marker">R</div>
+      <div class="timeline-content">
+        <h4>Rent — Place a Quality Tenant</h4>
+        <p>Jordan markets the unit and manages the tenant screening process. Target: qualified tenant in place within 30 days of rehab completion. Tenant placement triggers the seasoning clock for refinance.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-marker">R</div>
+      <div class="timeline-content">
+        <h4>Refinance — Extract Equity</h4>
+        <p>After 6–12 months seasoning, refinance at the new appraised ARV. A DSCR loan (qualifies on rental income, not personal income) is the preferred vehicle for scalability. Pull out as much capital as possible while maintaining positive cash flow.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-marker">R</div>
+      <div class="timeline-content">
+        <h4>Repeat — Redeploy Capital</h4>
+        <p>Cash-out proceeds fund the next acquisition. The portfolio grows with the same initial capital base, compounding over time. Target 2–3 deals per year by Year 3.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Target Property Criteria</h3>
+  <table>
+    <thead><tr><th>Criterion</th><th>Target Range</th></tr></thead>
+    <tbody>
+      <tr><td class="label">Purchase Price</td><td>$60,000 – $110,000</td></tr>
+      <tr><td class="label">Rehab Budget</td><td>$20,000 – $50,000</td></tr>
+      <tr><td class="label">After Repair Value (ARV)</td><td>$130,000 – $200,000</td></tr>
+      <tr><td class="label">All-In Cost / ARV</td><td>≤ 70% improved/residential · ≤ 65% raw land (hard rules — no exceptions)</td></tr>
+      <tr><td class="label">Rent-to-Price Ratio</td><td>≥ 1% monthly (e.g., $1,400/mo on $140k value)</td></tr>
+      <tr><td class="label">Property Type</td><td>Single family, small multi-family (2–4 units preferred)</td></tr>
+      <tr><td class="label">Condition</td><td>Cosmetic to moderate rehab — avoid foundation/structural</td></tr>
+      <tr><td class="label">Geography</td><td>Within Jeff's reasonable drive for rehab management</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Seasoning & Refinance Timing</h3>
+  <div class="formula">
+    <span class="comment">// Typical BRRRR Timeline Per Deal</span>
+    Month 0:      Close acquisition
+    Month 1–3:    Rehab execution (Landon Renovations)
+    Month 3–4:    <span class="highlight">Tenant placed — seasoning clock starts</span>
+    Month 4–10:   Seasoning period (lender requirement)
+    Month 10–12:  <span class="positive">Refinance at ARV — cash out extracted</span>
+    Month 12–14:  Capital redeployed → <span class="highlight">Deal #2 initiated</span>
+  </div>
+
+  <h3 class="sub-title">Vacation Rental Strategy — Phase 3+</h3>
+  <div class="card">
+    <p>Ironwood expands into short-term vacation rentals in two proven high-demand markets: the <strong>North Georgia Mountains</strong> (Blue Ridge, Ellijay, Dahlonega) and the <strong>Florida Emerald Coast</strong> (Destin, 30A/Santa Rosa Beach, Panama City Beach). Vacation rentals are managed by Ty Jackson under his active Georgia real estate license. Target nightly rates: <strong>$150–$350/night</strong> (GA mountains), <strong>$250–$500/night</strong> (FL coast). Target occupancy: <strong>65–70%</strong> (GA), <strong>70–75%</strong> (FL). PM fee: <strong>25% of gross revenue</strong>. Platform fee: <strong>3% (Airbnb/VRBO)</strong>. VR properties follow the same 70% ARV acquisition rule and are evaluated for individual LLC formation for liability isolation.</p>
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 05 DEAL ANALYZER -->
+<div class="page">
+  <div class="page-num">7</div>
+  <div class="section-label">Section 05</div>
+  <h2 class="section-title">Deal Analyzer Framework</h2>
+  <div class="title-rule"></div>
+
+  <p>Every deal must pass through a standardized analysis before an offer is made. This framework removes emotion from the decision and ensures every acquisition meets the partnership's minimum return thresholds.</p>
+
+  <h3 class="sub-title">Step 1 — Determine Maximum Allowable Offer (MAO)</h3>
+  <div class="formula">
+    <span class="comment">// Work backwards from ARV — never from asking price</span>
+    <span class="comment">// Standard properties: 70% rule | Raw land: 65% rule</span>
+
+    ARV (After Repair Value)          =  $___________
+
+    <span class="comment">// Choose the applicable rule:</span>
+    × 70% Rule  (improved / residential)  ×  0.70
+    × 65% Rule  (raw land acquisitions)   ×  0.65
+    <span class="separator"></span>
+    Max All-In Cost                    =  $___________
+    − Estimated Rehab Cost             −  $___________
+    − Closing Costs (buy side ~2–3%)   −  $___________
+    − Carrying Costs (loan interest)   −  $___________
+    <span class="separator"></span>
+    <span class="highlight">Maximum Allowable Offer (MAO)      =  $___________</span>
+
+    <span class="comment">// If the seller won't come down to MAO — walk away</span>
+  </div>
+
+  <h3 class="sub-title">Step 2 — Rehab Cost Estimator (Jeff's Scope Sheet)</h3>
+  <table>
+    <thead><tr><th>Category</th><th>Estimated Cost</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Roof</td><td>$__________</td><td>Age, condition, full replace vs. repair</td></tr>
+      <tr><td>HVAC</td><td>$__________</td><td>Furnace, AC, ductwork</td></tr>
+      <tr><td>Electrical</td><td>$__________</td><td>Panel, wiring, outlets</td></tr>
+      <tr><td>Plumbing</td><td>$__________</td><td>Pipes, fixtures, water heater</td></tr>
+      <tr><td>Framing / Structural</td><td>$__________</td><td>Jeff's specialty — flag immediately</td></tr>
+      <tr><td>Flooring</td><td>$__________</td><td>LVP preferred for durability</td></tr>
+      <tr><td>Kitchen</td><td>$__________</td><td>Cabinets, counters, appliances</td></tr>
+      <tr><td>Bathrooms</td><td>$__________</td><td>Tile, vanity, fixtures</td></tr>
+      <tr><td>Paint (interior)</td><td>$__________</td><td>Sherwin-Williams account pricing</td></tr>
+      <tr><td>Exterior / Curb Appeal</td><td>$__________</td><td>Paint, landscaping, doors</td></tr>
+      <tr><td>Permits & Inspections</td><td>$__________</td><td>Always budget for this</td></tr>
+      <tr><td>Miscellaneous</td><td>$__________</td><td>—</td></tr>
+      <tr><td><strong>Subtotal</strong></td><td><strong>$__________</strong></td><td></td></tr>
+      <tr><td><strong>+ 15% Contingency</strong></td><td><strong>$__________</strong></td><td>Non-negotiable buffer</td></tr>
+      <tr><td><strong>Total Rehab Budget</strong></td><td><strong>$__________</strong></td><td></td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Step 3 — Cash Flow Projection</h3>
+  <div class="formula">
+    <span class="comment">// Monthly cash flow after refinance (stabilized)</span>
+
+    Gross Monthly Rent                 =  $___________
+    − Vacancy Reserve (8%)            −  $___________
+    − Property Management (if any)    −  $___________
+    − Repairs Reserve (5–10%)         −  $___________
+    − Insurance                       −  $___________
+    − Property Taxes                  −  $___________
+    <span class="separator"></span>
+    Net Operating Income (NOI)         =  $___________
+    − DSCR Loan Payment (PITI)        −  $___________
+    <span class="separator"></span>
+    <span class="positive">Monthly Cash Flow                  =  $___________</span>
+    <span class="comment">// Minimum acceptable: $150/mo. Target: $250+/mo</span>
+  </div>
+
+  <h3 class="sub-title">Step 4 — Refinance Scenario</h3>
+  <div class="formula">
+    Total Capital Invested             =  Purchase + Rehab + Costs
+    ARV at Refinance                   =  $___________
+    × 75% LTV (lender maximum)         ×  0.75
+    <span class="separator"></span>
+    Loan Amount                        =  $___________
+    − Total Capital Invested          −  $___________
+    <span class="separator"></span>
+    <span class="highlight">Cash Returned to Partnership       =  $___________</span>
+    <span class="comment">// Goal: return 80–100% of invested capital for full recycle</span>
+  </div>
+
+  <h3 class="sub-title">Go / No-Go Decision Rules</h3>
+  <div class="card">
+    <strong>GO</strong> if: All-in cost ≤ 70% ARV (improved) or ≤ 65% ARV (raw land) · Cash flow ≥ $150/mo after refi · Rehab within Jeff's capacity · Refinance returns ≥ 70% of capital<br/><br/>
+    <strong>NO-GO</strong> if: Seller won't meet MAO · Structural/foundation issues · Cash flow negative after refi · Rehab timeline exceeds 4 months
+  </div>
+
+  <h3 class="sub-title">Target Investment Markets — Georgia</h3>
+  <p>Georgia offers an ideal environment for the BRRRR strategy — landlord-friendly laws, strong population growth, and significant price spread between distressed acquisition costs and ARV in secondary and tertiary markets.</p>
+
+  <table>
+    <thead><tr><th>Market</th><th>Why It Works</th><th>Strategy Fit</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Macon</strong></td><td>Low acquisition costs ($60–90K range), strong rent demand, affordable rehab market, less competition than Atlanta metro</td><td>Primary BRRRR target — best price-to-rent ratio in the state</td></tr>
+      <tr><td><strong>Augusta</strong></td><td>Steady population, military presence (Fort Eisenhower) drives consistent rental demand, affordable distressed inventory</td><td>Strong buy-and-hold fundamentals, reliable tenants</td></tr>
+      <tr><td><strong>Columbus</strong></td><td>Fort Moore (formerly Benning) military base = built-in rental demand, below-market acquisition prices, improving downtown</td><td>BRRRR + potential small multifamily</td></tr>
+      <tr><td><strong>Rome / Floyd County</strong></td><td>Growing bedroom community northwest of Atlanta, lower prices than Atlanta suburbs, Landon Renovations crew accessible</td><td>Good entry point — lower cost, appreciating values</td></tr>
+      <tr><td><strong>Warner Robins</strong></td><td>Robins Air Force Base = consistent tenant pool, stable economy, strong single-family rental demand</td><td>Low-risk buy-and-hold, predictable cash flow</td></tr>
+      <tr><td><strong>Savannah (outskirts)</strong></td><td>Rapid growth corridor, tourism economy, strong appreciation — stay outside the expensive historic district</td><td>Appreciation play — pair BRRRR with longer hold</td></tr>
+      <tr><td><strong>LaGrange / Troup County</strong></td><td>Kia manufacturing plant driving job growth and housing demand, very affordable entry prices</td><td>Emerging market — early mover advantage</td></tr>
+      <tr><td><strong>Albany / Dougherty County</strong></td><td>Deep value market, significant distressed inventory, high rent yields — requires stronger management</td><td>High cash flow, higher management intensity</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <strong>Georgia Landlord Law Advantage:</strong> Georgia is a landlord-friendly state. Eviction timelines are relatively fast (30–45 days), no rent control, and security deposit rules are straightforward. This matters for BRRRR — tenant risk is manageable, which protects cash flow during the seasoning period before refinance.
+  </div>
+
+  <div class="alert-box">
+    <strong>Raw Land Note:</strong> For raw land acquisitions in Georgia, focus on growth corridors — areas within 30–60 minutes of Atlanta, Savannah, or Augusta where infrastructure is expanding. Apply the 65% MAO rule strictly. Target land with utility access or easy permitting potential. Paulding County, Jackson County, and the I-85 corridor (LaGrange to Auburn, AL) are worth watching.
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 06 CAPITAL STACK -->
+<div class="page">
+  <div class="page-num">8</div>
+  <div class="section-label">Section 06</div>
+  <h2 class="section-title">Capital Stack & Financing</h2>
+  <div class="title-rule"></div>
+
+  <h3 class="sub-title">Phase 1 — Acquisition Financing (Hard Money)</h3>
+  <p>For the first 1–2 deals, hard money lending is the most accessible financing vehicle. It moves quickly, requires less documentation than conventional loans, and is suited to the rehab timeline of the BRRRR strategy.</p>
+
+  <table>
+    <thead><tr><th>Item</th><th>Typical Terms</th></tr></thead>
+    <tbody>
+      <tr><td class="label">Loan-to-Cost</td><td>70–90% of purchase + rehab</td></tr>
+      <tr><td class="label">Interest Rate</td><td>9–12% annually</td></tr>
+      <tr><td class="label">Loan Term</td><td>6–18 months</td></tr>
+      <tr><td class="label">Points</td><td>1–3 points origination</td></tr>
+      <tr><td class="label">Our $30K Role</td><td>Down payment gap + initial rehab draws</td></tr>
+      <tr><td class="label">Qualification</td><td>Deal quality and ARV — not personal income</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Phase 2 — Refinance Vehicles</h3>
+  <table>
+    <thead><tr><th>Loan Type</th><th>Best Use</th><th>Key Note</th></tr></thead>
+    <tbody>
+      <tr><td><strong>DSCR Loan</strong></td><td>Primary vehicle for scaling</td><td>Qualifies on rent income — does not count against personal DTI. Ideal for portfolio growth.</td></tr>
+      <tr><td><strong>Conventional</strong></td><td>First 1–2 properties</td><td>Lower rates but counts against DTI. Fannie/Freddie cap at 10 financed properties.</td></tr>
+      <tr><td><strong>Portfolio Loan</strong></td><td>Local bank / credit union</td><td>Flexible underwriting, relationship-based. Best for unusual properties or faster closing.</td></tr>
+      <tr><td><strong>Private Money</strong></td><td>Bridge / acquisition</td><td>Borrow from individuals at 8–10%. Use after Deal 1 establishes track record.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Target Deal — Capital Model</h3>
+  <div class="formula">
+    <span class="comment">// Illustrative Deal #1</span>
+
+    Purchase Price                     =   $75,000
+    Rehab Budget                       =   $28,000
+    Closing + Carrying Costs           =    $5,000
+    <span class="separator"></span>
+    Total Capital Invested             =  <span class="highlight">$108,000</span>
+
+    After Repair Value (ARV)           =  $155,000
+    75% LTV Refinance                  =  $116,250
+
+    <span class="separator"></span>
+    <span class="positive">Cash Returned                      =   $8,250</span>
+    <span class="positive">Equity Built                       =  $38,750</span>
+    <span class="positive">Est. Monthly Cash Flow             =    $275</span>
+    <span class="comment">// $30k deployed → $8k returned → $22k net in deal, equity compounding</span>
+  </div>
+
+  <h3 class="sub-title">Investor Strategy</h3>
+  <p>As the track record builds after Deal #1, private investors become accessible. Structure investor relationships as debt (not equity) to preserve partnership ownership:</p>
+
+  <div class="card">
+    <strong>Investor Terms (Recommended):</strong><br/>
+    Lend at 8–10% annual interest · 12–18 month term · Secured by the property · Paid off at refinance · One-page deal summary provided before each deal · Track record updated after each completed project
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 07 MARKETING -->
+<div class="page">
+  <div class="page-num">9</div>
+  <div class="section-label">Section 07</div>
+  <h2 class="section-title">Marketing & Lead Generation</h2>
+  <div class="title-rule"></div>
+
+  <p>Marketing runs two parallel tracks from day one: <strong>Track 1</strong> drives remodeling and renovation contract leads immediately, generating cash flow and building the team's reputation. <strong>Track 2</strong> launches the deal-sourcing and tenant pipeline for BRRRR acquisitions once capital is ready. With Ty Jackson (Anchor Pro) and Jordan Sarabia (Landon Renovations) both handling marketing and business operations, this partnership has dual marketing firepower on both sides of the business.</p>
+
+  <h3 class="sub-title">Brand Foundation (Month 1 — Non-Negotiable)</h3>
+  <table>
+    <thead><tr><th>Asset</th><th>Owner</th><th>Priority</th></tr></thead>
+    <tbody>
+      <tr><td>LLC Website (services page + before/after portfolio)</td><td>Jordan Sarabia + Ty Jackson</td><td>Month 1 — drives remodel inquiries</td></tr>
+      <tr><td>Google Business Profile</td><td>Jordan Sarabia (Landon) + Ty Jackson (Anchor Pro)</td><td>Month 1 — critical for local search</td></tr>
+      <tr><td>Instagram / Facebook Page</td><td>Ty Jackson (ads + auto-posting + DMs)</td><td>Month 1 — paid reach + engagement</td></tr>
+      <tr><td>YouTube Channel</td><td>Ty Jackson</td><td>Month 1 — job walkthroughs, time-lapses, education</td></tr>
+      <tr><td>Logo &amp; Brand Standards</td><td>Jordan Sarabia + Ty Jackson + Anchor Pro</td><td>Month 1</td></tr>
+      <tr><td>Investor One-Pager Template</td><td>Anchor Pro / Ty Jackson</td><td>Before BRRRR Deal #1 closes</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Track 1 — Remodeling Contract Leads (Phase 1 Priority)</h3>
+  <div class="card">
+    <strong>Paid Social Ads (Ty Jackson):</strong> Facebook and Instagram paid ad campaigns targeting homeowners actively searching for remodel and renovation work. Ads drive inbound inquiries directly to DMs — no phone tag, no lost leads. Calls are routed straight to the DM inbox for fast response.<br/><br/>
+    <strong>Auto-Posting &amp; Scheduling (Ty Jackson):</strong> Content is queued and auto-published on a consistent schedule across Instagram and Facebook using scheduling tools. Before/after photos, job progress clips, and project completions post automatically — the feed stays active even when the team is on a job site.<br/><br/>
+    <strong>Community Engagement (Ty Jackson):</strong> Every comment, DM, and inquiry is replied to promptly. Engagement signals drive organic reach, build trust with potential clients, and keep the algorithm pushing content forward.<br/><br/>
+    <strong>YouTube Channel (Ty Jackson):</strong> Time-lapse job walkthroughs, before/after reveals, and how-we-work content published to the company YouTube channel. Video content builds long-term SEO, establishes authority, and creates a library of social-shareable clips for Instagram Reels and Facebook.<br/><br/>
+    <strong>Content Engine (Jordan):</strong> Before/after photos on every completed job → Instagram Reels + Facebook Posts → Google review requests after every project. Social proof is the fastest trust-builder for new contractors.<br/><br/>
+    <strong>Referral Loop:</strong> Every satisfied remodel client gets a referral card — $100 Visa gift card for any job that closes from their referral. Word-of-mouth in residential remodeling is the #1 lead source.<br/><br/>
+    <strong>Yard Signs:</strong> Branded signage on every active job site. Generates neighbor inquiries, tenant leads, and future deal leads simultaneously.<br/><br/>
+    <strong>Bid Process:</strong> Site visit → Written scope (SOW Tool) → Material takeoff → Labor estimate → Markup → Professional proposal PDF (see Section 09)
+  </div>
+
+  <h3 class="sub-title">Track 2 — Deal Sourcing for BRRRR (Phase 2 Pipeline)</h3>
+  <div class="card">
+    <strong>Direct Mail:</strong> Pull distressed property lists (probate, pre-foreclosure, tax delinquent, absentee owners). Mail monthly. Budget $200–500/mo for stamps and list access.<br/><br/>
+    <strong>Driving for Dollars:</strong> Jeff spots distressed properties during remodel jobs — capture address, send letter or knock.<br/><br/>
+    <strong>Agent Relationships:</strong> Build relationships with 2–3 local agents who specialize in investment properties. They bring off-market deals in exchange for reliable, fast closings.<br/><br/>
+    <strong>Wholesaler Network:</strong> Join local REIA (Real Estate Investor Association). Wholesalers bring deals — your ability to close fast with hard money is your competitive edge.
+  </div>
+
+  <h3 class="sub-title">Track 3 — Tenant Marketing (Activates with First BRRRR Unit)</h3>
+  <div class="card">
+    <strong>Listing Platforms:</strong> Zillow Rental Manager, Facebook Marketplace, Apartments.com — all free or low-cost. List 2–3 weeks before rehab completion.<br/><br/>
+    <strong>Tenant Screening Process:</strong> Credit score ≥ 620 · Income ≥ 3× monthly rent · Landlord reference check · Background check · Signed lease through state-compliant template.<br/><br/>
+    <strong>Referral Program:</strong> Current tenants who refer a placed tenant receive $200 credit on next month's rent.
+  </div>
+
+  <h3 class="sub-title">Marketing Budget — Phase 1 vs. Phase 2</h3>
+  <div class="card-dark" style="margin-bottom:14px;">
+    <strong>Important distinction:</strong> Ty's 3% of gross revenue compensates him for his <em>time and labor</em> running the marketing — managing ads, posting content, replying to DMs, producing YouTube videos. The <strong>hard ad spend</strong> (dollars paid directly to Meta, Google, mail houses, and tools) is a separate business expense deducted off the top before the profit waterfall, just like materials or permits.
+  </div>
+
+  <table style="margin-bottom:14px;">
+    <thead><tr><th>Category</th><th>Tool / Platform</th><th>Phase 1 (Mo. 1–6)</th><th>Phase 2 (Mo. 6+)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Paid Social Ads</strong></td><td>Facebook + Instagram (Meta)</td><td>$300–$500/mo</td><td>$500–$1,500/mo</td></tr>
+      <tr><td><strong>Google Local Services</strong></td><td>Google LSA</td><td>—</td><td>$200–$500/mo</td></tr>
+      <tr><td><strong>Auto-Posting Tool</strong></td><td>Buffer / Later / Metricool</td><td>$15–$25/mo</td><td>$15–$25/mo</td></tr>
+      <tr><td><strong>DM Automation</strong></td><td>ManyChat</td><td>$15–$25/mo</td><td>$15–$25/mo</td></tr>
+      <tr><td><strong>CRM</strong></td><td>HubSpot Free → GoHighLevel</td><td>$0/mo</td><td>$97/mo</td></tr>
+      <tr><td><strong>Graphic Design</strong></td><td>Canva Pro</td><td>$13/mo</td><td>$13/mo</td></tr>
+      <tr><td><strong>Video Editing</strong></td><td>CapCut (free) / Adobe</td><td>$0/mo</td><td>$0–$55/mo</td></tr>
+      <tr><td><strong>Business Email</strong></td><td>Google Workspace</td><td>$14/mo</td><td>$14/mo</td></tr>
+      <tr><td><strong>Direct Mail</strong></td><td>Lists + postage</td><td>—</td><td>$200–$500/mo</td></tr>
+      <tr><td><strong>SEO / Website</strong></td><td>Local search optimization</td><td>—</td><td>$100–$300/mo</td></tr>
+      <tr><td><strong>Yard Signs</strong></td><td>Print (one-time)</td><td>$150–$300 one-time</td><td>—</td></tr>
+      <tr><td><strong>Referral Cards</strong></td><td>Print (one-time)</td><td>$50–$100 one-time</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <table>
+    <thead><tr><th>Phase</th><th>Monthly Ad Spend Budget</th><th>What It Covers</th></tr></thead>
+    <tbody>
+      <tr style="background:#1a2a1a"><td><strong>Phase 1</strong> (Month 1–6)</td><td><strong>$500/mo</strong></td><td>Meta ads + tools. Focus on remodel contract leads.</td></tr>
+      <tr style="background:#1a1a2a"><td><strong>Phase 2</strong> (Month 6+)</td><td><strong>$1,000–$1,500/mo</strong></td><td>Meta + Google LSA + direct mail + CRM. BRRRR pipeline + remodel leads.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="card" style="margin-top:14px;">
+    <strong>How it flows through the numbers:</strong> Ad spend is a direct business expense deducted before the waterfall (alongside materials, subs, and permits). Ty's 3% is paid separately on top of that — it covers his time, not the platform costs. On a $15,000 remodel job with $500 in ad spend allocated, that $500 comes off first, then the waterfall runs on the remaining revenue. Both line items appear separately in QuickBooks.
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 08 SUPPLIER ACCOUNTS -->
+<div class="page">
+  <div class="page-num">10</div>
+  <div class="section-label">Section 08</div>
+  <h2 class="section-title">Supplier Account Strategy</h2>
+  <div class="title-rule"></div>
+
+  <p>Supplier accounts are a strategic asset, not just a convenience. Net-30 terms preserve cash during rehab, volume discounts compound as the portfolio grows, and established trade lines support business credit building for future financing.</p>
+
+  <h3 class="sub-title">Target Supplier Accounts</h3>
+  <table>
+    <thead><tr><th>Supplier</th><th>Purpose</th><th>Priority</th><th>Ease of Approval</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sherwin-Williams Pro</strong></td><td>Paint, coatings, sundries</td><td>Week 1</td><td>Very Easy — open same day</td></tr>
+      <tr><td><strong>Lowe's Pro</strong></td><td>General materials, tools</td><td>Week 1</td><td>Easy</td></tr>
+      <tr><td><strong>84 Lumber</strong></td><td>Framing, decking, structural</td><td>Month 1</td><td>Moderate — Jeff's relationship helps</td></tr>
+      <tr><td><strong>ABC Supply</strong></td><td>Roofing, siding, gutters</td><td>Month 1</td><td>Moderate</td></tr>
+      <tr><td><strong>Ferguson</strong></td><td>Plumbing, HVAC, fixtures</td><td>Month 1</td><td>Moderate</td></tr>
+      <tr><td><strong>Local Lumber Yard</strong></td><td>Volume pricing, relationship</td><td>Month 2</td><td>Easy — relationship-based</td></tr>
+      <tr><td><strong>Fastenal</strong></td><td>Hardware, fasteners, tools</td><td>Month 2</td><td>Easy</td></tr>
+      <tr><td><strong>Home Depot Pro Xtra</strong></td><td>Backup / general materials</td><td>Month 1</td><td>Very Easy</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">How to Open Accounts</h3>
+  <div class="card">
+    <strong>Required Documents (have ready):</strong><br/>
+    LLC formation documents · EIN letter from IRS · Business bank account info · Business address · 2–3 trade references (existing vendor relationships from Anchor Pro or Jeff's business) · Estimated monthly spend
+  </div>
+
+  <div class="highlight-box">
+    <strong>Credit Building Strategy:</strong> Start with Sherwin-Williams and Lowe's Pro — easiest approvals. Pay every account early (not just on time). At 90 days, request a credit limit increase. These net-30 accounts report to Dun &amp; Bradstreet and Experian Business, building the LLC's credit profile independent of personal credit. This directly reduces reliance on personal guarantees for future financing.
+  </div>
+
+  <h3 class="sub-title">Savings Impact</h3>
+  <table>
+    <thead><tr><th>Benefit</th><th>Estimated Value Per Deal</th></tr></thead>
+    <tbody>
+      <tr><td>Net-30 terms (cash flow preservation)</td><td>$5,000–$15,000 in deferred outflow during rehab</td></tr>
+      <tr><td>Pro pricing vs. retail (avg 10–15% discount)</td><td>$2,000–$5,000 per rehab</td></tr>
+      <tr><td>Business credit building</td><td>Lower personal guarantee requirements over time</td></tr>
+      <tr><td>Consistency with subs (familiar materials)</td><td>Faster rehab timelines, fewer errors</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 09 BIDDING SYSTEM -->
+<div class="page">
+  <div class="page-num">11</div>
+  <div class="section-label">Section 09</div>
+  <h2 class="section-title">Bidding & Project Management System</h2>
+  <div class="title-rule"></div>
+
+  <p>In Phase 1, every remodeling contract is an opportunity to build margin, reputation, and systems. A disciplined bidding process protects profitability from the first job. The same framework carries directly into internal BRRRR rehabs in Phase 2 — the only difference is client markup vs. internal cost tracking.</p>
+
+  <h3 class="sub-title">Phase 1 — Remodel Contract Bid Process (Decks, Kitchens, Bathrooms, Renovations)</h3>
+
+  <div class="formula">
+    Step 1: Site Visit
+      → Measure scope · Photograph everything · Note site conditions
+
+    Step 2: Written Scope of Work
+      → Itemize every task in plain language
+      → Get client sign-off on scope before pricing
+
+    Step 3: Material Takeoff
+      → Quantity every material item
+      → Price from supplier accounts (not retail)
+
+    Step 4: Labor Estimate
+      → Hours per task × Jeff's labor rate
+      → Add sub quotes if specialty trades needed
+
+    Step 5: Apply Markup
+      → Materials × 1.20–1.30 (20–30% markup)
+      → Labor × 1.30–1.40 (30–40% markup)
+      → Add 10–15% contingency
+
+    Step 6: Proposal PDF
+      → Cover page · Scope · Line-item pricing · Timeline · Terms
+      → Require 30–50% deposit before materials ordered
+  </div>
+
+  <h3 class="sub-title">Internal BRRRR Rehab Process</h3>
+  <table>
+    <thead><tr><th>Phase</th><th>Owner</th><th>Milestone</th></tr></thead>
+    <tbody>
+      <tr><td>Pre-Close Walkthrough</td><td>Jeff + Anchor Pro</td><td>Scope locked, budget approved before closing</td></tr>
+      <tr><td>Permits Pulled</td><td>Jeff</td><td>Week 1 post-close</td></tr>
+      <tr><td>Demo & Rough Work</td><td>Jeff + Subs</td><td>Structural, mechanical, electrical rough-in</td></tr>
+      <tr><td>Inspections</td><td>Jeff</td><td>Rough-in inspections passed before close-up</td></tr>
+      <tr><td>Finishes</td><td>Jeff</td><td>Flooring, paint, fixtures, cabinets</td></tr>
+      <tr><td>Final Walkthrough</td><td>Both partners</td><td>Punch list completed before listing</td></tr>
+      <tr><td>Photography</td><td>Jordan</td><td>Professional photos same day as final walk</td></tr>
+      <tr><td>Listing Live</td><td>Jordan Sarabia + Ty Jackson</td><td>Tenant marketing begins immediately</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Project Management Tools</h3>
+  <table>
+    <thead><tr><th>Stage</th><th>Tool</th><th>Cost</th></tr></thead>
+    <tbody>
+      <tr><td>Bid templates, deal analyzer</td><td>Google Sheets (start here)</td><td>Free</td></tr>
+      <tr><td>Project communication</td><td>GroupMe or WhatsApp group per project</td><td>Free</td></tr>
+      <tr><td>Receipts and expenses</td><td>QuickBooks Simple Start</td><td>~$30/mo</td></tr>
+      <tr><td>Tenant applications</td><td>Avail.co or TurboTenant</td><td>Free to low cost</td></tr>
+      <tr><td>At scale (3+ projects)</td><td>Buildertrend or CoConstruct</td><td>$100–300/mo</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 10 PORTFOLIO TIMELINE -->
+<div class="page">
+  <div class="page-num">12</div>
+  <div class="section-label">Section 10</div>
+  <h2 class="section-title">Portfolio Growth Timeline</h2>
+  <div class="title-rule"></div>
+
+  <table>
+    <thead><tr><th>Phase / Year</th><th>Focus</th><th>Est. Revenue / Value</th><th>Est. Monthly Cash Flow</th><th>Milestone</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Phase 1<br/>Months 1–6</strong></td><td>Remodeling contracts — decks, kitchens, bathrooms, renovations</td><td>$40–80K gross revenue from jobs</td><td>$3,000–6,000/mo (contract income)</td><td>Build $15K+ reserve · open supplier accounts · first 5-star Google reviews</td></tr>
+      <tr><td><strong>Phase 2<br/>Months 6–18</strong></td><td>First BRRRR acquisition + continued remodel work</td><td>$140–160K portfolio value (1 property)</td><td>$250/mo passive + remodel revenue</td><td>First tenant placed · first refinance · capital recycled</td></tr>
+      <tr><td><strong>Year 2</strong></td><td>2–3 BRRRR deals + remodel team scaling</td><td>$350–500K portfolio</td><td>$750–1,200/mo passive</td><td>Private money source secured · DSCR loan established</td></tr>
+      <tr><td><strong>Year 3</strong></td><td>4–6 properties · Jeff manages crews · Jordan Sarabia + Ty Jackson handle marketing &amp; ops</td><td>$700K–1M portfolio</td><td>$2,000–3,000/mo passive</td><td>Portfolio self-sustaining · remodel business systemized</td></tr>
+      <tr><td><strong>Year 4–5</strong></td><td>Multifamily expansion · property management evaluation</td><td>$1.5M–2M portfolio</td><td>$4,000–6,000/mo passive</td><td>$1M+ portfolio achieved · consider property management company</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Why Remodeling First Accelerates BRRRR</h3>
+  <div class="two-col">
+    <div class="card-dark">
+      <h4>Cash Flow Bridge</h4>
+      <p>Remodel contracts generate $3,000–6,000/mo in operating income while the BRRRR pipeline is being built. This covers overhead, Jeff's labor, and builds the capital reserve needed for the first acquisition — without burning through the $30K seed capital.</p>
+    </div>
+    <div class="card-dark">
+      <h4>Proof of Execution</h4>
+      <p>Completed remodel jobs become the portfolio — before/after photos, real numbers, happy clients. Hard money lenders and private investors fund teams with a track record. Every remodel job is evidence that the team delivers.</p>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Capital Path — From Remodeling to BRRRR</h3>
+  <div class="formula">
+    <span class="comment">// Phase 1: Remodeling builds the war chest</span>
+
+    Month 1–3:  3 remodel jobs × ~$8,000 net profit each
+                <span class="positive">= ~$24,000 operating reserve accumulated</span>
+
+    Month 3–6:  Reserve hits $15K threshold → BRRRR deal search begins
+                Supplier accounts open → Business credit reporting → Lender outreach
+                <span class="positive">Phase 1 revenue continues alongside Phase 2 launch</span>
+
+    Month 6–8:  First BRRRR acquisition funded (hard money + reserve)
+                <span class="positive">Jeff's remodel skills now applied to BRRRR rehab at $50/hr (internal cost, not markup)</span>
+
+    Month 14–16: First refinance → $8–15K capital returned → Deal 2 initiated
+                <span class="highlight">Original $30K now controls 1 rental property + growing remodel business</span>
+
+    <span class="comment">// Remodeling feeds BRRRR. BRRRR builds wealth. Both run simultaneously.</span>
+  </div>
+
+  <h3 class="sub-title">Key Milestones to Celebrate</h3>
+  <div class="card">
+    <strong>First remodel job completed and paid</strong> — the revenue engine is on<br/><br/>
+    <strong>First 5-star Google review</strong> — the reputation flywheel starts<br/><br/>
+    <strong>First tenant placed</strong> — the BRRRR engine is running<br/><br/>
+    <strong>First refinance complete</strong> — capital recycled, proof of concept validated<br/><br/>
+    <strong>First private investor committed</strong> — deal flow no longer limited by personal capital<br/><br/>
+    <strong>$1,000/mo passive cash flow</strong> — the portfolio is self-sustaining<br/><br/>
+    <strong>5 properties owned</strong> — institutional lenders start calling you
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 11 $1M PORTFOLIO PLAN -->
+<div class="page">
+  <div class="page-num">13</div>
+  <div class="section-label">Section 11</div>
+  <h2 class="section-title">$1 Million Portfolio — Year One Acceleration Plan</h2>
+  <div class="title-rule"></div>
+
+  <p>Most BRRRR investors take 3–5 years to reach a $1M portfolio. This partnership's advantage — in-house construction, marketing expertise, and business credit access — makes an accelerated 12-month path realistic. The strategy is simple: start with a single-family, recycle the capital into a duplex, then leverage both to acquire additional multifamily. Each step is designed so that <strong>one tenant covers the mortgage note</strong>, meaning 20–40% vacancy does not put the partnership at financial risk.</p>
+
+  <h3 class="sub-title">The Core Principle — Vacancy-Proof Cash Flow</h3>
+  <div class="card-dark">
+    <h4>The One-Tenant-Covers-the-Note Rule</h4>
+    <p>On every multifamily acquisition, the rent from a <em>single unit</em> must cover the full mortgage payment (PITI). This means even at 50% vacancy (one unit empty on a duplex), the property is cash-flow neutral — not a liability. At 60–80% occupancy it cash flows positively. This is the structural protection against vacancy risk at 20–40%.</p>
+  </div>
+
+  <h3 class="sub-title">The Conversion Ladder — Single Family → Multifamily</h3>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-marker" style="background:#1a1410;">1</div>
+      <div class="timeline-content">
+        <h4>Phase 1 — Single Family Home (Months 1–10)</h4>
+        <p>Acquire distressed SFH. Jeff rehabilitates. Jordan places tenant. Refinance at ARV at month 10. Use cash-out proceeds to fund Phase 2. The SFH stays in the portfolio generating monthly cash flow while the recycled capital moves forward.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-marker" style="background:#1a1410;">2</div>
+      <div class="timeline-content">
+        <h4>Phase 2 — First Duplex Acquisition (Months 8–14)</h4>
+        <p>Deploy SFH cash-out into a distressed duplex. Rehab both units. Rent Unit A — Unit A's rent alone covers the full mortgage note. Unit B rent is pure cash flow. Refinance at duplex ARV. Portfolio now has 3 doors producing income.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-marker" style="background:#1a1410;">3</div>
+      <div class="timeline-content">
+        <h4>Phase 3 — Second Duplex or Triplex (Months 12–18)</h4>
+        <p>Duplex refinance cash-out + SFH equity access funds a second duplex or triplex. On a triplex: one tenant covers the note, two tenants are profit. Portfolio grows to 5–6 doors. DSCR refinances on all properties.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-marker" style="background:#c9a84c;">4</div>
+      <div class="timeline-content">
+        <h4>Phase 4 — Quadplex or Second Triplex (Months 16–24)</h4>
+        <p>Recycled capital from phases 1–3 plus investor capital funds a quadplex. On a quadplex: one unit covers the full note. Three units are income. Maximum vacancy protection. Portfolio reaches 9–10 doors and crosses the $1M valuation threshold.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">$1 Million Portfolio — Deal-by-Deal Math</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Phase</th>
+        <th>Property Type</th>
+        <th>Purchase + Rehab</th>
+        <th>ARV</th>
+        <th>Refi (75% LTV)</th>
+        <th>Cash Out</th>
+        <th>Monthly Rent</th>
+        <th>Monthly Cash Flow</th>
+        <th>Doors</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>1</strong></td>
+        <td>Single Family</td>
+        <td>$95,000</td>
+        <td>$145,000</td>
+        <td>$108,750</td>
+        <td>$13,750</td>
+        <td>$1,200/mo</td>
+        <td class="value">$275/mo</td>
+        <td>1</td>
+      </tr>
+      <tr>
+        <td><strong>2</strong></td>
+        <td>Duplex</td>
+        <td>$130,000</td>
+        <td>$210,000</td>
+        <td>$157,500</td>
+        <td>$27,500</td>
+        <td>$2,200/mo (2×$1,100)</td>
+        <td class="value">$650/mo</td>
+        <td>2</td>
+      </tr>
+      <tr>
+        <td><strong>3</strong></td>
+        <td>Duplex or Triplex</td>
+        <td>$160,000</td>
+        <td>$260,000</td>
+        <td>$195,000</td>
+        <td>$35,000</td>
+        <td>$3,300/mo (3×$1,100)</td>
+        <td class="value">$900/mo</td>
+        <td>3</td>
+      </tr>
+      <tr>
+        <td><strong>4</strong></td>
+        <td>Quadplex</td>
+        <td>$210,000</td>
+        <td>$390,000</td>
+        <td>$292,500</td>
+        <td>$82,500</td>
+        <td>$4,400/mo (4×$1,100)</td>
+        <td class="value">$1,400/mo</td>
+        <td>4</td>
+      </tr>
+      <tr style="background:#0a0a0a; font-weight:bold;">
+        <td colspan="2"><strong>TOTAL PORTFOLIO</strong></td>
+        <td><strong>$595,000</strong></td>
+        <td><strong>$1,005,000</strong></td>
+        <td><strong>$753,750</strong></td>
+        <td><strong>$158,750 recycled</strong></td>
+        <td><strong>$11,100/mo gross</strong></td>
+        <td style="color:#5a8a5a;"><strong>$3,225/mo net</strong></td>
+        <td><strong>10 doors</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Vacancy Stress Test — Does One Tenant Cover the Note?</h3>
+  <table>
+    <thead><tr><th>Property</th><th>Monthly Mortgage (PITI)</th><th>Single Unit Rent</th><th>Covered?</th><th>At 20% Vacancy</th><th>At 40% Vacancy</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Single Family</td>
+        <td>$850</td>
+        <td>$1,200</td>
+        <td style="color:#5a8a5a;font-weight:bold;">✓ Yes — $350 surplus</td>
+        <td style="color:#5a8a5a;">+$110/mo</td>
+        <td style="color:#c9843a;">−$130/mo (manageable)</td>
+      </tr>
+      <tr>
+        <td>Duplex (2 units)</td>
+        <td>$1,150</td>
+        <td>$1,100/unit</td>
+        <td style="color:#5a8a5a;font-weight:bold;">✓ Yes — $950 surplus</td>
+        <td style="color:#5a8a5a;">+$610/mo</td>
+        <td style="color:#5a8a5a;">+$210/mo</td>
+      </tr>
+      <tr>
+        <td>Triplex (3 units)</td>
+        <td>$1,450</td>
+        <td>$1,100/unit</td>
+        <td style="color:#5a8a5a;font-weight:bold;">✓ Yes — $1,850 surplus</td>
+        <td style="color:#5a8a5a;">+$1,190/mo</td>
+        <td style="color:#5a8a5a;">+$530/mo</td>
+      </tr>
+      <tr>
+        <td>Quadplex (4 units)</td>
+        <td>$1,800</td>
+        <td>$1,100/unit</td>
+        <td style="color:#5a8a5a;font-weight:bold;">✓ Yes — $2,600 surplus</td>
+        <td style="color:#5a8a5a;">+$1,720/mo</td>
+        <td style="color:#5a8a5a;">+$840/mo</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <strong>Key Insight:</strong> As you scale into multifamily, the vacancy risk actually <em>decreases</em>. A single-family home at 0% occupancy is a full liability. A quadplex at 25% occupancy (1 of 4 units) still covers its own mortgage. This is why the conversion ladder from SFH → duplex → triplex → quad is the right sequence for building a resilient portfolio fast.
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential · May 2026</div>
+</div>
+
+<div class="page">
+  <div class="page-num">14</div>
+  <div class="section-label">Section 11 — Continued</div>
+  <h2 class="section-title">$1 Million Portfolio — Capital Flow & Acquisition Timeline</h2>
+  <div class="title-rule"></div>
+
+  <h3 class="sub-title">12-Month Capital Recycling Map</h3>
+  <div class="formula">
+    <span class="comment">// How $30K seeds a $1M portfolio in 12–18 months</span>
+
+    Month 0:    <span class="highlight">$30K deployed</span> → SFH acquisition (hard money)
+    Month 1–3:  Jeff rehabs SFH · Jordan Sarabia + Ty Jackson prep tenant marketing &amp; brand
+    Month 3–4:  <span class="positive">SFH tenant placed</span> @ $1,200/mo · seasoning clock starts
+    Month 8:    <span class="highlight">Duplex identified</span> · hard money pre-approval in hand
+    Month 10:   <span class="positive">SFH refinance</span> → $13,750 cash out returned
+    Month 10:   Close on duplex · Jeff begins rehab immediately
+    Month 12:   <span class="positive">Both duplex units placed</span> @ $1,100 each
+    Month 14:   <span class="comment">// Duplex seasoning ends</span>
+    Month 16:   <span class="positive">Duplex refinance</span> → $27,500 cash out
+    Month 16:   Triplex or 2nd duplex acquisition
+    Month 18:   3rd property placed · <span class="highlight">Portfolio: $615K value · 6 doors</span>
+    Month 20:   3rd property refinance → cash out funds quadplex
+    Month 22:   Quadplex acquisition + rehab
+    Month 24:   <span class="positive">Quadplex placed · Portfolio crosses $1M</span>
+                <span class="highlight">10 doors · $3,225/mo net cash flow</span>
+  </div>
+
+  <h3 class="sub-title">What Makes This Timeline Achievable</h3>
+  <div class="two-col">
+    <div class="stat-block">
+      <div class="stat-num" style="font-size:22px;">In-House</div>
+      <div class="stat-label">Construction</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num" style="font-size:22px;">30–60 Day</div>
+      <div class="stat-label">Rehab Cycles</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num" style="font-size:22px;">DSCR</div>
+      <div class="stat-label">Loans — No DTI Cap</div>
+    </div>
+    <div class="stat-block">
+      <div class="stat-num" style="font-size:22px;">Georgia</div>
+      <div class="stat-label">Landlord-Friendly Laws</div>
+    </div>
+  </div>
+
+  <p>Jeff's in-house construction is the single biggest accelerator. Most investors wait 60–90 days for contractors. Jeff starts within days of closing, completes rehabs in 30–60 days, and controls quality and cost. That speed compresses each deal cycle by 1–2 months — which across 4 deals means the portfolio is 4–8 months ahead of what a typical investor could achieve.</p>
+
+  <h3 class="sub-title">Multifamily Deal Criteria</h3>
+  <table>
+    <thead><tr><th>Criterion</th><th>Duplex</th><th>Triplex</th><th>Quadplex</th></tr></thead>
+    <tbody>
+      <tr><td class="label">Max All-In Cost / ARV</td><td>≤ 70%</td><td>≤ 70%</td><td>≤ 70%</td></tr>
+      <tr><td class="label">Single Unit Rent Must Cover</td><td>Full PITI</td><td>Full PITI</td><td>Full PITI</td></tr>
+      <tr><td class="label">Min Cash Flow (fully occupied)</td><td>$500/mo</td><td>$800/mo</td><td>$1,200/mo</td></tr>
+      <tr><td class="label">Cash Flow at 40% Vacancy</td><td>Positive</td><td>Positive</td><td>Positive</td></tr>
+      <tr><td class="label">Max Rehab Budget</td><td>$60,000</td><td>$80,000</td><td>$100,000</td></tr>
+      <tr><td class="label">Financing Vehicle</td><td>DSCR Loan</td><td>DSCR Loan</td><td>DSCR / Portfolio Loan</td></tr>
+      <tr><td class="label">Jeff's Rehab Capacity</td><td>Both units simultaneously</td><td>All units simultaneously</td><td>Phased — 2 units at a time</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Georgia Multifamily Target Markets</h3>
+  <table>
+    <thead><tr><th>Market</th><th>Best For</th><th>Why</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Macon</strong></td><td>Duplexes / Triplexes</td><td>Highest price-to-rent ratio in Georgia. Distressed multifamily inventory available well below $150K. Strong rental demand from HBCU students and hospital workers.</td></tr>
+      <tr><td><strong>Columbus</strong></td><td>Duplexes / Quads</td><td>Fort Moore military = stable tenant pool. Multifamily under $200K all-in available. Military tenants often long-term.</td></tr>
+      <tr><td><strong>Augusta</strong></td><td>Duplexes</td><td>Fort Eisenhower tenant base. Medical College of Georgia adds student demand. Reliable vacancy rates under 8%.</td></tr>
+      <tr><td><strong>Warner Robins</strong></td><td>Duplexes</td><td>Robins AFB = consistent government-backed tenants. Very low default risk. Affordable multifamily entry points.</td></tr>
+      <tr><td><strong>Albany</strong></td><td>Quads / Triplexes</td><td>Deep value market. High gross yields. Best for the one-tenant-covers-note model due to low acquisition prices.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Risk Management</h3>
+  <div class="card">
+    <strong>Vacancy Buffer:</strong> Every deal underwrites at 20% vacancy minimum. The one-tenant-covers-note rule means even 40% vacancy does not create negative cash flow on multifamily.<br/><br/>
+    <strong>Reserves:</strong> Maintain a minimum $10,000 partnership reserve account at all times — do not deploy 100% of capital into deals. This covers unexpected repairs, vacancy gaps, and insurance deductibles.<br/><br/>
+    <strong>Tenant Screening:</strong> Jordan's screening process (credit ≥ 620, income ≥ 3× rent, references) reduces default risk. Quality tenants = lower vacancy = stronger cash flow.<br/><br/>
+    <strong>Diversification:</strong> Spreading across 2–3 Georgia markets means a local economic event in one city does not impact the full portfolio.<br/><br/>
+    <strong>Insurance:</strong> Landlord policy on every property from day one of ownership — not from the day of tenant placement.
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential · May 2026</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 12 30-DAY CHECKLIST -->
+<div class="page">
+  <div class="page-num">15</div>
+  <div class="section-label">Section 12</div>
+  <h2 class="section-title">30-Day Launch Checklist</h2>
+  <div class="title-rule"></div>
+
+  <p>The following tasks must be completed before the first offer is made. Assign ownership and a due date to each item.</p>
+
+  <div class="check-category">Week 1 — Entity & Legal</div>
+  <ul class="checklist">
+    <li><div class="check-box"></div>Agree on LLC name and check availability with Secretary of State</li>
+    <li><div class="check-box"></div>File LLC Articles of Organization (online, same-day in most states)</li>
+    <li><div class="check-box"></div>Obtain EIN from IRS.gov (free, immediate)</li>
+    <li><div class="check-box"></div>Retain business attorney for Operating Agreement drafting</li>
+    <li><div class="check-box"></div>Schedule Operating Agreement signing meeting (all partners)</li>
+  </ul>
+
+  <div class="check-category">Week 1–2 — Banking & Credit</div>
+  <ul class="checklist">
+    <li><div class="check-box"></div>Open dedicated LLC business checking account</li>
+    <li><div class="check-box"></div>Anchor Pro transfers $30,000 to LLC account</li>
+    <li><div class="check-box"></div>Apply for Sherwin-Williams Pro account</li>
+    <li><div class="check-box"></div>Apply for Lowe's Pro and Home Depot Pro Xtra accounts</li>
+    <li><div class="check-box"></div>Apply for 84 Lumber account (Jeff leads relationship)</li>
+    <li><div class="check-box"></div>Apply for ABC Supply and Ferguson accounts</li>
+  </ul>
+
+  <div class="check-category">Week 2 — Financing Relationships</div>
+  <ul class="checklist">
+    <li><div class="check-box"></div>Identify and contact 2 hard money lenders — get pre-approval terms</li>
+    <li><div class="check-box"></div>Contact 2 local community banks / credit unions about portfolio loans</li>
+    <li><div class="check-box"></div>Research 1 DSCR lender for eventual refinance</li>
+    <li><div class="check-box"></div>Join local REIA chapter (Real Estate Investor Association)</li>
+  </ul>
+
+  <div class="check-category">Week 2–3 — Marketing & Brand</div>
+  <ul class="checklist">
+    <li><div class="check-box"></div>Secure LLC domain name and set up Google Workspace email</li>
+    <li><div class="check-box"></div>Claim Google Business Profile for the LLC</li>
+    <li><div class="check-box"></div>Create Instagram and Facebook business pages</li>
+    <li><div class="check-box"></div>Begin website build (Squarespace or WordPress — simple and fast)</li>
+    <li><div class="check-box"></div>Design logo and brand colors (Canva Pro is sufficient)</li>
+    <li><div class="check-box"></div>Order yard signs for Jeff's active jobs</li>
+  </ul>
+
+  <div class="check-category">Week 3–4 — Operations & Deal Sourcing</div>
+  <ul class="checklist">
+    <li><div class="check-box"></div>Build deal analyzer in Google Sheets (use Section 05 framework)</li>
+    <li><div class="check-box"></div>Build rehab bid template in Google Sheets (use Section 09 framework)</li>
+    <li><div class="check-box"></div>Set up QuickBooks Simple Start for LLC accounting</li>
+    <li><div class="check-box"></div>Set up TurboTenant or Avail.co for tenant applications</li>
+    <li><div class="check-box"></div>Define deal criteria in writing (price range, geography, property type)</li>
+    <li><div class="check-box"></div>Pull first distressed property list for direct mail campaign</li>
+    <li><div class="check-box"></div>Contact 2–3 local investor-friendly real estate agents</li>
+    <li><div class="check-box"></div>Send first direct mail batch</li>
+  </ul>
+
+  <div class="check-category">End of Month 1 — Partnership Ready</div>
+  <ul class="checklist">
+    <li><div class="check-box"></div>Operating Agreement signed by all partners</li>
+    <li><div class="check-box"></div>At least 2 supplier accounts active</li>
+    <li><div class="check-box"></div>Hard money lender relationship established</li>
+    <li><div class="check-box"></div>Deal analyzer built and tested with a practice deal</li>
+    <li><div class="check-box"></div>Brand presence live (Google Business + social)</li>
+    <li><div class="check-box"></div>First deal leads in the pipeline</li>
+  </ul>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 13 EXIT & DISSOLUTION -->
+<div class="page">
+  <div class="page-num">16</div>
+  <div class="section-label">Section 13</div>
+  <h2 class="section-title">Exit, Buyout & Dissolution Framework</h2>
+  <div class="title-rule"></div>
+
+  <p>Every partnership, no matter how strong, needs a clearly defined exit framework before the first deal closes. This section is not a prediction of failure — it is a professional safeguard that protects all partners and ensures that personal relationships survive business disagreements. The terms below must be formalized in the Operating Agreement by a licensed attorney.</p>
+
+  <div class="alert-box">
+    <strong>Core Principle:</strong> No partner may be forced out without fair compensation. No partner may hold the business hostage. Every scenario below is designed to be fair to all sides and to keep the portfolio properties protected regardless of what happens between the partners.
+  </div>
+
+  <h3 class="sub-title">Scenario 1 — Voluntary Buyout (One Partner Wants to Exit)</h3>
+  <p>Any partner who wishes to exit the LLC must provide <strong>90 days written notice</strong> to all other partners. The following process applies:</p>
+
+  <table>
+    <thead><tr><th>Step</th><th>Action</th><th>Timeline</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1</strong></td><td>Exiting partner delivers written notice of intent to sell their interest</td><td>Day 0</td></tr>
+      <tr><td><strong>2</strong></td><td>LLC orders an independent third-party valuation of all assets and equity</td><td>Days 1–30</td></tr>
+      <tr><td><strong>3</strong></td><td>Remaining partners have <strong>Right of First Refusal</strong> — they may purchase the exiting partner's interest at the appraised value</td><td>Days 30–60</td></tr>
+      <tr><td><strong>4</strong></td><td>If remaining partners decline, exiting partner may sell their interest to an approved outside buyer — must be approved by unanimous consent of remaining partners</td><td>Days 60–90</td></tr>
+      <tr><td><strong>5</strong></td><td>Buyout payment made in full or via agreed installment schedule (max 24 months)</td><td>Day 90</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Scenario 2 — Forced Buyout (Partner Removed for Cause)</h3>
+  <p>A partner may be removed for cause by a unanimous vote of the remaining partners. Grounds for removal include:</p>
+
+  <div class="card">
+    <strong>Grounds for Removal:</strong><br/><br/>
+    · Fraud, theft, or misappropriation of LLC funds<br/>
+    · Material breach of the Operating Agreement not cured within 30 days of written notice<br/>
+    · Criminal conviction related to the business or its properties<br/>
+    · Willful or repeated failure to perform agreed responsibilities causing financial harm<br/>
+    · Filing personal bankruptcy that materially affects the LLC's creditworthiness<br/><br/>
+    <strong>Upon removal for cause:</strong> The removed partner retains their economic interest (they still receive their share of profits and equity) but loses all management rights and voting authority immediately. The remaining partners may purchase the removed partner's economic interest at a <strong>10% discount to appraised value</strong> as compensation for the disruption caused.
+  </div>
+
+  <h3 class="sub-title">Scenario 3 — Deadlock (Partners Cannot Agree)</h3>
+  <p>If the managing partners reach a deadlock on a material business decision and cannot resolve it within <strong>30 days</strong> of the dispute arising, the following escalation path applies:</p>
+
+  <table>
+    <thead><tr><th>Stage</th><th>Process</th><th>Cost</th><th>Timeline</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1 — Direct negotiation</strong></td><td>Partners meet with a written agenda and attempt resolution</td><td>None</td><td>30 days</td></tr>
+      <tr><td><strong>2 — Mediation</strong></td><td>Neutral third-party mediator agreed upon by both sides</td><td>Split equally</td><td>30–60 days</td></tr>
+      <tr><td><strong>3 — Binding arbitration</strong></td><td>Single arbitrator per AAA Commercial Rules. Decision is final and enforceable.</td><td>Split equally</td><td>60–120 days</td></tr>
+      <tr><td><strong>4 — Buy-Sell Trigger</strong></td><td>If arbitration fails to resolve the deadlock, either partner may trigger the Shotgun Clause below</td><td>—</td><td>After arbitration</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box">
+    <strong>No Litigation Clause:</strong> All partners waive the right to file civil litigation against the LLC or each other related to partnership disputes. All disputes are resolved through the mediation and arbitration process above. This keeps costs low, timelines short, and the business running during any disagreement.
+  </div>
+
+  <h3 class="sub-title">Scenario 4 — The Shotgun Clause (Last Resort)</h3>
+  <p>If all other resolution methods fail and the partnership is functionally broken, either partner may invoke the <strong>Shotgun Buy-Sell Clause</strong>:</p>
+
+  <div class="card-dark">
+    <h4>How the Shotgun Clause Works</h4>
+    <p>Partner A names a price for the entire LLC. Partner B must then choose one of two options — and only has <strong>30 days</strong> to decide:</p>
+    <p style="margin-top:10px;"><strong>Option 1:</strong> Buy Partner A's interest at the named price.<br/>
+    <strong>Option 2:</strong> Sell their own interest to Partner A at the same named price.</p>
+    <p style="margin-top:10px;">Because Partner A doesn't know which option Partner B will choose, they are incentivized to name a fair price. This mechanism resolves even the most contentious deadlocks quickly and fairly — with no court involvement.</p>
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential · May 2026</div>
+</div>
+
+<div class="page">
+  <div class="page-num">17</div>
+  <div class="section-label">Section 13 — Continued</div>
+  <h2 class="section-title">Exit, Buyout & Dissolution Framework</h2>
+  <div class="title-rule"></div>
+
+  <h3 class="sub-title">Scenario 5 — Voluntary Full Dissolution (All Partners Agree to Wind Down)</h3>
+  <p>If all partners mutually agree to dissolve the LLC, the following wind-down process applies in order:</p>
+
+  <table>
+    <thead><tr><th>Step</th><th>Action</th><th>Responsible</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1</strong></td><td>Stop all new acquisitions immediately</td><td>All partners</td></tr>
+      <tr><td><strong>2</strong></td><td>Honor all existing tenant leases through their natural end date — do not displace tenants</td><td>Jordan + Anchor Pro</td></tr>
+      <tr><td><strong>3</strong></td><td>Complete any active rehabs in progress to protect asset value</td><td>Landon Renovations</td></tr>
+      <tr><td><strong>4</strong></td><td>List all properties for sale OR offer partners Right of First Refusal to purchase individual properties at appraised value</td><td>All partners</td></tr>
+      <tr><td><strong>5</strong></td><td>Pay all outstanding LLC debts, loans, and obligations from sale proceeds</td><td>Anchor Pro</td></tr>
+      <tr><td><strong>6</strong></td><td>Distribute remaining net proceeds to all partners per equity percentage</td><td>All partners</td></tr>
+      <tr><td><strong>7</strong></td><td>File Articles of Dissolution with the State of Georgia</td><td>Attorney + Anchor Pro</td></tr>
+      <tr><td><strong>8</strong></td><td>Close all LLC bank accounts and notify the IRS of dissolution</td><td>Anchor Pro</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Property Valuation Method</h3>
+  <p>In any buyout or dissolution scenario, property values must be determined by a neutral, agreed-upon method. The following order of preference applies:</p>
+
+  <div class="card">
+    <strong>Step 1 — Mutual Agreement:</strong> Partners agree on value using recent comparable sales. Fast and free.<br/><br/>
+    <strong>Step 2 — Single Appraisal:</strong> One licensed appraiser, cost split equally. Value is binding.<br/><br/>
+    <strong>Step 3 — Two Appraisals:</strong> Each partner selects one appraiser. Final value is the average of both. Cost borne by each party for their own appraisal.<br/><br/>
+    <strong>Step 4 — Three Appraisals:</strong> If the two appraisals differ by more than 10%, a third appraiser is selected by mutual agreement. The final value is the average of the two closest appraisals. Cost split equally.
+  </div>
+
+  <h3 class="sub-title">Protecting the Properties During Any Dispute</h3>
+  <div class="highlight-box">
+    <strong>Non-Disruption Rule:</strong> During any active buyout negotiation, mediation, arbitration, or dissolution process — the properties continue to operate normally. Rents are collected, mortgages are paid, maintenance is performed, and tenants are not notified of any internal dispute. Neither partner may unilaterally list, sell, refinance, or encumber any LLC property without written consent of all partners during a dispute period.
+  </div>
+
+  <h3 class="sub-title">Death or Incapacity of a Partner</h3>
+  <table>
+    <thead><tr><th>Situation</th><th>What Happens</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Death of a partner</strong></td>
+        <td>The deceased partner's economic interest (profit share, equity) passes to their estate or named beneficiary. Management rights and voting authority do NOT automatically transfer — the estate has no operational role. Remaining partners have the Right of First Refusal to purchase the inherited interest at appraised value within 180 days.</td>
+      </tr>
+      <tr>
+        <td><strong>Permanent incapacity</strong></td>
+        <td>Determined by licensed physician certification. The incapacitated partner's economic rights are preserved. A designated successor (named in the OA) may assume operational duties. Buyout option available to all parties within 180 days.</td>
+      </tr>
+      <tr>
+        <td><strong>Temporary incapacity (&lt; 90 days)</strong></td>
+        <td>Remaining partners assume operational responsibilities. No buyout triggered. Partner resumes full role upon recovery.</td>
+      </tr>
+      <tr>
+        <td><strong>Divorce (Jeff and Jordan)</strong></td>
+        <td>Jeff and Jordan's combined interest is held in their family entity or jointly. A divorce does not by itself trigger any LLC changes — it is an internal matter for them to resolve. The LLC interest may not be divided or transferred to a non-partner without unanimous consent of all managing members.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Non-Compete & Non-Solicitation</h3>
+  <div class="card">
+    <strong>During active membership:</strong> No partner may acquire investment properties in the agreed target markets through a separate entity without first offering the opportunity to the LLC (Right of First Refusal — 14-day window).<br/><br/>
+    <strong>After exit (12-month period):</strong> An exiting partner may not solicit the LLC's tenants, investors, or vendor relationships for a competing real estate venture for 12 months following their exit date.<br/><br/>
+    <strong>Construction work:</strong> Landon Renovations retains the right to continue all client contracting work independent of this LLC at all times. The non-compete applies only to real estate investment activity, not construction services.
+  </div>
+
+  <h3 class="sub-title">Summary — When to Use Which Path</h3>
+  <table>
+    <thead><tr><th>Situation</th><th>Resolution Path</th><th>Timeline</th></tr></thead>
+    <tbody>
+      <tr><td>One partner wants to leave amicably</td><td>Voluntary Buyout — Right of First Refusal</td><td>90 days</td></tr>
+      <tr><td>Partner acts against the LLC's interests</td><td>Forced Buyout for Cause</td><td>30–60 days</td></tr>
+      <tr><td>Partners disagree on a major decision</td><td>Mediation → Arbitration</td><td>30–120 days</td></tr>
+      <tr><td>Partnership is broken beyond repair</td><td>Shotgun Buy-Sell Clause</td><td>30 days</td></tr>
+      <tr><td>All partners agree to close</td><td>Voluntary Dissolution — 8-step wind-down</td><td>6–18 months</td></tr>
+      <tr><td>Partner passes away</td><td>Estate inherits economic rights, OA controls management</td><td>180-day buyout window</td></tr>
+    </tbody>
+  </table>
+
+  <div class="alert-box">
+    <strong>Attorney Requirement:</strong> This section establishes the framework and intent of all partners. The specific legal language, enforceable terms, and state-compliant provisions must be drafted by a licensed Georgia business attorney in the Operating Agreement. Budget $500–$1,500 for this — it is the single most important investment the partnership makes before its first deal.
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential · May 2026</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 14 SIGNATURE -->
+<div class="page">
+  <div class="page-num">18</div>
+  <div class="section-label">Section 14</div>
+  <h2 class="section-title">Partnership Agreement & Signatures</h2>
+  <div class="title-rule"></div>
+
+  <p>By signing below, all parties confirm they have read, understand, and agree to the terms and structure outlined in this proposal, and commit to proceeding with the formation of the partnership LLC and the execution of the operating agreement with legal counsel.</p>
+
+  <div class="highlight-box">
+    <strong>Next Step:</strong> This proposal is not a legally binding agreement. It serves as the foundational alignment document for the partnership. A formal Operating Agreement drafted by a licensed business attorney must be executed before any capital is deployed or deals are initiated.
+  </div>
+
+  <br/><br/>
+
+  <div class="sig-grid">
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-block">
+        <div class="sig-name">Anchor Pro Solutions</div>
+        <div class="sig-title">CEO / Managing Partner</div>
+      </div>
+    </div>
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-block">
+        <div class="sig-name">Date</div>
+        <div class="sig-title">&nbsp;</div>
+      </div>
+    </div>
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-block">
+        <div class="sig-name">Ty Jackson — Anchor Pro Solutions</div>
+        <div class="sig-title">Marketing &amp; Business Operations Partner</div>
+      </div>
+    </div>
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-block">
+        <div class="sig-name">Date</div>
+        <div class="sig-title">&nbsp;</div>
+      </div>
+    </div>
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-block">
+        <div class="sig-name">Jeff Sarabia — Landon Renovations</div>
+        <div class="sig-title">COO / Managing Partner</div>
+      </div>
+    </div>
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-block">
+        <div class="sig-name">Date</div>
+        <div class="sig-title">&nbsp;</div>
+      </div>
+    </div>
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-block">
+        <div class="sig-name">Jordan Sarabia — Landon Renovations</div>
+        <div class="sig-title">Marketing &amp; Business Operations Partner</div>
+      </div>
+    </div>
+    <div>
+      <div class="sig-line"></div>
+      <div class="sig-block">
+        <div class="sig-name">Date</div>
+        <div class="sig-title">&nbsp;</div>
+      </div>
+    </div>
+  </div>
+
+  <br/><br/>
+
+  <div class="card-dark">
+    <h4>Disclaimer</h4>
+    <p>This document is a strategic proposal prepared by Anchor Pro Solutions for internal partnership alignment purposes. It does not constitute legal, financial, or investment advice. All projections are illustrative and based on reasonable market assumptions — actual results will vary. Consult a licensed attorney for entity formation and operating agreement drafting. Consult a licensed financial advisor before making investment decisions.</p>
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential · May 2026</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ NEW: NONPROFIT / GIVEBACK -->
+<div class="page">
+  <div class="page-num">20</div>
+  <div class="section-label">Section 15</div>
+  <h2 class="section-title">Community Giveback &amp; Nonprofit Initiative</h2>
+  <div class="title-rule"></div>
+
+  <p>As Anchor Pro Solutions and its partners build wealth through real estate, we are committed to reinvesting in the communities that make our business possible. This section outlines the framework for a company-funded nonprofit arm designed to create lasting social impact alongside financial returns.</p>
+
+  <h3 class="sub-title">The Vision</h3>
+  <div class="card-dark">
+    <p>The partnership will establish a separate 501(c)(3) nonprofit organization — tentatively named <strong>Anchor Community Foundation</strong> — funded by a percentage of annual net profits. The Foundation's mission is to provide affordable housing access, homeownership education, and skilled-trades training to underserved communities in our target markets.</p>
+  </div>
+
+  <h3 class="sub-title">Core Programs</h3>
+  <table>
+    <thead><tr><th>Program</th><th>Description</th><th>Target Population</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Homeownership Readiness</strong></td>
+        <td>Free workshops on credit repair, budgeting, DSCR lending, and the home-buying process</td>
+        <td>First-generation buyers, renters</td>
+      </tr>
+      <tr>
+        <td><strong>Trades Pipeline</strong></td>
+        <td>Paid apprenticeship program teaching framing, finish carpentry, and project management — creating Anchor Pro's future labor pool</td>
+        <td>Young adults (18–28), returning citizens</td>
+      </tr>
+      <tr>
+        <td><strong>Affordable Unit Set-Aside</strong></td>
+        <td>1 unit per multi-family acquisition reserved at 20% below market rate for qualifying low-income households</td>
+        <td>Families below 80% AMI</td>
+      </tr>
+      <tr>
+        <td><strong>Community Rehab Grants</strong></td>
+        <td>Small material grants ($500–$2,000) to elderly or disabled homeowners unable to maintain basic safety repairs</td>
+        <td>Seniors, disabled residents</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Funding Structure</h3>
+  <div class="two-col">
+    <div class="card-dark">
+      <h4>Annual Contribution</h4>
+      <p><strong>3% of net annual profits</strong> allocated to the Foundation from the operating LLC. Treated as a business charitable contribution — tax-deductible up to 10% of taxable income (IRS §170).</p>
+    </div>
+    <div class="card-dark">
+      <h4>Governance</h4>
+      <p>The Foundation operates as a legally separate entity with its own board. Partners may serve on the board but Foundation funds cannot be redirected to the LLC. Annual impact report issued to all partners.</p>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Why This Matters for the Business</h3>
+  <ul>
+    <li><strong>Brand equity:</strong> Community reputation accelerates deal sourcing — motivated sellers choose mission-driven buyers</li>
+    <li><strong>Talent pipeline:</strong> Apprenticeship graduates become trained, loyal subcontractors at competitive rates</li>
+    <li><strong>Investor appeal:</strong> ESG-conscious private lenders and impact investors prefer partners with a giveback framework</li>
+    <li><strong>Tax efficiency:</strong> Charitable contributions reduce LLC taxable income while building community goodwill</li>
+  </ul>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential · May 2026</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ NEW: HR / EMPLOYEES & SUBS -->
+<div class="page">
+  <div class="page-num">21</div>
+  <div class="section-label">Section 16</div>
+  <h2 class="section-title">Employees &amp; Subcontractor Framework</h2>
+  <div class="title-rule"></div>
+
+  <p>As the portfolio scales, Anchor Pro Solutions will build a lean internal team while maintaining a flexible subcontractor network. This section defines the hiring structure, compensation framework, and roles for both W-2 employees and 1099 independent contractors.</p>
+
+  <h3 class="sub-title">W-2 Employee vs. 1099 Subcontractor</h3>
+  <table>
+    <thead><tr><th>Factor</th><th>W-2 Employee</th><th>1099 Subcontractor</th></tr></thead>
+    <tbody>
+      <tr><td>Tax withholding</td><td>Employer withholds income tax, Social Security, Medicare</td><td>Contractor responsible for self-employment tax</td></tr>
+      <tr><td>Benefits eligible</td><td>Yes (health, PTO, retirement)</td><td>No employer obligations</td></tr>
+      <tr><td>Work control</td><td>Employer directs when, where, and how</td><td>Contractor controls method and schedule</td></tr>
+      <tr><td>Best for</td><td>Full-time roles (PM, office admin, leasing)</td><td>Trade work, project-based labor (framing, plumbing, HVAC)</td></tr>
+      <tr><td>Payroll taxes</td><td>~7.65% employer FICA match</td><td>None for the company</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Founding Team Compensation</h3>
+  <div class="card-dark">
+    <p><strong>Jeff Sarabia — Landon Renovations (Lead Contractor / Field Operations):</strong> Compensated on a two-phase structure tied to business maturity:</p>
+    <ul style="margin:8px 0 8px 20px; line-height:2;">
+      <li><strong>Phase 1 — Hourly ($50/hr):</strong> Jeff is paid $50/hr on all jobs while the LLC is in its early stage. This ensures fair compensation from day one regardless of job size or margin.</li>
+      <li><strong>Phase 2 — 30% of Gross Profit:</strong> Once the LLC sustains <strong>$25,000/mo in revenue for 2 consecutive months</strong>, Jeff converts to 30% of gross profit on all jobs going forward. Gross profit is defined as total revenue minus hard material costs and subcontractor invoices. This is paid to Landon Renovations before the net profit split.</li>
+    </ul>
+    <p>The two-consecutive-month requirement confirms the revenue milestone is a sustained baseline, not a one-time spike. Once triggered, the conversion is permanent. As the company scales further and Jeff transitions to a management role, his percentage and structure will be renegotiated annually by both partners.</p>
+    <br/>
+    <p><strong>Jordan Sarabia — Landon Renovations (Marketing &amp; Business Operations):</strong> Compensated at <strong>3% of gross revenue per job</strong> — paid through Landon Renovations before the net profit split. Covers brand management, lead generation, social media, tenant marketing, and Landon-side business operations. Treated as a 1099 contractor billed through Landon Renovations or her own DBA.</p>
+    <br/>
+    <p><strong>Ty Jackson — Anchor Pro Solutions (Marketing, Business Operations &amp; Field Labor):</strong> Compensated through two separate streams, both expensed through Anchor Pro Solutions before the net profit split:</p>
+    <ul style="margin:8px 0 8px 20px; line-height:2;">
+      <li><strong>Marketing &amp; Operations — 3% of gross revenue per job:</strong> Paid social media ads (Facebook &amp; Instagram), content auto-posting and scheduling, comment and DM engagement, inbound call routing to DMs, YouTube channel management and content production, CRM management, and Anchor Pro-side business operations.</li>
+      <li><strong>Field Labor — $30/hr:</strong> When Ty works on job sites alongside Jeff, his hours are logged and billed at $30/hr through Anchor Pro Solutions as a pre-waterfall labor cost. Hours must be pre-approved and logged per job.</li>
+      <li><strong>Vacation Rental Management — 25% of gross monthly VR revenue per property:</strong> Earned under Ty Jackson's Georgia real estate license for STR management services including guest communication, check-in/check-out coordination, cleaning scheduling, platform listing management (Airbnb/VRBO), dynamic pricing, and maintenance response. A 3% platform host fee passthrough also applies per property.</li>
+    </ul>
+    <br/>
+    <p><strong>Anchor Pro Solutions (Managing Partner):</strong> Draws a <strong>management fee</strong> equal to 5% of gross project revenue per deal for deal sourcing, financing coordination, and business oversight — plus a salary once LLC cash flow supports it.</p>
+  </div>
+
+  <h3 class="sub-title">Roles Roadmap (18-Month Hiring Plan)</h3>
+  <table>
+    <thead><tr><th>Month</th><th>Role</th><th>Entity</th><th>Type</th><th>Estimated Cost</th></tr></thead>
+    <tbody>
+      <tr><td>Month 0+</td><td>Jeff Sarabia — Field Ops Lead</td><td>Landon Renovations</td><td>1099</td><td>$50/hr until $25K/mo × 2 months → converts to 30% gross profit</td></tr>
+      <tr><td>Month 0–3</td><td>Jordan Sarabia — Marketing &amp; Business Ops</td><td>Landon Renovations</td><td>1099</td><td>3% of gross revenue per job</td></tr>
+      <tr><td>Month 0+</td><td>Ty Jackson — Marketing, Ops &amp; Field Labor</td><td>Anchor Pro Solutions</td><td>Internal</td><td>3% gross revenue (marketing) + $30/hr (field labor)</td></tr>
+      <tr><td>Month 3–6</td><td>General Labor (2–3 crew)</td><td>1099</td><td>$20–$28/hr per head</td></tr>
+      <tr><td>Month 6–9</td><td>Licensed Electrician (as needed)</td><td>1099</td><td>Bid-based per project</td></tr>
+      <tr><td>Month 6–9</td><td>Licensed Plumber (as needed)</td><td>1099</td><td>Bid-based per project</td></tr>
+      <tr><td>Month 9–12</td><td>Property Manager / Leasing Agent</td><td>W-2 or PM contract</td><td>8–10% of gross rent</td></tr>
+      <tr><td>Month 12–18</td><td>Office Administrator / Bookkeeper</td><td>W-2 part-time</td><td>$18–$22/hr · 20 hrs/wk</td></tr>
+      <tr><td>Month 12–18</td><td>Project Manager (2nd crew)</td><td>W-2 or 1099</td><td>$55,000–$65,000/yr salary</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Key Policies</h3>
+  <ul>
+    <li><strong>Time tracking:</strong> All hourly workers (W-2 and 1099) log hours in the Scope of Work tool per project — no pay processed without logged hours tied to a job code</li>
+    <li><strong>Invoicing:</strong> 1099 subs submit invoices Net-15. The LLC issues 1099-NEC to any contractor paid $600+ in a calendar year</li>
+    <li><strong>Licensing verification:</strong> All trade subcontractors must provide proof of current license, liability insurance ($1M minimum), and workers' comp before first engagement</li>
+    <li><strong>Non-solicitation:</strong> Subcontractors may not solicit Anchor Pro's clients or investors directly — governed by the subcontractor services agreement</li>
+    <li><strong>Profit share eligibility:</strong> Only LLC members (partners) participate in profit distributions — employees and subs receive wages/fees only</li>
+  </ul>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential · May 2026</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ NEW: OPERATIONAL COSTS -->
+<div class="page">
+  <div class="page-num">22</div>
+  <div class="section-label">Section 17</div>
+  <h2 class="section-title">Operational Cost Framework</h2>
+  <div class="title-rule"></div>
+
+  <p>Understanding and controlling operational costs is critical to maintaining positive cash flow and protecting BRRRR returns. This section defines the LLC's monthly overhead structure, separating fixed obligations from variable project-tied expenses.</p>
+
+  <h3 class="sub-title">Fixed Monthly Overhead</h3>
+  <table>
+    <thead><tr><th>Category</th><th>Item</th><th>Est. Monthly Cost</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Legal / Compliance</td><td>Registered Agent fee</td><td>$15–$25</td><td>Annual fee prorated monthly</td></tr>
+      <tr><td>Legal / Compliance</td><td>LLC state filing / annual report</td><td>$10–$20</td><td>Georgia: ~$50/yr prorated</td></tr>
+      <tr><td>Insurance</td><td>General liability insurance</td><td>$100–$200</td><td>$1M–$2M coverage for contractor LLC</td></tr>
+      <tr><td>Insurance</td><td>Umbrella policy</td><td>$50–$75</td><td>Add-on once portfolio exceeds 2 units</td></tr>
+      <tr><td>Software / Tools</td><td>QuickBooks / bookkeeping</td><td>$30–$50</td><td>Self-file or CPA-managed</td></tr>
+      <tr><td>Software / Tools</td><td>CRM / lead tracking</td><td>$0–$50</td><td>HubSpot free tier to start</td></tr>
+      <tr><td>Software / Tools</td><td>Google Workspace</td><td>$12–$18</td><td>Business email + Drive</td></tr>
+      <tr><td>Marketing</td><td>Jordan Sarabia (3% per job)</td><td>Per job</td><td>3% of gross revenue; expensed before profit split</td></tr>
+      <tr><td>Marketing</td><td>Ty Jackson — Marketing (3% per job)</td><td>Per job</td><td>3% of gross revenue; expensed through Anchor Pro</td></tr>
+      <tr><td>Labor</td><td>Ty Jackson — Field Labor ($30/hr)</td><td>Per job</td><td>When on job site with Jeff; pre-approved hours; expensed through Anchor Pro</td></tr>
+      <tr><td>Marketing</td><td>Ad spend (social/direct mail)</td><td>$200–$500</td><td>Scales with deal pipeline</td></tr>
+      <tr><td>Banking / Finance</td><td>Business checking account</td><td>$0–$25</td><td>Most business accounts free with minimum balance</td></tr>
+      <tr><td>Banking / Finance</td><td>Lender relationship fees</td><td>$0</td><td>Paid per deal at closing, not monthly</td></tr>
+      <tr><td>Office / Admin</td><td>P.O. Box / virtual office</td><td>$20–$50</td><td>For professional business address</td></tr>
+      <tr><td>Office / Admin</td><td>Misc. office supplies / printing</td><td>$30–$60</td><td>Contracts, signage, stamps</td></tr>
+    </tbody>
+  </table>
+
+  <div class="two-col">
+    <div class="card-dark">
+      <h4>Estimated Fixed Overhead Range</h4>
+      <p><strong>Low end: ~$467/month</strong></p>
+      <p><strong>High end: ~$1,073/month</strong></p>
+      <p>At startup, target the low end. Scale software and marketing spend as deal volume increases. Fixed overhead should never exceed 15% of monthly gross revenue.</p>
+    </div>
+    <div class="card-dark">
+      <h4>Break-Even Benchmark</h4>
+      <p>At $700/month average fixed overhead, the portfolio needs to generate at minimum <strong>$700 net cash flow</strong> from rental units before any partner draws. One stabilized rental unit (1 SFH or 1 duplex unit) typically covers this threshold.</p>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Variable Project Costs (Per Deal)</h3>
+  <table>
+    <thead><tr><th>Category</th><th>Item</th><th>Typical Range</th></tr></thead>
+    <tbody>
+      <tr><td>Acquisition</td><td>Hard money origination fee (1–3 pts)</td><td>$2,000–$6,000 per deal</td></tr>
+      <tr><td>Acquisition</td><td>Title search &amp; closing costs</td><td>$1,500–$3,000</td></tr>
+      <tr><td>Acquisition</td><td>Inspection &amp; appraisal</td><td>$400–$800</td></tr>
+      <tr><td>Rehab</td><td>Jeff's labor (30% of gross profit)</td><td>Calculated per job before profit split</td></tr>
+      <tr><td>Rehab</td><td>Materials (supplier accounts)</td><td>Project-specific (SOW line items)</td></tr>
+      <tr><td>Rehab</td><td>Trade subcontractors (elec/plumb/HVAC)</td><td>$1,500–$8,000 per trade per deal</td></tr>
+      <tr><td>Carrying</td><td>Hard money interest (10–14%/yr)</td><td>$500–$1,800/month while holding</td></tr>
+      <tr><td>Carrying</td><td>Utilities during rehab</td><td>$150–$350/month</td></tr>
+      <tr><td>Exit / Refi</td><td>DSCR loan closing costs (1–2%)</td><td>$1,500–$4,000</td></tr>
+      <tr><td>Exit / Refi</td><td>Appraisal for refinance</td><td>$450–$700</td></tr>
+      <tr><td>Stabilized</td><td>Property management (if outsourced)</td><td>8–10% gross rent monthly</td></tr>
+      <tr><td>Stabilized</td><td>Maintenance reserve</td><td>5–10% gross rent monthly</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Cost Control Principles</h3>
+  <ul>
+    <li><strong>Every project gets a budget BEFORE work begins</strong> — no open-ended scopes; Jeff's hours are estimated and capped at the SOW stage</li>
+    <li><strong>Supplier accounts reduce material costs 10–20%</strong> — prioritize opening Net-30 accounts with HD Supply, Sherwin-Williams, and Ferguson within 90 days</li>
+    <li><strong>Rehab contingency:</strong> Always budget +10% over SOW estimate for surprises — funded from the deal's capital stack, not operations</li>
+    <li><strong>Quarterly overhead review:</strong> Partners review fixed costs every 90 days and cut any line item not directly generating revenue or protecting assets</li>
+  </ul>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential · May 2026</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SERVICES MENU -->
+<div class="page">
+  <div class="page-num">24</div>
+  <div class="section-label">Section 19</div>
+  <h2 class="section-title">Services Menu &amp; Pricing Guide</h2>
+  <div class="title-rule"></div>
+
+  <p>The partnership operates across two phases and multiple service lines. Phase 1 revenue comes directly from remodeling and renovation contracts. As the portfolio grows, these services also support internal BRRRR rehabs at cost. All client-facing pricing includes Jeff's labor markup and material markup per the bidding framework in Section 09.</p>
+
+  <h3 class="sub-title">Landon Renovations — Core Services</h3>
+  <table>
+    <thead><tr><th>Service</th><th>Typical Scope</th><th>Est. Price Range</th><th>Timeline</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Kitchen Remodel</strong></td><td>Cabinets, countertops, backsplash, flooring, appliance hookup</td><td>$8,000 – $25,000</td><td>2–4 weeks</td></tr>
+      <tr><td><strong>Bathroom Remodel</strong></td><td>Tile, vanity, fixtures, tub/shower, flooring</td><td>$4,000 – $12,000</td><td>1–2 weeks</td></tr>
+      <tr><td><strong>Deck / Porch Build</strong></td><td>New deck construction, framing, decking, rails, stairs</td><td>$5,000 – $18,000</td><td>1–2 weeks</td></tr>
+      <tr><td><strong>Full Home Renovation</strong></td><td>Multi-room gut and remodel, structural updates, full finish</td><td>$30,000 – $80,000+</td><td>6–14 weeks</td></tr>
+      <tr><td><strong>Flooring Installation</strong></td><td>LVP, hardwood, tile — per sqft pricing</td><td>$3 – $8/sqft installed</td><td>2–5 days</td></tr>
+      <tr><td><strong>Interior Painting</strong></td><td>Full interior, walls + trim, per room or whole home</td><td>$300 – $800/room</td><td>1–3 days</td></tr>
+      <tr><td><strong>Exterior Painting</strong></td><td>Full exterior, prep, prime, 2 coats</td><td>$2,500 – $6,000</td><td>3–7 days</td></tr>
+      <tr><td><strong>Basement Finish</strong></td><td>Framing, drywall, flooring, electrical rough-in coordination</td><td>$15,000 – $35,000</td><td>4–8 weeks</td></tr>
+      <tr><td><strong>Room Addition / Build</strong></td><td>Foundation, framing, exterior, interior finish</td><td>$25,000 – $60,000+</td><td>8–16 weeks</td></tr>
+      <tr><td><strong>BRRRR Rehab (Internal)</strong></td><td>Full acquisition-to-rent-ready rehab, all trades coordinated</td><td>Cost + $50/hr labor</td><td>60–90 days</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Partner Subsidiary Services (Under the Partnership Umbrella)</h3>
+  <table>
+    <thead><tr><th>Service Line</th><th>Entity / Operator</th><th>Typical Job</th><th>Est. Revenue / Job</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Property Staging</strong></td><td>Anchor Pro Solutions</td><td>Furniture, décor, and layout for pre-listing seller prep or post-renovation showcase photography</td><td>$800 – $3,500/engagement</td></tr>
+      <tr><td><strong>Dumpster Rental</strong></td><td>TBD subsidiary LLC</td><td>10–20 yd roll-off delivery + pickup for remodel, cleanout, or job site</td><td>$300 – $600/drop</td></tr>
+      <tr><td><strong>Cleaning Service</strong></td><td>TBD subsidiary LLC</td><td>Post-construction clean, move-in/move-out clean, recurring residential</td><td>$150 – $500/job</td></tr>
+      <tr><td><strong>Lawn Care</strong></td><td>TBD subsidiary LLC</td><td>Mow, edge, blow — weekly or bi-weekly for rental properties + client referrals</td><td>$40 – $120/visit</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Property Staging — Service Packages</h3>
+  <p>Staging is offered under the Ironwood umbrella as an add-on service for two audiences: homeowners preparing to list and renovation clients wanting professional photos and showings after a completed remodel. Fulfilled by Anchor Pro Solutions — billed through Ironwood at the rates below.</p>
+
+  <table>
+    <thead><tr><th>Package</th><th>What's Included</th><th>Best For</th><th>Price</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Consult Only</strong></td>
+        <td>1-hour walkthrough with staging professional, written room-by-room recommendations, no furniture provided</td>
+        <td>DIY sellers who want direction</td>
+        <td>$150 – $250</td>
+      </tr>
+      <tr>
+        <td><strong>Partial Staging</strong></td>
+        <td>Key rooms only (living room + primary bedroom + entry), furniture and décor provided, setup and breakdown included</td>
+        <td>Most seller prep jobs</td>
+        <td>$800 – $1,500</td>
+      </tr>
+      <tr>
+        <td><strong>Full Staging</strong></td>
+        <td>All main living areas furnished and styled, accessory placement, artwork, lighting, 30-day rental of all furnishings</td>
+        <td>Higher-value listings, post-reno showcase</td>
+        <td>$1,800 – $3,500</td>
+      </tr>
+      <tr>
+        <td><strong>Post-Reno Photo Package</strong></td>
+        <td>Partial staging setup timed for photography day, styled for listing photos, same-day breakdown — coordinated with Ty's photography</td>
+        <td>Renovation clients going to market</td>
+        <td>$500 – $900</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="card-dark">
+    <p><strong>Internal Synergy:</strong> Every remodel job and every BRRRR property creates direct demand for dumpster rental (demo phase), cleaning service (turnover / punch list), lawn care (ongoing property maintenance), and staging (pre-listing or post-reno photos). These subsidiary businesses are fed by the core pipeline — each new property or renovation contract is also a revenue opportunity for the subsidiaries. Staging in particular converts renovation clients directly into seller leads, creating a full-cycle relationship with every homeowner we touch.</p>
+  </div>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential · May 2026</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ SUBSIDIARY BUSINESSES -->
+<div class="page">
+  <div class="page-num">25</div>
+  <div class="section-label">Section 20</div>
+  <h2 class="section-title">Subsidiary Business Framework</h2>
+  <div class="title-rule"></div>
+
+  <p>The partnership is structured to allow additional service businesses to operate under the same umbrella — each as its own LLC, but coordinated through the parent partnership for shared resources, marketing, and referral flow. This creates a vertically integrated operation where the core real estate business feeds revenue to each subsidiary, and each subsidiary supports the core business.</p>
+
+  <h3 class="sub-title">Holding Structure</h3>
+  <div class="card-dark">
+    <p>The recommended structure is a <strong>Parent Holding LLC</strong> that owns a membership interest in each subsidiary. This allows profits to flow up from each business line, protects each entity from the liabilities of the others, and simplifies tax reporting at the partner level through pass-through taxation.</p>
+    <br/>
+    <p><strong>Example structure:</strong><br/>
+    [Parent Holding LLC] → owns interest in → Ironwood LLC (Renovations)<br/>
+    [Parent Holding LLC] → owns interest in → Anchor Pro Solutions (Staging)<br/>
+    [Parent Holding LLC] → owns interest in → [Dumpster Co.] LLC<br/>
+    [Parent Holding LLC] → owns interest in → [Cleaning Co.] LLC<br/>
+    [Parent Holding LLC] → owns interest in → [Lawn Care Co.] LLC<br/>
+    Anchor Pro Solutions → partner in → [Parent Holding LLC]</p>
+  </div>
+
+  <h3 class="sub-title">Subsidiary Profiles</h3>
+  <table>
+    <thead><tr><th>Business</th><th>Startup Cost</th><th>Equipment Needed</th><th>Licensing</th><th>Revenue Model</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Property Staging</strong></td>
+        <td>$2,000 – $8,000 (furniture inventory, décor, transport)</td>
+        <td>Staging inventory (furniture, art, accessories), transport vehicle or van</td>
+        <td>GA business license, general liability insurance — operated under Anchor Pro Solutions</td>
+        <td>$500–$3,500/engagement · 4 packages · feeds directly from renovation + seller pipeline</td>
+      </tr>
+      <tr>
+        <td><strong>Dumpster Rental</strong></td>
+        <td>$8,000 – $20,000 (1–2 roll-off containers + truck)</td>
+        <td>Roll-off truck or hookup truck, 10/20 yd containers</td>
+        <td>GA business license, DOT number if over 10,001 lbs GVWR</td>
+        <td>$300–$600/drop · 5-7 day rental period · target: 3–5 drops/week</td>
+      </tr>
+      <tr>
+        <td><strong>Cleaning Service</strong></td>
+        <td>$500 – $2,000 (supplies, insurance, uniforms)</td>
+        <td>Commercial vacuums, mops, cleaning supplies, vehicle</td>
+        <td>GA business license, general liability insurance ($1M)</td>
+        <td>$150–$500/job · recurring residential accounts · post-construction premium</td>
+      </tr>
+      <tr>
+        <td><strong>Lawn Care</strong></td>
+        <td>$3,000 – $8,000 (mower, trailer, equipment)</td>
+        <td>Zero-turn mower, trailer, trimmers, blower</td>
+        <td>GA business license, liability insurance</td>
+        <td>$40–$120/visit · weekly/bi-weekly recurring accounts · property mgmt contracts</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Profit Waterfall — Subsidiaries</h3>
+  <p>Each subsidiary follows the same contribution-based waterfall as the core business:</p>
+  <div class="two-col">
+    <div class="card-dark">
+      <h4>Revenue Flow</h4>
+      <ul style="font-size:13px; line-height:2;">
+        <li>Gross revenue collected by subsidiary LLC</li>
+        <li>Hard costs (fuel, supplies, equipment depreciation) off the top</li>
+        <li>Operator labor paid first (at agreed rate)</li>
+        <li>Management fee to Anchor Pro (5%)</li>
+        <li>Net profit → 50/50 split between Anchor Pro and Landon Renovations</li>
+      </ul>
+    </div>
+    <div class="card-dark">
+      <h4>Shared Resources</h4>
+      <ul style="font-size:13px; line-height:2;">
+        <li>Shared marketing under Ty Jackson; graphic design by Jordan Sarabia</li>
+        <li>Shared supplier accounts where applicable</li>
+        <li>Cross-referral from every remodel and rental job</li>
+        <li>Shared bookkeeping / QuickBooks entity tracking</li>
+        <li>Shared insurance umbrella policy (where eligible)</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Launch Priority</h3>
+  <table>
+    <thead><tr><th>Business</th><th>Launch Phase</th><th>Why This Order</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Property Staging</strong></td><td>Phase 1 (Month 1–2)</td><td>No major startup cost — Anchor Pro operates this directly. Launch immediately. Every seller lead and every completed renovation is an automatic staging opportunity. Highest per-job revenue of any subsidiary.</td></tr>
+      <tr><td><strong>Cleaning Service</strong></td><td>Phase 1 (Month 1–3)</td><td>Lowest startup cost — launch immediately alongside remodeling. Post-construction cleans come from every job completed.</td></tr>
+      <tr><td><strong>Lawn Care</strong></td><td>Phase 1 (Month 2–4)</td><td>Low startup, recurring revenue, rental property maintenance contracts provide steady base. Cross-sell to every remodel client.</td></tr>
+      <tr><td><strong>Dumpster Rental</strong></td><td>Phase 2 (Month 6–9)</td><td>Higher startup cost — fund from remodeling profits or business credit. Serves every construction job and becomes a profit center on its own.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="footer">Anchor Pro Solutions × Landon Renovations — BRRRR Partnership Proposal — Confidential · May 2026</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ 21 COMPANY NAME -->
+<div class="page">
+  <div class="page-num">26</div>
+  <div class="section-label">Section 21</div>
+  <h2 class="section-title">Company Name — Confirmed</h2>
+  <div class="title-rule"></div>
+
+  <div style="background:#f0f7f0; border:2px solid #2e7d32; border-radius:8px; padding:24px 28px; margin-bottom:24px;">
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
+      <span style="font-size:22px;">✔</span>
+      <span style="font-size:13px; font-weight:700; color:#2e7d32; text-transform:uppercase; letter-spacing:.08em;">Name Selected &amp; Confirmed</span>
+    </div>
+    <div style="font-size:28px; font-weight:900; color:#0a0a0a; margin:10px 0 4px;">Ironwood LLC</div>
+    <div style="font-size:14px; color:#444; margin-bottom:4px;">dba <strong>Ironwood Holdings</strong></div>
+    <div style="font-size:13px; color:#555;">Fictitious Name: <strong>Ironwood Renovations</strong></div>
+  </div>
+
+  <h3 class="sub-title">Legal Name Structure</h3>
+  <table>
+    <thead><tr><th>Layer</th><th>Name</th><th>Purpose</th></tr></thead>
+    <tbody>
+      <tr>
+        <td><strong>Legal Entity</strong></td>
+        <td>Ironwood LLC</td>
+        <td>Registered entity name — used on all legal filings, contracts, and tax documents. Formed in Delaware; foreign-qualified in Georgia.</td>
+      </tr>
+      <tr>
+        <td><strong>DBA / Trade Name</strong></td>
+        <td>Ironwood Holdings</td>
+        <td>Used for investor-facing communications, lender packages, and portfolio branding. Signals a growth-oriented holding company.</td>
+      </tr>
+      <tr>
+        <td><strong>Fictitious Name</strong></td>
+        <td>Ironwood Renovations</td>
+        <td>Used on job sites, homeowner contracts, yard signs, and marketing materials. Consumer-facing construction identity.</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Formation Details</h3>
+  <table>
+    <thead><tr><th>Item</th><th>Detail</th></tr></thead>
+    <tbody>
+      <tr><td>State of Formation</td><td>Delaware (favorable LLC law, strong liability protection, no state income tax on out-of-state operations)</td></tr>
+      <tr><td>Operating State</td><td>Georgia — foreign qualification required with Georgia Secretary of State</td></tr>
+      <tr><td>Registered Agent</td><td>Delaware registered agent required; Georgia registered agent required for foreign qualification</td></tr>
+      <tr><td>Ownership Structure</td><td>50% — Anchor Pro Solutions (Ty Jackson, Managing Member) &nbsp;|&nbsp; 50% — Landon Renovations (Jeff &amp; Jordan Sarabia, jointly as one member unit)</td></tr>
+      <tr><td>Management</td><td>Member-managed; Ty Jackson designated as Managing Member per Operating Agreement</td></tr>
+      <tr><td>Tax Classification</td><td>Default: Partnership (pass-through); consult CPA before S-Corp election</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sub-title">Brand Usage Guide</h3>
+  <div class="card-dark" style="margin-top:8px;">
+    <table style="margin:0;">
+      <thead><tr><th>Context</th><th>Name to Use</th></tr></thead>
+      <tbody>
+        <tr><td>Contracts with homeowners / clients</td><td>Ironwood Renovations</td></tr>
+        <tr><td>Bank accounts &amp; checks</td><td>Ironwood LLC</td></tr>
+        <tr><td>Lender applications &amp; DSCR loans</td><td>Ironwood LLC (or Ironwood Holdings)</td></tr>
+        <tr><td>Yard signs, door hangers, trucks</td><td>Ironwood Renovations</td></tr>
+        <tr><td>Investor decks &amp; JV pitches</td><td>Ironwood Holdings</td></tr>
+        <tr><td>Social media &amp; YouTube</td><td>Ironwood Renovations (consumer-facing)</td></tr>
+        <tr><td>Operating Agreement &amp; tax filings</td><td>Ironwood LLC</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="footer">Ironwood LLC dba Ironwood Holdings · Ironwood Renovations — BRRRR Partnership Proposal — Confidential · May 2026</div>
+</div>
+
+</body>
+</html>

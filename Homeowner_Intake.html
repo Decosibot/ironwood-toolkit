@@ -1,0 +1,1402 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ironwood Renovations — Seller Intake</title>
+<style>
+/* ===== VARIABLES ===== */
+:root {
+  --black: #0a0a0a;
+  --cream: #f5f0e8;
+  --gold: #c9a84c;
+  --gold-dark: #a8893a;
+  --gold-light: #e2c97a;
+  --mid: #2a2520;
+  --border: #d4c9b0;
+  --section-bg: #faf7f2;
+  --internal-bg: #1a1208;
+  --internal-border: #c9a84c;
+  --red: #c0392b;
+  --green: #27ae60;
+  --orange: #e67e22;
+  --blue: #2980b9;
+}
+
+/* ===== RESET ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 15px; }
+body {
+  font-family: 'Georgia', 'Times New Roman', serif;
+  background: #e8e2d6;
+  color: var(--black);
+  min-height: 100vh;
+}
+
+/* ===== TOOLBAR ===== */
+#toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--black);
+  border-bottom: 2px solid var(--gold);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+#toolbar .brand {
+  font-family: 'Georgia', serif;
+  color: var(--gold);
+  font-size: 1rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+#toolbar .brand span {
+  color: #999;
+  font-size: 0.75rem;
+  display: block;
+  letter-spacing: 0.04em;
+  font-weight: normal;
+  text-transform: none;
+  margin-top: 1px;
+}
+.toolbar-btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  font-family: 'Georgia', serif;
+  font-size: 0.82rem;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 0.04em;
+  transition: all 0.15s ease;
+  text-transform: uppercase;
+}
+.btn-gold {
+  background: var(--gold);
+  color: var(--black);
+  border: 1px solid var(--gold-dark);
+}
+.btn-gold:hover { background: var(--gold-light); }
+.btn-outline {
+  background: transparent;
+  color: var(--gold);
+  border: 1px solid var(--gold);
+}
+.btn-outline:hover { background: rgba(201,168,76,0.12); }
+.btn-dark {
+  background: #2a2520;
+  color: var(--cream);
+  border: 1px solid #444;
+}
+.btn-dark:hover { background: #3a342e; }
+
+/* ===== MAIN WRAPPER ===== */
+#main {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px 16px 60px;
+}
+
+/* ===== HEADER BLOCK ===== */
+#form-header {
+  background: var(--black);
+  color: var(--cream);
+  border-radius: 8px 8px 0 0;
+  padding: 28px 32px 20px;
+  border-bottom: 3px solid var(--gold);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.logo-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.logo-block { display: flex; align-items: center; gap: 14px; }
+.logo-icon {
+  width: 52px; height: 52px;
+  background: var(--gold);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.logo-icon svg { width: 32px; height: 32px; fill: var(--black); }
+.logo-text-block {}
+.logo-company {
+  font-size: 1.35rem;
+  font-weight: bold;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  line-height: 1.1;
+}
+.logo-tagline {
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin-top: 2px;
+}
+.form-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  text-align: right;
+}
+.form-no {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--gold);
+  letter-spacing: 0.1em;
+  font-family: 'Courier New', monospace;
+}
+.form-date-row {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.82rem; color: #ccc;
+}
+.form-date-row input[type="date"] {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--gold);
+  color: var(--gold-light);
+  font-size: 0.82rem;
+  font-family: 'Courier New', monospace;
+  padding: 2px 4px;
+  cursor: pointer;
+  outline: none;
+}
+.confidential-bar {
+  margin-top: 8px;
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #888;
+  border-top: 1px solid #333;
+  padding-top: 8px;
+}
+
+/* ===== FORM BODY ===== */
+#form-body {
+  background: var(--cream);
+  border-radius: 0 0 8px 8px;
+  padding: 0 0 32px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+}
+
+/* ===== SECTIONS ===== */
+.section {
+  padding: 28px 32px 24px;
+  border-bottom: 1px solid var(--border);
+}
+.section:last-child { border-bottom: none; }
+.section-title {
+  font-size: 0.72rem;
+  font-weight: bold;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  margin-bottom: 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-title::before {
+  content: '';
+  display: inline-block;
+  width: 3px;
+  height: 16px;
+  background: var(--gold);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+.section-title .section-num {
+  background: var(--gold);
+  color: var(--black);
+  font-size: 0.62rem;
+  font-weight: bold;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+
+/* ===== FIELD LAYOUT ===== */
+.field-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px 20px;
+  margin-bottom: 16px;
+}
+.field-row.two-col { grid-template-columns: 1fr 1fr; }
+.field-row.three-col { grid-template-columns: 1fr 1fr 1fr; }
+.field-row.four-col { grid-template-columns: 1fr 1fr 1fr 1fr; }
+.field-row.full { grid-template-columns: 1fr; }
+.field-group { display: flex; flex-direction: column; gap: 5px; }
+.field-group label {
+  font-size: 0.72rem;
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #555;
+}
+.field-group input[type="text"],
+.field-group input[type="tel"],
+.field-group input[type="email"],
+.field-group input[type="number"],
+.field-group input[type="date"],
+.field-group select,
+.field-group textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--black);
+  font-size: 0.9rem;
+  font-family: 'Georgia', serif;
+  outline: none;
+  transition: border-color 0.15s;
+}
+.field-group input:focus,
+.field-group select:focus,
+.field-group textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(201,168,76,0.18);
+}
+.field-group textarea {
+  resize: vertical;
+  min-height: 80px;
+  line-height: 1.5;
+}
+.field-group select { cursor: pointer; appearance: auto; }
+
+/* ===== RADIO & CHECKBOX GROUPS ===== */
+.radio-group, .check-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+.radio-group.vertical { flex-direction: column; gap: 6px; }
+.radio-opt, .check-opt {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.88rem;
+  color: var(--black);
+  cursor: pointer;
+}
+.radio-opt input, .check-opt input {
+  width: 16px; height: 16px;
+  accent-color: var(--gold);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ===== CONDITION CARDS ===== */
+.condition-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+.condition-card {
+  cursor: pointer;
+  user-select: none;
+}
+.condition-card input[type="radio"] { display: none; }
+.condition-card .card-inner {
+  padding: 10px 18px;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  font-size: 0.85rem;
+  font-weight: bold;
+  color: #555;
+  transition: all 0.15s;
+  text-align: center;
+  min-width: 90px;
+}
+.condition-card input:checked + .card-inner {
+  border-color: var(--gold);
+  background: var(--gold);
+  color: var(--black);
+}
+.condition-card .card-inner:hover { border-color: var(--gold-light); }
+
+/* ===== LEAD SCORE BUTTONS ===== */
+.lead-score-group { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 4px; }
+.lead-score-opt { cursor: pointer; user-select: none; }
+.lead-score-opt input[type="radio"] { display: none; }
+.lead-score-opt .ls-inner {
+  padding: 10px 20px;
+  border-radius: 6px;
+  border: 2px solid transparent;
+  font-size: 0.88rem;
+  font-weight: bold;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+.ls-hot .ls-inner { background: #ffecec; border-color: #e74c3c; color: #c0392b; }
+.ls-warm .ls-inner { background: #fff8ec; border-color: #e67e22; color: #d35400; }
+.ls-cold .ls-inner { background: #ecf6ff; border-color: #3498db; color: #2980b9; }
+.ls-pass .ls-inner { background: #f5f5f5; border-color: #bbb; color: #666; }
+.ls-hot input:checked + .ls-inner { background: #e74c3c; color: #fff; }
+.ls-warm input:checked + .ls-inner { background: #e67e22; color: #fff; }
+.ls-cold input:checked + .ls-inner { background: #3498db; color: #fff; }
+.ls-pass input:checked + .ls-inner { background: #888; color: #fff; }
+
+/* ===== CHECKBOX GRID ===== */
+.check-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 20px;
+  margin-top: 4px;
+}
+.check-grid .check-opt {
+  font-size: 0.85rem;
+}
+
+/* ===== INTERNAL SECTION ===== */
+.section-internal {
+  background: #1a1510;
+  border-top: 3px solid var(--gold);
+  border-bottom: 3px solid var(--gold);
+  padding: 28px 32px 24px;
+  margin: 0;
+  position: relative;
+}
+.section-internal .section-title {
+  color: var(--gold);
+}
+.section-internal .internal-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 0.6rem;
+  font-weight: bold;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 3px;
+  margin-left: 8px;
+}
+.section-internal .field-group label { color: #c9b98a; }
+.section-internal input[type="text"],
+.section-internal input[type="number"],
+.section-internal input[type="date"],
+.section-internal select,
+.section-internal textarea {
+  background: #2a2010;
+  border-color: #4a3c20;
+  color: var(--cream);
+}
+.section-internal input:focus,
+.section-internal select:focus,
+.section-internal textarea:focus {
+  border-color: var(--gold);
+  box-shadow: 0 0 0 2px rgba(201,168,76,0.25);
+}
+.section-internal .condition-card .card-inner {
+  background: #2a2010;
+  border-color: #4a3c20;
+  color: #c9b98a;
+}
+.section-internal .radio-opt,
+.section-internal .check-opt { color: var(--cream); }
+.mao-display {
+  background: #2a2010;
+  border: 1px solid var(--gold);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 1.05rem;
+  color: var(--gold);
+  font-weight: bold;
+  letter-spacing: 0.06em;
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+}
+
+/* ===== NEXT STEPS ===== */
+.next-steps-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+}
+
+/* ===== CONDITIONAL FIELDS ===== */
+.conditional { display: none; }
+.conditional.visible { display: block; }
+
+/* ===== TOOLTIP ===== */
+.tooltip-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+.tooltip-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--gold);
+  color: var(--black);
+  font-size: 0.65rem;
+  font-weight: bold;
+  cursor: help;
+  position: relative;
+}
+.tooltip-icon::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--black);
+  color: var(--cream);
+  font-size: 0.72rem;
+  font-weight: normal;
+  padding: 5px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  border: 1px solid var(--gold);
+  z-index: 50;
+}
+.tooltip-icon:hover::after { opacity: 1; }
+
+/* ===== BOTTOM BUTTONS ===== */
+#bottom-bar {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+  padding: 24px 32px;
+  background: var(--black);
+  border-radius: 0 0 8px 8px;
+  flex-wrap: wrap;
+}
+.btn-lg {
+  padding: 12px 32px;
+  font-size: 0.92rem;
+  border-radius: 6px;
+}
+.btn-save {
+  background: var(--gold);
+  color: var(--black);
+  border: 2px solid var(--gold-dark);
+}
+.btn-save:hover { background: var(--gold-light); }
+.btn-pipeline {
+  background: transparent;
+  color: var(--gold);
+  border: 2px solid var(--gold);
+}
+.btn-pipeline:hover { background: rgba(201,168,76,0.12); }
+
+/* ===== TOAST NOTIFICATION ===== */
+#toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: var(--black);
+  color: var(--gold);
+  border: 1px solid var(--gold);
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-size: 0.88rem;
+  font-weight: bold;
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+  max-width: 320px;
+}
+#toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== DIVIDER ===== */
+.field-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 16px 0;
+}
+
+/* ===== PRINT STYLES ===== */
+@media print {
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    background: #fff !important;
+    color: #000 !important;
+    font-size: 11pt;
+  }
+
+  #toolbar { display: none !important; }
+  #bottom-bar { display: none !important; }
+  #toast { display: none !important; }
+  #main { max-width: 100%; padding: 0; margin: 0; }
+
+  #form-header {
+    background: #000 !important;
+    color: #fff !important;
+    border-radius: 0;
+    padding: 18px 24px 14px;
+  }
+
+  #form-body {
+    background: #fff !important;
+    box-shadow: none !important;
+    border-radius: 0;
+    padding: 0;
+  }
+
+  .section {
+    padding: 14px 24px 12px;
+    page-break-inside: avoid;
+  }
+
+  .section-title {
+    font-size: 8pt;
+    color: #000 !important;
+    border-bottom: 1px solid #000;
+    padding-bottom: 4px;
+    margin-bottom: 10px;
+  }
+
+  .field-group label {
+    font-size: 7.5pt;
+    color: #333 !important;
+  }
+
+  .field-group input,
+  .field-group select,
+  .field-group textarea {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid #999 !important;
+    border-radius: 0 !important;
+    padding: 3px 2px !important;
+    font-size: 10pt;
+    color: #000 !important;
+    box-shadow: none !important;
+  }
+
+  .field-group textarea {
+    border: 1px solid #999 !important;
+    min-height: 50px;
+  }
+
+  /* Condition cards - print as simple inline */
+  .condition-cards { display: flex; flex-wrap: wrap; gap: 6px; }
+  .condition-card .card-inner {
+    border: 1px solid #000 !important;
+    background: transparent !important;
+    color: #000 !important;
+    padding: 4px 10px;
+    font-size: 9pt;
+  }
+  .condition-card input:checked + .card-inner {
+    background: #000 !important;
+    color: #fff !important;
+  }
+
+  /* Lead score */
+  .ls-inner {
+    border: 1px solid #000 !important;
+    background: transparent !important;
+    color: #000 !important;
+    padding: 4px 12px;
+  }
+  .lead-score-opt input:checked + .ls-inner {
+    background: #000 !important;
+    color: #fff !important;
+  }
+
+  /* Checkboxes and radios - print visible */
+  .radio-opt, .check-opt { font-size: 9.5pt; }
+  .radio-opt input, .check-opt input { width: 12px; height: 12px; }
+
+  .check-grid { grid-template-columns: 1fr 1fr; }
+  .next-steps-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Internal section */
+  .section-internal {
+    background: #f8f8f8 !important;
+    border: 2px solid #000 !important;
+    position: relative;
+    overflow: visible;
+  }
+  .section-internal::before {
+    content: '— INTERNAL USE ONLY — NOT FOR SELLER —';
+    display: block;
+    text-align: center;
+    font-size: 7pt;
+    font-weight: bold;
+    letter-spacing: 0.2em;
+    color: #000;
+    border: 1px solid #000;
+    padding: 3px;
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+  .section-internal .section-title { color: #000 !important; }
+  .section-internal .field-group label { color: #333 !important; }
+  .section-internal input,
+  .section-internal select,
+  .section-internal textarea {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid #555 !important;
+    color: #000 !important;
+  }
+  .section-internal .radio-opt,
+  .section-internal .check-opt { color: #000 !important; }
+  .mao-display {
+    background: transparent !important;
+    border: 1px solid #000 !important;
+    color: #000 !important;
+  }
+
+  /* Conditional fields — show if they have content via CSS attr trick (not perfect but best effort) */
+  .conditional { display: none !important; }
+  .conditional.visible { display: block !important; }
+
+  .tooltip-icon { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== TOOLBAR ===== -->
+<div id="toolbar">
+  <div class="brand">
+    Ironwood Renovations — Seller Intake
+    <span>Homeowner Lead Form · Ironwood LLC</span>
+  </div>
+  <div class="toolbar-btns">
+    <button class="btn btn-dark" onclick="newForm()">&#x2715; New Form</button>
+    <button class="btn btn-outline" onclick="window.print()">&#x1F5B6; Print / Save PDF</button>
+    <button class="btn btn-gold" onclick="saveToLog()">&#x1F4BE; Save to Log</button>
+  </div>
+</div>
+
+<!-- ===== MAIN ===== -->
+<div id="main">
+
+  <!-- HEADER -->
+  <div id="form-header">
+    <div class="logo-row">
+      <div class="logo-block">
+        <div class="logo-icon">
+          <!-- Ironwood tree silhouette SVG -->
+          <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+            <rect x="14" y="18" width="4" height="10" rx="1"/>
+            <path d="M16 2 L26 14 H21 L28 22 H20 L16 28 L12 22 H4 L11 14 H6 Z"/>
+          </svg>
+        </div>
+        <div class="logo-text-block">
+          <div class="logo-company">Ironwood Renovations</div>
+          <div class="logo-tagline">Ironwood LLC · Acquisitions &amp; Renovations</div>
+        </div>
+      </div>
+      <div class="form-meta">
+        <div class="form-no" id="form-no-display">INTAKE-0001</div>
+        <div class="form-date-row">
+          Date: <input type="date" id="form-date" />
+        </div>
+      </div>
+    </div>
+    <div class="confidential-bar">Confidential — Internal Use Only — Do Not Distribute</div>
+  </div>
+
+  <!-- FORM BODY -->
+  <div id="form-body">
+
+    <!-- SECTION 1: Seller Information -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-num">1</span>
+        Seller Information
+      </div>
+
+      <div class="field-row two-col">
+        <div class="field-group">
+          <label>Full Name</label>
+          <input type="text" id="s1_name" placeholder="First and Last Name" />
+        </div>
+        <div class="field-group">
+          <label>Phone</label>
+          <input type="tel" id="s1_phone" placeholder="(xxx) xxx-xxxx" />
+        </div>
+      </div>
+
+      <div class="field-row two-col">
+        <div class="field-group">
+          <label>Email</label>
+          <input type="email" id="s1_email" placeholder="email@example.com" />
+        </div>
+        <div class="field-group">
+          <label>Preferred Contact Method</label>
+          <select id="s1_contact_pref">
+            <option value="">— Select —</option>
+            <option>Call</option>
+            <option>Text</option>
+            <option>Email</option>
+            <option>Any</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row two-col">
+        <div class="field-group">
+          <label>Best Time to Reach</label>
+          <select id="s1_best_time">
+            <option value="">— Select —</option>
+            <option>Morning</option>
+            <option>Afternoon</option>
+            <option>Evening</option>
+            <option>Anytime</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>How did you hear about us?</label>
+          <select id="s1_source" onchange="toggleReferral()">
+            <option value="">— Select —</option>
+            <option>Social Media</option>
+            <option>YouTube</option>
+            <option>Direct Mail</option>
+            <option value="Referral">Referral</option>
+            <option>Door Hanger</option>
+            <option>Google</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row full conditional" id="referral_row">
+        <div class="field-group">
+          <label>Referral Name</label>
+          <input type="text" id="s1_referral_name" placeholder="Who referred you?" />
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 2: Property Information -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-num">2</span>
+        Property Information
+      </div>
+
+      <div class="field-row full">
+        <div class="field-group">
+          <label>Property Address</label>
+          <input type="text" id="s2_address" placeholder="123 Main Street" />
+        </div>
+      </div>
+
+      <div class="field-row three-col">
+        <div class="field-group">
+          <label>City, State, ZIP</label>
+          <input type="text" id="s2_city" placeholder="City, ST 00000" />
+        </div>
+        <div class="field-group">
+          <label>County</label>
+          <input type="text" id="s2_county" placeholder="e.g. Gilmer, Walton…" />
+        </div>
+        <div class="field-group">
+          <label>Property Type</label>
+          <select id="s2_prop_type">
+            <option value="">— Select —</option>
+            <option>Single Family</option>
+            <option>Multi-Family</option>
+            <option>Vacant Land</option>
+            <option>Vacation / Cabin</option>
+            <option>Commercial</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-row four-col">
+        <div class="field-group">
+          <label>Year Built</label>
+          <input type="text" id="s2_year_built" placeholder="e.g. 1985" />
+        </div>
+        <div class="field-group">
+          <label>Square Footage</label>
+          <input type="number" id="s2_sqft" placeholder="e.g. 1800" />
+        </div>
+        <div class="field-group">
+          <label>Bedrooms</label>
+          <input type="number" id="s2_beds" placeholder="3" min="0" />
+        </div>
+        <div class="field-group">
+          <label>Bathrooms</label>
+          <input type="number" id="s2_baths" placeholder="2" min="0" step="0.5" />
+        </div>
+      </div>
+
+      <div class="field-row two-col">
+        <div class="field-group">
+          <label>Lot Size</label>
+          <input type="text" id="s2_lot_size" placeholder="e.g. 0.5 acres or 7,500 sqft" />
+        </div>
+        <div class="field-group">
+          <label>Is the property currently occupied?</label>
+          <div class="radio-group" style="margin-top:6px;">
+            <label class="radio-opt"><input type="radio" name="s2_occupied" value="Yes — Owner" onchange="toggleTenant()" /> Yes — Owner</label>
+            <label class="radio-opt"><input type="radio" name="s2_occupied" value="Yes — Tenant" onchange="toggleTenant()" /> Yes — Tenant</label>
+            <label class="radio-opt"><input type="radio" name="s2_occupied" value="Vacant" onchange="toggleTenant()" /> Vacant</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row conditional" id="tenant_row">
+        <div class="field-group">
+          <label>Lease End Date</label>
+          <input type="date" id="s2_lease_end" />
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 3: Property Condition -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-num">3</span>
+        Property Condition
+      </div>
+
+      <div class="field-group" style="margin-bottom:18px;">
+        <label>Overall Condition</label>
+        <div class="condition-cards" style="margin-top:8px;">
+          <label class="condition-card"><input type="radio" name="s3_condition" value="Excellent" /><div class="card-inner">Excellent</div></label>
+          <label class="condition-card"><input type="radio" name="s3_condition" value="Good" /><div class="card-inner">Good</div></label>
+          <label class="condition-card"><input type="radio" name="s3_condition" value="Fair" /><div class="card-inner">Fair</div></label>
+          <label class="condition-card"><input type="radio" name="s3_condition" value="Poor" /><div class="card-inner">Poor</div></label>
+          <label class="condition-card"><input type="radio" name="s3_condition" value="Needs Full Rehab" /><div class="card-inner">Needs Full Rehab</div></label>
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-bottom:16px;">
+        <label>Known Issues (check all that apply)</label>
+        <div class="check-grid" style="margin-top:10px;">
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Roof damage" /> Roof damage</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Foundation issues" /> Foundation issues</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Water/flood damage" /> Water / flood damage</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Fire damage" /> Fire damage</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Mold" /> Mold</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="HVAC needs replacing" /> HVAC needs replacing</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Plumbing issues" /> Plumbing issues</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Electrical issues" /> Electrical issues</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Outdated kitchen" /> Outdated kitchen</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Outdated bathrooms" /> Outdated bathrooms</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Structural damage" /> Structural damage</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Code violations" /> Code violations</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="Unpermitted work" /> Unpermitted work</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="HOA violations" /> HOA violations</label>
+          <label class="check-opt"><input type="checkbox" name="s3_issues" value="None known" /> None known</label>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Additional Condition Notes</label>
+        <textarea id="s3_notes" placeholder="Describe any known issues, recent repairs, or relevant details…"></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 4: Seller Motivation & Timeline -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-num">4</span>
+        Seller Motivation &amp; Timeline
+      </div>
+
+      <div class="field-group" style="margin-bottom:16px;">
+        <label>Why are you selling? (check all that apply)</label>
+        <div class="check-grid" style="margin-top:10px;">
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Inherited property" /> Inherited property</label>
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Behind on payments" /> Behind on payments</label>
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Facing foreclosure" /> Facing foreclosure</label>
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Divorce / separation" /> Divorce / separation</label>
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Relocating" /> Relocating</label>
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Downsizing" /> Downsizing</label>
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Too many repairs" /> Too many repairs</label>
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Tired landlord" /> Tired landlord</label>
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Estate sale" /> Estate sale</label>
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Financial hardship" /> Financial hardship</label>
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Job loss" /> Job loss</label>
+          <label class="check-opt"><input type="checkbox" name="s4_motivation" value="Other" onchange="toggleMotivationOther()" /> Other</label>
+        </div>
+      </div>
+
+      <div class="field-row full conditional" id="motivation_other_row">
+        <div class="field-group">
+          <label>Other Reason</label>
+          <input type="text" id="s4_motivation_other" placeholder="Please describe…" />
+        </div>
+      </div>
+
+      <div class="field-row two-col" style="margin-top:12px;">
+        <div class="field-group">
+          <label>How soon do you need to sell?</label>
+          <div class="radio-group" style="margin-top:6px; flex-direction:column; gap:6px;">
+            <label class="radio-opt"><input type="radio" name="s4_timeline" value="ASAP" /> ASAP</label>
+            <label class="radio-opt"><input type="radio" name="s4_timeline" value="30 days" /> 30 days</label>
+            <label class="radio-opt"><input type="radio" name="s4_timeline" value="60–90 days" /> 60–90 days</label>
+            <label class="radio-opt"><input type="radio" name="s4_timeline" value="6+ months" /> 6+ months</label>
+            <label class="radio-opt"><input type="radio" name="s4_timeline" value="Flexible" /> Flexible</label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Is the property listed with an agent?</label>
+          <div class="radio-group" style="margin-top:6px; flex-direction:column; gap:6px;">
+            <label class="radio-opt"><input type="radio" name="s4_listed" value="Yes" onchange="toggleAgentInfo()" /> Yes</label>
+            <label class="radio-opt"><input type="radio" name="s4_listed" value="No" onchange="toggleAgentInfo()" /> No</label>
+            <label class="radio-opt"><input type="radio" name="s4_listed" value="Was listed, now expired" onchange="toggleAgentInfo()" /> Was listed, now expired</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row conditional" id="agent_info_row">
+        <div class="field-group">
+          <label>Agent Name &amp; Brokerage</label>
+          <input type="text" id="s4_agent_info" placeholder="Agent name, Brokerage" />
+        </div>
+      </div>
+
+      <hr class="field-divider" />
+
+      <div class="field-row two-col">
+        <div class="field-group">
+          <label>Are there any liens or back taxes?</label>
+          <div class="radio-group" style="margin-top:6px;">
+            <label class="radio-opt"><input type="radio" name="s4_liens" value="Yes" onchange="toggleLienAmount()" /> Yes</label>
+            <label class="radio-opt"><input type="radio" name="s4_liens" value="No" onchange="toggleLienAmount()" /> No</label>
+            <label class="radio-opt"><input type="radio" name="s4_liens" value="Not sure" onchange="toggleLienAmount()" /> Not sure</label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Is the mortgage current?</label>
+          <div class="radio-group" style="margin-top:6px; flex-direction:column; gap:6px;">
+            <label class="radio-opt"><input type="radio" name="s4_mortgage" value="Yes" /> Yes</label>
+            <label class="radio-opt"><input type="radio" name="s4_mortgage" value="No — behind" /> No — behind</label>
+            <label class="radio-opt"><input type="radio" name="s4_mortgage" value="No mortgage" /> No mortgage (free &amp; clear)</label>
+            <label class="radio-opt"><input type="radio" name="s4_mortgage" value="Not sure" /> Not sure</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-row conditional" id="lien_amount_row">
+        <div class="field-group">
+          <label>Estimated Lien / Back Tax Amount ($)</label>
+          <input type="text" id="s4_lien_amount" placeholder="e.g. $12,000" />
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 5: Financials -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-num">5</span>
+        Financials
+      </div>
+
+      <div class="field-row three-col">
+        <div class="field-group">
+          <label>Seller's Asking Price ($)</label>
+          <input type="text" id="s5_asking" placeholder="$000,000" />
+        </div>
+        <div class="field-group">
+          <label>What do you owe? ($)</label>
+          <input type="text" id="s5_owed" placeholder="$000,000" />
+        </div>
+        <div class="field-group">
+          <label>Est. Repairs Needed — per Seller ($)</label>
+          <input type="text" id="s5_seller_repairs" placeholder="$0" />
+        </div>
+      </div>
+
+      <div class="field-row two-col">
+        <div class="field-group">
+          <label>
+            <span class="tooltip-wrap">
+              Open to Creative Financing?
+              <span class="tooltip-icon" data-tip="e.g. seller financing, subject-to, lease option">?</span>
+            </span>
+          </label>
+          <div class="radio-group" style="margin-top:6px;">
+            <label class="radio-opt"><input type="radio" name="s5_creative" value="Yes" /> Yes</label>
+            <label class="radio-opt"><input type="radio" name="s5_creative" value="No" /> No</label>
+            <label class="radio-opt"><input type="radio" name="s5_creative" value="Open to discussion" /> Open to discussion</label>
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Minimum Acceptable Price ($) <span style="font-weight:normal;font-size:0.7rem;color:#888;">— just for our notes</span></label>
+          <input type="text" id="s5_min_price" placeholder="Optional" />
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION 6: Internal Notes -->
+    <div class="section section-internal">
+      <div class="section-title">
+        <span class="section-num" style="background:#c9a84c;">6</span>
+        Ironwood Internal Notes
+        <span class="internal-badge">Internal — Not Shown to Seller</span>
+      </div>
+
+      <div class="field-row three-col">
+        <div class="field-group">
+          <label>Estimated ARV ($)</label>
+          <input type="number" id="s6_arv" placeholder="000000" oninput="calcMAO()" />
+        </div>
+        <div class="field-group">
+          <label>Estimated Rehab Cost ($)</label>
+          <input type="number" id="s6_rehab" placeholder="000000" oninput="calcMAO()" />
+        </div>
+        <div class="field-group">
+          <label>Calculated MAO <span style="font-weight:normal;font-size:0.68rem;color:#9a8a5a;">(ARV × 0.70 − Rehab)</span></label>
+          <div class="mao-display" id="mao_display">—</div>
+        </div>
+      </div>
+
+      <div class="field-row two-col">
+        <div class="field-group">
+          <label>Deal Type Assessment</label>
+          <select id="s6_deal_type" style="background:#2a2010;border-color:#4a3c20;color:#f5f0e8;">
+            <option value="">— Select —</option>
+            <option>Flip</option>
+            <option>Remodel</option>
+            <option>BRRRR</option>
+            <option>Vacation Rental</option>
+            <option>Pass</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Market</label>
+          <select id="s6_market" style="background:#2a2010;border-color:#4a3c20;color:#f5f0e8;">
+            <option value="">— Select —</option>
+            <option>Georgia</option>
+            <option>Blue Ridge GA</option>
+            <option>Ellijay GA</option>
+            <option>Dahlonega GA</option>
+            <option>Destin FL</option>
+            <option>30A FL</option>
+            <option>Panama City Beach FL</option>
+            <option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group" style="margin-bottom:16px;">
+        <label>Lead Score</label>
+        <div class="lead-score-group" style="margin-top:8px;">
+          <label class="lead-score-opt ls-hot"><input type="radio" name="s6_lead_score" value="Hot" /> <div class="ls-inner">&#x1F525; Hot</div></label>
+          <label class="lead-score-opt ls-warm"><input type="radio" name="s6_lead_score" value="Warm" /> <div class="ls-inner">&#x1F44D; Warm</div></label>
+          <label class="lead-score-opt ls-cold"><input type="radio" name="s6_lead_score" value="Cold" /> <div class="ls-inner">&#x2744;&#xFE0F; Cold</div></label>
+          <label class="lead-score-opt ls-pass"><input type="radio" name="s6_lead_score" value="Pass" /> <div class="ls-inner">&#x2715; Pass</div></label>
+        </div>
+      </div>
+
+      <div class="field-row two-col">
+        <div class="field-group">
+          <label>Assigned To</label>
+          <select id="s6_assigned" style="background:#2a2010;border-color:#4a3c20;color:#f5f0e8;">
+            <option value="">— Select —</option>
+            <option>Ty Jackson</option>
+            <option>Jeff Sarabia</option>
+            <option>Both</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Follow-up Date</label>
+          <input type="date" id="s6_followup" style="background:#2a2010;border-color:#4a3c20;color:#f5f0e8;" />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label>Internal Notes</label>
+        <textarea id="s6_notes" style="background:#2a2010;border-color:#4a3c20;color:#f5f0e8;min-height:100px;" placeholder="Deal notes, red flags, comparable details, anything Ty or Jeff needs to know…"></textarea>
+      </div>
+    </div>
+
+    <!-- SECTION 7: Next Steps -->
+    <div class="section">
+      <div class="section-title">
+        <span class="section-num">7</span>
+        Next Steps
+      </div>
+
+      <div class="next-steps-grid">
+        <label class="check-opt"><input type="checkbox" name="s7_next" value="Schedule property walkthrough" /> Schedule property walkthrough</label>
+        <label class="check-opt"><input type="checkbox" name="s7_next" value="Pull comps (MLS access — Ty)" /> Pull comps (MLS access — Ty)</label>
+        <label class="check-opt"><input type="checkbox" name="s7_next" value="Run MAO calculator" /> Run MAO calculator</label>
+        <label class="check-opt"><input type="checkbox" name="s7_next" value="Create Scope of Work" /> Create Scope of Work</label>
+        <label class="check-opt"><input type="checkbox" name="s7_next" value="Send Client Service Agreement" /> Send Client Service Agreement</label>
+        <label class="check-opt"><input type="checkbox" name="s7_next" value="Add to Property Pipeline" /> Add to Property Pipeline</label>
+        <label class="check-opt"><input type="checkbox" name="s7_next" value="Follow up call scheduled" /> Follow up call scheduled</label>
+      </div>
+    </div>
+
+    <!-- BOTTOM BUTTONS -->
+    <div id="bottom-bar">
+      <button class="btn btn-save btn-lg" onclick="saveToLog()">&#x1F4BE; Save Lead</button>
+      <button class="btn btn-pipeline btn-lg" onclick="openPipeline()">&#x1F4CB; Open in Pipeline</button>
+    </div>
+
+  </div><!-- /form-body -->
+</div><!-- /main -->
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ===== UTILITIES =====
+function toast(msg, duration) {
+  duration = duration || 3000;
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, duration);
+}
+
+function formatCurrency(val) {
+  if (isNaN(val) || val === '') return '—';
+  return '$' + Number(val).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+// ===== FORM NUMBER =====
+function getNextFormNo() {
+  var current = parseInt(localStorage.getItem('ironwood_form_counter') || '0', 10);
+  current += 1;
+  localStorage.setItem('ironwood_form_counter', current);
+  return 'INTAKE-' + String(current).padStart(4, '0');
+}
+
+function setFormDate() {
+  var today = new Date();
+  var yyyy = today.getFullYear();
+  var mm = String(today.getMonth() + 1).padStart(2, '0');
+  var dd = String(today.getDate()).padStart(2, '0');
+  document.getElementById('form-date').value = yyyy + '-' + mm + '-' + dd;
+}
+
+var currentFormNo = '';
+
+function initFormNo() {
+  currentFormNo = getNextFormNo();
+  document.getElementById('form-no-display').textContent = currentFormNo;
+}
+
+// ===== CONDITIONAL TOGGLES =====
+function toggleReferral() {
+  var src = document.getElementById('s1_source').value;
+  var row = document.getElementById('referral_row');
+  row.classList.toggle('visible', src === 'Referral');
+}
+
+function toggleTenant() {
+  var val = document.querySelector('input[name="s2_occupied"]:checked');
+  var row = document.getElementById('tenant_row');
+  row.classList.toggle('visible', val && val.value === 'Yes — Tenant');
+}
+
+function toggleMotivationOther() {
+  var checked = document.querySelector('input[name="s4_motivation"][value="Other"]');
+  var row = document.getElementById('motivation_other_row');
+  row.classList.toggle('visible', checked && checked.checked);
+}
+
+function toggleAgentInfo() {
+  var val = document.querySelector('input[name="s4_listed"]:checked');
+  var row = document.getElementById('agent_info_row');
+  row.classList.toggle('visible', val && val.value === 'Yes');
+}
+
+function toggleLienAmount() {
+  var val = document.querySelector('input[name="s4_liens"]:checked');
+  var row = document.getElementById('lien_amount_row');
+  row.classList.toggle('visible', val && val.value === 'Yes');
+}
+
+// ===== MAO CALCULATOR =====
+function calcMAO() {
+  var arv = parseFloat(document.getElementById('s6_arv').value) || 0;
+  var rehab = parseFloat(document.getElementById('s6_rehab').value) || 0;
+  var el = document.getElementById('mao_display');
+  if (arv === 0) {
+    el.textContent = '—';
+    return;
+  }
+  var mao = (arv * 0.70) - rehab;
+  el.textContent = formatCurrency(mao) + '  (' + formatCurrency(arv) + ' × 0.70 − ' + formatCurrency(rehab) + ')';
+}
+
+// ===== COLLECT FORM DATA =====
+function getChecked(name) {
+  return Array.from(document.querySelectorAll('input[name="' + name + '"]:checked')).map(function(el) { return el.value; });
+}
+
+function getRadio(name) {
+  var el = document.querySelector('input[name="' + name + '"]:checked');
+  return el ? el.value : '';
+}
+
+function collectForm() {
+  var arv = parseFloat(document.getElementById('s6_arv').value) || 0;
+  var rehab = parseFloat(document.getElementById('s6_rehab').value) || 0;
+  var mao = arv > 0 ? (arv * 0.70) - rehab : null;
+
+  return {
+    form_no: currentFormNo,
+    form_date: document.getElementById('form-date').value,
+    timestamp: new Date().toISOString(),
+
+    // Section 1
+    seller_name: document.getElementById('s1_name').value,
+    seller_phone: document.getElementById('s1_phone').value,
+    seller_email: document.getElementById('s1_email').value,
+    contact_pref: document.getElementById('s1_contact_pref').value,
+    best_time: document.getElementById('s1_best_time').value,
+    source: document.getElementById('s1_source').value,
+    referral_name: document.getElementById('s1_referral_name').value,
+
+    // Section 2
+    property_address: document.getElementById('s2_address').value,
+    city_state_zip: document.getElementById('s2_city').value,
+    county: document.getElementById('s2_county').value,
+    property_type: document.getElementById('s2_prop_type').value,
+    year_built: document.getElementById('s2_year_built').value,
+    sqft: document.getElementById('s2_sqft').value,
+    beds: document.getElementById('s2_beds').value,
+    baths: document.getElementById('s2_baths').value,
+    lot_size: document.getElementById('s2_lot_size').value,
+    occupied: getRadio('s2_occupied'),
+    lease_end: document.getElementById('s2_lease_end').value,
+
+    // Section 3
+    condition: getRadio('s3_condition'),
+    known_issues: getChecked('s3_issues'),
+    condition_notes: document.getElementById('s3_notes').value,
+
+    // Section 4
+    motivations: getChecked('s4_motivation'),
+    motivation_other: document.getElementById('s4_motivation_other').value,
+    timeline: getRadio('s4_timeline'),
+    listed: getRadio('s4_listed'),
+    agent_info: document.getElementById('s4_agent_info').value,
+    liens: getRadio('s4_liens'),
+    lien_amount: document.getElementById('s4_lien_amount').value,
+    mortgage_current: getRadio('s4_mortgage'),
+
+    // Section 5
+    asking_price: document.getElementById('s5_asking').value,
+    amount_owed: document.getElementById('s5_owed').value,
+    seller_repair_est: document.getElementById('s5_seller_repairs').value,
+    creative_financing: getRadio('s5_creative'),
+    min_price: document.getElementById('s5_min_price').value,
+
+    // Section 6
+    arv: document.getElementById('s6_arv').value,
+    rehab_cost: document.getElementById('s6_rehab').value,
+    mao: mao !== null ? mao.toFixed(2) : '',
+    deal_type: document.getElementById('s6_deal_type').value,
+    market: document.getElementById('s6_market').value,
+    lead_score: getRadio('s6_lead_score'),
+    assigned_to: document.getElementById('s6_assigned').value,
+    followup_date: document.getElementById('s6_followup').value,
+    internal_notes: document.getElementById('s6_notes').value,
+
+    // Section 7
+    next_steps: getChecked('s7_next')
+  };
+}
+
+// ===== SAVE TO LOG =====
+function saveToLog() {
+  var data = collectForm();
+  var log = JSON.parse(localStorage.getItem('ironwood_intake_log') || '[]');
+  // Update existing if same form_no, otherwise push
+  var idx = log.findIndex(function(r) { return r.form_no === data.form_no; });
+  if (idx > -1) {
+    log[idx] = data;
+    toast('Lead updated: ' + data.form_no + ' — ' + (data.seller_name || 'No name'));
+  } else {
+    log.push(data);
+    toast('Lead saved: ' + data.form_no + ' — ' + (data.seller_name || 'No name'));
+  }
+  localStorage.setItem('ironwood_intake_log', JSON.stringify(log));
+}
+
+// ===== NEW FORM =====
+function newForm() {
+  if (!confirm('Clear all fields and start a new form?')) return;
+
+  // Reset all inputs
+  document.querySelectorAll('input[type="text"], input[type="tel"], input[type="email"], input[type="number"]').forEach(function(el) {
+    if (el.id !== 'form-date') el.value = '';
+  });
+  document.querySelectorAll('textarea').forEach(function(el) { el.value = ''; });
+  document.querySelectorAll('select').forEach(function(el) { el.selectedIndex = 0; });
+  document.querySelectorAll('input[type="radio"]').forEach(function(el) { el.checked = false; });
+  document.querySelectorAll('input[type="checkbox"]').forEach(function(el) { el.checked = false; });
+  // Reset date fields except form-date
+  document.querySelectorAll('input[type="date"]').forEach(function(el) {
+    if (el.id !== 'form-date') el.value = '';
+  });
+
+  // Hide all conditional rows
+  document.querySelectorAll('.conditional').forEach(function(el) { el.classList.remove('visible'); });
+
+  // Reset MAO
+  document.getElementById('mao_display').textContent = '—';
+
+  // New form number
+  currentFormNo = getNextFormNo();
+  document.getElementById('form-no-display').textContent = currentFormNo;
+
+  // Reset date
+  setFormDate();
+
+  toast('New form started — ' + currentFormNo);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ===== OPEN PIPELINE =====
+function openPipeline() {
+  var data = collectForm();
+  alert('Copy deal info to Property Pipeline\n\nForm: ' + data.form_no + '\nSeller: ' + (data.seller_name || '—') + '\nAddress: ' + (data.property_address || '—') + '\nLead Score: ' + (data.lead_score || '—') + '\nDeal Type: ' + (data.deal_type || '—'));
+}
+
+// ===== INIT =====
+window.addEventListener('DOMContentLoaded', function() {
+  initFormNo();
+  setFormDate();
+});
+</script>
+</body>
+</html>

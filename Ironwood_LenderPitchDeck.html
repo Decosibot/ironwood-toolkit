@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ironwood Holdings — Lender &amp; Investor One-Pager</title>
+  <style>
+    /* ── Reset & Base ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black:  #0a0a0a;
+      --cream:  #f5f0e8;
+      --gold:   #c9a84c;
+      --gold2:  #e8c96a;
+      --dark:   #111111;
+      --mid:    #1e1e1e;
+      --muted:  #6b6355;
+      --border: #d4c9a8;
+      --text:   #1a1612;
+      --serif:  'Georgia', 'Times New Roman', serif;
+      --sans:   'Helvetica Neue', Arial, sans-serif;
+    }
+
+    html { font-size: 15px; }
+
+    body {
+      font-family: var(--sans);
+      background: var(--black);
+      color: var(--text);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ── Toolbar (screen only) ────────────────────────────── */
+    #toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--mid);
+      border-bottom: 2px solid var(--gold);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 24px;
+    }
+
+    #toolbar .tb-title {
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    #toolbar button {
+      background: var(--gold);
+      color: var(--black);
+      border: none;
+      padding: 7px 20px;
+      font-family: var(--sans);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    #toolbar button:hover { background: var(--gold2); }
+
+    /* ── Page Wrapper ─────────────────────────────────────── */
+    #page {
+      max-width: 960px;
+      margin: 28px auto 48px;
+      background: var(--cream);
+      box-shadow: 0 8px 60px rgba(0,0,0,0.7);
+    }
+
+    /* ── HEADER ───────────────────────────────────────────── */
+    #header {
+      background: var(--black);
+      padding: 36px 44px 28px;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .header-left .co-name {
+      font-family: var(--serif);
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.06em;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .header-left .co-sub {
+      margin-top: 7px;
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #a89870;
+    }
+
+    .header-right {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .header-right .confidential {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #888070;
+    }
+
+    .header-right .partners {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+    }
+
+    .gold-bar {
+      height: 3px;
+      background: linear-gradient(90deg, var(--gold) 0%, var(--gold2) 50%, var(--gold) 100%);
+      margin-top: 24px;
+    }
+
+    /* ── Section Shell ────────────────────────────────────── */
+    .section {
+      padding: 28px 44px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .section:last-of-type { border-bottom: none; }
+
+    .section-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--gold);
+      opacity: 0.35;
+    }
+
+    /* ── Executive Summary ────────────────────────────────── */
+    #exec-summary p {
+      font-family: var(--serif);
+      font-size: 0.97rem;
+      line-height: 1.75;
+      color: #2a2218;
+      max-width: 840px;
+    }
+
+    /* ── Team Cards ───────────────────────────────────────── */
+    .team-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .team-card {
+      background: var(--black);
+      padding: 22px 24px;
+      border-top: 3px solid var(--gold);
+    }
+
+    .team-card .tc-name {
+      font-family: var(--serif);
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.03em;
+    }
+
+    .team-card .tc-entity {
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #7a6e58;
+      margin-bottom: 10px;
+      margin-top: 2px;
+    }
+
+    .team-card .tc-role {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #a89260;
+      margin-bottom: 10px;
+    }
+
+    .team-card ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .team-card ul li {
+      font-size: 0.8rem;
+      color: #c8bfa8;
+      padding: 4px 0;
+      border-bottom: 1px solid #1e1e1e;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.4;
+    }
+
+    .team-card ul li::before {
+      content: '▸';
+      color: var(--gold);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* ── Strategy Columns ─────────────────────────────────── */
+    .strategy-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    .strat-card {
+      border: 1px solid var(--border);
+      background: #faf7f1;
+      padding: 18px 18px 16px;
+    }
+
+    .strat-card .strat-title {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 8px;
+    }
+
+    .strat-card .strat-body {
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: #3a3020;
+    }
+
+    .strat-card .strat-stat {
+      margin-top: 10px;
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+
+    /* ── Deal Criteria ────────────────────────────────────── */
+    .criteria-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+    }
+
+    .criteria-table tr {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .criteria-table tr:last-child { border-bottom: none; }
+
+    .criteria-table td {
+      padding: 9px 10px;
+      vertical-align: top;
+      line-height: 1.45;
+    }
+
+    .criteria-table td:first-child {
+      font-weight: 700;
+      color: var(--muted);
+      font-size: 0.72rem;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      width: 42%;
+      white-space: nowrap;
+    }
+
+    .criteria-table td:last-child {
+      color: var(--text);
+    }
+
+    .criteria-table tr:nth-child(odd) td {
+      background: #f0ece2;
+    }
+
+    .criteria-table tr:nth-child(even) td {
+      background: var(--cream);
+    }
+
+    /* ── Financial Waterfall ──────────────────────────────── */
+    .waterfall {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    .wf-row {
+      display: flex;
+      align-items: stretch;
+    }
+
+    .wf-box {
+      flex: 1;
+      padding: 10px 18px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.3;
+    }
+
+    .wf-arrow {
+      text-align: center;
+      color: var(--gold);
+      font-size: 1rem;
+      line-height: 1;
+      padding: 3px 0;
+    }
+
+    .wf-gross-rev   { background: var(--black); color: var(--gold); }
+    .wf-hard-costs  { background: #1a1410; color: #c8bfa8; }
+    .wf-ad-spend    { background: #1e1912; color: #c8bfa8; }
+    .wf-gross-profit{ background: #2a1e06; color: var(--gold2); border: 1px solid var(--gold); }
+    .wf-jeff-labor  { background: #f0ece2; color: #4a3c20; border-left: 4px solid var(--gold); }
+    .wf-mgmt-fee    { background: #f0ece2; color: #4a3c20; border-left: 4px solid var(--gold); }
+    .wf-mktg-fees   { background: #f0ece2; color: #4a3c20; border-left: 4px solid var(--gold); }
+    .wf-net-dist    { background: #1a1410; color: var(--gold2); border: 2px solid var(--gold); }
+    .wf-split       { background: var(--black); color: var(--gold); }
+
+    .wf-box .wf-label {
+      display: block;
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+    }
+
+    .wf-box .wf-sub {
+      font-size: 0.68rem;
+      font-weight: 400;
+      opacity: 0.8;
+    }
+
+    /* ── Entity Structure ─────────────────────────────────── */
+    .entity-diagram {
+      font-size: 0.82rem;
+      line-height: 1.9;
+      color: var(--text);
+    }
+
+    .entity-diagram .entity-box {
+      display: inline-block;
+      background: var(--black);
+      color: var(--gold);
+      padding: 6px 16px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      margin-bottom: 4px;
+    }
+
+    .entity-diagram .entity-row {
+      margin: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .entity-diagram .e-indent {
+      margin-left: 24px;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .entity-diagram .e-key {
+      font-weight: 700;
+      color: #2a1e06;
+    }
+
+    .entity-diagram .connector {
+      color: var(--gold);
+      margin-left: 12px;
+    }
+
+    .dba-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    .dba-card {
+      border: 1px solid var(--border);
+      background: #faf7f1;
+      padding: 10px 14px;
+      font-size: 0.78rem;
+    }
+
+    .dba-card .dba-name {
+      font-weight: 700;
+      color: var(--gold);
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+    }
+
+    .dba-card .dba-desc {
+      color: var(--muted);
+      font-size: 0.72rem;
+      margin-top: 2px;
+    }
+
+    .member-row {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .member-pill {
+      background: var(--black);
+      border: 1px solid var(--gold);
+      padding: 9px 14px;
+      font-size: 0.78rem;
+    }
+
+    .member-pill .mp-pct {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .member-pill .mp-name {
+      color: #c8bfa8;
+      font-size: 0.72rem;
+      margin-top: 2px;
+    }
+
+    .member-pill .mp-entity {
+      color: #7a6e58;
+      font-size: 0.68rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .managing-note {
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+    }
+
+    .managing-note strong { color: var(--text); }
+
+    /* ── Why Partner ──────────────────────────────────────── */
+    .why-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .why-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      padding: 10px 12px;
+      background: #faf7f1;
+      border-left: 3px solid var(--gold);
+    }
+
+    .why-item .wi-icon {
+      color: var(--gold);
+      font-size: 1rem;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .why-item .wi-text {
+      font-size: 0.8rem;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    .why-item .wi-text strong {
+      display: block;
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    /* ── Contact ──────────────────────────────────────────── */
+    #contact {
+      background: var(--black);
+    }
+
+    #contact .section-label { color: var(--gold); }
+    #contact .section-label::after { background: var(--gold); }
+
+    .contact-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .contact-name {
+      font-family: var(--serif);
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--gold);
+    }
+
+    .contact-role {
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #7a6e58;
+      margin-top: 4px;
+    }
+
+    .contact-details {
+      margin-top: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .contact-line {
+      font-size: 0.82rem;
+      color: #c8bfa8;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .contact-line .cl-label {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gold);
+      width: 52px;
+      flex-shrink: 0;
+    }
+
+    .phone-fill {
+      display: inline-block;
+      border-bottom: 1px solid #5a4e38;
+      width: 180px;
+      height: 14px;
+    }
+
+    /* ── Footer ───────────────────────────────────────────── */
+    #footer {
+      background: var(--black);
+      border-top: 1px solid #222;
+      padding: 14px 44px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    #footer .footer-text {
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #555040;
+    }
+
+    #footer .footer-mark {
+      font-size: 0.68rem;
+      color: var(--gold);
+      opacity: 0.5;
+      letter-spacing: 0.08em;
+    }
+
+    /* ── Print Styles ─────────────────────────────────────── */
+    @media print {
+      @page {
+        size: letter;
+        margin: 0.45in 0.5in;
+      }
+
+      html { font-size: 11px; }
+
+      #toolbar { display: none !important; }
+
+      body {
+        background: white;
+      }
+
+      #page {
+        max-width: 100%;
+        margin: 0;
+        box-shadow: none;
+      }
+
+      #header {
+        padding: 20px 28px 16px;
+      }
+
+      .header-left .co-name { font-size: 1.9rem; }
+
+      .section {
+        padding: 14px 28px;
+      }
+
+      .team-card, .strat-card, .why-item, .dba-card, .member-pill {
+        break-inside: avoid;
+      }
+
+      .team-grid, .strategy-grid, .why-grid, .dba-grid, .member-row {
+        break-inside: avoid;
+      }
+
+      #exec-summary p { font-size: 0.85rem; }
+
+      .waterfall { max-width: 480px; }
+
+      .wf-box { padding: 7px 14px; font-size: 0.72rem; }
+
+      #contact { break-inside: avoid; }
+      #footer   { break-inside: avoid; }
+
+      .criteria-table td { padding: 6px 8px; font-size: 0.75rem; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── TOOLBAR ─────────────────────────────────────────────── -->
+<div id="toolbar">
+  <span class="tb-title">Ironwood Holdings &mdash; Lender &amp; Investor One-Pager</span>
+  <button onclick="window.print()">&#x1F5A8;&nbsp; Print / Save PDF</button>
+</div>
+
+<!-- ── PAGE ───────────────────────────────────────────────── -->
+<div id="page">
+
+  <!-- HEADER -->
+  <div id="header">
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="co-name">Ironwood Holdings</div>
+        <div class="co-sub">Ironwood LLC &nbsp;·&nbsp; Delaware Formation &nbsp;·&nbsp; Georgia Operations</div>
+      </div>
+      <div class="header-right">
+        <div class="confidential">Confidential &nbsp;·&nbsp; <span id="doc-date"></span></div>
+        <div class="partners">Anchor Pro Solutions &times; Landon Renovations</div>
+      </div>
+    </div>
+    <div class="gold-bar"></div>
+  </div>
+
+  <!-- 1. EXECUTIVE SUMMARY -->
+  <div class="section" id="exec-summary">
+    <div class="section-label">Executive Summary</div>
+    <p>Ironwood Holdings is a Georgia-based real estate investment company specializing in residential renovation, BRRRR acquisitions, and buy-and-hold rental properties. We partner experienced construction management with active deal sourcing and licensed real estate representation to acquire, renovate, and hold undervalued residential properties across Georgia.</p>
+  </div>
+
+  <!-- 2. THE TEAM -->
+  <div class="section" id="the-team">
+    <div class="section-label">The Team</div>
+    <div class="team-grid">
+
+      <div class="team-card">
+        <div class="tc-name">Ty Jackson</div>
+        <div class="tc-entity">Anchor Pro Solutions</div>
+        <div class="tc-role">Managing Member</div>
+        <ul>
+          <li>Active Georgia Real Estate License</li>
+          <li>Deal sourcing &amp; financing coordination</li>
+          <li>Lender relationships &amp; marketing strategy</li>
+          <li>Social media &amp; brand growth</li>
+        </ul>
+      </div>
+
+      <div class="team-card">
+        <div class="tc-name">Jeff &amp; Jordan Sarabia</div>
+        <div class="tc-entity">Landon Renovations</div>
+        <div class="tc-role">Field Operations &amp; Project Management</div>
+        <ul>
+          <li>Licensed contractor / skilled trades background</li>
+          <li>On-site renovation management (Jeff)</li>
+          <li>Marketing operations &amp; administration (Jordan)</li>
+          <li>Cost control &amp; subcontractor oversight</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 3. INVESTMENT STRATEGY -->
+  <div class="section" id="strategy">
+    <div class="section-label">Investment Strategy</div>
+    <div class="strategy-grid">
+
+      <div class="strat-card">
+        <div class="strat-title">Fix &amp; Flip</div>
+        <div class="strat-body">Acquire distressed residential properties, execute targeted renovations, and resell at full-market ARV.</div>
+        <div class="strat-stat">Target: All-in &le; 70% ARV &nbsp;|&nbsp; 90–180 day cycle</div>
+      </div>
+
+      <div class="strat-card">
+        <div class="strat-title">BRRRR</div>
+        <div class="strat-body">Buy &rarr; Rehab &rarr; Rent &rarr; Refinance &rarr; Repeat. DSCR financing used to recycle capital into the next acquisition.</div>
+        <div class="strat-stat">Target DSCR: &ge; 1.25 &nbsp;|&nbsp; Long-term hold</div>
+      </div>
+
+      <div class="strat-card">
+        <div class="strat-title">Contract Remodel</div>
+        <div class="strat-body">Revenue-generating renovation services for homeowners via Landon Renovations while the portfolio builds scale.</div>
+        <div class="strat-stat">Active revenue stream &nbsp;|&nbsp; Funds deal pipeline</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 4. DEAL CRITERIA -->
+  <div class="section" id="deal-criteria">
+    <div class="section-label">Deal Criteria</div>
+    <table class="criteria-table">
+      <tbody>
+        <tr><td>Property Type</td><td>Single-family residential (primary focus)</td></tr>
+        <tr><td>Target Market</td><td>Georgia (primary) &nbsp;·&nbsp; Surrounding states (future expansion)</td></tr>
+        <tr><td>Purchase Price Range</td><td>$50,000 – $250,000</td></tr>
+        <tr><td>ARV Rule</td><td>All-in cost &le; 70% of ARV (improved) &nbsp;·&nbsp; 65% raw land</td></tr>
+        <tr><td>Rehab Budget</td><td>$15,000 – $80,000 per project</td></tr>
+        <tr><td>Target Gross Profit</td><td>$25,000 – $60,000 per flip</td></tr>
+        <tr><td>BRRRR Target DSCR</td><td>&ge; 1.25 at stabilized rent</td></tr>
+        <tr><td>Hold Strategy</td><td>5 – 20+ year horizon on rental properties</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 5. FINANCIAL STRUCTURE / WATERFALL -->
+  <div class="section" id="waterfall">
+    <div class="section-label">Financial Structure — Profit Waterfall</div>
+    <div class="waterfall">
+
+      <div class="wf-row">
+        <div class="wf-box wf-gross-rev">
+          <span class="wf-label">Gross Revenue</span>
+          <span class="wf-sub">Sale proceeds or rental income</span>
+        </div>
+      </div>
+      <div class="wf-arrow">&#x25BC;</div>
+
+      <div class="wf-row">
+        <div class="wf-box wf-hard-costs">
+          <span class="wf-label">Less: Hard Costs</span>
+          <span class="wf-sub">Purchase, closing, materials, subs</span>
+        </div>
+      </div>
+      <div class="wf-arrow">&#x25BC;</div>
+
+      <div class="wf-row">
+        <div class="wf-box wf-ad-spend">
+          <span class="wf-label">Less: Ad Spend</span>
+          <span class="wf-sub">Paid marketing &amp; lead generation</span>
+        </div>
+      </div>
+      <div class="wf-arrow">&#x25BC;</div>
+
+      <div class="wf-row">
+        <div class="wf-box wf-gross-profit">
+          <span class="wf-label">= Gross Profit</span>
+          <span class="wf-sub">Basis for all distributions below</span>
+        </div>
+      </div>
+      <div class="wf-arrow">&#x25BC;</div>
+
+      <div class="wf-row">
+        <div class="wf-box wf-jeff-labor">
+          <span class="wf-label">Jeff Labor Fee</span>
+          <span class="wf-sub">Phase 1: $50/hr &nbsp;·&nbsp; Phase 2: 30% of Gross Profit</span>
+        </div>
+      </div>
+      <div class="wf-arrow">&#x25BC;</div>
+
+      <div class="wf-row">
+        <div class="wf-box wf-mgmt-fee">
+          <span class="wf-label">Management Fee — 5%</span>
+          <span class="wf-sub">Ironwood LLC operational overhead</span>
+        </div>
+      </div>
+      <div class="wf-arrow">&#x25BC;</div>
+
+      <div class="wf-row">
+        <div class="wf-box wf-mktg-fees">
+          <span class="wf-label">Marketing Fees — 6% Total</span>
+          <span class="wf-sub">Jordan Sarabia 3% &nbsp;+&nbsp; Ty Jackson 3%</span>
+        </div>
+      </div>
+      <div class="wf-arrow">&#x25BC;</div>
+
+      <div class="wf-row">
+        <div class="wf-box wf-net-dist">
+          <span class="wf-label">= Net Distributable Profit</span>
+          <span class="wf-sub">Available for member distribution</span>
+        </div>
+      </div>
+      <div class="wf-arrow">&#x25BC;</div>
+
+      <div class="wf-row">
+        <div class="wf-box wf-split">
+          <span class="wf-label">50 / 50 Member Split</span>
+          <span class="wf-sub">Anchor Pro Solutions &nbsp;|&nbsp; Landon Renovations</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 6. ENTITY STRUCTURE -->
+  <div class="section" id="entity">
+    <div class="section-label">Entity Structure</div>
+
+    <div class="entity-diagram">
+      <div style="margin-bottom:12px;">
+        <span class="entity-box">Ironwood LLC</span>
+        <span style="margin-left:10px; font-size:0.75rem; color:var(--muted); letter-spacing:0.06em;">Delaware Formation &nbsp;·&nbsp; Georgia Qualified &nbsp;·&nbsp; Operating Entity</span>
+      </div>
+    </div>
+
+    <div class="dba-grid">
+      <div class="dba-card">
+        <div class="dba-name">dba Ironwood Holdings</div>
+        <div class="dba-desc">Investor &amp; lender-facing brand — used in pitch materials, DSCR applications, and capital conversations</div>
+      </div>
+      <div class="dba-card">
+        <div class="dba-name">dba Ironwood Renovations</div>
+        <div class="dba-desc">Consumer &amp; job-site facing brand — homeowner contracts, permit applications, and field operations</div>
+      </div>
+    </div>
+
+    <div class="member-row">
+      <div class="member-pill">
+        <div class="mp-pct">50%</div>
+        <div class="mp-name">Anchor Pro Solutions</div>
+        <div class="mp-entity">Ty Jackson, Principal</div>
+      </div>
+      <div class="member-pill">
+        <div class="mp-pct">50%</div>
+        <div class="mp-name">Landon Renovations</div>
+        <div class="mp-entity">Jeff &amp; Jordan Sarabia, Principals</div>
+      </div>
+    </div>
+
+    <div class="managing-note">
+      <strong>Managing Member:</strong> &nbsp;Ty Jackson &nbsp;/&nbsp; Anchor Pro Solutions
+    </div>
+
+  </div>
+
+  <!-- 7. WHY PARTNER WITH US -->
+  <div class="section" id="why-partner">
+    <div class="section-label">Why Partner with Ironwood</div>
+    <div class="why-grid">
+
+      <div class="why-item">
+        <div class="wi-icon">&#x2713;</div>
+        <div class="wi-text">
+          <strong>Licensed Agent on Every Deal</strong>
+          In-house GA real estate license reduces transaction costs and accelerates deal flow.
+        </div>
+      </div>
+
+      <div class="why-item">
+        <div class="wi-icon">&#x2713;</div>
+        <div class="wi-text">
+          <strong>Experienced Construction Team</strong>
+          Licensed contractor controls rehab quality, timeline, and budget — no guesswork.
+        </div>
+      </div>
+
+      <div class="why-item">
+        <div class="wi-icon">&#x2713;</div>
+        <div class="wi-text">
+          <strong>Active + Passive Revenue</strong>
+          BRRRR strategy builds long-term cash flow alongside active flips and contract remodels.
+        </div>
+      </div>
+
+      <div class="why-item">
+        <div class="wi-icon">&#x2713;</div>
+        <div class="wi-text">
+          <strong>Transparent Waterfall Structure</strong>
+          Lenders can see exactly how money moves — no black box, documented at the entity level.
+        </div>
+      </div>
+
+      <div class="why-item">
+        <div class="wi-icon">&#x2713;</div>
+        <div class="wi-text">
+          <strong>Clean Delaware LLC Formation</strong>
+          Strong liability protection, investor-friendly operating agreement, GA-qualified.
+        </div>
+      </div>
+
+      <div class="why-item">
+        <div class="wi-icon">&#x2713;</div>
+        <div class="wi-text">
+          <strong>Disciplined Acquisition Criteria</strong>
+          Strict 70% ARV rule enforced on every deal — protects capital and loan collateral.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 8. CONTACT -->
+  <div class="section" id="contact">
+    <div class="section-label">Contact</div>
+    <div class="contact-inner">
+      <div>
+        <div class="contact-name">Ty Jackson</div>
+        <div class="contact-role">Managing Member &nbsp;·&nbsp; Anchor Pro Solutions &nbsp;·&nbsp; Ironwood LLC</div>
+        <div class="contact-details">
+          <div class="contact-line">
+            <span class="cl-label">Email</span>
+            <span>tysellshomes96@gmail.com</span>
+          </div>
+          <div class="contact-line">
+            <span class="cl-label">Phone</span>
+            <span class="phone-fill">&nbsp;</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div id="footer">
+    <span class="footer-text">Ironwood LLC dba Ironwood Holdings &nbsp;·&nbsp; Confidential &nbsp;·&nbsp; Not a securities offering &nbsp;·&nbsp; May 2026</span>
+    <span class="footer-mark">IRONWOOD HOLDINGS</span>
+  </div>
+
+</div><!-- /#page -->
+
+<script>
+  // Auto-fill current date
+  (function() {
+    var months = ["January","February","March","April","May","June",
+                  "July","August","September","October","November","December"];
+    var d = new Date();
+    var formatted = months[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+    document.getElementById("doc-date").textContent = formatted;
+  })();
+</script>
+
+</body>
+</html>

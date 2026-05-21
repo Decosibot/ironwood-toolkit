@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ironwood LLC — Operating Agreement</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #0a0a0a;
+    color: #f5f0e8;
+    font-family: 'Georgia', serif;
+    min-height: 100vh;
+  }
+
+  /* TOPBAR */
+  .topbar {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    background: #0f0f0f;
+    border-bottom: 2px solid #c9a84c;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    height: 60px;
+    gap: 16px;
+  }
+  .logo-badge {
+    width: 38px; height: 38px;
+    background: #c9a84c;
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Georgia', serif;
+    font-size: 20px;
+    font-weight: bold;
+    color: #0a0a0a;
+    flex-shrink: 0;
+  }
+  .topbar-titles { flex: 1; }
+  .topbar-main {
+    font-size: 15px;
+    font-weight: bold;
+    color: #f5f0e8;
+    letter-spacing: 0.04em;
+  }
+  .topbar-sub {
+    font-size: 11px;
+    color: #c9a84c;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .topbar-btns { display: flex; gap: 10px; }
+  .topbar-btn {
+    background: transparent;
+    border: 1px solid #c9a84c;
+    color: #c9a84c;
+    padding: 7px 16px;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: 'Georgia', serif;
+    transition: background 0.2s, color 0.2s;
+  }
+  .topbar-btn:hover { background: #c9a84c; color: #0a0a0a; }
+
+  /* PAGE WRAPPER */
+  .page-wrapper {
+    margin-top: 60px;
+    padding: 40px 20px 80px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* DOCUMENT */
+  .document {
+    background: #faf8f3;
+    color: #1a1a1a;
+    width: 100%;
+    max-width: 860px;
+    padding: 72px 80px;
+    box-shadow: 0 8px 60px rgba(0,0,0,0.7);
+    font-family: 'Georgia', serif;
+    font-size: 13.5px;
+    line-height: 1.75;
+  }
+
+  /* DOCUMENT HEADER */
+  .doc-header {
+    text-align: center;
+    border-bottom: 3px double #1a1a1a;
+    padding-bottom: 28px;
+    margin-bottom: 32px;
+  }
+  .doc-header .entity-name {
+    font-size: 26px;
+    font-weight: bold;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #1a1a1a;
+    margin-bottom: 4px;
+  }
+  .doc-header .doc-title {
+    font-size: 18px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #2a2a2a;
+    margin-bottom: 10px;
+  }
+  .doc-header .doc-subtitle {
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #555;
+  }
+  .doc-header .doc-meta {
+    margin-top: 16px;
+    font-size: 12px;
+    color: #444;
+  }
+
+  /* PLAIN LANGUAGE BOX */
+  .plain-box {
+    background: #e8eef5;
+    border-left: 4px solid #5b8ab0;
+    border-radius: 0 6px 6px 0;
+    padding: 14px 18px;
+    margin: 22px 0 16px;
+    font-size: 12.5px;
+    color: #1e3a4f;
+    line-height: 1.65;
+  }
+  .plain-box strong {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #2c5f82;
+    margin-bottom: 5px;
+  }
+
+  /* ARTICLE */
+  .article {
+    margin-bottom: 36px;
+    page-break-inside: avoid;
+  }
+  .article-header {
+    background: #1a1a1a;
+    color: #c9a84c;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    border-left: 5px solid #c9a84c;
+  }
+  .article-header span {
+    color: #f5f0e8;
+    font-size: 11px;
+    font-weight: normal;
+    letter-spacing: 0.06em;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* SECTIONS */
+  .section {
+    margin-bottom: 14px;
+  }
+  .section-num {
+    font-weight: bold;
+    color: #1a1a1a;
+  }
+
+  h4.section-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #1a1a1a;
+    margin-bottom: 6px;
+    text-decoration: underline;
+  }
+
+  p { margin-bottom: 10px; }
+
+  ol.alpha { list-style-type: lower-alpha; padding-left: 28px; margin-bottom: 10px; }
+  ol.roman { list-style-type: lower-roman; padding-left: 28px; margin-bottom: 10px; }
+  ol.alpha li, ol.roman li { margin-bottom: 6px; }
+  ul.bullet { list-style-type: disc; padding-left: 28px; margin-bottom: 10px; }
+  ul.bullet li { margin-bottom: 6px; }
+
+  .indent { padding-left: 24px; }
+
+  .def-term { font-weight: bold; font-style: italic; }
+
+  .notice-box {
+    border: 1px solid #999;
+    padding: 12px 16px;
+    margin: 16px 0;
+    background: #f0ede4;
+    font-size: 12px;
+  }
+
+  /* SIGNATURE PAGE */
+  .sig-page {
+    page-break-before: always;
+    margin-top: 48px;
+    border-top: 3px double #1a1a1a;
+    padding-top: 32px;
+  }
+  .sig-page-title {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .sig-page-sub {
+    text-align: center;
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 32px;
+  }
+  .sig-block {
+    margin-bottom: 40px;
+    page-break-inside: avoid;
+  }
+  .sig-block-title {
+    font-weight: bold;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 14px;
+    color: #333;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 4px;
+  }
+  .sig-line-wrap {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .sig-field {
+    flex: 1;
+    min-width: 180px;
+  }
+  .sig-field label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 28px;
+  }
+  .sig-field .sig-line {
+    border-bottom: 1px solid #333;
+    width: 100%;
+    height: 1px;
+    margin-bottom: 4px;
+  }
+  .sig-field .sig-label-below {
+    font-size: 10.5px;
+    color: #444;
+  }
+
+  .notary-block {
+    background: #f5f2eb;
+    border: 1px solid #bbb;
+    padding: 16px 20px;
+    margin-top: 16px;
+    font-size: 11.5px;
+    line-height: 1.7;
+  }
+  .notary-block strong {
+    display: block;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    color: #333;
+  }
+  .notary-line {
+    border-bottom: 1px solid #888;
+    display: inline-block;
+    min-width: 180px;
+    margin: 0 4px;
+    vertical-align: bottom;
+  }
+
+  /* FOOTER */
+  .doc-footer {
+    margin-top: 48px;
+    border-top: 1px solid #ccc;
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: #777;
+    letter-spacing: 0.04em;
+  }
+
+  /* PRINT */
+  @media print {
+    body { background: #fff !important; }
+    .topbar { display: none !important; }
+    .page-wrapper { margin-top: 0; padding: 0; }
+    .document {
+      box-shadow: none;
+      max-width: 100%;
+      padding: 48px 60px;
+      font-size: 12px;
+    }
+    .plain-box { background: #e8eef5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .article-header { background: #1a1a1a !important; color: #c9a84c !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .article { page-break-inside: avoid; }
+    .sig-block { page-break-inside: avoid; }
+    .sig-page { page-break-before: always; }
+  }
+
+  @page {
+    margin: 0.75in;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="logo-badge">I</div>
+  <div class="topbar-titles">
+    <div class="topbar-main">Ironwood LLC — Operating Agreement</div>
+    <div class="topbar-sub">Delaware LLC &nbsp;·&nbsp; Operating in Georgia</div>
+  </div>
+  <div class="topbar-btns">
+    <button class="topbar-btn" onclick="window.print()">Print</button>
+    <button class="topbar-btn" onclick="window.print()">Save as PDF</button>
+  </div>
+</div>
+
+<!-- PAGE WRAPPER -->
+<div class="page-wrapper">
+<div class="document">
+
+  <!-- DOCUMENT HEADER -->
+  <div class="doc-header">
+    <div class="entity-name">Ironwood LLC</div>
+    <div class="doc-title">Limited Liability Company Operating Agreement</div>
+    <div class="doc-subtitle">A Delaware Limited Liability Company &nbsp;|&nbsp; DBA: Ironwood Holdings &nbsp;|&nbsp; Ironwood Renovations</div>
+    <div class="doc-meta">
+      Effective Date: [EFFECTIVE DATE]<br>
+      EIN: [TO BE ASSIGNED]<br>
+      Principal Operating State: Georgia
+    </div>
+  </div>
+
+  <!-- PREAMBLE -->
+  <div class="plain-box">
+    <strong>Plain Language Summary — Preamble</strong>
+    This is the governing document for Ironwood LLC. It spells out who owns the company, how it is managed, how money flows, and what happens when members disagree or want to exit. Both members sign this and agree to be bound by it.
+  </div>
+
+  <p>This Limited Liability Company Operating Agreement (this <span class="def-term">"Agreement"</span>) is entered into as of [EFFECTIVE DATE] (the <span class="def-term">"Effective Date"</span>) by and among the Members identified on the signature pages hereto and any Persons who are subsequently admitted as Members in accordance with the terms hereof. This Agreement governs the affairs of <span class="def-term">Ironwood LLC</span>, a limited liability company formed under the laws of the State of Delaware, operating principally in the State of Georgia under the fictitious business names <em>Ironwood Holdings</em> and <em>Ironwood Renovations</em>.</p>
+
+  <p>The Members desire to set forth herein their respective rights, duties, and obligations with respect to the Company and its business, and to provide for the management, financing, and operation of the Company. In consideration of the mutual covenants and agreements contained herein, and for other good and valuable consideration, the receipt and sufficiency of which are hereby acknowledged, the parties agree as follows:</p>
+
+  <!-- ARTICLE I -->
+  <div class="article">
+    <div class="article-header">Article I — Definitions<span>Key terms used throughout this Agreement</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article I</strong>
+      This article defines the important words and phrases used throughout the agreement so everyone has the same understanding. When a term appears in bold italics elsewhere in this document, it has the specific meaning defined here.
+    </div>
+
+    <div class="section">
+      <p>As used in this Agreement, the following terms shall have the meanings set forth below:</p>
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">1.1</span> &nbsp;<span class="def-term">"Act"</span> means the Delaware Limited Liability Company Act, as set forth in Title 6, Chapter 18 of the Delaware Code, as amended from time to time.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.2</span> &nbsp;<span class="def-term">"Agreement"</span> means this Limited Liability Company Operating Agreement, as amended, restated, or supplemented from time to time in accordance with its terms.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.3</span> &nbsp;<span class="def-term">"Anchor Pro"</span> means Anchor Pro Solutions, a company serving as the Managing Member of the Company, holding a fifty percent (50%) Membership Interest.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.4</span> &nbsp;<span class="def-term">"Capital Account"</span> means, with respect to any Member, the account maintained for such Member in accordance with the provisions of Article VI of this Agreement.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.5</span> &nbsp;<span class="def-term">"Capital Contribution"</span> means the total amount of cash, property, or services contributed or agreed to be contributed by a Member to the Company as set forth herein or in any amendment hereto.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.6</span> &nbsp;<span class="def-term">"Company"</span> means Ironwood LLC, the Delaware limited liability company formed pursuant to this Agreement and the Act.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.7</span> &nbsp;<span class="def-term">"Distributable Cash"</span> means, for any fiscal period, all cash receipts of the Company from all sources during such period, less: (a) all operating expenses paid or accrued during such period; (b) all debt service payments; (c) all amounts paid or set aside for capital expenditures; (d) all fees and compensation payments owed to Members and their designees under Article VIII; and (e) the Operating Reserve.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.8</span> &nbsp;<span class="def-term">"Fiscal Year"</span> means the calendar year commencing January 1 and ending December 31, except that the first Fiscal Year shall commence on the Effective Date and end on December 31 of that same year.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.9</span> &nbsp;<span class="def-term">"Gross Project Revenue"</span> means all revenue received or receivable by the Company attributable to a specific project or deal, including sale proceeds, rental income during the project hold period, and any insurance proceeds, prior to deduction of any costs or expenses.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.10</span> &nbsp;<span class="def-term">"Gross Profit (Per Project)"</span> means Gross Project Revenue for a given project minus Hard Material Costs and Subcontractor Invoices attributable to that project, as documented in the Company's project management system and QuickBooks records.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.11</span> &nbsp;<span class="def-term">"Hard Material Costs"</span> means direct, documented expenditures for physical materials incorporated into a project, including but not limited to lumber, flooring, fixtures, appliances, roofing, concrete, and other construction materials, excluding labor costs, subcontractor invoices, overhead, and soft costs.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.12</span> &nbsp;<span class="def-term">"Jeff Sarabia"</span> means the individual Jeff Sarabia, who, together with Jordan Sarabia, owns and operates Landon Renovations as a married couple.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.13</span> &nbsp;<span class="def-term">"Jordan Sarabia"</span> means the individual Jordan Sarabia, who, together with Jeff Sarabia, owns and operates Landon Renovations as a married couple.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.14</span> &nbsp;<span class="def-term">"Landon"</span> or <span class="def-term">"Landon Renovations"</span> means Landon Renovations, the entity owned and operated by Jeff Sarabia and Jordan Sarabia as a married couple, holding a fifty percent (50%) Membership Interest in the Company as Non-Managing Member.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.15</span> &nbsp;<span class="def-term">"Managing Member"</span> means Anchor Pro Solutions, in its capacity as the sole manager of the Company with day-to-day operational authority as further described in Article V hereof.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.16</span> &nbsp;<span class="def-term">"Member"</span> means any Person who holds a Membership Interest in the Company, and <span class="def-term">"Members"</span> means all such Persons collectively. As of the Effective Date, the Members are Anchor Pro Solutions and Landon Renovations.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.17</span> &nbsp;<span class="def-term">"Membership Interest"</span> means a Member's entire ownership interest in the Company, including that Member's share of the profits, losses, and distributions of the Company and that Member's right to vote on or consent to matters subject to Member approval under this Agreement or the Act.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.18</span> &nbsp;<span class="def-term">"Net Distributable Profit"</span> means Gross Project Revenue for a given project or period, reduced by: (a) all Hard Material Costs and Subcontractor Invoices; (b) all Management Fees payable to Anchor Pro under Section 8.4; (c) all Project Compensation payable to Jeff Sarabia through Landon Renovations under Section 8.1 or 8.2, as applicable; (d) all Marketing and Operations Fees payable to Jordan Sarabia and Ty Jackson under Section 8.3; (e) all other documented project-level operating expenses; and (f) the applicable portion of the Operating Reserve allocation. Net Distributable Profit is the amount available for distribution fifty percent (50%) to Anchor Pro and fifty percent (50%) to Landon Renovations.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.19</span> &nbsp;<span class="def-term">"Non-Managing Member"</span> means Landon Renovations in its capacity as a Member without day-to-day management authority, whose consent is required only as expressly set forth in this Agreement.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.20</span> &nbsp;<span class="def-term">"Operating Reserve"</span> means the minimum cash balance of Ten Thousand Dollars ($10,000.00) that the Company shall maintain at all times in its business checking account before making any Member distributions.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.21</span> &nbsp;<span class="def-term">"Person"</span> means any individual, partnership, joint venture, limited liability company, corporation, trust, estate, association, or other legal or commercial entity.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.22</span> &nbsp;<span class="def-term">"Phase 1 Period"</span> means the period commencing on the Effective Date and continuing until the Company first achieves and sustains Gross Monthly Revenue of Twenty-Five Thousand Dollars ($25,000.00) or more for two (2) consecutive calendar months, at which point Phase 2 permanently commences. Once Phase 2 commences, the Company shall not revert to Phase 1 even if revenues subsequently decline.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.23</span> &nbsp;<span class="def-term">"Phase 2 Period"</span> means the period commencing permanently upon the Company first achieving and sustaining Gross Monthly Revenue of Twenty-Five Thousand Dollars ($25,000.00) or more for two (2) consecutive calendar months.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.24</span> &nbsp;<span class="def-term">"Subcontractor Invoices"</span> means documented payments to third-party subcontractors for labor or specialized services performed on a project, supported by signed contracts or invoices, as maintained in the Company's project management system.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.25</span> &nbsp;<span class="def-term">"Transfer"</span> means any direct or indirect sale, assignment, transfer, exchange, mortgage, pledge, hypothecation, grant of a security interest in, or other disposition or encumbrance of all or any portion of a Membership Interest.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.26</span> &nbsp;<span class="def-term">"Ty Jackson"</span> means the individual Ty Jackson, who operates and represents Anchor Pro Solutions in connection with marketing and operational duties described herein.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">1.27</span> &nbsp;<span class="def-term">"Unanimous Consent"</span> means the affirmative written consent or vote of all Members holding one hundred percent (100%) of the outstanding Membership Interests.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE II -->
+  <div class="article">
+    <div class="article-header">Article II — Formation and Name<span>Legal identity, formation, and registration of the Company</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article II</strong>
+      This article confirms that Ironwood LLC is a real Delaware LLC with a registered agent in Delaware as required by law. It also records the "doing business as" names the company uses and where it is primarily located and operating.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">2.1</span> &nbsp;<strong>Formation.</strong> The Company was formed as a limited liability company pursuant to the Act by the filing of a Certificate of Formation with the Secretary of State of the State of Delaware. The rights and liabilities of the Members shall be governed by the Act and this Agreement. To the extent any provision of this Agreement is inconsistent with a non-mandatory provision of the Act, this Agreement shall control.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">2.2</span> &nbsp;<strong>Company Name.</strong> The legal name of the Company is <strong>Ironwood LLC</strong>. The Company may conduct business under the following assumed or fictitious business names:</p>
+      <ol class="alpha">
+        <li><strong>Ironwood Holdings</strong> — used for investment, holding, and general business operations; and</li>
+        <li><strong>Ironwood Renovations</strong> — used for residential and commercial renovation, remodeling, and construction-related activities.</li>
+      </ol>
+      <p>The Managing Member shall file and maintain all required fictitious business name registrations in each jurisdiction where the Company conducts business under such names, and shall renew such registrations as required by applicable law.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">2.3</span> &nbsp;<strong>Registered Agent and Office.</strong> The Company's registered agent in the State of Delaware is [Registered Agent Name], located at [Address], Wilmington, Delaware. The Managing Member may change the registered agent or registered office upon filing the appropriate documentation with the Delaware Secretary of State and providing written notice to all Members.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">2.4</span> &nbsp;<strong>Principal Place of Business.</strong> The principal place of business of the Company shall be located at [Street Address], [City], Georgia [ZIP]. The Managing Member may change the principal place of business upon written notice to all Members and, where required, upon filing any required state or local notifications.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">2.5</span> &nbsp;<strong>Qualification in Georgia.</strong> Because the Company's principal operations are conducted in the State of Georgia, the Managing Member shall cause the Company to register as a foreign limited liability company with the Georgia Secretary of State and shall maintain such registration in good standing throughout the term of the Company. All fees, costs, and expenses associated with such registration and ongoing maintenance thereof shall be paid from Company funds.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">2.6</span> &nbsp;<strong>EIN.</strong> The Company shall obtain an Employer Identification Number from the Internal Revenue Service. The EIN shall be recorded in the Company's books as: [TO BE ASSIGNED].</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">2.7</span> &nbsp;<strong>Term.</strong> The Company shall continue in perpetual existence unless dissolved and wound up in accordance with Article XV of this Agreement or as otherwise required by the Act.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE III -->
+  <div class="article">
+    <div class="article-header">Article III — Purpose and Powers<span>What the Company does and is legally authorized to do</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article III</strong>
+      This article explains what business the Company is in. The primary business is real estate renovation and investment in Georgia, but the LLC can do anything else a business legally can do. This includes forming subsidiaries (like a dumpster service or lawn care company) if both members agree.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">3.1</span> &nbsp;<strong>Primary Purpose.</strong> The primary purpose of the Company is to acquire, renovate, manage, lease, hold, sell, and otherwise deal in real property, principally within the State of Georgia, for profit. The Company's activities shall include but are not limited to:</p>
+      <ol class="alpha">
+        <li>Sourcing, underwriting, and acquiring residential and commercial properties for renovation and resale (commonly referred to as "fix-and-flip" transactions);</li>
+        <li>Acquiring, renovating, and holding residential or commercial properties for rental income;</li>
+        <li>Providing or contracting for renovation, remodeling, and construction management services in connection with Company-owned properties;</li>
+        <li>Engaging in wholesale real estate transactions, including assignment of purchase contracts;</li>
+        <li>Securing project-based financing, hard money loans, private money loans, conventional mortgages, and other debt instruments as necessary to fund acquisitions and renovations;</li>
+        <li>Marketing Company properties and services under the assumed names Ironwood Holdings and Ironwood Renovations;</li>
+        <li>Acquiring, owning, operating, and managing short-term vacation rental properties, including listing on platforms such as Airbnb, VRBO, and similar short-term rental platforms, in Georgia, Florida, and other states where the Company holds or obtains appropriate licenses or registrations;</li>
+        <li>Complying with all applicable short-term rental regulations, licensing requirements, and homeowner association rules in each jurisdiction where the Company operates vacation rental properties, including but not limited to the North Georgia mountain communities (Blue Ridge, Ellijay, Dahlonega) and Florida Emerald Coast communities (Destin, Santa Rosa Beach/30A, Panama City Beach); and</li>
+        <li>All activities incidental or ancillary to the foregoing.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">3.2</span> &nbsp;<strong>General Powers.</strong> The Company shall have the power and authority to do all things necessary or appropriate to carry out its purpose, including without limitation the power to:</p>
+      <ol class="alpha">
+        <li>Enter into, make, perform, and carry out contracts of every kind with any Person;</li>
+        <li>Open, maintain, and close bank accounts, investment accounts, and other financial accounts;</li>
+        <li>Borrow money, issue notes, bonds, and other evidences of indebtedness, and secure the same by mortgage, pledge, deed of trust, or other lien;</li>
+        <li>Purchase, hold, sell, exchange, transfer, and dispose of real and personal property;</li>
+        <li>Employ agents, employees, contractors, subcontractors, attorneys, and accountants;</li>
+        <li>Invest and reinvest Company funds;</li>
+        <li>Form, acquire an interest in, or contribute to the capital of subsidiaries or other entities by Unanimous Consent as provided in Article XVI; and</li>
+        <li>Do all other acts and things that may be necessary, incidental, or convenient to the conduct, promotion, or attainment of the Company's business, purposes, or activities.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">3.3</span> &nbsp;<strong>Limitations.</strong> The Company shall not engage in any business activity that would jeopardize its status as a limited liability company under the Act, violate any applicable law or regulation, or constitute fraud or willful misconduct. The Members acknowledge that the Company's activities are primarily investment and renovation activities and that compliance with all applicable federal, state, and local laws — including without limitation contractor licensing laws, fair housing laws, and tax laws — is the responsibility of the Managing Member.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE IV -->
+  <div class="article">
+    <div class="article-header">Article IV — Members and Membership Interests<span>Who owns the Company and in what proportions</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article IV</strong>
+      This article identifies the two owners (members) of Ironwood LLC and their ownership percentages. Anchor Pro Solutions owns 50% and is the manager. Landon Renovations — owned by Jeff and Jordan Sarabia as a married couple — owns the other 50%. Ownership percentages can only change if both members agree in writing.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">4.1</span> &nbsp;<strong>Members.</strong> The initial Members of the Company, their Membership Interests, roles, and initial Capital Contributions are as follows:</p>
+      <div class="notice-box">
+        <table style="width:100%; border-collapse:collapse; font-size:12px;">
+          <thead>
+            <tr style="background:#1a1a1a; color:#c9a84c;">
+              <th style="padding:8px 10px; text-align:left; border:1px solid #555;">Member</th>
+              <th style="padding:8px 10px; text-align:left; border:1px solid #555;">Role</th>
+              <th style="padding:8px 10px; text-align:center; border:1px solid #555;">Interest</th>
+              <th style="padding:8px 10px; text-align:left; border:1px solid #555;">Initial Contribution</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="padding:8px 10px; border:1px solid #ccc;">Anchor Pro Solutions</td>
+              <td style="padding:8px 10px; border:1px solid #ccc;">Managing Member</td>
+              <td style="padding:8px 10px; text-align:center; border:1px solid #ccc;">50%</td>
+              <td style="padding:8px 10px; border:1px solid #ccc;">$30,000 cash</td>
+            </tr>
+            <tr style="background:#f5f2eb;">
+              <td style="padding:8px 10px; border:1px solid #ccc;">Landon Renovations<br><em style="font-size:11px;">(Jeff &amp; Jordan Sarabia)</em></td>
+              <td style="padding:8px 10px; border:1px solid #ccc;">Non-Managing Member</td>
+              <td style="padding:8px 10px; text-align:center; border:1px solid #ccc;">50%</td>
+              <td style="padding:8px 10px; border:1px solid #ccc;">Labor credit / sweat equity on Deal #1</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="section">
+      <p><span class="section-num">4.2</span> &nbsp;<strong>Nature of Membership Interest.</strong> A Membership Interest is personal property. A Member has no interest in specific Company property. No Member shall have the right to partition any Company property, and any purported conveyance of an undivided interest in any Company property shall be void.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">4.3</span> &nbsp;<strong>Landon Renovations — Married Couple Ownership.</strong> Landon Renovations' fifty percent (50%) Membership Interest is held jointly by Jeff Sarabia and Jordan Sarabia as a married couple through the Landon Renovations entity. The Sarabias' internal marital relationship, community property arrangements, and any future domestic arrangements — including divorce, separation, or dissolution of their marital relationship — are internal matters of Landon Renovations and do not constitute a Transfer of Membership Interest for purposes of Article XII of this Agreement. In the event of a divorce or separation between Jeff Sarabia and Jordan Sarabia, the fifty percent (50%) Membership Interest shall remain held by Landon Renovations, and the Company shall have no obligation to purchase, redeem, or otherwise acquire any Membership Interest solely as a result of such marital change. Landon Renovations shall designate one individual to serve as its authorized representative and spokesperson for all Company communications, decisions, and votes. Jeff Sarabia shall be the initial authorized representative unless Landon Renovations provides written notice of a change to the Managing Member.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">4.4</span> &nbsp;<strong>Percentage Interests.</strong> The Membership Interests set forth in Section 4.1 represent the Members' respective percentage interests in the profits, losses, and distributions of the Company. Such percentages may be modified only by Unanimous Consent and a written amendment to this Agreement executed by all Members.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">4.5</span> &nbsp;<strong>Admission of New Members.</strong> No Person shall be admitted as a new Member without the Unanimous Consent of all existing Members. Any new Member shall execute a joinder agreement in form and substance reasonably satisfactory to all existing Members, agreeing to be bound by all terms of this Agreement. Upon admission, the Membership Interests of all Members shall be adjusted as agreed by all Members in writing.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">4.6</span> &nbsp;<strong>No Certificates.</strong> The Company shall not issue certificates evidencing Membership Interests unless required by applicable law or agreed to by all Members in writing. The Company shall maintain a membership register reflecting the name, address, and Membership Interest percentage of each Member.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE V -->
+  <div class="article">
+    <div class="article-header">Article V — Management<span>Who runs the Company, what they can do alone, and what requires both members to agree</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article V</strong>
+      Anchor Pro Solutions runs the day-to-day business — it can sign contracts, hire vendors, source deals, and manage operations without asking first. But big decisions — buying property, taking on large debt, admitting new members, or dissolving — require both members to agree in writing. This protects Landon Renovations while keeping the business moving fast.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">5.1</span> &nbsp;<strong>Manager-Managed Structure.</strong> The Company shall be managed by its Managing Member, Anchor Pro Solutions. As a manager-managed limited liability company under the Act, the Managing Member shall have full, exclusive, and complete discretion to manage and control the business, affairs, and properties of the Company with respect to all matters that do not expressly require Unanimous Consent or Member approval under this Agreement.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">5.2</span> &nbsp;<strong>Authority of Managing Member.</strong> Without limiting the generality of Section 5.1, and without the consent or approval of the Non-Managing Member, the Managing Member shall have the power and authority to:</p>
+      <ol class="alpha">
+        <li>Conduct, manage, and supervise all day-to-day business operations of the Company, including oversight of all active renovation projects;</li>
+        <li>Source, evaluate, and negotiate potential property acquisitions, provided that final acquisition of any property requires Unanimous Consent under Section 5.4(b);</li>
+        <li>Coordinate and secure project financing, provided that incurring debt in excess of Twenty-Five Thousand Dollars ($25,000.00) requires Unanimous Consent under Section 5.4(c);</li>
+        <li>Establish and maintain relationships with lenders, hard money providers, private money investors, title companies, real estate agents, and other vendors and service providers;</li>
+        <li>Enter into, amend, and terminate contracts with vendors, subcontractors, and service providers involving aggregate payments of less than Five Thousand Dollars ($5,000.00) per contract;</li>
+        <li>Open, maintain, and manage Company bank accounts, and make disbursements in the ordinary course of business, subject to the signatory authority limitations in Article X;</li>
+        <li>Hire, supervise, compensate, and terminate employees, independent contractors, and consultants within approved budgets;</li>
+        <li>Implement and maintain the Company's project management system and accounting records;</li>
+        <li>Execute and deliver deeds, bills of sale, assignments, and other instruments of conveyance in connection with the sale or transfer of Company property approved by the Members;</li>
+        <li>Make all tax elections, file all required tax returns, and take all actions necessary to maintain the Company in good standing with applicable governmental authorities;</li>
+        <li>Take all actions that the Managing Member reasonably deems necessary or appropriate to carry out the purpose of the Company in the ordinary course of business; and</li>
+        <li>Engage attorneys, accountants, and other professional advisors on behalf of the Company.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">5.3</span> &nbsp;<strong>Decisions Requiring Simple Majority (Both Members).</strong> Because the Company has two Members each holding fifty percent (50%) of the Membership Interests, any decision requiring a simple majority vote effectively requires the affirmative consent of both Members. The following decisions shall require the affirmative written consent of both Members:</p>
+      <ol class="alpha">
+        <li>The making of any distribution to Members, including the amount, timing, and method of distribution;</li>
+        <li>Approval of the Company's annual operating budget, including projected revenues and expenses for the upcoming Fiscal Year; and</li>
+        <li>The hiring of any full-time or part-time employees of the Company (as distinguished from independent contractors engaged by the Managing Member in the ordinary course).</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">5.4</span> &nbsp;<strong>Decisions Requiring Unanimous Consent.</strong> Notwithstanding the general authority of the Managing Member under Section 5.2, the following matters shall require the Unanimous Consent of all Members:</p>
+      <ol class="alpha">
+        <li>Any capital call or requirement that Members contribute additional capital to the Company in excess of Ten Thousand Dollars ($10,000.00) in the aggregate in any twelve (12) month period;</li>
+        <li>The acquisition, purchase, or contract to purchase any real property, regardless of purchase price;</li>
+        <li>Incurring any indebtedness, liability, or obligation on behalf of the Company in excess of Twenty-Five Thousand Dollars ($25,000.00) per transaction or per lender in the aggregate at any time, including any mortgage, deed of trust, hard money loan, line of credit, or personal guarantee;</li>
+        <li>The admission of any new Member to the Company;</li>
+        <li>Any amendment to, restatement of, or modification of this Agreement;</li>
+        <li>The dissolution, winding up, or termination of the Company;</li>
+        <li>The formation of, or acquisition of any interest in, any subsidiary entity as further described in Article XVI;</li>
+        <li>Any merger, consolidation, conversion, or reorganization of the Company;</li>
+        <li>The sale, transfer, or other disposition of all or substantially all of the assets of the Company outside the ordinary course of business; and</li>
+        <li>The initiation of any litigation or arbitration on behalf of the Company involving a claim or exposure in excess of Ten Thousand Dollars ($10,000.00).</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">5.5</span> &nbsp;<strong>Standard of Care.</strong> The Managing Member shall devote such time and attention to the management of the Company's affairs as is reasonably necessary for the proper conduct of the Company's business. The Managing Member shall act in good faith and in a manner it reasonably believes to be in the best interests of the Company and its Members. The Managing Member shall not be liable to the Company or any Member for any action taken or omitted to be taken by it in good faith in connection with the business or affairs of the Company, except for acts or omissions constituting gross negligence, fraud, willful misconduct, or material breach of this Agreement.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">5.6</span> &nbsp;<strong>No Authority of Non-Managing Member.</strong> Landon Renovations, as Non-Managing Member, shall not have any authority to act for, bind, or obligate the Company in any manner. No contract, agreement, or commitment entered into by or on behalf of Landon Renovations purporting to bind the Company shall be valid or enforceable against the Company unless such action was expressly authorized in writing by the Managing Member. The Non-Managing Member's rights are limited to: (a) receiving the information and reports described in Article XI; (b) voting on matters expressly requiring Member consent under this Agreement; (c) receiving distributions in accordance with Article VIII and Article IX; and (d) all other rights expressly granted to Members under this Agreement or under non-waivable provisions of the Act.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">5.7</span> &nbsp;<strong>Removal or Replacement of Managing Member.</strong> The Managing Member may not be removed except upon Unanimous Consent of all Members, including the consent of the Managing Member itself, or upon a final, non-appealable judicial determination that the Managing Member has committed fraud, gross negligence, or willful misconduct in connection with the Company's affairs. In the event of removal or resignation of the Managing Member, the Non-Managing Member and the removed Managing Member shall negotiate in good faith to identify a successor Managing Member or to restructure the Company's management. If no agreement is reached within sixty (60) days, either Member may invoke the dispute resolution procedures of Article XIV.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">5.8</span> &nbsp;<strong>Meetings.</strong> The Members shall hold at least one (1) business review meeting per calendar quarter, which may be held in person, by telephone, or by videoconference. The Managing Member shall prepare and distribute an agenda at least five (5) business days in advance. Actions requiring Member consent may be taken without a meeting by written consent signed by all Members required to approve such action. Email communications acknowledged by the receiving Member in writing (including by email reply) shall constitute valid written consent for purposes of routine Member approvals under Section 5.3; however, actions requiring Unanimous Consent under Section 5.4 shall be documented by a separate written consent instrument signed by all Members.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE VI -->
+  <div class="article">
+    <div class="article-header">Article VI — Capital Contributions<span>What each member put in and what happens if more money is needed</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article VI</strong>
+      Anchor Pro Solutions put in $30,000 cash to start the Company. Landon Renovations contributed labor and sweat equity on the first project, valued at market rate and documented separately. If the Company needs more money later, both members must agree before anyone is required to contribute. No member can be forced to put in more money without that agreement.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">6.1</span> &nbsp;<strong>Initial Capital Contributions.</strong> Each Member's initial Capital Contribution to the Company is as follows:</p>
+      <ol class="alpha">
+        <li><strong>Anchor Pro Solutions:</strong> Thirty Thousand Dollars ($30,000.00) in cash, contributed at or prior to the Effective Date of this Agreement.</li>
+        <li><strong>Landon Renovations:</strong> Labor credit and sweat equity in connection with the renovation project designated as "Deal #1," to be valued at market rate and documented in a separate written addendum executed by both Members within thirty (30) days of the completion of Deal #1. The parties acknowledge that the labor and sweat equity contribution of Landon Renovations is material consideration for its fifty percent (50%) Membership Interest and is separate from the hourly compensation and project-based fees described in Article VIII.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">6.2</span> &nbsp;<strong>Capital Accounts.</strong> The Company shall maintain a Capital Account for each Member. Each Member's Capital Account shall be:</p>
+      <ol class="alpha">
+        <li>Credited with such Member's Capital Contributions and such Member's allocable share of Company profits and income;</li>
+        <li>Debited with such Member's allocable share of Company losses and deductions, and the amount of any cash distributions and the fair market value of any property distributions made to such Member.</li>
+      </ol>
+      <p>The Capital Accounts shall be maintained in accordance with the rules set forth in Treasury Regulations Section 1.704-1(b)(2)(iv) to the extent applicable to a limited liability company.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">6.3</span> &nbsp;<strong>No Interest on Capital.</strong> No Member shall be entitled to receive interest on its Capital Contribution or on the balance of its Capital Account, unless otherwise unanimously agreed in writing by all Members.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">6.4</span> &nbsp;<strong>No Right to Return of Capital.</strong> Except as specifically provided in this Agreement, no Member shall have the right to demand or receive the return of its Capital Contribution or the balance of its Capital Account. The Members acknowledge that the return of capital is subject to the availability of Company assets and the payment of Company obligations.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">6.5</span> &nbsp;<strong>Additional Capital Contributions — Voluntary.</strong> No Member shall be required to make any additional Capital Contribution to the Company beyond the initial Capital Contribution set forth in Section 6.1. Any Member may, with the Unanimous Consent of all Members, make additional Capital Contributions to the Company. Any such additional contribution shall be reflected in an amendment to this Agreement executed by all Members, which amendment shall set forth the amount contributed, the contributing Member, and any adjustment to the Members' relative Capital Accounts or Membership Interests.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">6.6</span> &nbsp;<strong>Capital Calls.</strong> The Managing Member may, with Unanimous Consent of all Members, issue a capital call requiring each Member to contribute additional capital to the Company. Any capital call in excess of Ten Thousand Dollars ($10,000.00) in the aggregate within any rolling twelve (12) month period shall require Unanimous Consent as provided in Section 5.4(a). Any capital call notice shall:</p>
+      <ol class="alpha">
+        <li>Be in writing and delivered to all Members at least fifteen (15) business days prior to the required contribution date;</li>
+        <li>Specify the total amount to be raised, each Member's pro-rata share based on Membership Interest percentages, the purpose for which the additional capital is required, and the date by which contributions must be made; and</li>
+        <li>Be accompanied by reasonable supporting documentation demonstrating the business need for the additional capital.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">6.7</span> &nbsp;<strong>Failure to Contribute.</strong> If a Member fails to make any additional Capital Contribution agreed upon or required pursuant to a capital call under Section 6.6 within the time specified, such failure shall constitute a material breach of this Agreement. In such event, the non-defaulting Member shall have the right, but not the obligation, to contribute the defaulting Member's share of such additional capital. If the non-defaulting Member elects to contribute the defaulting Member's share, the Membership Interests of the Members shall be adjusted proportionately to reflect the aggregate Capital Contributions of each Member, subject to good faith negotiation between the Members. If the Members cannot agree on an adjusted Membership Interest within thirty (30) days, either Member may invoke the dispute resolution procedures of Article XIV.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE VII -->
+  <div class="article">
+    <div class="article-header">Article VII — Allocations of Profit and Loss<span>How profits and losses are assigned to each member for tax purposes</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article VII</strong>
+      For tax purposes, the Company's profits and losses are split 50/50 between the two members each year. This is different from cash distributions — it's about what each member reports on their tax returns. Special rules apply to make sure tax allocations have real economic meaning.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">7.1</span> &nbsp;<strong>Allocation of Net Profit.</strong> Except as otherwise provided in this Article VII, the net profits of the Company for each Fiscal Year, as determined in accordance with the Company's method of accounting, shall be allocated among the Members in proportion to their respective Membership Interest percentages: fifty percent (50%) to Anchor Pro Solutions and fifty percent (50%) to Landon Renovations.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">7.2</span> &nbsp;<strong>Allocation of Net Loss.</strong> Except as otherwise provided in this Article VII, the net losses of the Company for each Fiscal Year shall be allocated among the Members in proportion to their respective Membership Interest percentages: fifty percent (50%) to Anchor Pro Solutions and fifty percent (50%) to Landon Renovations.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">7.3</span> &nbsp;<strong>Special Allocations.</strong> Notwithstanding Sections 7.1 and 7.2, the following special allocations shall be made prior to any other allocations:</p>
+      <ol class="alpha">
+        <li><strong>Minimum Gain Chargeback.</strong> If there is a net decrease in Company minimum gain during any Fiscal Year, each Member shall be allocated items of Company income and gain for such year in an amount and in the manner required by Treasury Regulations Section 1.704-2(f).</li>
+        <li><strong>Qualified Income Offset.</strong> In the event any Member unexpectedly receives an adjustment, allocation, or distribution described in Treasury Regulations Section 1.704-1(b)(2)(ii)(d)(4), (5), or (6), such Member shall be allocated items of Company income and gain in an amount and manner sufficient to eliminate the deficit balance in such Member's Capital Account as quickly as possible.</li>
+        <li><strong>Gross Income Allocation.</strong> In the event any Member has a deficit Capital Account balance at the end of any Fiscal Year, such Member shall be allocated items of Company gross income and gain in the amount of such deficit as rapidly as possible.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">7.4</span> &nbsp;<strong>Tax Allocations.</strong> For federal and applicable state income tax purposes, each item of Company income, gain, loss, deduction, and credit shall be allocated among the Members in the same manner as the corresponding item is allocated for book purposes under this Article VII, except to the extent a different allocation is required by Section 704(c) of the Internal Revenue Code of 1986, as amended (the "Code"), and the Treasury Regulations thereunder.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">7.5</span> &nbsp;<strong>Tax Treatment of Fees.</strong> The parties acknowledge and agree that the compensation, fees, and payments described in Article VIII (including the Phase 1 and Phase 2 field labor compensation to Jeff Sarabia through Landon Renovations, the Marketing and Operations Fees to Jordan Sarabia and Ty Jackson, and the Management Fee to Anchor Pro) are intended to be treated for tax purposes as guaranteed payments under Section 707(c) of the Code or payments for services treated as made to a non-member under Section 707(a) of the Code, as determined by the Company's tax advisors. Such payments shall be deducted by the Company before computing net profit or loss for allocation purposes.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">7.6</span> &nbsp;<strong>Tax Matters Partner / Partnership Representative.</strong> Anchor Pro Solutions shall serve as the "partnership representative" of the Company (as defined in Section 6223 of the Code, as amended by the Bipartisan Budget Act of 2015) for all taxable years. The partnership representative shall have the right, power, and authority to take all actions required or permitted of the partnership representative under applicable law, including with respect to any audit of the Company by the Internal Revenue Service. The partnership representative shall keep all Members informed of any such audit and shall not agree to any settlement or assessment that would materially adversely affect either Member without the consent of the affected Member.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">7.7</span> &nbsp;<strong>S-Corporation Tax Election.</strong> The Members hereby agree that the Company shall elect to be treated as an S-Corporation for federal income tax purposes pursuant to Section 1362 of the Code by timely filing IRS Form 2553 (Election by a Small Business Corporation) with the Internal Revenue Service. The Managing Member, Anchor Pro Solutions, shall be responsible for preparing and filing Form 2553 within seventy-five (75) days of the Company's formation date, or by such other date as is necessary to make the election effective for the Company's first taxable year, whichever is earlier. The following terms apply to this election:</p>
+      <ol class="alpha">
+        <li><strong>Reasonable Compensation Requirement.</strong> As required under the S-Corporation tax rules, each Member who performs services for the Company and receives distributions shall be paid a reasonable salary as a W-2 employee of the Company before receiving any profit distributions. "Reasonable compensation" shall be determined in good faith by the Members based on fair market value for the services rendered, with reference to comparable industry compensation data, and shall be documented in writing and reviewed annually. Failure to pay reasonable compensation could result in IRS reclassification of distributions as wages subject to payroll taxes.</li>
+        <li><strong>Payroll Requirements.</strong> The Company shall establish and maintain a payroll system in compliance with applicable federal and state law. All W-2 wages paid to Members shall be subject to applicable payroll tax withholding, including federal income tax withholding, Social Security, and Medicare taxes. The Company shall file all required payroll tax returns and make all required deposits on a timely basis.</li>
+        <li><strong>Distribution vs. Salary Split.</strong> The Members acknowledge that the tax benefit of the S-Corporation election arises from the ability to take a portion of income as a profit distribution (not subject to self-employment tax) rather than as salary. The Members agree to work with the Company's CPA or tax advisor annually to optimize the salary-to-distribution ratio in a manner that is compliant with IRS guidelines and defensible upon audit.</li>
+        <li><strong>State Conformity.</strong> The Members acknowledge that Georgia recognizes the federal S-Corporation election for state income tax purposes. The Managing Member shall take all steps necessary to ensure the election is recognized at the state level, including filing any required state-level election forms.</li>
+        <li><strong>Unanimous Consent to Revoke.</strong> The S-Corporation election may only be revoked upon the Unanimous Consent of all Members. Any revocation shall require the filing of a written revocation statement with the IRS in accordance with Section 1362(d) of the Code, and both Members shall be given no less than thirty (30) days' advance written notice before any revocation is filed.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ARTICLE VIII -->
+  <div class="article">
+    <div class="article-header">Article VIII — Compensation, Fees, and Distributions<span>How money flows from each project — who gets paid first, and the 50/50 split at the end</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article VIII</strong>
+      This is the most detailed financial article. Here is the order of operations for each project: (1) Pay Jeff Sarabia for field labor (hourly during Phase 1, or 30% of gross profit during Phase 2), billed through Landon Renovations as a 1099 subcontractor. (2) Pay Jordan Sarabia 3% of gross project revenue for marketing through Landon Renovations. (3) Pay Ty Jackson 3% of gross project revenue for marketing through Anchor Pro Solutions, PLUS $30/hr for any pre-approved field labor hours he works on job sites alongside Jeff (also through Anchor Pro). (4) Pay Anchor Pro Solutions a 5% management fee. (5) Whatever is left — the Net Distributable Profit — is split 50/50 between the two members.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">8.1</span> &nbsp;<strong>Phase 1 — Field Labor Compensation for Jeff Sarabia.</strong> During the Phase 1 Period (as defined in Section 1.22), Jeff Sarabia shall be compensated for all field labor performed for or on behalf of the Company at the rate of Fifty Dollars ($50.00) per hour, subject to the following conditions:</p>
+      <ol class="alpha">
+        <li><strong>Billing Entity.</strong> All hourly field labor compensation for Jeff Sarabia during Phase 1 shall be billed to and paid by the Company through Landon Renovations as an independent contractor (1099 subcontractor). Landon Renovations shall issue invoices to the Company reflecting Jeff Sarabia's documented hours and the applicable hourly rate. Jeff Sarabia shall not be treated as an employee of the Company for purposes of this compensation.</li>
+        <li><strong>Pre-Approval Requirement.</strong> Jeff Sarabia's hours must be pre-approved by the Managing Member prior to commencement of work. The Managing Member shall provide written pre-approval (including by email or through the Company's designated project management system) specifying the project, the scope of authorized work, and the maximum authorized hours for each work authorization.</li>
+        <li><strong>Time Logging.</strong> Jeff Sarabia shall log all hours in the Company's designated project management system, itemizing the date, project, type of work performed, and hours worked. Hours not logged in the project management system within five (5) business days of the work being performed shall not be eligible for compensation, absent the written agreement of the Managing Member.</li>
+        <li><strong>Payment Timing.</strong> Invoices from Landon Renovations for Phase 1 field labor shall be paid by the Company within fifteen (15) business days of the Company's receipt of a complete, accurate invoice accompanied by the relevant time log entries, provided that the Company has sufficient funds after maintaining the Operating Reserve.</li>
+        <li><strong>Priority.</strong> Phase 1 field labor compensation is a project expense and is deducted from Gross Project Revenue before computing Net Distributable Profit.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">8.2</span> &nbsp;<strong>Phase 2 — Project-Based Compensation for Jeff Sarabia.</strong> Upon the commencement of the Phase 2 Period (as defined in Section 1.23), the hourly compensation structure of Section 8.1 shall terminate permanently and be replaced by the following project-based compensation structure:</p>
+      <ol class="alpha">
+        <li><strong>Rate.</strong> Jeff Sarabia shall receive compensation equal to thirty percent (30%) of Gross Profit (as defined in Section 1.10) per project.</li>
+        <li><strong>Calculation.</strong> For each project, Gross Profit shall be calculated as: Total Project Revenue minus documented Hard Material Costs minus documented Subcontractor Invoices attributable to that project. For the avoidance of doubt, overhead, management fees, marketing fees, and other non-project-level expenses are not deducted in calculating Gross Profit under this Section 8.2.</li>
+        <li><strong>Documentation.</strong> The Managing Member shall prepare a project-level profit and loss statement for each project, including a calculation of Gross Profit, and shall provide such statement to Landon Renovations within fifteen (15) business days of project close (defined as the date of settlement or sale, or for rental properties, the date a tenant lease commences).</li>
+        <li><strong>Billing Entity.</strong> As with Phase 1 compensation, Phase 2 compensation shall be billed to and paid by the Company through Landon Renovations as a 1099 subcontractor invoice. Landon Renovations shall issue an invoice to the Company referencing the applicable project and the Gross Profit calculation within ten (10) business days of receiving the project-level profit and loss statement.</li>
+        <li><strong>Payment Timing.</strong> The Company shall pay the Phase 2 invoice within fifteen (15) business days of receipt, provided that the Company has sufficient funds after maintaining the Operating Reserve.</li>
+        <li><strong>Priority.</strong> Phase 2 project-based compensation is a project expense and is deducted from project revenues before computing Net Distributable Profit.</li>
+        <li><strong>No Retroactive Adjustment.</strong> The transition from Phase 1 to Phase 2 is not retroactive. Projects commenced during Phase 1 shall be compensated under the Phase 1 hourly structure for any hours pre-approved and logged prior to the commencement of Phase 2. Projects commenced after Phase 2 commences shall be compensated entirely under the Phase 2 structure.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">8.3</span> &nbsp;<strong>Marketing and Operations Fees.</strong> The following marketing and operations fees shall be payable on each project, regardless of whether the Company is in Phase 1 or Phase 2:</p>
+      <ol class="alpha">
+        <li><strong>Jordan Sarabia — Landon-Side Marketing and Operations Fee.</strong> Jordan Sarabia, through Landon Renovations, shall receive a marketing and business operations fee equal to three percent (3%) of Gross Project Revenue per project. This fee compensates Jordan Sarabia for marketing activities, social media management, client communications, and Landon Renovations-side operational support. Landon Renovations shall invoice the Company for this fee within ten (10) business days of project close, and the Company shall pay such invoice within fifteen (15) business days of receipt.</li>
+        <li><strong>Ty Jackson — Anchor Pro-Side Marketing and Operations Fee.</strong> Ty Jackson, through Anchor Pro Solutions, shall receive a marketing and business operations fee equal to three percent (3%) of Gross Project Revenue per project. This fee compensates Ty Jackson for paid social media advertising, content auto-posting and scheduling, community engagement (comment replies and DM communications), inbound call routing, YouTube channel management, CRM management, and Anchor Pro-side business operations. Anchor Pro Solutions shall invoice the Company for this fee within ten (10) business days of project close, and the Company shall pay such invoice within fifteen (15) business days of receipt.</li>
+        <li><strong>Ty Jackson — Field Labor Compensation.</strong> When Ty Jackson performs physical field labor on job sites alongside Jeff Sarabia, he shall be compensated at a rate of Thirty Dollars ($30.00) per hour, billed through Anchor Pro Solutions as a pre-waterfall labor cost and expensed at the project level before computing Net Distributable Profit. Field labor hours must be pre-approved by the Managing Member on a per-project basis and logged in the Company's project management system. This field labor compensation is separate from and in addition to the marketing and operations fee in Section 8.3(b).</li>
+        <li><strong>Nature of Fees.</strong> The Marketing and Operations Fees and Field Labor compensation described in this Section 8.3 are separate from and in addition to each Member's share of Net Distributable Profit, and are compensation for specific services rendered to the Company. These fees are project-level expenses deducted before computing Net Distributable Profit.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">8.4</span> &nbsp;<strong>Anchor Pro Management Fee.</strong> Anchor Pro Solutions shall receive a management fee equal to five percent (5%) of Gross Project Revenue per deal (the <span class="def-term">"Management Fee"</span>). The Management Fee compensates Anchor Pro Solutions for deal sourcing, financing coordination, lender relationships, project oversight, vendor management, and general business oversight as Managing Member. The Management Fee is a project-level expense:</p>
+      <ol class="alpha">
+        <li>The Management Fee shall be calculated based on total Gross Project Revenue per deal;</li>
+        <li>The Management Fee is deducted from project revenues before computing Net Distributable Profit;</li>
+        <li>The Management Fee is in addition to Anchor Pro's fifty percent (50%) share of Net Distributable Profit and is not a substitute therefor; and</li>
+        <li>The Management Fee shall be documented in the project-level profit and loss statement and paid to Anchor Pro Solutions at the time of or prior to the distribution of Net Distributable Profit.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">8.5</span> &nbsp;<strong>Order of Payments — Waterfall.</strong> On a per-project basis, project revenues shall be applied in the following order of priority:</p>
+      <ol class="roman">
+        <li>Payment of all third-party costs and expenses directly attributable to the project, including acquisition costs, Hard Material Costs, Subcontractor Invoices (excluding Landon Renovations' labor invoices addressed below), carrying costs, closing costs, and other documented project expenses;</li>
+        <li>Payment of Phase 1 field labor compensation to Landon Renovations for Jeff Sarabia's hours (if applicable under Section 8.1), or Phase 2 project-based compensation to Landon Renovations (if applicable under Section 8.2);</li>
+        <li>Payment of the Jordan Sarabia Marketing and Operations Fee to Landon Renovations (Section 8.3(a));</li>
+        <li>Payment of the Ty Jackson Marketing and Operations Fee to Anchor Pro Solutions (Section 8.3(b));</li>
+        <li>Payment of Ty Jackson's pre-approved field labor compensation to Anchor Pro Solutions at $30.00/hr (Section 8.3(c), if applicable);</li>
+        <li>Payment of the Anchor Pro Management Fee (Section 8.4);</li>
+        <li>Retention of the applicable portion of the Operating Reserve allocation; and</li>
+        <li>Distribution of Net Distributable Profit fifty percent (50%) to Anchor Pro Solutions and fifty percent (50%) to Landon Renovations.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">8.6</span> &nbsp;<strong>Distributions — Timing and Conditions.</strong></p>
+      <ol class="alpha">
+        <li><strong>Project Distributions.</strong> Net Distributable Profit attributable to a completed renovation and resale project shall be distributed to the Members within thirty (30) days of the project close date, subject to the conditions in Section 8.6(c).</li>
+        <li><strong>Rental Income Distributions.</strong> Net Distributable Profit attributable to rental income from Company-held properties shall be distributed quarterly — within thirty (30) days following the end of each calendar quarter — subject to the conditions in Section 8.6(c).</li>
+        <li><strong>Conditions Precedent to Distribution.</strong> No distribution shall be made to any Member unless and until: (i) the Company's cash balance after giving effect to such distribution is not less than the Operating Reserve of Ten Thousand Dollars ($10,000.00); (ii) all Company debts, liabilities, and obligations then due and payable have been paid or adequately provided for; (iii) both Members have approved the distribution in accordance with Section 5.3(a); and (iv) the project-level profit and loss statement has been prepared and reviewed by both Members.</li>
+        <li><strong>Form of Distribution.</strong> All distributions shall be made in cash, by wire transfer or ACH, to the bank account designated by each Member in writing. A Member may change its designated distribution account upon ten (10) business days' prior written notice to the Managing Member.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">8.7</span> &nbsp;<strong>Operating Reserve.</strong> The Company shall at all times maintain a minimum cash balance of Ten Thousand Dollars ($10,000.00) in its primary business checking account as the Operating Reserve. The Operating Reserve shall be funded from project revenues and shall not be distributed to Members. The Operating Reserve may be increased by Unanimous Consent of the Members if the Members determine that a higher reserve is warranted by the Company's then-current obligations and business activity.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">8.8</span> &nbsp;<strong>No Draw Rights.</strong> Except as expressly set forth in this Article VIII, no Member shall have any right to draw funds from the Company, receive advances against anticipated distributions, or receive any compensation or payment from the Company for services rendered in a Member capacity. The compensation and fee structures described in this Article represent the complete and exclusive compensation arrangement between the Company and its Members and their associated individuals and entities.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">8.9</span> &nbsp;<strong>Ty Jackson — Licensed Real Estate Agent; Commission Structure.</strong></p>
+      <p>Ty Jackson holds an active Georgia real estate salesperson or broker license (the <span class="def-term">"License"</span>). The parties acknowledge that Ty Jackson's licensed status creates opportunities to reduce the Company's transactional costs and generate additional revenue. The following provisions govern the use of the License in connection with Company activities:</p>
+      <ol class="alpha">
+        <li><strong>Buyer Representation — Acquisitions.</strong> When the Company acquires a property and Ty Jackson serves as the Company's licensed buyer's agent in connection with that acquisition, Ty Jackson (through Anchor Pro Solutions or a licensed brokerage entity designated by Ty Jackson) shall be entitled to receive the buyer-side real estate commission paid by the seller or the seller's agent, at the rate negotiated in the purchase contract and customary for the applicable market (typically 2.5% to 3% of the purchase price). Such commission shall be paid at closing directly to the designated brokerage entity and shall not flow through the Company's operating account. The commission shall not be treated as Company revenue and shall not be subject to the waterfall or distribution provisions of this Article VIII. Both Members acknowledge and consent to Ty Jackson's dual role as Managing Member and buyer's agent, and waive any conflict of interest claim arising solely from such dual role provided Ty Jackson discloses the agency relationship in writing on the applicable purchase contract.</li>
+        <li><strong>Listing Representation — Dispositions.</strong> When the Company sells a completed renovation property or any other Company-held real estate, Ty Jackson (through Anchor Pro Solutions or a designated brokerage entity) may serve as the Company's listing agent. In that capacity, Ty Jackson shall be entitled to receive the listing-side commission at the rate agreed upon in the listing agreement, which shall not exceed the commission rate customary in the applicable market (typically 2.5% to 3% of the sale price). Such listing commission shall be paid at closing directly to the brokerage entity and shall not flow through the Company's waterfall. The net sales proceeds received by the Company after payment of all closing costs, commissions, and liens shall constitute Gross Project Revenue for purposes of this Agreement. The Unanimous Consent of both Members shall be required before Ty Jackson may serve as the Company's listing agent on any sale transaction exceeding Two Hundred Fifty Thousand Dollars ($250,000.00).</li>
+        <li><strong>Commission Offset; Disclosure.</strong> On any transaction where Ty Jackson earns a real estate commission as provided in Sections 8.9(a) or 8.9(b), Ty Jackson shall provide both Members with written disclosure of the commission amount no later than five (5) business days prior to the applicable closing date. Both Members acknowledge that these commissions represent compensation for licensed real estate services and are separate from Ty Jackson's compensation as Managing Member and from Anchor Pro Solutions' management fee under Section 8.4. No double-counting or offset against the Management Fee shall apply unless otherwise agreed in writing by Unanimous Consent.</li>
+        <li><strong>MLS and Market Access.</strong> The License grants the Company access to Multiple Listing Service (MLS) data, off-market deal networks, and other resources available to licensed real estate professionals. Ty Jackson shall make such resources available to the Company in connection with deal sourcing, property valuation (comparable sales analysis), and disposition strategy at no additional charge beyond the compensation already established in this Agreement.</li>
+        <li><strong>Property Management Fee.</strong> Ty Jackson's active Georgia real estate license authorizes the Company to engage in property management activities for all Company-owned rental properties without retaining a separate third-party licensed property management company. Effective from the first Company-owned rental property, the following property management fees shall be charged against each rental property's gross monthly rent and shall flow into the Ironwood LLC waterfall as Company revenue before computing net distributable profit:
+          <ol style="margin-top:8px;margin-left:18px;">
+            <li><strong>Property Management Fee:</strong> Nine percent (9%) of gross monthly rent collected per property per month, payable to Ironwood LLC in compensation for Ty Jackson's property management services performed under his Georgia real estate license. This fee covers tenant screening, lease administration, maintenance coordination, rent collection oversight, and general property oversight.</li>
+            <li><strong>Payment Processing Fee:</strong> Three and one-half percent (3.5%) of gross monthly rent collected per property per month, charged at the time of rent collection to cover payment processing costs, platform fees, and collection administration. Total effective property management rate: twelve and one-half percent (12.5%) of gross monthly rent.</li>
+            <li><strong>Waterfall Treatment:</strong> Both the Property Management Fee and the Payment Processing Fee are Company-level revenue items. They are collected from tenants or deducted from gross rent receipts and deposited into the Company's operating account. These fees are not separate compensation to Ty Jackson personally beyond his existing interests in Ironwood LLC, and they flow through the standard profit waterfall established in Section 8.5.</li>
+            <li><strong>High-Volume Supplement:</strong> If the number of Company-owned rental units under management exceeds twenty (20), the parties shall negotiate in good faith a supplemental management fee adjustment to reflect the increased operational burden, to be documented by written amendment signed by both Members.</li>
+          </ol>
+          <p style="margin-top:10px;">Notwithstanding the foregoing, for short-term vacation rental properties owned by the Company and listed on platforms such as Airbnb, VRBO, or similar short-term rental platforms (each a <span class="def-term">"Vacation Rental Property"</span>), the following fee structure shall apply in lieu of the long-term rental property management fees:
+          <ol style="margin-top:8px;margin-left:18px;">
+            <li><strong>Vacation Rental Management Fee:</strong> Twenty-five percent (25%) of gross monthly vacation rental revenue per property, in recognition of the substantially higher management burden associated with short-term rentals, including guest communication, check-in/check-out coordination, cleaning scheduling, platform listing management, dynamic pricing, and maintenance response;</li>
+            <li><strong>Platform Host Fee Passthrough:</strong> Three percent (3%) of gross monthly vacation rental revenue per property, representing the standard Airbnb and/or VRBO host fee charged at the platform level, passed through as a Company operating expense;</li>
+            <li><strong>Total Effective Vacation Rental Management Rate:</strong> Twenty-eight percent (28%) of gross monthly vacation rental revenue. All fees flow into the Ironwood LLC waterfall as Company revenue before computing net distributable profit, consistent with the treatment established for long-term rental management fees in Section 8.9(e)(iii).</li>
+          </ol></p>
+        </li>
+        <li><strong>Referral Income.</strong> In the Company's ordinary marketing course, Ty Jackson may generate leads from homeowners, buyers, or sellers who do not fit the Company's current project criteria. Ty Jackson may refer such leads to other licensed agents or brokerages and earn referral fees in his personal capacity. Such referral income belongs to Ty Jackson personally and is not Company revenue; provided, however, that Ty Jackson shall not refer away any lead that constitutes a viable acquisition opportunity for the Company without first presenting such opportunity to the Company and allowing the Members to evaluate it under the Company's standard deal criteria.</li>
+        <li><strong>License Maintenance.</strong> Ty Jackson shall maintain his Georgia real estate license in good standing throughout the term of this Agreement. The cost of license renewal fees, continuing education required for license maintenance, and errors and omissions (E&amp;O) insurance required by Ty Jackson's affiliated brokerage shall be borne by Ty Jackson personally or by Anchor Pro Solutions, and shall not be charged as a Company operating expense unless both Members agree in writing.</li>
+        <li><strong>Change in License Status.</strong> Ty Jackson shall promptly notify the Non-Managing Member in writing if his Georgia real estate license is suspended, revoked, placed on inactive status, or otherwise impaired. A loss of licensure does not constitute grounds for removal of Ty Jackson as Managing Member; however, the Commission structure described in Sections 8.9(a) and 8.9(b) shall be suspended during any period in which Ty Jackson does not hold an active, unrestricted Georgia real estate license.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">8.10</span> &nbsp;<strong>Future Growth Structures — Holding Company and Subsidiary Framework.</strong></p>
+      <p>The parties acknowledge that Ironwood LLC is designed to evolve through distinct development phases as the Company scales its real estate portfolio and operational capacity. The following provisions establish the framework and Unanimous Consent requirements governing the Company's anticipated evolution:</p>
+      <ol class="alpha">
+        <li><strong>Phase 1 — Foundation (Active Operations).</strong> The Company's initial operating phase encompasses renovation projects, property flips, and early BRRRR acquisitions conducted directly within Ironwood LLC. During Phase 1, all deal activity flows through the single operating entity. No subsidiary or holding company structure is required during this phase.</li>
+        <li><strong>Phase 2 — Portfolio Build (Rental Accumulation).</strong> As the Company accumulates rental properties generating consistent monthly cash flow, the parties shall evaluate whether individual properties or property clusters warrant segregation into separate single-purpose LLCs (each a <span class="def-term">"Property LLC"</span>) for liability isolation. The formation of any Property LLC shall require Unanimous Consent. Ironwood LLC shall hold the membership interests in each such Property LLC. The compensation and distribution waterfall in this Article VIII shall apply to all revenues flowing up from Property LLCs to Ironwood LLC. Vacation rental properties acquired by the Company shall also be evaluated for segregation into separate Property LLCs for liability isolation, particularly given the heightened guest liability exposure inherent in short-term rental operations. The Managing Member shall obtain and maintain appropriate short-term rental insurance (including STR-specific liability coverage) for each Vacation Rental Property as a Company operating expense.</li>
+        <li><strong>Phase 3 — Holding Structure (Ironwood Holdings Activation).</strong> When the Company's aggregate rental portfolio value reaches or exceeds One Million Dollars ($1,000,000.00), or when the Members unanimously agree that the business has reached sufficient scale, the parties shall evaluate activating Ironwood Holdings as a parent holding company above Ironwood LLC. The specific structure, capitalization, and governance of any holding company tier shall be negotiated by Unanimous Consent and documented by a separate operating agreement and written amendment to this Agreement.</li>
+        <li><strong>Phase 4 — Outside Capital (Investor Access).</strong> Should the Members determine that outside passive investors or joint venture partners should be admitted to any project or entity, no outside capital shall be admitted to Ironwood LLC directly without amending this Agreement by Unanimous Consent. The parties may form separate project-level LLCs or a restructured Ironwood Holdings entity to accommodate outside investors without disturbing the core 50/50 ownership of Ironwood LLC. Neither Member shall admit any outside investor, accept any capital commitment, or grant any equity interest to any third party in connection with Company business without the prior Unanimous Consent of both Members.</li>
+        <li><strong>REIT Evaluation.</strong> If and when the Company's rental portfolio grows to a scale at which conversion to a Real Estate Investment Trust (REIT) structure would be advantageous (as determined by independent legal and tax counsel engaged by Unanimous Consent), both Members agree to negotiate in good faith regarding such conversion. Any REIT conversion shall require Unanimous Consent and shall be structured to preserve the relative economic interests of both Members to the fullest extent practicable. Neither Member is obligated to consent to a REIT conversion, and the failure to convert to a REIT shall not constitute a breach of this Agreement.</li>
+        <li><strong>Decision Rights on Phase Transitions.</strong> Advancement from one phase to another does not occur automatically. Each phase transition described in this Section 8.10 requires: (i) a written proposal by either Member describing the proposed structure, rationale, and projected costs; (ii) a good-faith review period of not less than thirty (30) days; and (iii) Unanimous Consent documented by a written resolution or amendment signed by both Members. Neither Member may unilaterally form a subsidiary, activate a holding structure, or admit outside capital in connection with Company business.</li>
+      </ol>
+    </div>
+  </div>
+
+  <!-- ARTICLE IX -->
+  <div class="article">
+    <div class="article-header">Article IX — Fiscal Year and Accounting<span>The Company's financial year and how its books are kept</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article IX</strong>
+      The Company's financial year runs January 1 through December 31. Anchor Pro Solutions keeps the books using QuickBooks. Both members get monthly profit-and-loss statements and annual financial statements. Either member can ask to review the books with five business days' notice.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">9.1</span> &nbsp;<strong>Fiscal Year.</strong> The Fiscal Year of the Company shall be the calendar year, commencing January 1 and ending December 31 of each year, except that the first Fiscal Year of the Company shall commence on the Effective Date and shall end on December 31 of the same calendar year.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">9.2</span> &nbsp;<strong>Method of Accounting.</strong> The Company shall maintain its books and records using the accrual method of accounting for financial reporting purposes, unless the Managing Member, with the consent of the Non-Managing Member, elects to use the cash method or another method permitted under applicable law. The same accounting method shall be used for both financial reporting and tax purposes, unless the Company's tax advisors recommend otherwise and both Members consent in writing.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">9.3</span> &nbsp;<strong>Books and Records.</strong> The Managing Member shall cause the Company to keep and maintain full, accurate, and complete books of account and other financial records at the Company's principal place of business using QuickBooks (or such other commercially reasonable accounting software as the Managing Member may designate with notice to the Non-Managing Member). The Company's books and records shall include:</p>
+      <ol class="alpha">
+        <li>A list of the full name and last known address of each Member;</li>
+        <li>A copy of the Certificate of Formation and all amendments thereto;</li>
+        <li>Copies of all federal, state, and local income tax returns and reports;</li>
+        <li>Copies of this Agreement and any amendments thereto;</li>
+        <li>Financial statements for each Fiscal Year, including a balance sheet, income statement, and statement of cash flows;</li>
+        <li>Project-level profit and loss statements for each completed project;</li>
+        <li>Copies of all executed contracts, loan documents, and purchase and sale agreements; and</li>
+        <li>Such other information as is required by the Act or reasonably requested by any Member.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">9.4</span> &nbsp;<strong>Inspection Rights.</strong> Each Member shall have the right, upon five (5) business days' written notice to the Managing Member, to inspect and copy at its own expense any of the Company's books and records described in Section 9.3. Such inspection shall be conducted at a reasonable time during normal business hours. The Managing Member shall not unreasonably withhold, condition, or delay access to the Company's books and records. Any information obtained through the exercise of inspection rights shall be kept confidential and shall not be disclosed to any third party without the consent of all Members.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">9.5</span> &nbsp;<strong>Monthly Financial Reporting.</strong> The Managing Member shall prepare or cause to be prepared a monthly profit and loss statement for the Company and shall distribute such statement to all Members by the fifteenth (15th) day of the following month. The monthly statement shall include, at a minimum: gross revenues by project, all operating expenses, fee payments made to each Member entity, and the current cash balance.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">9.6</span> &nbsp;<strong>Annual Financial Statements.</strong> Within sixty (60) days after the end of each Fiscal Year (i.e., by February 28 or February 29 in a leap year), the Managing Member shall prepare or cause to be prepared and shall distribute to all Members annual financial statements for the completed Fiscal Year. The annual financial statements shall include a balance sheet as of the end of the Fiscal Year, an income statement for the Fiscal Year, a statement of cash flows, a Capital Account summary for each Member, and a project-by-project performance summary. The annual financial statements shall be prepared in accordance with generally accepted accounting principles, consistently applied, or in accordance with the Company's chosen accounting method.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">9.7</span> &nbsp;<strong>Tax Returns.</strong> The Managing Member shall cause the Company to prepare and timely file all required federal, state, and local tax returns, including an annual federal partnership return (IRS Form 1065) and Schedule K-1s for each Member. The Managing Member shall distribute Schedule K-1s to each Member by March 15 of the year following each Fiscal Year, or as soon as practicable after the applicable due date. The cost of tax return preparation shall be a Company expense.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">9.8</span> &nbsp;<strong>Project Management System.</strong> The Managing Member shall implement and maintain a commercially reasonable project management system to track all active and completed projects. The project management system shall record, at a minimum: deal name and address, acquisition date and cost, renovation scope and budget, actual expenditures by category, projected and actual completion date, and projected and actual sale or rental income. Both Members shall have access to the project management system.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE X -->
+  <div class="article">
+    <div class="article-header">Article X — Banking and Financial Controls<span>How the Company's money is held and who can access it</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article X</strong>
+      The Company has its own dedicated bank account. Anchor Pro Solutions can sign checks and make transfers as part of running the business. However, any single check or transfer over $10,000 requires authorization from both members. This protects both parties from unauthorized large withdrawals.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">10.1</span> &nbsp;<strong>Company Bank Account.</strong> The Managing Member shall cause the Company to establish and maintain at least one dedicated business checking account in the name of Ironwood LLC at a federally insured financial institution. Company funds shall not be commingled with the personal funds of any Member or with the funds of any other entity. All revenues of the Company shall be deposited into a Company account, and all Company expenses shall be paid from a Company account.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">10.2</span> &nbsp;<strong>Signatory Authority.</strong> Anchor Pro Solutions, as Managing Member, shall be the primary authorized signatory on all Company bank accounts and shall have authority to sign checks, authorize wire transfers and ACH transactions, and otherwise conduct ordinary banking operations on behalf of the Company in the course of managing Company business.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">10.3</span> &nbsp;<strong>Dual Authorization for Large Transactions.</strong> Notwithstanding Section 10.2, any single check, wire transfer, ACH transaction, or other disbursement from any Company account in excess of Ten Thousand Dollars ($10,000.00) shall require the written authorization (including by email or through the Company's banking platform) of both Members prior to processing. The Managing Member shall not circumvent this requirement by breaking a single transaction into multiple transactions that individually fall below the threshold. Any attempt to do so shall constitute a material breach of this Agreement.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">10.4</span> &nbsp;<strong>Non-Managing Member Access.</strong> Landon Renovations shall be provided with view-only access to all Company bank accounts, sufficient to monitor account balances and transaction history in real time. The Managing Member shall set up such access within ten (10) business days of the Effective Date and shall maintain such access throughout the term of the Company.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">10.5</span> &nbsp;<strong>Credit Cards and Lines of Credit.</strong> The Managing Member may, in the ordinary course of business, obtain and use Company credit cards or lines of credit for Company expenses up to the limits established in the then-current annual budget approved by the Members. Any credit card or line of credit with a credit limit in excess of Ten Thousand Dollars ($10,000.00) shall require approval of both Members prior to application or activation.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE XI -->
+  <div class="article">
+    <div class="article-header">Article XI — Information Rights and Confidentiality<span>What information each member is entitled to and how to keep it confidential</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article XI</strong>
+      Both members have a right to know what is happening with the Company's business and finances. The managing member keeps both parties informed with regular reports. In return, both members agree not to share the Company's confidential business information with outsiders.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">11.1</span> &nbsp;<strong>Information Rights.</strong> In addition to the rights set forth in Section 9.4, each Member shall be entitled to receive:</p>
+      <ol class="alpha">
+        <li>Monthly profit and loss statements as provided in Section 9.5;</li>
+        <li>Annual financial statements as provided in Section 9.6;</li>
+        <li>Annual Schedule K-1s as provided in Section 9.7;</li>
+        <li>Project-level profit and loss statements within fifteen (15) business days of each project close;</li>
+        <li>Notice of any litigation, arbitration, administrative proceeding, or governmental investigation involving the Company within five (5) business days of the Managing Member becoming aware of such matter;</li>
+        <li>Notice of any default by the Company under any material contract or loan document within five (5) business days of the Managing Member becoming aware of such default; and</li>
+        <li>Such other information as either Member reasonably requests in connection with a legitimate business purpose related to the Company.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">11.2</span> &nbsp;<strong>Confidentiality.</strong> Each Member acknowledges that in connection with its Membership Interest and participation in the Company, it will have access to confidential and proprietary information of the Company, including without limitation deal terms, lender relationships, vendor pricing, financial projections, property acquisition strategies, and non-public financial data (<span class="def-term">"Confidential Information"</span>). Each Member agrees to:</p>
+      <ol class="alpha">
+        <li>Hold all Confidential Information in strict confidence;</li>
+        <li>Not disclose any Confidential Information to any third party without the prior written consent of the other Member, except to the Member's own legal counsel, accountants, or financial advisors who have a need to know and are bound by confidentiality obligations; and</li>
+        <li>Use Confidential Information solely for purposes directly related to the Member's Membership Interest in the Company.</li>
+      </ol>
+      <p>The confidentiality obligations of this Section 11.2 shall survive termination of a Member's Membership Interest and the dissolution of the Company for a period of three (3) years.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE XII -->
+  <div class="article">
+    <div class="article-header">Article XII — Transfer Restrictions and Right of First Refusal<span>What happens if a member wants to sell or transfer their ownership</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article XII</strong>
+      Neither member can sell or transfer their ownership stake without the other member's written permission. If a member does want to sell, they must first offer it to the other member at the same price and on the same terms. Death of a member is handled carefully — the interest passes to their estate, but heirs cannot manage the Company without the remaining member's consent. The Sarabias' marital status does not affect this.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">12.1</span> &nbsp;<strong>General Restriction on Transfer.</strong> No Member may Transfer all or any portion of its Membership Interest without the prior written consent of all other Members, which consent may be granted or withheld in each Member's sole and absolute discretion. Any purported Transfer of a Membership Interest in violation of this Article XII shall be null and void and of no force or effect, and the Company shall not record any such purported Transfer in the Company's membership register.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">12.2</span> &nbsp;<strong>Right of First Refusal.</strong> If any Member (the <span class="def-term">"Selling Member"</span>) receives a bona fide written offer from an unaffiliated third party (the <span class="def-term">"Third-Party Offer"</span>) to purchase all or a portion of such Member's Membership Interest, and the Selling Member desires to accept such offer, the Selling Member must first comply with the following right of first refusal procedure:</p>
+      <ol class="alpha">
+        <li><strong>Offer Notice.</strong> The Selling Member shall provide written notice (the <span class="def-term">"Offer Notice"</span>) to the other Member (the <span class="def-term">"Non-Selling Member"</span>) setting forth: (i) the identity of the proposed purchaser; (ii) the price and all material terms and conditions of the Third-Party Offer; (iii) the percentage of Membership Interest proposed to be transferred; and (iv) a copy of the Third-Party Offer.</li>
+        <li><strong>Election Period.</strong> The Non-Selling Member shall have thirty (30) calendar days following receipt of the Offer Notice (the <span class="def-term">"Election Period"</span>) to elect in writing to purchase the offered Membership Interest at the same price and on the same terms and conditions as the Third-Party Offer.</li>
+        <li><strong>Exercise of Right.</strong> If the Non-Selling Member elects to exercise its right of first refusal within the Election Period, the parties shall close the sale within sixty (60) days following the Non-Selling Member's election.</li>
+        <li><strong>Non-Exercise.</strong> If the Non-Selling Member does not exercise its right of first refusal within the Election Period, the Selling Member may sell its Membership Interest to the third-party purchaser identified in the Offer Notice at a price and on terms no more favorable to the third-party purchaser than those set forth in the Offer Notice, within ninety (90) days following the expiration of the Election Period. Any sale at a lower price or on more favorable terms to the purchaser shall require a new Offer Notice to the Non-Selling Member.</li>
+        <li><strong>Condition to Transfer.</strong> As a condition to any Transfer permitted under this Section 12.2, the transferee shall execute and deliver to the Company a joinder agreement in form and substance acceptable to the remaining Members, pursuant to which the transferee agrees to be bound by all terms and conditions of this Agreement.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">12.3</span> &nbsp;<strong>Death of a Member.</strong> Upon the death of a natural person who is a Member or the sole owner or controller of a Member entity, the deceased Member's Membership Interest shall transfer to and be held by the deceased Member's estate, trust, or other successor-in-interest as a matter of law. The following provisions shall apply:</p>
+      <ol class="alpha">
+        <li>The estate, trust, or successor-in-interest shall be admitted as an assignee of the deceased Member's economic rights (i.e., the right to receive distributions and allocations), but shall not be admitted as a substituted Member with management or voting rights without the written consent of the surviving Member;</li>
+        <li>The surviving Member shall have ninety (90) days following the date of death to elect to purchase the deceased Member's Membership Interest from the estate at fair market value as determined by a mutually agreed independent appraiser, or if the parties cannot agree on an appraiser within thirty (30) days, by an appraiser selected by the American Arbitration Association;</li>
+        <li>If the surviving Member does not elect to purchase the deceased Member's Membership Interest within ninety (90) days, the estate shall retain the economic rights associated with such interest but shall not acquire management or voting rights without the surviving Member's written consent; and</li>
+        <li>Any dispute regarding fair market value or the terms of a buyout following death shall be resolved pursuant to Article XIV.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">12.4</span> &nbsp;<strong>Marital Status of Landon Renovations Members.</strong> As provided in Section 4.3, the Membership Interest held by Landon Renovations is owned by Landon Renovations as an entity. The marital relationship between Jeff Sarabia and Jordan Sarabia is an internal matter of Landon Renovations. A divorce, legal separation, dissolution of marriage, or any division of marital property between Jeff Sarabia and Jordan Sarabia shall not constitute a Transfer of the Membership Interest held by Landon Renovations and shall not trigger the right of first refusal provisions of Section 12.2 or any buyout obligation by the Company or Anchor Pro Solutions. The Company and Anchor Pro Solutions shall have no obligation to recognize or accommodate any court order dividing Landon Renovations' Membership Interest between the Sarabias as individuals, and any such division shall be treated as an internal matter of Landon Renovations to be resolved by that entity.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">12.5</span> &nbsp;<strong>Involuntary Transfer.</strong> In the event of any involuntary Transfer, including any Transfer resulting from bankruptcy, insolvency, attachment, levy, or operation of law (other than death), the Company shall have the option, exercisable within sixty (60) days of learning of such involuntary Transfer, to purchase the affected Membership Interest at its fair market value as determined pursuant to Section 12.3(b). The non-affected Member shall also have the right to purchase such Membership Interest on the same terms. If neither the Company nor the non-affected Member exercises the purchase option, the involuntary transferee shall be admitted only as an assignee of economic rights.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE XIII -->
+  <div class="article">
+    <div class="article-header">Article XIII — Indemnification and Liability<span>When the Company protects the managing member, and when it does not</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article XIII</strong>
+      If Anchor Pro Solutions does something on behalf of the Company in good faith and within its authority, the Company will cover any resulting legal costs or damages. But if Anchor Pro acts dishonestly, recklessly, or outside its authority, it is on its own. Members are not personally liable for Company debts beyond their capital contributions.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">13.1</span> &nbsp;<strong>Indemnification of Managing Member.</strong> The Company shall indemnify, defend, and hold harmless the Managing Member (Anchor Pro Solutions) and its members, managers, officers, employees, and agents (collectively, the <span class="def-term">"Covered Persons"</span>) from and against any and all claims, demands, liabilities, damages, losses, costs, and expenses (including reasonable attorneys' fees) arising out of or in connection with any action taken or omitted to be taken by a Covered Person on behalf of or for the benefit of the Company, provided that:</p>
+      <ol class="alpha">
+        <li>The Covered Person acted in good faith and in a manner it reasonably believed to be in the best interests of the Company;</li>
+        <li>The Covered Person's conduct did not constitute gross negligence, fraud, willful misconduct, or a material breach of this Agreement; and</li>
+        <li>The action or omission was within the scope of the Managing Member's authority as set forth in this Agreement.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">13.2</span> &nbsp;<strong>No Indemnification for Misconduct.</strong> Notwithstanding Section 13.1, the Company shall have no obligation to indemnify any Covered Person for:</p>
+      <ol class="alpha">
+        <li>Any act or omission constituting gross negligence, fraud, willful misconduct, or knowing violation of law;</li>
+        <li>Any breach of this Agreement or any fiduciary duty owed to the Company or its Members;</li>
+        <li>Any transaction from which the Covered Person derived an improper personal benefit; or</li>
+        <li>Any act or omission taken outside the scope of the Managing Member's authority under this Agreement.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">13.3</span> &nbsp;<strong>Indemnification of Non-Managing Member.</strong> The Company shall indemnify, defend, and hold harmless the Non-Managing Member (Landon Renovations) from and against any claims, damages, or liabilities arising out of or in connection with its status as a Member, provided that Landon Renovations acted in good faith and within the scope of its rights as a Non-Managing Member, and did not take any action purporting to bind the Company without authority.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">13.4</span> &nbsp;<strong>Limitation of Liability.</strong> No Member shall be personally liable for any debt, obligation, or liability of the Company solely by reason of being a Member or participating in the management of the Company. Each Member's liability shall be limited to its Capital Contribution and its obligation to return distributions improperly received pursuant to applicable law. Nothing in this Section 13.4 shall limit the liability of any Member for its own gross negligence, fraud, willful misconduct, or breach of this Agreement.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">13.5</span> &nbsp;<strong>Insurance.</strong> The Managing Member is authorized to obtain, on behalf of the Company, such general liability insurance, errors and omissions insurance, property insurance, and other insurance coverage as the Managing Member deems reasonable and appropriate for the protection of the Company and its Members. All insurance premiums shall be a Company expense.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">13.6</span> &nbsp;<strong>Advances.</strong> Reasonable expenses incurred by a Covered Person in connection with any proceeding for which indemnification may be available under Section 13.1 may be advanced by the Company prior to the final disposition of such proceeding, provided that the Covered Person provides a written undertaking to repay such advances if it is ultimately determined that the Covered Person is not entitled to indemnification.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE XIV -->
+  <div class="article">
+    <div class="article-header">Article XIV — Dispute Resolution<span>What happens when the members disagree and cannot resolve it themselves</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article XIV</strong>
+      If the members have a disagreement, the first step is to try to work it out directly within 30 days. If that doesn't work, they go to a neutral mediator and split the cost. If mediation fails, the dispute goes to binding arbitration in Georgia under AAA rules — meaning a private arbitrator makes the final decision, not a judge. The loser only pays the winner's attorney fees if they were acting in bad faith.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">14.1</span> &nbsp;<strong>Good Faith Negotiation.</strong> In the event of any dispute, controversy, or claim arising out of or relating to this Agreement, the business of the Company, or the rights or obligations of any Member (a <span class="def-term">"Dispute"</span>), the Members shall first attempt in good faith to resolve such Dispute by direct negotiation. Either Member may initiate the negotiation process by delivering a written notice to the other Member (the <span class="def-term">"Dispute Notice"</span>) describing the Dispute in reasonable detail. The Members shall meet (in person, by telephone, or by videoconference) within ten (10) business days of delivery of the Dispute Notice and shall negotiate in good faith for a period of thirty (30) calendar days from the date of the Dispute Notice (the <span class="def-term">"Negotiation Period"</span>) to resolve the Dispute.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">14.2</span> &nbsp;<strong>Mediation.</strong> If the Members are unable to resolve the Dispute during the Negotiation Period, either Member may submit the Dispute to non-binding mediation by delivering written notice to the other Member. The mediation shall be conducted by a single neutral mediator mutually agreed upon by the Members within fifteen (15) days after the end of the Negotiation Period. If the Members cannot agree on a mediator within such fifteen (15) day period, either Member may request that the American Arbitration Association (the <span class="def-term">"AAA"</span>) appoint a mediator in accordance with its then-current mediation procedures. The costs of mediation, including the mediator's fees, shall be split equally between the Members. Each Member shall bear its own attorneys' fees and costs in connection with mediation, unless otherwise agreed. The mediation shall be conducted in Georgia. If the Dispute is not resolved within sixty (60) days after the commencement of mediation (or such longer period as the Members may agree), either Member may proceed to arbitration under Section 14.3.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">14.3</span> &nbsp;<strong>Binding Arbitration.</strong> If the Dispute is not resolved through negotiation or mediation, the Dispute shall be finally resolved by binding arbitration administered by the AAA under its then-current Commercial Arbitration Rules. The arbitration shall be:</p>
+      <ol class="alpha">
+        <li>Conducted by a single arbitrator mutually agreed upon by the Members or, if the Members cannot agree within fifteen (15) days, selected by the AAA;</li>
+        <li>Held in Georgia (the specific location to be determined by the arbitrator or as agreed by the Members);</li>
+        <li>Governed by the substantive laws of the State of Georgia, without regard to its choice-of-law rules;</li>
+        <li>Conducted on a confidential basis; and</li>
+        <li>Concluded within one hundred eighty (180) days of the filing of the demand for arbitration, subject to extensions as reasonably required by the arbitrator.</li>
+      </ol>
+      <p>The arbitrator's award shall be final, binding, and non-appealable except as provided by applicable law, and may be entered as a judgment in any court of competent jurisdiction.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">14.4</span> &nbsp;<strong>Attorneys' Fees.</strong> Each Member shall bear its own attorneys' fees and costs in any arbitration proceeding, except that if the arbitrator finds that a Member pursued the Dispute, or defended against the Dispute, in bad faith, the arbitrator may award the prevailing party its reasonable attorneys' fees and costs against the bad-faith party.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">14.5</span> &nbsp;<strong>Emergency Relief.</strong> Notwithstanding the foregoing, nothing in this Article XIV shall prevent either Member from seeking temporary restraining orders, preliminary injunctions, or other emergency relief from a court of competent jurisdiction to prevent irreparable harm pending resolution of a Dispute through the procedures described in this Article XIV. The Members consent to the exclusive jurisdiction of the state and federal courts located in Georgia for purposes of any such emergency relief.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">14.6</span> &nbsp;<strong>Governing Law.</strong> This Agreement shall be governed by and construed in accordance with the laws of the State of Delaware with respect to corporate and LLC formation and governance matters, and the laws of the State of Georgia with respect to all other matters, including without limitation the conduct of the Company's business, real property transactions, and dispute resolution. To the extent there is a conflict, the Delaware Act shall govern LLC-specific matters and Georgia law shall govern operational and contractual matters.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE XV -->
+  <div class="article">
+    <div class="article-header">Article XV — Dissolution and Winding Up<span>What it takes to close the Company and how assets are distributed when it ends</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article XV</strong>
+      Closing the Company (dissolution) requires both members to agree in writing. It also happens automatically if the Company has been completely inactive — no projects, no assets — for 12 straight months. When the Company winds down, debts get paid first, then each member gets back their capital contribution, and then any leftover assets are split 50/50.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">15.1</span> &nbsp;<strong>Events of Dissolution.</strong> The Company shall be dissolved and its affairs wound up only upon the occurrence of any of the following events:</p>
+      <ol class="alpha">
+        <li>Unanimous written consent of all Members to dissolve the Company; or</li>
+        <li>The Company has had no active projects, no contractual obligations, and no assets (other than a de minimis cash balance of less than five hundred dollars ($500.00)) for a period of twelve (12) consecutive calendar months, and neither Member has initiated a new project or made a written proposal to do so during such period.</li>
+      </ol>
+      <p>Dissolution shall not occur upon the death, bankruptcy, or withdrawal of a Member; in such events, the provisions of Sections 12.3 and 12.5 shall apply, and the Company shall continue in existence unless the Members unanimously elect to dissolve.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">15.2</span> &nbsp;<strong>Winding Up.</strong> Upon dissolution of the Company, the Managing Member (or, if the Managing Member is unavailable or has been removed, a liquidating trustee appointed by Unanimous Consent) shall wind up the Company's affairs. The winding up shall include:</p>
+      <ol class="alpha">
+        <li>Completing any ongoing projects to the extent commercially reasonable;</li>
+        <li>Selling or otherwise disposing of the Company's remaining assets at fair market value;</li>
+        <li>Paying or making provision for all known and reasonably anticipated Company debts, liabilities, and obligations, including any contractual obligations and tax liabilities; and</li>
+        <li>Distributing the remaining assets in the order specified in Section 15.3.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">15.3</span> &nbsp;<strong>Distribution on Liquidation.</strong> After paying or providing for all Company obligations, the remaining assets of the Company shall be distributed in the following order:</p>
+      <ol class="roman">
+        <li><strong>First:</strong> to pay all outstanding debts, liabilities, and obligations of the Company (including any outstanding fees owed to Members under Article VIII that have been earned but not yet paid);</li>
+        <li><strong>Second:</strong> to each Member in an amount equal to the positive balance of such Member's Capital Account, pro-rata if assets are insufficient to pay all positive Capital Account balances in full; and</li>
+        <li><strong>Third:</strong> any remaining assets, after the distributions described in clauses (i) and (ii) above, shall be distributed fifty percent (50%) to Anchor Pro Solutions and fifty percent (50%) to Landon Renovations.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">15.4</span> &nbsp;<strong>Articles of Cancellation.</strong> Upon completion of the winding up of the Company, the Managing Member or liquidating trustee shall file a Certificate of Cancellation with the Delaware Secretary of State and any required notices or filings with the State of Georgia or other jurisdictions in which the Company is qualified to do business.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">15.5</span> &nbsp;<strong>No Dissolution by Court Order.</strong> No Member shall seek judicial dissolution of the Company except pursuant to the Act and only upon grounds recognized by the Act, and only after the dispute resolution procedures of Article XIV have been fully exhausted without resolution.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE XVI -->
+  <div class="article">
+    <div class="article-header">Article XVI — Subsidiary Businesses<span>Rules for forming spin-off companies under the Ironwood umbrella</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article XVI</strong>
+      The Company can create or invest in subsidiary businesses — like a dumpster rental service, cleaning company, or lawn care business — but only if both members agree in writing first. Unless a separate written agreement says otherwise, each subsidiary follows the same 50/50 ownership split and the same marketing fee structure as the main Company.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">16.1</span> &nbsp;<strong>Authority to Form Subsidiaries.</strong> By Unanimous Consent, the Company may form, organize, acquire an interest in, or contribute capital to one or more subsidiary entities, whether organized as limited liability companies, corporations, partnerships, or otherwise, for the purpose of conducting ancillary or complementary businesses, including without limitation:</p>
+      <ol class="alpha">
+        <li>Dumpster rental and debris hauling services;</li>
+        <li>Residential and commercial cleaning services;</li>
+        <li>Lawn care and landscaping services;</li>
+        <li>Property management services; and</li>
+        <li>Any other business that is ancillary to or synergistic with the Company's primary renovation and real estate business.</li>
+      </ol>
+    </div>
+    <div class="section">
+      <p><span class="section-num">16.2</span> &nbsp;<strong>Subsidiary Governance.</strong> Each subsidiary formed or acquired by the Company shall be governed by its own operating agreement, articles of organization, or similar governing document. Unless otherwise agreed in a separate written instrument executed by all Members, the governing documents of each subsidiary shall reflect the same fifty percent (50%) / fifty percent (50%) ownership structure and the same marketing and operations fee structure as described in Article VIII of this Agreement, appropriately adapted for the subsidiary's business.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">16.3</span> &nbsp;<strong>Shared Marketing and Operations.</strong> Subsidiary businesses formed by the Company shall share the marketing and operational infrastructure provided by Jordan Sarabia and Ty Jackson as described in Section 8.3, unless a separate written agreement provides otherwise. Jordan Sarabia and Ty Jackson shall each be entitled to a marketing and operations fee on subsidiary revenues consistent with the fee structure in Section 8.3, unless the Members agree in writing to a different fee structure for a specific subsidiary.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">16.4</span> &nbsp;<strong>No Commingling.</strong> Subsidiary business revenues, expenses, and assets shall be maintained in separate books of account and, where applicable, separate bank accounts from the Company's real estate renovation and investment activities. The Managing Member shall maintain clear and complete records reflecting the financial performance of each subsidiary.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">16.5</span> &nbsp;<strong>Separate Agreements Required.</strong> Any subsidiary formed or acquired by the Company shall be the subject of a separate written agreement signed by all Members specifying, at a minimum: the purpose and business of the subsidiary, the capital contributions to be made by each Member to the subsidiary, the ownership percentages, the management structure, and the fee and compensation arrangements applicable to the subsidiary. No subsidiary shall be formed or operated in a manner that circumvents the economic arrangement set forth in this Agreement.</p>
+    </div>
+  </div>
+
+  <!-- ARTICLE XVII -->
+  <div class="article">
+    <div class="article-header">Article XVII — Miscellaneous Provisions<span>Additional legal requirements and standard contract terms</span></div>
+    <div class="plain-box">
+      <strong>Plain Language Summary — Article XVII</strong>
+      This article covers administrative and legal housekeeping items: how to send official notices, what happens if part of this agreement is found to be unenforceable, the fact that this document is the entire agreement between the parties, and other standard legal provisions.
+    </div>
+
+    <div class="section">
+      <p><span class="section-num">17.1</span> &nbsp;<strong>Notices.</strong> All notices, demands, requests, and other communications required or permitted under this Agreement shall be in writing and shall be deemed properly given when: (a) delivered personally; (b) sent by nationally recognized overnight courier with tracking and confirmation; (c) sent by certified mail, return receipt requested, postage prepaid; or (d) sent by email with written acknowledgment of receipt by the receiving party (which acknowledgment may be by email reply). Notices shall be addressed to the Managing Member at its principal business address on file with the Company, and to the Non-Managing Member at the address of Landon Renovations on file with the Company. Either Member may change its notice address upon written notice to all other Members.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">17.2</span> &nbsp;<strong>Amendments.</strong> This Agreement may be amended, modified, or supplemented only by a written instrument executed by all Members. No oral modification of this Agreement shall be effective. Any amendment shall specify the effective date of the amendment and shall be attached to and made part of this Agreement.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">17.3</span> &nbsp;<strong>Entire Agreement.</strong> This Agreement, together with any exhibits, schedules, and addenda attached hereto (including the Deal #1 labor credit addendum referenced in Section 6.1(b) when executed), constitutes the entire agreement among the Members with respect to the subject matter hereof and supersedes all prior agreements, understandings, negotiations, and representations, whether oral or written, relating to the Company or the Members' relationship with the Company.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">17.4</span> &nbsp;<strong>Severability.</strong> If any provision of this Agreement is held by a court of competent jurisdiction or an arbitrator to be invalid, illegal, or unenforceable under applicable law, such provision shall be deemed modified to the minimum extent necessary to make it valid, legal, and enforceable, and the remaining provisions of this Agreement shall continue in full force and effect. The Members agree that, in such event, they will negotiate in good faith to replace the invalid provision with a valid provision that, to the greatest extent possible, achieves the same economic and legal effect as the original provision.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">17.5</span> &nbsp;<strong>Waiver.</strong> No waiver by any Member of any breach or default of any provision of this Agreement shall be deemed a waiver of any subsequent breach or default. No waiver shall be effective unless in writing and signed by the Member granting the waiver.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">17.6</span> &nbsp;<strong>Counterparts.</strong> This Agreement may be executed in one or more counterparts, each of which shall be deemed an original, and all of which together shall constitute one and the same instrument. Electronic signatures (including signatures transmitted by PDF, DocuSign, or similar electronic signature platform) shall be deemed original signatures for all purposes.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">17.7</span> &nbsp;<strong>Headings.</strong> The article and section headings in this Agreement are for convenience of reference only and shall not affect the interpretation of this Agreement.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">17.8</span> &nbsp;<strong>Construction.</strong> This Agreement shall be construed without regard to any presumption or rule requiring construction against the party causing this Agreement to be drafted. The Members acknowledge that they have had the opportunity to consult with legal counsel of their own choosing in connection with the negotiation and execution of this Agreement.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">17.9</span> &nbsp;<strong>No Third-Party Beneficiaries.</strong> This Agreement is for the sole and exclusive benefit of the Members and their permitted successors and assigns. Nothing in this Agreement, express or implied, is intended to confer upon any other Person any rights, remedies, obligations, or liabilities.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">17.10</span> &nbsp;<strong>Further Assurances.</strong> Each Member agrees to execute and deliver such additional documents, instruments, and agreements, and to take such further actions, as may be reasonably necessary or appropriate to carry out the purposes and intent of this Agreement.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">17.11</span> &nbsp;<strong>Force Majeure.</strong> No Member shall be in default under this Agreement for any delay or failure to perform any obligation (other than the payment of money already owed) where such delay or failure arises from causes beyond such Member's reasonable control, including without limitation acts of God, war, terrorism, pandemic, government-mandated shutdowns, or natural disasters. The Member claiming force majeure shall provide prompt written notice and shall use commercially reasonable efforts to resume performance as soon as practicable.</p>
+    </div>
+    <div class="section">
+      <p><span class="section-num">17.12</span> &nbsp;<strong>Survival.</strong> The provisions of Article VII (Allocations), Article VIII (Compensation) with respect to earned but unpaid amounts, Article IX (Books and Records) for the applicable record retention period, Article XI (Confidentiality), Article XIII (Indemnification), Article XIV (Dispute Resolution), and this Article XVII (Miscellaneous) shall survive the termination, dissolution, or winding up of the Company to the extent necessary to give full effect to their respective provisions.</p>
+    </div>
+  </div>
+
+  <!-- SIGNATURE PAGE -->
+  <div class="sig-page">
+    <div class="sig-page-title">Signature Page</div>
+    <div class="sig-page-sub">
+      IN WITNESS WHEREOF, the undersigned Members have executed this Limited Liability Company Operating Agreement of Ironwood LLC as of the date first set forth above.
+    </div>
+
+    <!-- ANCHOR PRO -->
+    <div class="sig-block">
+      <div class="sig-block-title">Managing Member — Anchor Pro Solutions</div>
+      <div class="sig-line-wrap">
+        <div class="sig-field">
+          <div class="sig-line"></div>
+          <div class="sig-label-below">Signature</div>
+          <label>Authorized Representative of Anchor Pro Solutions</label>
+        </div>
+        <div class="sig-field">
+          <div class="sig-line"></div>
+          <div class="sig-label-below">Printed Name</div>
+          <label>&nbsp;</label>
+        </div>
+      </div>
+      <div class="sig-line-wrap">
+        <div class="sig-field">
+          <div class="sig-line"></div>
+          <div class="sig-label-below">Title</div>
+          <label>Managing Member / Authorized Signatory</label>
+        </div>
+        <div class="sig-field">
+          <div class="sig-line"></div>
+          <div class="sig-label-below">Date</div>
+          <label>&nbsp;</label>
+        </div>
+      </div>
+      <div class="notary-block">
+        <strong>Notary Acknowledgment — Anchor Pro Solutions</strong>
+        State of &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;
+        County of &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br><br>
+        On this &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; day of &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;, 20<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;,
+        before me, a Notary Public, personally appeared &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;,
+        known to me (or proved to me on the basis of satisfactory evidence) to be the person whose name is subscribed to the within instrument
+        and acknowledged to me that he/she executed the same in his/her authorized capacity, and that by his/her signature on the instrument the person,
+        or the entity upon behalf of which the person acted, executed the instrument.<br><br>
+        Notary Public Signature: &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        &nbsp;&nbsp;&nbsp; Commission Expires: &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </div>
+    </div>
+
+    <!-- LANDON / JEFF -->
+    <div class="sig-block">
+      <div class="sig-block-title">Non-Managing Member — Landon Renovations / Jeff Sarabia</div>
+      <div class="sig-line-wrap">
+        <div class="sig-field">
+          <div class="sig-line"></div>
+          <div class="sig-label-below">Signature</div>
+          <label>Jeff Sarabia, on behalf of Landon Renovations</label>
+        </div>
+        <div class="sig-field">
+          <div class="sig-line"></div>
+          <div class="sig-label-below">Printed Name: Jeff Sarabia</div>
+          <label>&nbsp;</label>
+        </div>
+      </div>
+      <div class="sig-line-wrap">
+        <div class="sig-field">
+          <div class="sig-line"></div>
+          <div class="sig-label-below">Date</div>
+          <label>&nbsp;</label>
+        </div>
+        <div class="sig-field">&nbsp;</div>
+      </div>
+      <div class="notary-block">
+        <strong>Notary Acknowledgment — Jeff Sarabia</strong>
+        State of &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;
+        County of &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br><br>
+        On this &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; day of &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;, 20<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;,
+        before me, a Notary Public, personally appeared Jeff Sarabia,
+        known to me (or proved to me on the basis of satisfactory evidence) to be the person whose name is subscribed to the within instrument
+        and acknowledged to me that he executed the same in his authorized capacity on behalf of Landon Renovations.<br><br>
+        Notary Public Signature: &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        &nbsp;&nbsp;&nbsp; Commission Expires: &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </div>
+    </div>
+
+    <!-- LANDON / JORDAN -->
+    <div class="sig-block">
+      <div class="sig-block-title">Non-Managing Member — Landon Renovations / Jordan Sarabia</div>
+      <div class="sig-line-wrap">
+        <div class="sig-field">
+          <div class="sig-line"></div>
+          <div class="sig-label-below">Signature</div>
+          <label>Jordan Sarabia, on behalf of Landon Renovations</label>
+        </div>
+        <div class="sig-field">
+          <div class="sig-line"></div>
+          <div class="sig-label-below">Printed Name: Jordan Sarabia</div>
+          <label>&nbsp;</label>
+        </div>
+      </div>
+      <div class="sig-line-wrap">
+        <div class="sig-field">
+          <div class="sig-line"></div>
+          <div class="sig-label-below">Date</div>
+          <label>&nbsp;</label>
+        </div>
+        <div class="sig-field">&nbsp;</div>
+      </div>
+      <div class="notary-block">
+        <strong>Notary Acknowledgment — Jordan Sarabia</strong>
+        State of &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;&nbsp;
+        County of &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><br><br>
+        On this &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp; day of &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;, 20<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>&nbsp;,
+        before me, a Notary Public, personally appeared Jordan Sarabia,
+        known to me (or proved to me on the basis of satisfactory evidence) to be the person whose name is subscribed to the within instrument
+        and acknowledged to me that she executed the same in her authorized capacity on behalf of Landon Renovations.<br><br>
+        Notary Public Signature: &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+        &nbsp;&nbsp;&nbsp; Commission Expires: &nbsp;<span class="notary-line">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+      </div>
+    </div>
+
+  </div><!-- /sig-page -->
+
+  <!-- DOCUMENT FOOTER -->
+  <div class="doc-footer">
+    <span>Ironwood LLC Operating Agreement — Confidential</span>
+    <span>Delaware LLC · Principal Operations: Georgia</span>
+    <span>Effective: [EFFECTIVE DATE]</span>
+  </div>
+
+</div><!-- /document -->
+</div><!-- /page-wrapper -->
+
+</body>
+</html>

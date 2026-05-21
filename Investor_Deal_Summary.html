@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Investor Deal Summary — Anchor Pro Solutions</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: Arial, sans-serif;
+  background: #0a0a0a;
+  color: #fff;
+  min-height: 100vh;
+  padding: 24px 16px 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* ── EDIT MODE HEADER ── */
+.edit-bar {
+  width: 100%; max-width: 860px;
+  background: #111111;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.edit-bar .edit-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #b8b0a0; }
+
+.btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+.btn {
+  padding: 8px 18px; border-radius: 6px; border: none; cursor: pointer;
+  font-size: 11px; font-weight: bold; letter-spacing: 1px;
+  text-transform: uppercase; font-family: Arial; transition: opacity .2s;
+}
+.btn:hover { opacity: .85; }
+.btn-preview { background: #c9a84c; color: #fff; }
+.btn-print   { background: #2a2a2a; color: #f5f0e8; border: 1px solid #c9a84c; }
+.btn-save    { background: #5a8a5a; color: #0a0a0a; }
+.btn-new     { background: #c9843a; color: #0a0a0a; }
+
+/* ── FORM CARD ── */
+.form-card {
+  width: 100%; max-width: 860px;
+  background: #111111;
+  border: 1px solid #2a2a2a;
+  border-radius: 10px;
+  padding: 22px 26px;
+  margin-bottom: 16px;
+}
+
+.form-card-title {
+  font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
+  color: #b8b0a0; margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 14px; }
+.form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.field { display: flex; flex-direction: column; gap: 5px; }
+.field label { font-size: 10px; color: #b8b0a0; text-transform: uppercase; letter-spacing: .5px; }
+.field input, .field select, .field textarea {
+  background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 6px;
+  color: #fff; padding: 8px 10px; font-size: 13px; font-family: Arial;
+}
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #c9a84c; }
+.field select option { background: #0a0a0a; }
+.field textarea { resize: vertical; min-height: 70px; }
+.field.full { grid-column: 1 / -1; }
+
+/* ── PREVIEW / PRINT DOCUMENT ── */
+#preview-wrap {
+  width: 100%; max-width: 860px;
+  display: none;
+}
+
+#preview-wrap.visible { display: block; }
+
+.doc {
+  background: #0a0a0a;
+  color: #f5f0e8;
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: Georgia, serif;
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+/* Cover strip */
+.doc-cover {
+  background: linear-gradient(160deg, #0a0a0a 0%, #1a1410 60%, #2a1f0a 100%);
+  padding: 36px 44px 28px;
+  color: #fff;
+}
+
+.doc-cover .co-label {
+  font-size: 9px; letter-spacing: 5px; text-transform: uppercase;
+  color: #f5f0e8; font-family: Arial; margin-bottom: 6px;
+}
+
+.doc-cover h1 { font-size: 26px; font-weight: bold; margin-bottom: 6px; }
+.doc-cover .co-sub { font-size: 13px; color: #b8b0a0; font-family: Arial; }
+
+.doc-cover .co-meta {
+  margin-top: 22px;
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 16px;
+}
+
+.co-stat { text-align: center; }
+.co-stat .cs-num { font-size: 22px; font-weight: bold; color: #5a8a5a; font-family: Arial; }
+.co-stat .cs-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #b8b0a0; font-family: Arial; }
+
+/* Body */
+.doc-body { padding: 32px 44px; }
+
+.doc-section { margin-bottom: 26px; }
+
+.doc-section h2 {
+  font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+  color: #c9a84c; font-family: Arial; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 2px solid #c9a84c;
+}
+
+/* Two column */
+.doc-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.doc-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+.stat-box {
+  background: #1a1a1a;
+  border-left: 3px solid #c9a84c;
+  border-radius: 0 6px 6px 0;
+  padding: 12px 14px;
+}
+.stat-box .sb-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #6b6560; font-family: Arial; margin-bottom: 4px; }
+.stat-box .sb-val { font-size: 18px; font-weight: bold; color: #f5f0e8; font-family: Arial; }
+.stat-box .sb-sub { font-size: 10px; color: #6b6560; font-family: Arial; margin-top: 2px; }
+
+.stat-box.green { border-left-color: #5a8a5a; }
+.stat-box.green .sb-val { color: #5a8a5a; }
+.stat-box.blue { border-left-color: #c9a84c; }
+
+.doc-table { width: 100%; border-collapse: collapse; font-family: Arial; font-size: 12px; margin-top: 6px; }
+.doc-table th { background: #0a0a0a; color: #fff; padding: 8px 10px; text-align: left; font-size: 10px; letter-spacing: .5px; }
+.doc-table td { padding: 8px 10px; border-bottom: 1px solid #2a2a2a; color: #b8b0a0; }
+.doc-table tr:nth-child(even) td { background: #1a1a1a; }
+.doc-table td.val { font-weight: bold; color: #e8c97a; }
+
+.formula-block {
+  background: #080808;
+  color: #b8b0a0;
+  font-family: 'Courier New', monospace;
+  font-size: 11px;
+  padding: 16px 18px;
+  border-radius: 6px;
+  line-height: 2;
+}
+.formula-block .f-sep { display: block; border-top: 1px solid #2a2a2a; margin: 4px 0; }
+.formula-block .f-result { color: #5a8a5a; font-weight: bold; }
+.formula-block .f-label { color: #b8b0a0; }
+
+.return-box {
+  background: #0a0a0a;
+  color: #fff;
+  border-radius: 8px;
+  padding: 20px 24px;
+  text-align: center;
+}
+.return-box .rb-num { font-size: 36px; font-weight: bold; color: #5a8a5a; font-family: Arial; }
+.return-box .rb-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #b8b0a0; font-family: Arial; margin-top: 4px; }
+
+.risk-table { width: 100%; border-collapse: collapse; font-family: Arial; font-size: 11px; }
+.risk-table td { padding: 7px 10px; border-bottom: 1px solid #2a2a2a; }
+.risk-table td:first-child { font-weight: bold; color: #f5f0e8; width: 40%; }
+.risk-ok { color: #5a8a5a; font-weight: bold; }
+.risk-caution { color: #c9843a; font-weight: bold; }
+
+.disclaimer {
+  font-size: 9px; color: #6b6560; font-family: Arial;
+  border-top: 1px solid #2a2a2a; padding-top: 12px; margin-top: 10px;
+  line-height: 1.5;
+}
+
+.sig-block {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;
+}
+.sig-line { border-bottom: 1px solid #6b6560; height: 40px; margin-bottom: 6px; }
+.sig-name { font-size: 11px; font-weight: bold; color: #f5f0e8; font-family: Arial; }
+.sig-title { font-size: 9px; color: #888; font-family: Arial; text-transform: uppercase; letter-spacing: 1px; }
+
+/* ── PRINT ── */
+@media print {
+  body { background: #0a0a0a; padding: 0; }
+  .edit-bar, .form-card, .btn-row { display: none !important; }
+  #preview-wrap { display: block !important; max-width: 100%; }
+  .doc { border-radius: 0; }
+  @page { margin: 0; size: letter; }
+}
+</style>
+</head>
+<body>
+
+<!-- EDIT BAR -->
+<div class="edit-bar">
+  <div>
+    <div class="edit-label">Anchor Pro Solutions</div>
+    <div style="font-size:15px; font-weight:bold; margin-top:2px;">Investor Deal Summary Builder</div>
+  </div>
+  <div class="btn-row">
+    <button class="btn btn-new" onclick="newDeal()">New Deal</button>
+    <button class="btn btn-save" onclick="saveDeal()">Save JSON</button>
+    <button class="btn btn-preview" onclick="togglePreview()">Preview / Edit</button>
+    <button class="btn btn-print" onclick="window.print()">Print / PDF</button>
+  </div>
+</div>
+
+<!-- INPUT FORM -->
+<div id="form-wrap">
+
+  <!-- Deal Info -->
+  <div class="form-card">
+    <div class="form-card-title">Deal Information</div>
+    <div class="form-grid">
+      <div class="field full"><label>Property Address</label><input id="f-address" type="text" placeholder="123 Main St, Macon, GA 31201"/></div>
+      <div class="field"><label>Property Type</label>
+        <select id="f-type">
+          <option>Single Family</option>
+          <option>Duplex</option>
+          <option>Triplex</option>
+          <option>Quadplex</option>
+          <option>Mixed Use</option>
+        </select>
+      </div>
+      <div class="field"><label>Deal #</label><input id="f-deal-num" type="text" placeholder="Deal #1"/></div>
+      <div class="field"><label>Date Prepared</label><input id="f-date" type="date"/></div>
+      <div class="field"><label>Prepared By</label><input id="f-preparer" type="text" placeholder="Anchor Pro Solutions"/></div>
+    </div>
+  </div>
+
+  <!-- The Numbers -->
+  <div class="form-card">
+    <div class="form-card-title">The Numbers</div>
+    <div class="form-grid">
+      <div class="field"><label>Purchase Price ($)</label><input id="f-purchase" type="number" placeholder="75000" oninput="autoCalc()"/></div>
+      <div class="field"><label>Rehab Budget ($)</label><input id="f-rehab" type="number" placeholder="28000" oninput="autoCalc()"/></div>
+      <div class="field"><label>Closing + Carrying Costs ($)</label><input id="f-costs" type="number" placeholder="5000" oninput="autoCalc()"/></div>
+      <div class="field"><label>After Repair Value — ARV ($)</label><input id="f-arv" type="number" placeholder="155000" oninput="autoCalc()"/></div>
+      <div class="field"><label>Refinance Loan Amount ($)</label><input id="f-refi" type="number" placeholder="116250" oninput="autoCalc()"/></div>
+      <div class="field"><label>Monthly Rent (Gross)</label><input id="f-rent" type="number" placeholder="1200" oninput="autoCalc()"/></div>
+      <div class="field"><label>Monthly Loan Payment (PITI)</label><input id="f-piti" type="number" placeholder="850" oninput="autoCalc()"/></div>
+      <div class="field"><label>Estimated Rehab Timeline</label><input id="f-timeline" type="text" placeholder="60–90 days"/></div>
+    </div>
+  </div>
+
+  <!-- Investor Terms -->
+  <div class="form-card">
+    <div class="form-card-title">Investor Offer</div>
+    <div class="form-grid">
+      <div class="field"><label>Amount Requested from Investor ($)</label><input id="f-inv-amount" type="number" placeholder="30000" oninput="autoCalc()"/></div>
+      <div class="field"><label>Investor Return Rate (%)</label><input id="f-inv-rate" type="number" placeholder="9" oninput="autoCalc()"/></div>
+      <div class="field"><label>Loan Term (months)</label><input id="f-inv-term" type="number" placeholder="14" oninput="autoCalc()"/></div>
+      <div class="field"><label>Repayment Source</label>
+        <select id="f-inv-repay">
+          <option>Cash-Out Refinance</option>
+          <option>Sale of Property</option>
+          <option>Both (Refi or Sale)</option>
+        </select>
+      </div>
+      <div class="field"><label>Security</label>
+        <select id="f-inv-security">
+          <option>Deed of Trust (Property)</option>
+          <option>Personal Guarantee</option>
+          <option>Both</option>
+          <option>Promissory Note</option>
+        </select>
+      </div>
+      <div class="field"><label>Payment Structure</label>
+        <select id="f-inv-payment">
+          <option>Interest paid at maturity (balloon)</option>
+          <option>Monthly interest payments</option>
+          <option>Quarterly interest payments</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Deal Narrative -->
+  <div class="form-card">
+    <div class="form-card-title">Deal Narrative & Value Add</div>
+    <div class="form-grid">
+      <div class="field full"><label>Why This Deal (2–3 sentences)</label>
+        <textarea id="f-why" placeholder="Distressed property in a strong rental corridor. Acquired at 68% of ARV. Landon Renovations will execute the full rehab in-house within 75 days, forcing $60K in equity at a fraction of market labor cost."></textarea>
+      </div>
+      <div class="field full"><label>Rehab Scope Summary</label>
+        <textarea id="f-scope" placeholder="Full kitchen renovation, master bath update, new HVAC, roof repair, LVP flooring throughout, interior/exterior paint. Landon Renovations manages all trades."></textarea>
+      </div>
+      <div class="field full"><label>Exit Strategy</label>
+        <textarea id="f-exit" placeholder="BRRRR — refinance at ARV after 6-month seasoning period. Investor repaid in full at closing of refinance. Property retained as a long-term rental generating $275/mo net cash flow."></textarea>
+      </div>
+      <div class="field"><label>Market / Area Notes</label>
+        <textarea id="f-market" placeholder="Macon, GA — strong rental demand, vacancy rate under 6%, comparable rents at $1,150–$1,300/mo for this bedroom count."></textarea>
+      </div>
+      <div class="field"><label>Worst Case Scenario</label>
+        <textarea id="f-risk" placeholder="If refinance is delayed, property generates $275/mo cash flow to service carrying costs. Property can be sold at ARV to repay investor in full if needed."></textarea>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /form-wrap -->
+
+<!-- PREVIEW DOCUMENT -->
+<div id="preview-wrap">
+  <div class="doc" id="doc-output">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<script>
+let showingPreview = false;
+
+function fmt(n) {
+  if (!n || isNaN(n)) return '$0';
+  return '$' + Number(n).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+}
+function pct(n) { return (parseFloat(n)||0).toFixed(1)+'%'; }
+function num(id) { return parseFloat(document.getElementById(id)?.value)||0; }
+function val(id) { return document.getElementById(id)?.value||''; }
+
+function autoCalc() {
+  // auto-suggest refi if ARV entered
+  const arv = num('f-arv');
+  const refiEl = document.getElementById('f-refi');
+  if (arv > 0 && !refiEl.value) refiEl.placeholder = Math.round(arv*0.75).toLocaleString();
+}
+
+function getCalcs() {
+  const purchase  = num('f-purchase');
+  const rehab     = num('f-rehab');
+  const costs     = num('f-costs');
+  const arv       = num('f-arv');
+  const refi      = num('f-refi') || arv*0.75;
+  const rent      = num('f-rent');
+  const piti      = num('f-piti');
+  const invAmt    = num('f-inv-amount');
+  const invRate   = num('f-inv-rate');
+  const invTerm   = num('f-inv-term');
+
+  const totalIn   = purchase + rehab + costs;
+  const cashOut   = refi - totalIn;
+  const equity    = arv - refi;
+  const ratio     = totalIn / arv;
+
+  const vacancy   = rent * 0.08;
+  const repairs   = rent * 0.07;
+  const expenses  = 200;
+  const noi       = rent - vacancy - repairs - expenses;
+  const cashFlow  = noi - piti;
+
+  const invReturn = invAmt * (invRate/100) * (invTerm/12);
+  const invTotal  = invAmt + invReturn;
+
+  return { purchase, rehab, costs, arv, refi, rent, piti,
+           totalIn, cashOut, equity, ratio,
+           cashFlow, invAmt, invRate, invTerm, invReturn, invTotal };
+}
+
+function buildDoc() {
+  const c = getCalcs();
+  const address   = val('f-address')   || '[Property Address]';
+  const propType  = val('f-type')      || 'Single Family';
+  const dealNum   = val('f-deal-num')  || 'Deal #1';
+  const dateStr   = val('f-date')      ? new Date(val('f-date')).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+  const preparer  = val('f-preparer')  || 'Anchor Pro Solutions';
+  const timeline  = val('f-timeline')  || '60–90 days';
+  const repay     = val('f-inv-repay') || 'Cash-Out Refinance';
+  const security  = val('f-inv-security') || 'Deed of Trust';
+  const payment   = val('f-inv-payment')  || 'Interest paid at maturity';
+  const why       = val('f-why')    || '—';
+  const scope     = val('f-scope')  || '—';
+  const exit      = val('f-exit')   || '—';
+  const market    = val('f-market') || '—';
+  const risk      = val('f-risk')   || '—';
+
+  const ratioOk   = c.ratio <= 0.75;
+  const cfOk      = c.cashFlow >= 150;
+  const coOk      = c.cashOut >= 0;
+
+  return `
+  <div class="doc-cover">
+    <div class="co-label">Anchor Pro Solutions — Private Investment Opportunity</div>
+    <h1>${dealNum} — ${propType}</h1>
+    <div class="co-sub">${address}</div>
+    <div class="co-meta">
+      <div class="co-stat">
+        <div class="cs-num">${fmt(c.invAmt)}</div>
+        <div class="cs-label">Requested</div>
+      </div>
+      <div class="co-stat">
+        <div class="cs-num">${pct(c.invRate)}</div>
+        <div class="cs-label">Annual Return</div>
+      </div>
+      <div class="co-stat">
+        <div class="cs-num">${c.invTerm} Mo</div>
+        <div class="cs-label">Term</div>
+      </div>
+      <div class="co-stat">
+        <div class="cs-num">${fmt(c.invReturn)}</div>
+        <div class="cs-label">Total Return</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-body">
+
+    <!-- THE OPPORTUNITY -->
+    <div class="doc-section">
+      <h2>The Opportunity</h2>
+      <p>${why}</p>
+    </div>
+
+    <!-- KEY METRICS -->
+    <div class="doc-section">
+      <h2>Key Deal Metrics</h2>
+      <div class="doc-3col">
+        <div class="stat-box">
+          <div class="sb-label">Purchase Price</div>
+          <div class="sb-val">${fmt(c.purchase)}</div>
+        </div>
+        <div class="stat-box">
+          <div class="sb-label">Rehab Budget</div>
+          <div class="sb-val">${fmt(c.rehab)}</div>
+          <div class="sb-sub">In-house — Landon Renovations</div>
+        </div>
+        <div class="stat-box">
+          <div class="sb-label">Total Capital In</div>
+          <div class="sb-val">${fmt(c.totalIn)}</div>
+        </div>
+        <div class="stat-box blue">
+          <div class="sb-label">After Repair Value (ARV)</div>
+          <div class="sb-val">${fmt(c.arv)}</div>
+        </div>
+        <div class="stat-box ${coOk?'green':''}">
+          <div class="sb-label">Cash Out at Refi</div>
+          <div class="sb-val">${fmt(c.cashOut)}</div>
+          <div class="sb-sub">${coOk?'Capital recycled to next deal':'Equity held in property'}</div>
+        </div>
+        <div class="stat-box green">
+          <div class="sb-label">Equity Built</div>
+          <div class="sb-val">${fmt(c.equity)}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FORMULA TRACE -->
+    <div class="doc-section">
+      <h2>Deal Math — Full Breakdown</h2>
+      <div class="formula-block">
+<span class="f-label">Purchase Price              </span>${fmt(c.purchase)}
+<span class="f-label">+ Rehab Budget              </span>${fmt(c.rehab)}
+<span class="f-label">+ Closing / Carrying Costs  </span>${fmt(c.costs)}
+<span class="f-sep"></span>
+<span class="f-label">Total Capital Invested      </span>${fmt(c.totalIn)}
+<span class="f-label">All-In Cost / ARV Ratio     </span>${(c.ratio*100).toFixed(1)}% ${ratioOk?'✓ Within 75% Rule':'⚠ Above 75% Rule'}
+<span class="f-sep"></span>
+<span class="f-label">Refinance Loan (75% LTV)    </span>${fmt(c.refi)}
+<span class="f-label">− Total Capital Invested     </span>− ${fmt(c.totalIn)}
+<span class="f-result">Cash Returned at Refi       ${fmt(c.cashOut)}</span>
+<span class="f-sep"></span>
+<span class="f-label">Gross Monthly Rent          </span>${fmt(c.rent)}
+<span class="f-label">− Vacancy Reserve (8%)      </span>− ${fmt(c.rent*0.08)}
+<span class="f-label">− Repairs Reserve (7%)      </span>− ${fmt(c.rent*0.07)}
+<span class="f-label">− Insurance / Taxes (est.)  </span>− $200
+<span class="f-label">− Loan Payment (PITI)       </span>− ${fmt(c.piti)}
+<span class="f-result">Net Monthly Cash Flow       ${fmt(c.cashFlow)} ${cfOk?'✓':'⚠'}</span>
+      </div>
+    </div>
+
+    <!-- INVESTOR TERMS -->
+    <div class="doc-section">
+      <h2>Your Investment — Terms & Return</h2>
+      <div class="doc-2col">
+        <div>
+          <table class="doc-table">
+            <tr><td>Amount</td><td class="val">${fmt(c.invAmt)}</td></tr>
+            <tr><td>Annual Return</td><td class="val">${pct(c.invRate)}</td></tr>
+            <tr><td>Term</td><td class="val">${c.invTerm} months</td></tr>
+            <tr><td>Payment Structure</td><td class="val">${payment}</td></tr>
+            <tr><td>Repayment Source</td><td class="val">${repay}</td></tr>
+            <tr><td>Security</td><td class="val">${security}</td></tr>
+            <tr><td>Total Interest Earned</td><td class="val" style="color:#5a8a5a;">${fmt(c.invReturn)}</td></tr>
+            <tr><td>Total Returned to Investor</td><td class="val" style="color:#5a8a5a; font-size:15px;">${fmt(c.invTotal)}</td></tr>
+          </table>
+        </div>
+        <div class="return-box">
+          <div class="rb-num">${fmt(c.invReturn)}</div>
+          <div class="rb-label">Total Return on ${fmt(c.invAmt)}</div>
+          <div style="margin-top:16px; font-size:11px; color:#b8b0a0; font-family:Arial;">
+            ${pct(c.invRate)} annualized · ${c.invTerm}-month term<br/>
+            Repaid via: ${repay}<br/>
+            Secured by: ${security}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SCOPE & TIMELINE -->
+    <div class="doc-section">
+      <h2>Rehab Scope & Timeline</h2>
+      <div class="doc-2col">
+        <div>
+          <p style="color:#b8b0a0;">${scope}</p>
+        </div>
+        <div>
+          <table class="doc-table">
+            <tr><td>General Contractor</td><td class="val">Landon Renovations</td></tr>
+            <tr><td>Rehab Timeline</td><td class="val">${timeline}</td></tr>
+            <tr><td>Tenant Placement</td><td class="val">Jordan Sarabia — Marketing & Business Operations</td></tr>
+            <tr><td>Financing Lead</td><td class="val">Anchor Pro Solutions</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARKET -->
+    <div class="doc-section">
+      <h2>Market Analysis</h2>
+      <p style="color:#b8b0a0;">${market}</p>
+    </div>
+
+    <!-- EXIT -->
+    <div class="doc-section">
+      <h2>Exit Strategy</h2>
+      <p style="color:#b8b0a0;">${exit}</p>
+    </div>
+
+    <!-- RISK -->
+    <div class="doc-section">
+      <h2>Risk & Worst Case</h2>
+      <table class="risk-table">
+        <tr><td>Vacancy Risk</td><td class="risk-ok">Mitigated — Jordan Sarabia's tenant screening + 8% vacancy reserve built into underwriting</td></tr>
+        <tr><td>Rehab Cost Overrun</td><td class="risk-ok">Mitigated — Jeff's in-house construction + 15% contingency buffer in budget</td></tr>
+        <tr><td>Refinance Delay</td><td class="risk-caution">Low risk — property cash flows ${fmt(c.cashFlow)}/mo while waiting</td></tr>
+        <tr><td>Market Value Decline</td><td class="risk-ok">Low risk — acquired at ${(c.ratio*100).toFixed(0)}% of ARV, significant equity cushion</td></tr>
+        <tr><td>Worst Case</td><td>${risk}</td></tr>
+      </table>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="doc-section">
+      <h2>About the Partnership</h2>
+      <table class="doc-table">
+        <tr><td>Business Development & Finance</td><td class="val">Anchor Pro Solutions</td></tr>
+        <tr><td>Construction & Project Execution</td><td class="val">Landon Renovations</td></tr>
+        <tr><td>Marketing, Business Operations & Tenant Acquisition</td><td class="val">Jordan Sarabia</td></tr>
+        <tr><td>Strategy</td><td class="val">BRRRR — Buy, Rehab, Rent, Refinance, Repeat</td></tr>
+        <tr><td>Target Portfolio</td><td class="val">$1M+ · 10+ doors · 18-month horizon</td></tr>
+      </table>
+    </div>
+
+    <!-- SIGNATURE -->
+    <div class="doc-section">
+      <h2>Acknowledgment of Interest</h2>
+      <p style="color:#b8b0a0; font-size:12px; margin-bottom:16px;">To express interest in this investment opportunity, please sign below and return this page. A formal promissory note and investment agreement will be provided upon confirmation.</p>
+      <div class="sig-block">
+        <div>
+          <div class="sig-line"></div>
+          <div class="sig-name">Investor Signature</div>
+          <div class="sig-title">Date: _______________</div>
+        </div>
+        <div>
+          <div class="sig-line"></div>
+          <div class="sig-name">Anchor Pro Solutions</div>
+          <div class="sig-title">Managing Partner · Date: _______________</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="disclaimer">
+      This document is a private investment summary prepared by Anchor Pro Solutions for informational purposes only. It does not constitute a securities offering, legal advice, or a guarantee of returns. All projections are estimates based on current market data and are subject to change. Past performance is not indicative of future results. Investors should consult their own financial and legal advisors before making any investment decision. Prepared by ${preparer} · ${dateStr}
+    </div>
+
+  </div>
+  `;
+}
+
+function togglePreview() {
+  showingPreview = !showingPreview;
+  document.getElementById('form-wrap').style.display = showingPreview ? 'none' : 'block';
+  const pw = document.getElementById('preview-wrap');
+  pw.className = showingPreview ? 'visible' : '';
+  if (showingPreview) {
+    document.getElementById('doc-output').innerHTML = buildDoc();
+  }
+  document.querySelector('.btn-preview').textContent = showingPreview ? 'Back to Edit' : 'Preview / Edit';
+}
+
+function saveDeal() {
+  const data = {
+    address: val('f-address'), type: val('f-type'), dealNum: val('f-deal-num'),
+    date: val('f-date'), preparer: val('f-preparer'),
+    purchase: val('f-purchase'), rehab: val('f-rehab'), costs: val('f-costs'),
+    arv: val('f-arv'), refi: val('f-refi'), rent: val('f-rent'), piti: val('f-piti'),
+    timeline: val('f-timeline'), invAmount: val('f-inv-amount'), invRate: val('f-inv-rate'),
+    invTerm: val('f-inv-term'), invRepay: val('f-inv-repay'), invSecurity: val('f-inv-security'),
+    invPayment: val('f-inv-payment'), why: val('f-why'), scope: val('f-scope'),
+    exit: val('f-exit'), market: val('f-market'), risk: val('f-risk'),
+    savedAt: new Date().toISOString()
+  };
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `AnchorPro_InvestorDeal_${(val('f-address')||'deal').replace(/[^a-z0-9]/gi,'_')}.json`;
+  a.click();
+}
+
+function newDeal() {
+  if (!confirm('Clear this deal and start a new one?')) return;
+  document.querySelectorAll('input,textarea').forEach(el => el.value = '');
+  document.getElementById('f-preparer').value = 'Anchor Pro Solutions';
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+  if (showingPreview) togglePreview();
+}
+
+// Set today's date
+document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+document.getElementById('f-preparer').value = 'Anchor Pro Solutions';
+
+// Drag drop load
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => {
+  e.preventDefault();
+  const file = e.dataTransfer.files[0];
+  if (!file || !file.name.endsWith('.json')) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const d = JSON.parse(ev.target.result);
+      Object.entries(d).forEach(([k,v]) => {
+        const map = {
+          address:'f-address', type:'f-type', dealNum:'f-deal-num', date:'f-date',
+          preparer:'f-preparer', purchase:'f-purchase', rehab:'f-rehab', costs:'f-costs',
+          arv:'f-arv', refi:'f-refi', rent:'f-rent', piti:'f-piti', timeline:'f-timeline',
+          invAmount:'f-inv-amount', invRate:'f-inv-rate', invTerm:'f-inv-term',
+          invRepay:'f-inv-repay', invSecurity:'f-inv-security', invPayment:'f-inv-payment',
+          why:'f-why', scope:'f-scope', exit:'f-exit', market:'f-market', risk:'f-risk'
+        };
+        if (map[k] && document.getElementById(map[k])) document.getElementById(map[k]).value = v;
+      });
+    } catch { alert('Could not load file.'); }
+  };
+  reader.readAsText(file);
+});
+</script>
+</body>
+</html>

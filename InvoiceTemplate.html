@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood Renovations — Invoice</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:    #0a0a0a;
+    --cream:  #f5f0e8;
+    --gold:   #c9a84c;
+    --border: #d0c8b8;
+    --muted:  #777;
+    --light:  #faf7f2;
+  }
+
+  body {
+    background: #e8e4dc;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 13px;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .toolbar-brand { font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--gold); }
+  .toolbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+  .btn { border: none; cursor: pointer; padding: 7px 16px; border-radius: 4px; font-size: 12px; font-weight: 600; }
+  .btn-gold { background: var(--gold); color: var(--ink); }
+  .btn-outline { background: transparent; border: 1px solid #555; color: var(--cream); }
+  .btn-green { background: #2e7d32; color: #fff; }
+  @media print { .toolbar { display: none !important; } }
+
+  /* ── PAGE ── */
+  .page-wrap {
+    max-width: 820px;
+    margin: 28px auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0,0,0,.12);
+    padding: 56px 64px;
+  }
+  @media print {
+    body { background: #fff; }
+    .page-wrap { margin: 0; box-shadow: none; border: none; padding: 44px 52px; max-width: 100%; }
+  }
+
+  /* ── HEADER ── */
+  .inv-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 32px;
+    gap: 20px;
+  }
+  .brand-block .brand-name {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .brand-block .brand-sub {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-top: 3px;
+    line-height: 1.6;
+  }
+  .inv-badge {
+    text-align: right;
+  }
+  .inv-badge .inv-label {
+    font-size: 28px;
+    font-weight: 900;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .inv-badge .inv-num {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+  .inv-badge .inv-type-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    border-radius: 3px;
+    margin-top: 8px;
+  }
+  .badge-deposit { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+  .badge-progress { background: #cfe2ff; color: #084298; border: 1px solid #0d6efd; }
+  .badge-final    { background: #d1e7dd; color: #0a3622; border: 1px solid #198754; }
+
+  /* ── GOLD DIVIDER ── */
+  .gold-bar {
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin: 8px 0 28px;
+  }
+
+  /* ── BILL TO / INFO ── */
+  .bill-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .bill-box { }
+  .bill-title {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+    margin-bottom: 8px;
+  }
+  .fill-line {
+    border: none;
+    border-bottom: 1px solid #ccc;
+    width: 100%;
+    height: 22px;
+    margin-bottom: 6px;
+    background: transparent;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 12px;
+    color: var(--ink);
+    outline: none;
+  }
+  .fill-line::placeholder { color: #bbb; }
+
+  /* ── LINE ITEMS ── */
+  .line-items-section { margin-bottom: 0; }
+  .li-header {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr;
+    gap: 0;
+    background: var(--ink);
+    color: var(--cream);
+    padding: 8px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+  }
+  .li-header span:not(:first-child) { text-align: right; }
+
+  .li-row {
+    display: grid;
+    grid-template-columns: 3fr 1fr 1fr 1fr;
+    gap: 0;
+    padding: 7px 12px;
+    border-bottom: 1px solid var(--border);
+    align-items: center;
+    font-size: 12px;
+  }
+  .li-row:nth-child(even) { background: var(--light); }
+  .li-row input { border: none; background: transparent; font-size: 12px; color: var(--ink); outline: none; font-family: 'Segoe UI', sans-serif; }
+  .li-row input.num { text-align: right; width: 100%; }
+  .li-row .amt-cell { text-align: right; font-weight: 600; }
+  .li-row .del-btn {
+    background: none; border: none; cursor: pointer; color: #c0392b;
+    font-size: 14px; padding: 0 4px; display: none;
+  }
+
+  /* ── TOTALS ── */
+  .totals-section {
+    display: grid;
+    grid-template-columns: 1fr 200px;
+    gap: 24px;
+    margin-top: 0;
+    border-top: 2px solid var(--ink);
+    padding-top: 12px;
+    align-items: start;
+  }
+  .totals-notes { }
+  .totals-notes textarea {
+    width: 100%;
+    height: 70px;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 11px;
+    color: var(--ink);
+    resize: none;
+    background: var(--light);
+    outline: none;
+  }
+  .totals-box { }
+  .totals-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 12px;
+    border-bottom: 1px solid #eee;
+    gap: 12px;
+  }
+  .totals-row label { color: var(--muted); font-size: 11px; }
+  .totals-row.grand {
+    border-top: 2px solid var(--ink);
+    border-bottom: none;
+    margin-top: 4px;
+    padding-top: 8px;
+    font-size: 16px;
+    font-weight: 900;
+  }
+  .totals-row.due-today {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 10px 8px;
+    margin-top: 8px;
+    border-radius: 4px;
+  }
+  .totals-row.due-today label { color: #aaa; }
+
+  /* ── PAYMENT INFO ── */
+  .payment-box {
+    margin-top: 24px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--gold);
+    padding: 14px 18px;
+    font-size: 11px;
+    line-height: 1.8;
+  }
+  .payment-box strong { font-size: 10px; text-transform: uppercase; letter-spacing: .07em; display: block; margin-bottom: 4px; }
+
+  /* ── FOOTER ── */
+  .inv-footer {
+    margin-top: 28px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 10px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: .03em;
+    line-height: 1.7;
+  }
+
+  @media print {
+    .fill-line { border-bottom: 1px solid #888; }
+    .li-row .del-btn { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="toolbar-brand">Ironwood Renovations — Invoice Builder</span>
+  <div class="toolbar-actions">
+    <select id="invTypeSel" style="padding:6px 10px;border-radius:4px;border:1px solid #555;background:#1a1a1a;color:var(--cream);font-size:12px;" onchange="setInvType(this.value)">
+      <option value="deposit">Deposit Invoice</option>
+      <option value="progress">Progress Invoice</option>
+      <option value="final">Final Invoice</option>
+    </select>
+    <button class="btn btn-gold" onclick="addLineItem()">+ Add Line</button>
+    <button class="btn btn-green" onclick="saveInvoice()">Save</button>
+    <button class="btn btn-outline" onclick="window.print()">Print / PDF</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <div class="inv-header">
+    <div class="brand-block">
+      <div class="brand-name">Ironwood Renovations</div>
+      <div class="brand-sub">Licensed Contractor · Georgia</div>
+    </div>
+    <div class="inv-badge">
+      <div class="inv-label">Invoice</div>
+      <div class="inv-num">No. <strong id="invNum">INV-1001</strong></div>
+      <div><span id="invTypeBadge" class="inv-type-badge badge-deposit">Deposit</span></div>
+    </div>
+  </div>
+  <div class="gold-bar"></div>
+
+  <!-- BILL TO / DETAILS -->
+  <div class="bill-row">
+    <div class="bill-box">
+      <div class="bill-title">Bill To</div>
+      <input class="fill-line" id="clientName" placeholder="Client Full Name"/>
+      <input class="fill-line" id="clientAddr" placeholder="Property / Billing Address"/>
+      <input class="fill-line" id="clientCity" placeholder="City, State, ZIP"/>
+      <input class="fill-line" id="clientEmail" placeholder="Email Address"/>
+      <input class="fill-line" id="clientPhone" placeholder="Phone Number"/>
+    </div>
+    <div class="bill-box">
+      <div class="bill-title">Invoice Details</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:11px;margin-bottom:6px;">
+        <div>
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Invoice Date</div>
+          <input class="fill-line" id="invDate" placeholder="MM/DD/YYYY"/>
+        </div>
+        <div>
+          <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Due Date</div>
+          <input class="fill-line" id="dueDate" placeholder="MM/DD/YYYY"/>
+        </div>
+      </div>
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;">Related Agreement / SOW #</div>
+      <input class="fill-line" id="relatedDoc" placeholder="CSA-_____ / SOW-_____"/>
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px;margin-top:6px;">Job / Property Reference</div>
+      <input class="fill-line" id="jobRef" placeholder="e.g. 123 Main St Renovation"/>
+    </div>
+  </div>
+
+  <!-- LINE ITEMS -->
+  <div class="line-items-section">
+    <div class="li-header">
+      <span>Description</span>
+      <span>Qty</span>
+      <span>Unit Price</span>
+      <span>Amount</span>
+    </div>
+    <div id="lineItemsBody"></div>
+  </div>
+
+  <!-- TOTALS -->
+  <div class="totals-section">
+    <div class="totals-notes">
+      <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Notes / Message to Client</div>
+      <textarea id="invNotes" placeholder="e.g. Thank you for choosing Ironwood Renovations! Deposit secures your project start date."></textarea>
+    </div>
+    <div class="totals-box">
+      <div class="totals-row">
+        <label>Subtotal</label>
+        <span id="dispSubtotal">$0.00</span>
+      </div>
+      <div class="totals-row">
+        <label>Tax (if applicable)</label>
+        <span><input id="taxAmt" type="number" step="0.01" placeholder="0.00" style="width:70px;text-align:right;border:none;border-bottom:1px solid #ccc;font-size:12px;outline:none;background:transparent;" oninput="calcTotals()"/></span>
+      </div>
+      <div class="totals-row">
+        <label>Credits / Discounts</label>
+        <span><input id="creditAmt" type="number" step="0.01" placeholder="0.00" style="width:70px;text-align:right;border:none;border-bottom:1px solid #ccc;font-size:12px;outline:none;background:transparent;" oninput="calcTotals()"/></span>
+      </div>
+      <div class="totals-row grand">
+        <label>Total</label>
+        <span id="dispTotal">$0.00</span>
+      </div>
+      <div class="totals-row due-today">
+        <label>Amount Due</label>
+        <strong id="dispDue">$0.00</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAYMENT INFO -->
+  <div class="payment-box">
+    <strong>Payment Instructions</strong>
+    Make checks payable to: <strong>Ironwood LLC</strong><br/>
+    ACH / Zelle: tysellshomes96@gmail.com<br/>
+    <em>Cash is not accepted. All payments must be traceable for legal and tax purposes.</em><br/>
+    Questions? Contact us directly. Reference Invoice No. <span id="invNumRef">INV-1001</span>.
+  </div>
+
+  <div class="inv-footer">
+    Ironwood LLC dba Ironwood Renovations · Georgia<br/>
+    All work covered by written agreement and signed scope<br/>
+    This invoice is valid for 30 days from invoice date
+  </div>
+
+</div>
+
+<script>
+  let lineItems = [];
+  let invType = 'deposit';
+  let invCounter = parseInt(localStorage.getItem('ironwood_inv_counter') || '1000');
+
+  const BADGE = {
+    deposit:  { label: 'Deposit Invoice', cls: 'badge-deposit' },
+    progress: { label: 'Progress Invoice', cls: 'badge-progress' },
+    final:    { label: 'Final Invoice',    cls: 'badge-final'   },
+  };
+
+  function setInvType(t) {
+    invType = t;
+    const b = document.getElementById('invTypeBadge');
+    b.textContent = BADGE[t].label;
+    b.className = 'inv-type-badge ' + BADGE[t].cls;
+  }
+
+  function fmt(n) {
+    return '$' + Math.max(0, n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  }
+
+  function uid() { return Math.random().toString(36).slice(2,9); }
+
+  function addLineItem(desc='', qty=1, unit=0) {
+    const id = uid();
+    lineItems.push({ id, desc, qty, unit });
+    renderLineItems();
+    calcTotals();
+  }
+
+  function renderLineItems() {
+    const body = document.getElementById('lineItemsBody');
+    if (lineItems.length === 0) {
+      body.innerHTML = `<div style="padding:16px 12px;color:#bbb;font-size:12px;text-align:center;border-bottom:1px solid var(--border);">No line items — click "+ Add Line" to begin</div>`;
+      return;
+    }
+    body.innerHTML = lineItems.map((li, i) => `
+      <div class="li-row" id="lr-${li.id}">
+        <input placeholder="Description of work or material" value="${li.desc}" oninput="updateLi('${li.id}','desc',this.value)" style="width:100%;"/>
+        <input class="num" type="number" step="1" placeholder="1" value="${li.qty}" oninput="updateLi('${li.id}','qty',this.value);calcTotals()" style="width:100%;"/>
+        <input class="num" type="number" step="0.01" placeholder="0.00" value="${li.unit > 0 ? li.unit : ''}" oninput="updateLi('${li.id}','unit',this.value);calcTotals()" style="width:100%;"/>
+        <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;">
+          <span class="amt-cell" id="amt-${li.id}">${fmt(li.qty * li.unit)}</span>
+          <button class="del-btn" style="display:block;" onclick="removeLi('${li.id}')">×</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function updateLi(id, field, val) {
+    const li = lineItems.find(l => l.id === id);
+    if (!li) return;
+    if (field === 'qty' || field === 'unit') li[field] = parseFloat(val) || 0;
+    else li[field] = val;
+    const amt = (li.qty || 0) * (li.unit || 0);
+    const el = document.getElementById('amt-' + id);
+    if (el) el.textContent = fmt(amt);
+  }
+
+  function removeLi(id) {
+    lineItems = lineItems.filter(l => l.id !== id);
+    renderLineItems();
+    calcTotals();
+  }
+
+  function calcTotals() {
+    const sub = lineItems.reduce((s,li) => s + (li.qty||0)*(li.unit||0), 0);
+    const tax  = parseFloat(document.getElementById('taxAmt').value) || 0;
+    const cred = parseFloat(document.getElementById('creditAmt').value) || 0;
+    const total = sub + tax - cred;
+    document.getElementById('dispSubtotal').textContent = fmt(sub);
+    document.getElementById('dispTotal').textContent    = fmt(total);
+    document.getElementById('dispDue').textContent      = fmt(total);
+  }
+
+  function saveInvoice() {
+    const saved = { invType, lineItems, invNum: document.getElementById('invNum').textContent };
+    localStorage.setItem('ironwood_inv_last', JSON.stringify(saved));
+    alert('Invoice saved to browser storage.');
+  }
+
+  // Init
+  (function() {
+    const today = new Date();
+    const mo = String(today.getMonth()+1).padStart(2,'0');
+    const dy = String(today.getDate()).padStart(2,'0');
+    const yr = today.getFullYear();
+    document.getElementById('invDate').value = `${mo}/${dy}/${yr}`;
+
+    const due = new Date(today.getTime() + 3*24*60*60*1000);
+    document.getElementById('dueDate').value =
+      `${String(due.getMonth()+1).padStart(2,'0')}/${String(due.getDate()).padStart(2,'0')}/${due.getFullYear()}`;
+
+    invCounter++;
+    localStorage.setItem('ironwood_inv_counter', invCounter);
+    const numStr = 'INV-' + invCounter;
+    document.getElementById('invNum').textContent = numStr;
+    document.getElementById('invNumRef').textContent = numStr;
+
+    // seed one blank line item
+    addLineItem();
+  })();
+</script>
+
+</body>
+</html>

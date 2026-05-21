@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Anchor Pro — Business Credit Tracker</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --gold: #c9a84c; --cream: #f5f0e8;
+    --muted: #888; --success: #27ae60; --danger: #c0392b; --warn: #e67e22;
+  }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+
+  .topbar { background: linear-gradient(135deg,#1a1a1a,#0a0a0a); border-bottom: 1px solid var(--gold); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top:0; z-index:100; }
+  .topbar-brand { display: flex; align-items: center; gap: 12px; }
+  .topbar-logo { width: 36px; height: 36px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
+  .topbar-title { font-size: 16px; font-weight: 700; }
+  .topbar-sub { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+
+  .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
+  .btn:hover { opacity: .85; }
+  .btn-gold { background: var(--gold); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 24px 20px; }
+
+  /* ── SUMMARY CARDS ── */
+  .summary-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(170px,1fr)); gap: 14px; margin-bottom: 28px; }
+  .sc { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .sc.accent { border-color: var(--gold); }
+  .sc .sc-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .sc .sc-value { font-size: 22px; font-weight: 700; }
+  .sc .sc-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+  .gold { color: var(--gold); } .success { color: var(--success); } .warn-c { color: var(--warn); } .danger-c { color: var(--danger); }
+
+  /* ── SCORE PANEL ── */
+  .score-panel { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 28px; }
+  .score-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; text-align: center; }
+  .score-card h3 { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .score-num { font-size: 40px; font-weight: 900; margin-bottom: 4px; }
+  .score-label { font-size: 11px; color: var(--muted); margin-bottom: 12px; }
+  .score-bar-wrap { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .score-bar { height: 100%; border-radius: 4px; transition: width .4s; }
+  .score-input-row { display: flex; align-items: center; gap: 8px; margin-top: 12px; justify-content: center; }
+  .score-input-row input { background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 6px 10px; font-size: 14px; font-weight: 700; width: 90px; text-align: center; }
+  .score-input-row input:focus { outline: 1px solid var(--gold); }
+  .score-input-row label { font-size: 11px; color: var(--muted); }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab { padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; background: var(--surface); border: 1px solid var(--border); color: var(--muted); transition: all .15s; }
+  .tab.active { background: var(--gold); color: #0a0a0a; border-color: var(--gold); }
+  .tab:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+
+  /* ── TABLE ── */
+  .table-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
+  .table-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .table-header h3 { font-size: 13px; color: var(--gold); font-weight: 700; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th { background: var(--surface2); padding: 9px 14px; text-align: left; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .8px; border-bottom: 1px solid var(--border); }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td { padding: 10px 14px; vertical-align: middle; font-size: 13px; }
+  .editable { background: transparent; border: none; color: var(--cream); font-size: 13px; font-family: inherit; width: 100%; padding: 3px 6px; border-radius: 4px; }
+  .editable:focus { outline: 1px solid var(--gold); background: var(--surface2); }
+
+  .status-pill { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; cursor: pointer; border: none; }
+  .pill-active   { background: #1a2a1a; color: #5cb85c; }
+  .pill-applied  { background: #2a2a10; color: #c9a84c; }
+  .pill-pending  { background: #2a1a10; color: #e67e22; }
+  .pill-closed   { background: #2a1a1a; color: #c0392b; }
+  .pill-target   { background: #1a1a2a; color: #64b5f6; }
+
+  .reports-badge { display: inline-flex; gap: 4px; flex-wrap: wrap; }
+  .rb { display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 9px; font-weight: 700; }
+  .rb-dnb  { background: #1a1a2a; color: #64b5f6; }
+  .rb-exp  { background: #2a1a2a; color: #ce93d8; }
+  .rb-eq   { background: #1a2a2a; color: #4db6ac; }
+  .rb-nav  { background: #1a1a1a; color: #666; }
+
+  .del-btn { background: none; border: none; cursor: pointer; color: #444; font-size: 16px; padding: 2px 6px; border-radius: 4px; }
+  .del-btn:hover { color: var(--danger); }
+
+  .add-row-form { display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end; padding: 12px 14px; background: var(--surface2); border-top: 1px solid var(--border); }
+  .add-row-form .af { display: flex; flex-direction: column; gap: 3px; }
+  .add-row-form label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .add-row-form input, .add-row-form select { background: var(--surface); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 6px 9px; font-size: 12px; }
+  .add-row-form input:focus, .add-row-form select:focus { outline: 1px solid var(--gold); }
+
+  /* ── ROADMAP ── */
+  .roadmap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; }
+  .roadmap h3 { font-size: 12px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 16px; }
+  .rm-phase { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .rm-phase:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+  .rm-phase-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .rm-badge { padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; }
+  .rm-badge-1 { background: #1a2a1a; color: #5cb85c; }
+  .rm-badge-2 { background: #2a2a10; color: #c9a84c; }
+  .rm-badge-3 { background: #1a1a2a; color: #64b5f6; }
+  .rm-phase-title { font-size: 13px; font-weight: 700; color: var(--cream); }
+  .rm-items { display: flex; flex-wrap: wrap; gap: 6px; }
+  .rm-item { padding: 4px 10px; border-radius: 6px; font-size: 11px; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); cursor: pointer; transition: all .15s; }
+  .rm-item.done { background: #1a2a1a; border-color: #2a4a2a; color: #5cb85c; }
+  .rm-item.done::before { content: '✓ '; }
+
+  .empty-state { text-align: center; padding: 30px; color: var(--muted); font-size: 13px; }
+  .app-footer { text-align: center; padding: 20px; color: var(--muted); font-size: 11px; border-top: 1px solid var(--border); margin-top: 10px; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">C</div>
+    <div>
+      <div class="topbar-title">Business Credit Tracker</div>
+      <div class="topbar-sub">Anchor Pro Solutions × Landon Renovations</div>
+    </div>
+  </div>
+  <div style="display:flex; gap:8px;">
+    <button class="btn btn-outline btn-sm" onclick="loadFromFile()">&#8599; Import</button>
+    <button class="btn btn-outline btn-sm" onclick="exportJSON()">&#8595; Export</button>
+    <button class="btn btn-gold btn-sm" onclick="saveData()">&#10003; Save</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- SCORE PANEL -->
+  <div class="score-panel">
+    <div class="score-card">
+      <h3>Dun &amp; Bradstreet (PAYDEX)</h3>
+      <div class="score-num" id="dnbScore" style="color:var(--gold);">—</div>
+      <div class="score-label">Score range: 1–100 · Target: 80+</div>
+      <div class="score-bar-wrap"><div class="score-bar" id="dnbBar" style="background:var(--gold);width:0%;"></div></div>
+      <div class="score-input-row">
+        <label>Current:</label>
+        <input type="number" id="dnbInput" placeholder="—" min="1" max="100" oninput="updateScores()"/>
+      </div>
+    </div>
+    <div class="score-card">
+      <h3>Experian Business</h3>
+      <div class="score-num" id="expScore" style="color:#ce93d8;">—</div>
+      <div class="score-label">Score range: 1–100 · Target: 75+</div>
+      <div class="score-bar-wrap"><div class="score-bar" id="expBar" style="background:#ce93d8;width:0%;"></div></div>
+      <div class="score-input-row">
+        <label>Current:</label>
+        <input type="number" id="expInput" placeholder="—" min="1" max="100" oninput="updateScores()"/>
+      </div>
+    </div>
+    <div class="score-card">
+      <h3>Equifax Business</h3>
+      <div class="score-num" id="eqScore" style="color:#4db6ac;">—</div>
+      <div class="score-label">Score range: 101–816 · Target: 500+</div>
+      <div class="score-bar-wrap"><div class="score-bar" id="eqBar" style="background:#4db6ac;width:0%;"></div></div>
+      <div class="score-input-row">
+        <label>Current:</label>
+        <input type="number" id="eqInput" placeholder="—" min="101" max="816" oninput="updateScores()"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-grid">
+    <div class="sc accent">
+      <div class="sc-label">Total Credit Limit</div>
+      <div class="sc-value gold" id="totalLimit">$0</div>
+      <div class="sc-sub">Across all accounts</div>
+    </div>
+    <div class="sc">
+      <div class="sc-label">Active Accounts</div>
+      <div class="sc-value" id="activeCount">0</div>
+      <div class="sc-sub">Reporting tradelines</div>
+    </div>
+    <div class="sc">
+      <div class="sc-label">Net-30 Accounts</div>
+      <div class="sc-value gold" id="net30Count">0</div>
+      <div class="sc-sub">Primary credit builders</div>
+    </div>
+    <div class="sc">
+      <div class="sc-label">Total Balance Owed</div>
+      <div class="sc-value" id="totalBalance">$0</div>
+      <div class="sc-sub">Current utilization</div>
+    </div>
+    <div class="sc">
+      <div class="sc-label">Utilization Rate</div>
+      <div class="sc-value" id="utilRate">—</div>
+      <div class="sc-sub">Target: under 30%</div>
+    </div>
+    <div class="sc">
+      <div class="sc-label">Next Reporting Date</div>
+      <div class="sc-value" id="nextReport" style="font-size:15px;">—</div>
+      <div class="sc-sub">Nearest upcoming</div>
+    </div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('net30',this)">Net-30 Accounts</div>
+    <div class="tab" onclick="switchTab('revolving',this)">Revolving / LOC</div>
+    <div class="tab" onclick="switchTab('loan',this)">Loans / Financing</div>
+    <div class="tab" onclick="switchTab('all',this)">All Accounts</div>
+  </div>
+
+  <!-- ACCOUNTS TABLE -->
+  <div class="table-wrap">
+    <div class="table-header">
+      <h3 id="tableTitle">Net-30 Accounts</h3>
+      <span id="tableSubtotal" style="font-size:13px; color:var(--gold); font-weight:700;"></span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Vendor / Creditor</th>
+          <th>Type</th>
+          <th>Account #</th>
+          <th style="text-align:right">Limit</th>
+          <th style="text-align:right">Balance</th>
+          <th>Opened</th>
+          <th>Reports To</th>
+          <th>Reports On</th>
+          <th>Status</th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="accountsBody"></tbody>
+    </table>
+    <div class="add-row-form">
+      <div class="af"><label>Vendor</label><input id="nVendor" type="text" placeholder="HD Supply" style="width:140px;"/></div>
+      <div class="af"><label>Type</label>
+        <select id="nType">
+          <option value="net30">Net-30</option>
+          <option value="net60">Net-60</option>
+          <option value="revolving">Revolving</option>
+          <option value="loc">Line of Credit</option>
+          <option value="loan">Loan</option>
+          <option value="card">Business Card</option>
+        </select>
+      </div>
+      <div class="af"><label>Acct #</label><input id="nAcct" type="text" placeholder="****1234" style="width:90px;"/></div>
+      <div class="af"><label>Limit ($)</label><input id="nLimit" type="number" placeholder="5000" style="width:90px;"/></div>
+      <div class="af"><label>Balance ($)</label><input id="nBalance" type="number" placeholder="0" style="width:90px;"/></div>
+      <div class="af"><label>Opened</label><input id="nOpened" type="date" style="width:130px;"/></div>
+      <div class="af"><label>Reports On (day of month)</label><input id="nReportDay" type="number" placeholder="15" min="1" max="31" style="width:70px;"/></div>
+      <div class="af" style="justify-content:flex-end;">
+        <button class="btn btn-gold btn-sm" onclick="addAccount()" style="margin-top:auto;">+ Add</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREDIT BUILDING ROADMAP -->
+  <div class="roadmap">
+    <h3>Credit Building Roadmap — Click to Mark Complete</h3>
+    <div class="rm-phase">
+      <div class="rm-phase-head">
+        <span class="rm-badge rm-badge-1">Phase 1 · Month 1–3</span>
+        <span class="rm-phase-title">Foundation — Tier 1 Starter Accounts</span>
+      </div>
+      <div class="rm-items" id="phase1Items"></div>
+    </div>
+    <div class="rm-phase">
+      <div class="rm-phase-head">
+        <span class="rm-badge rm-badge-2">Phase 2 · Month 3–6</span>
+        <span class="rm-phase-title">Build — Add Tier 2 Accounts &amp; First Score</span>
+      </div>
+      <div class="rm-items" id="phase2Items"></div>
+    </div>
+    <div class="rm-phase">
+      <div class="rm-phase-head">
+        <span class="rm-badge rm-badge-3">Phase 3 · Month 6–12</span>
+        <span class="rm-phase-title">Scale — Revolving Credit &amp; LOC Access</span>
+      </div>
+      <div class="rm-items" id="phase3Items"></div>
+    </div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="table-wrap" style="padding:18px;">
+    <h3 style="font-size:12px; color:var(--gold); text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">Notes &amp; Action Items</h3>
+    <textarea id="creditNotes" style="width:100%; min-height:80px; background:var(--surface2); border:1px solid var(--border); color:var(--cream); border-radius:6px; padding:10px; font-size:13px; font-family:inherit; resize:vertical;" placeholder="Track calls with creditors, next steps, strategy notes..."></textarea>
+  </div>
+
+</div>
+
+<div class="app-footer">Anchor Pro Solutions — Business Credit Tracker · Saved locally in your browser</div>
+<input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleFileLoad(event)"/>
+
+<script>
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let data = { accounts: [], scores: { dnb:'', exp:'', eq:'' }, roadmap: {}, notes: '' };
+let activeTab = 'net30';
+
+const ROADMAP = {
+  phase1: [
+    'Form LLC + get EIN', 'Open business checking account', 'Register with D&B (get DUNS number)',
+    'Apply: Uline Net-30', 'Apply: Grainger Net-30', 'Apply: Quill Net-30',
+    'Apply: HD Supply Net-30', 'Apply: Sherwin-Williams Net-30',
+    'Make first purchases + pay early on all accounts'
+  ],
+  phase2: [
+    'Verify 3+ tradelines reporting to D&B', 'Check first PAYDEX score',
+    'Apply: Ferguson Enterprises Net-30', 'Apply: Fastenal Net-30',
+    'Apply: Staples Business Advantage Net-30', 'Apply: Office Depot Business Net-30',
+    'Open Nav or Creditsafe account to monitor scores',
+    'Apply: Sam\'s Club Business Mastercard'
+  ],
+  phase3: [
+    'Apply: Wells Fargo Business LOC (if score 75+ PAYDEX)',
+    'Apply: Chase Ink Business Card', 'Apply: Capital One Spark Business Card',
+    'Apply: Home Depot Commercial Credit (revolving)',
+    'Apply: Lowes Business Credit (revolving)',
+    'Request limit increases on active Net-30 accounts',
+    'Target: $50K+ total revolving credit available',
+    'Submit first DSCR loan pre-qual using business credit profile'
+  ]
+};
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+window.onload = function() {
+  const saved = localStorage.getItem('anchorpro_credit');
+  if (saved) data = JSON.parse(saved);
+  if (!data.roadmap) data.roadmap = {};
+  loadScoreInputs();
+  renderRoadmap();
+  renderAccounts();
+  refreshSummary();
+  if (data.notes) document.getElementById('creditNotes').value = data.notes;
+};
+
+function loadScoreInputs() {
+  if (data.scores.dnb) document.getElementById('dnbInput').value = data.scores.dnb;
+  if (data.scores.exp) document.getElementById('expInput').value = data.scores.exp;
+  if (data.scores.eq)  document.getElementById('eqInput').value  = data.scores.eq;
+  updateScores();
+}
+
+function updateScores() {
+  const dnb = parseInt(document.getElementById('dnbInput').value) || 0;
+  const exp = parseInt(document.getElementById('expInput').value) || 0;
+  const eq  = parseInt(document.getElementById('eqInput').value) || 0;
+
+  data.scores.dnb = dnb || '';
+  data.scores.exp = exp || '';
+  data.scores.eq  = eq  || '';
+
+  setText('dnbScore', dnb || '—');
+  setText('expScore', exp || '—');
+  setText('eqScore',  eq  || '—');
+
+  document.getElementById('dnbBar').style.width = dnb ? Math.min(100, dnb) + '%' : '0%';
+  document.getElementById('expBar').style.width = exp ? Math.min(100, exp) + '%' : '0%';
+  document.getElementById('eqBar').style.width  = eq  ? Math.min(100, (eq - 101) / (816 - 101) * 100) + '%' : '0%';
+
+  saveData();
+}
+
+// ─── TAB SWITCH ───────────────────────────────────────────────────────────────
+function switchTab(tab, el) {
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderAccounts();
+}
+
+// ─── RENDER ACCOUNTS ─────────────────────────────────────────────────────────
+function renderAccounts() {
+  const rows = activeTab === 'all' ? data.accounts
+    : data.accounts.filter(a => {
+        if (activeTab === 'net30') return a.type === 'net30' || a.type === 'net60';
+        if (activeTab === 'revolving') return a.type === 'revolving' || a.type === 'loc' || a.type === 'card';
+        if (activeTab === 'loan') return a.type === 'loan';
+        return true;
+      });
+
+  const titles = { net30:'Net-30 Accounts', revolving:'Revolving / Lines of Credit', loan:'Loans & Financing', all:'All Accounts' };
+  document.getElementById('tableTitle').textContent = titles[activeTab];
+
+  const subTotal = rows.reduce((s,a) => s + (parseFloat(a.limit)||0), 0);
+  document.getElementById('tableSubtotal').textContent = rows.length > 0 ? `${rows.length} accounts · ${fmt(subTotal)} total limit` : '';
+
+  const tbody = document.getElementById('accountsBody');
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="11"><div class="empty-state">No accounts yet. Add one below.</div></td></tr>`;
+    return;
+  }
+
+  tbody.innerHTML = rows.map(a => {
+    const reportBadges = (a.reportsTo || ['dnb']).map(r => {
+      const cls = { dnb:'rb-dnb', exp:'rb-exp', eq:'rb-eq' }[r] || 'rb-nav';
+      const label = { dnb:'D&B', exp:'Experian', eq:'Equifax', nav:'Nav' }[r] || r;
+      return `<span class="rb ${cls}">${label}</span>`;
+    }).join('');
+
+    const typeLabel = { net30:'Net-30', net60:'Net-60', revolving:'Revolving', loc:'LOC', loan:'Loan', card:'Biz Card' }[a.type] || a.type;
+    const util = a.limit > 0 ? ((a.balance||0)/a.limit*100).toFixed(0)+'%' : '—';
+    return `
+      <tr>
+        <td><input class="editable" value="${esc(a.vendor)}" onchange="updateAcct('${a.id}','vendor',this.value)" style="min-width:110px;"/></td>
+        <td style="color:var(--muted); font-size:11px;">${typeLabel}</td>
+        <td><input class="editable" value="${esc(a.acct||'')}" onchange="updateAcct('${a.id}','acct',this.value)" style="width:80px;"/></td>
+        <td style="text-align:right"><input class="editable" type="number" value="${a.limit||0}" onchange="updateAcct('${a.id}','limit',this.value);refreshSummary()" style="width:80px; text-align:right;"/></td>
+        <td style="text-align:right"><input class="editable" type="number" value="${a.balance||0}" onchange="updateAcct('${a.id}','balance',this.value);refreshSummary()" style="width:70px; text-align:right;"/></td>
+        <td style="color:var(--muted); font-size:12px;">${a.opened||'—'}</td>
+        <td><div class="reports-badge">${reportBadges}</div></td>
+        <td style="color:var(--muted); font-size:12px;">${a.reportDay ? 'Day ' + a.reportDay : '—'}</td>
+        <td><button class="status-pill pill-${a.status||'active'}" onclick="cycleStatus('${a.id}')">${capitalize(a.status||'active')}</button></td>
+        <td><input class="editable" value="${esc(a.notes||'')}" onchange="updateAcct('${a.id}','notes',this.value)" style="min-width:100px;"/></td>
+        <td><button class="del-btn" onclick="deleteAcct('${a.id}')">×</button></td>
+      </tr>`;
+  }).join('');
+}
+
+function addAccount() {
+  const vendor    = document.getElementById('nVendor').value.trim();
+  const type      = document.getElementById('nType').value;
+  const acct      = document.getElementById('nAcct').value.trim();
+  const limit     = parseFloat(document.getElementById('nLimit').value) || 0;
+  const balance   = parseFloat(document.getElementById('nBalance').value) || 0;
+  const opened    = document.getElementById('nOpened').value;
+  const reportDay = document.getElementById('nReportDay').value;
+  if (!vendor) { alert('Vendor name required.'); return; }
+
+  // default reports-to based on type
+  const reportsTo = type === 'net30' || type === 'net60' ? ['dnb'] : ['dnb','exp','eq'];
+
+  data.accounts.push({ id: uid(), vendor, type, acct, limit, balance, opened, reportDay: parseInt(reportDay)||null, reportsTo, status: 'active', notes: '' });
+  document.getElementById('nVendor').value = '';
+  document.getElementById('nAcct').value = '';
+  document.getElementById('nLimit').value = '';
+  document.getElementById('nBalance').value = '';
+  document.getElementById('nReportDay').value = '';
+  saveData(); renderAccounts(); refreshSummary();
+}
+
+function updateAcct(id, field, val) {
+  const a = data.accounts.find(x => x.id === id);
+  if (a) a[field] = (field === 'limit' || field === 'balance') ? parseFloat(val)||0 : val;
+  saveData();
+}
+
+function cycleStatus(id) {
+  const states = ['active','applied','pending','closed','target'];
+  const a = data.accounts.find(x => x.id === id);
+  if (a) a.status = states[(states.indexOf(a.status||'active')+1) % states.length];
+  saveData(); renderAccounts();
+}
+
+function deleteAcct(id) {
+  data.accounts = data.accounts.filter(a => a.id !== id);
+  saveData(); renderAccounts(); refreshSummary();
+}
+
+// ─── SUMMARY ──────────────────────────────────────────────────────────────────
+function refreshSummary() {
+  const active = data.accounts.filter(a => a.status === 'active');
+  const totalLimit   = active.reduce((s,a) => s + (a.limit||0), 0);
+  const totalBalance = active.reduce((s,a) => s + (a.balance||0), 0);
+  const net30Count   = active.filter(a => a.type === 'net30' || a.type === 'net60').length;
+  const util = totalLimit > 0 ? ((totalBalance/totalLimit)*100).toFixed(1)+'%' : '—';
+
+  setText('totalLimit',   fmt(totalLimit));
+  setText('activeCount',  active.length);
+  setText('net30Count',   net30Count);
+  setText('totalBalance', fmt(totalBalance));
+  setText('utilRate',     util);
+
+  // Next report date
+  const today = new Date();
+  const todayDay = today.getDate();
+  let closest = null, closestDays = 999;
+  active.forEach(a => {
+    if (!a.reportDay) return;
+    let diff = a.reportDay - todayDay;
+    if (diff < 0) diff += 31;
+    if (diff < closestDays) { closestDays = diff; closest = a; }
+  });
+  setText('nextReport', closest ? `Day ${closest.reportDay} — ${closest.vendor}` : '—');
+
+  // Utilization color
+  const utilEl = document.getElementById('utilRate');
+  if (utilEl) {
+    const pct = totalLimit > 0 ? (totalBalance/totalLimit)*100 : 0;
+    utilEl.className = 'sc-value ' + (pct < 30 ? 'success' : pct < 50 ? 'warn-c' : 'danger-c');
+  }
+}
+
+// ─── ROADMAP ─────────────────────────────────────────────────────────────────
+function renderRoadmap() {
+  ['phase1','phase2','phase3'].forEach(phase => {
+    const el = document.getElementById(phase + 'Items');
+    el.innerHTML = ROADMAP[phase].map((item, i) => {
+      const key = phase + '_' + i;
+      const done = data.roadmap[key];
+      return `<div class="rm-item ${done ? 'done' : ''}" onclick="toggleRoadmap('${key}',this)">${item}</div>`;
+    }).join('');
+  });
+}
+
+function toggleRoadmap(key, el) {
+  data.roadmap[key] = !data.roadmap[key];
+  el.classList.toggle('done', data.roadmap[key]);
+  saveData();
+}
+
+// ─── PERSISTENCE ─────────────────────────────────────────────────────────────
+function saveData() {
+  data.notes = document.getElementById('creditNotes')?.value || '';
+  localStorage.setItem('anchorpro_credit', JSON.stringify(data));
+}
+
+function exportJSON() {
+  saveData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `AnchorPro_BusinessCredit_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+
+function loadFromFile() { document.getElementById('fileInput').click(); }
+function handleFileLoad(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      data = JSON.parse(ev.target.result);
+      if (!data.roadmap) data.roadmap = {};
+      loadScoreInputs(); renderRoadmap(); renderAccounts(); refreshSummary();
+      if (data.notes) document.getElementById('creditNotes').value = data.notes;
+      alert('Data loaded.');
+    } catch { alert('Invalid file.'); }
+  };
+  reader.readAsText(file); e.target.value = '';
+}
+
+// ─── UTILS ───────────────────────────────────────────────────────────────────
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function fmt(n) { return '$' + (parseFloat(n)||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function setText(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
+</script>
+</body>
+</html>

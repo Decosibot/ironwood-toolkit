@@ -1,0 +1,1721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rental Property Dashboard — Anchor Pro Solutions</title>
+<style>
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111111;
+    --bg3: #1a1a1a;
+    --bg4: #222222;
+    --cream: #f5f0e8;
+    --cream2: #e8e0d0;
+    --gold: #c9a84c;
+    --gold2: #a8883c;
+    --gold3: #e8c87a;
+    --red: #e05555;
+    --green: #4caf6e;
+    --yellow: #e0c040;
+    --orange: #e0883a;
+    --blue: #5588cc;
+    --teal: #3aabab;
+    --border: #2a2a2a;
+    --border2: #333333;
+    --text: #f5f0e8;
+    --text2: #b0a898;
+    --text3: #7a7268;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+
+  /* TOPBAR */
+  #topbar {
+    background: var(--bg2);
+    border-bottom: 2px solid var(--gold);
+    display: flex; align-items: center; gap: 16px;
+    padding: 0 24px; height: 64px; position: sticky; top: 0; z-index: 100;
+  }
+  .logo-circle {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--gold); color: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px; flex-shrink: 0;
+  }
+  .topbar-titles { flex: 1; }
+  .topbar-title { font-size: 17px; font-weight: 700; color: var(--gold); letter-spacing: 0.5px; }
+  .topbar-sub { font-size: 11px; color: var(--text2); letter-spacing: 1px; text-transform: uppercase; }
+  .topbar-actions { display: flex; gap: 8px; }
+  .btn { background: var(--bg3); border: 1px solid var(--border2); color: var(--cream); padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 500; transition: all 0.15s; white-space: nowrap; }
+  .btn:hover { background: var(--bg4); border-color: var(--gold); color: var(--gold); }
+  .btn-gold { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 700; }
+  .btn-gold:hover { background: var(--gold3); color: var(--bg); border-color: var(--gold3); }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+  .btn-danger { border-color: var(--red); color: var(--red); }
+  .btn-danger:hover { background: var(--red); color: #fff; }
+
+  /* LAYOUT */
+  #layout { display: flex; height: calc(100vh - 64px); }
+
+  /* SIDEBAR */
+  #sidebar {
+    width: 280px; min-width: 280px; background: var(--bg2);
+    border-right: 1px solid var(--border); display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  #sidebar-header { padding: 16px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  #sidebar-header h3 { font-size: 12px; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); }
+  #prop-list { flex: 1; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+  .prop-card {
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+    padding: 12px; cursor: pointer; transition: all 0.15s;
+  }
+  .prop-card:hover { border-color: var(--gold2); background: var(--bg4); }
+  .prop-card.active { border-color: var(--gold); background: var(--bg4); }
+  .prop-card-addr { font-weight: 600; font-size: 13px; color: var(--cream); margin-bottom: 4px; }
+  .prop-card-meta { font-size: 11px; color: var(--text2); display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .prop-card-flow { font-size: 13px; font-weight: 700; margin-top: 6px; }
+  .pos { color: var(--green); }
+  .neg { color: var(--red); }
+  .prop-card-occ { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+  /* STR BADGE */
+  .str-badge {
+    display: inline-block; padding: 2px 6px; border-radius: 3px;
+    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+    background: rgba(58,171,171,0.18); color: var(--teal); border: 1px solid rgba(58,171,171,0.35);
+  }
+  .ltr-badge {
+    display: inline-block; padding: 2px 6px; border-radius: 3px;
+    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px;
+    background: rgba(201,168,76,0.12); color: var(--gold2); border: 1px solid rgba(201,168,76,0.25);
+  }
+
+  /* MAIN PANEL */
+  #main { flex: 1; overflow-y: auto; padding: 24px; display: flex; flex-direction: column; gap: 24px; }
+
+  /* SUMMARY CARDS */
+  #summary-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+  }
+  .sum-card {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+    padding: 16px; display: flex; flex-direction: column; gap: 4px;
+  }
+  .sum-card-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text2); }
+  .sum-card-value { font-size: 22px; font-weight: 800; color: var(--gold); }
+  .sum-card-sub { font-size: 11px; color: var(--text3); }
+
+  /* SECTION */
+  .section { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .section-header {
+    background: var(--bg3); padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .section-title { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); }
+  .section-body { padding: 20px; }
+
+  /* PROPERTY DETAIL GRID */
+  .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .detail-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .detail-field { display: flex; flex-direction: column; gap: 4px; }
+  .detail-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text2); }
+  .detail-value { font-size: 14px; color: var(--cream); font-weight: 500; }
+  .detail-value.big { font-size: 18px; font-weight: 700; color: var(--gold); }
+  .detail-value.pos { color: var(--green); }
+  .detail-value.neg { color: var(--red); }
+  .detail-value.teal { color: var(--teal); }
+
+  /* TABLES */
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th { text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text2); padding: 8px 12px; border-bottom: 1px solid var(--border2); white-space: nowrap; }
+  td { padding: 9px 12px; border-bottom: 1px solid var(--border); font-size: 13px; vertical-align: middle; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(201,168,76,0.04); }
+
+  .status-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;
+  }
+  .status-occupied { background: rgba(76,175,110,0.15); color: var(--green); }
+  .status-vacant { background: rgba(224,85,85,0.15); color: var(--red); }
+  .status-notice { background: rgba(224,192,64,0.15); color: var(--yellow); }
+  .status-paid { background: rgba(76,175,110,0.15); color: var(--green); }
+  .status-late { background: rgba(224,192,64,0.15); color: var(--yellow); }
+  .status-partial { background: rgba(224,136,58,0.15); color: var(--orange); }
+  .status-unpaid { background: rgba(224,85,85,0.15); color: var(--red); }
+  .status-pending { background: rgba(85,136,204,0.15); color: var(--blue); }
+  .status-complete { background: rgba(76,175,110,0.15); color: var(--green); }
+
+  /* EXPENSES */
+  .expense-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; }
+  .expense-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 0; border-bottom: 1px solid var(--border);
+  }
+  .expense-row:last-child { border-bottom: none; }
+  .expense-label { font-size: 13px; color: var(--cream2); }
+  .expense-amount { font-size: 14px; font-weight: 600; color: var(--cream); }
+  .expense-amount.auto { color: var(--text2); font-style: italic; }
+
+  /* VR INCOME SUMMARY */
+  .vr-income-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px;
+    background: rgba(58,171,171,0.05); border: 1px solid rgba(58,171,171,0.2);
+    border-radius: 8px; padding: 16px; margin-bottom: 16px;
+  }
+  .vr-income-item { display: flex; flex-direction: column; gap: 4px; }
+  .vr-income-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--teal); opacity: 0.8; }
+  .vr-income-value { font-size: 15px; font-weight: 700; color: var(--cream); }
+  .vr-income-value.big { font-size: 20px; color: var(--teal); }
+
+  /* VR PERF */
+  .vr-perf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .vr-perf-card {
+    background: var(--bg3); border: 1px solid var(--border); border-radius: 8px;
+    padding: 14px; display: flex; flex-direction: column; gap: 4px;
+  }
+  .vr-perf-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text2); }
+  .vr-perf-value { font-size: 18px; font-weight: 800; color: var(--teal); }
+  .vr-perf-value.pos { color: var(--green); }
+  .vr-perf-value.neg { color: var(--red); }
+  .vr-perf-value.gold { color: var(--gold); }
+  .vr-perf-value.cream { color: var(--cream); }
+
+  /* CASH FLOW SUMMARY */
+  .cf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .cf-item { display: flex; flex-direction: column; gap: 4px; }
+  .cf-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text2); }
+  .cf-value { font-size: 20px; font-weight: 800; }
+  .cf-value.pos { color: var(--green); }
+  .cf-value.neg { color: var(--red); }
+  .cf-value.gold { color: var(--gold); }
+  .cf-value.cream { color: var(--cream); }
+
+  /* CHART */
+  .chart-bar-row { display: flex; gap: 2px; align-items: flex-end; height: 120px; padding: 0 8px; }
+  .chart-bar-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; }
+  .chart-bar {
+    width: 100%; border-radius: 3px 3px 0 0; min-height: 2px;
+    transition: height 0.3s;
+  }
+  .chart-bar.pos-bar { background: var(--green); }
+  .chart-bar.neg-bar { background: var(--red); border-radius: 0 0 3px 3px; }
+  .chart-label { font-size: 10px; color: var(--text3); text-align: center; }
+  .chart-val { font-size: 10px; color: var(--text2); }
+  .chart-baseline { height: 1px; background: var(--border2); margin: 0 8px; }
+  .chart-wrap { display: flex; flex-direction: column; gap: 4px; }
+
+  /* PARTNERSHIP */
+  .partner-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .partner-card { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 16px; text-align: center; }
+  .partner-name { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); margin-bottom: 8px; }
+  .partner-val { font-size: 20px; font-weight: 800; color: var(--gold); }
+  .partner-pct { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .partner-note { font-size: 11px; color: var(--text3); margin-top: 8px; font-style: italic; }
+
+  /* MODAL */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75); z-index: 500;
+    align-items: center; justify-content: center;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--bg2); border: 1px solid var(--border2); border-radius: 12px;
+    width: 680px; max-width: 95vw; max-height: 90vh;
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  .modal-header {
+    padding: 18px 24px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg3);
+  }
+  .modal-title { font-size: 15px; font-weight: 700; color: var(--gold); }
+  .modal-close { background: none; border: none; color: var(--text2); font-size: 20px; cursor: pointer; line-height: 1; }
+  .modal-close:hover { color: var(--cream); }
+  .modal-body { padding: 24px; overflow-y: auto; flex: 1; }
+  .modal-footer { padding: 16px 24px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+
+  /* FORM */
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .form-full { grid-column: 1 / -1; }
+  .form-group { display: flex; flex-direction: column; gap: 5px; }
+  .form-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text2); }
+  .form-input {
+    background: var(--bg3); border: 1px solid var(--border2); color: var(--cream);
+    padding: 8px 12px; border-radius: 6px; font-size: 13px; width: 100%;
+    outline: none; transition: border-color 0.15s;
+  }
+  .form-input:focus { border-color: var(--gold); }
+  select.form-input option { background: var(--bg3); color: var(--cream); }
+  .form-sep { grid-column: 1 / -1; border: none; border-top: 1px solid var(--border); margin: 4px 0; }
+  .form-section-label { grid-column: 1 / -1; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--gold); padding-top: 4px; }
+
+  /* EMPTY STATE */
+  .empty { text-align: center; padding: 40px; color: var(--text3); }
+  .empty-icon { font-size: 36px; margin-bottom: 12px; }
+  .empty-text { font-size: 14px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 0; border-bottom: 1px solid var(--border); margin-bottom: 20px; }
+  .tab { padding: 10px 18px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.7px; color: var(--text2); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+  .tab:hover { color: var(--cream); }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  /* NO PROPERTY */
+  #no-prop { display: flex; align-items: center; justify-content: center; flex: 1; text-align: center; }
+  #no-prop-inner { color: var(--text3); }
+  #no-prop-inner .big-icon { font-size: 64px; margin-bottom: 16px; }
+  #no-prop-inner p { font-size: 15px; margin-bottom: 20px; }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gold2); }
+
+  /* ACTION BAR */
+  .action-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+  .action-bar h4 { font-size: 12px; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text2); }
+
+  .icon-btn { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 14px; padding: 4px 6px; border-radius: 4px; transition: color 0.15s; }
+  .icon-btn:hover { color: var(--gold); }
+  .icon-btn.del:hover { color: var(--red); }
+
+  textarea.form-input { resize: vertical; min-height: 60px; }
+  .hint { font-size: 11px; color: var(--text3); margin-top: 3px; }
+
+  /* VR form section highlight */
+  .form-section-label.vr { color: var(--teal); }
+
+  @media (max-width: 1100px) {
+    #summary-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (max-width: 800px) {
+    #layout { flex-direction: column; }
+    #sidebar { width: 100%; min-width: 0; height: auto; max-height: 260px; }
+    #summary-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="logo-circle">A</div>
+  <div class="topbar-titles">
+    <div class="topbar-title">Rental Property Dashboard</div>
+    <div class="topbar-sub">Anchor Pro Solutions &times; Landon Renovations</div>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-sm" onclick="exportJSON()">&#8595; Export JSON</button>
+    <button class="btn btn-sm" onclick="document.getElementById('importFile').click()">&#8593; Import JSON</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importJSON(this)">
+    <button class="btn btn-gold btn-sm" onclick="openAddProperty()">+ Add Property</button>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div id="layout">
+
+  <!-- SIDEBAR -->
+  <div id="sidebar">
+    <div id="sidebar-header">
+      <h3>Properties</h3>
+      <span id="prop-count" style="font-size:11px;color:var(--text3)"></span>
+    </div>
+    <div id="prop-list"></div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="main">
+
+    <!-- PORTFOLIO SUMMARY -->
+    <div id="summary-grid">
+      <div class="sum-card">
+        <div class="sum-card-label">Total Doors</div>
+        <div class="sum-card-value" id="s-doors">0</div>
+        <div class="sum-card-sub" id="s-occ">0 occupied / 0 vacant</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-card-label">Monthly Revenue</div>
+        <div class="sum-card-value" id="s-rent">$0</div>
+        <div class="sum-card-sub">Gross across portfolio</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-card-label">Monthly Expenses</div>
+        <div class="sum-card-value" id="s-exp">$0</div>
+        <div class="sum-card-sub">All fixed + reserves</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-card-label">Net Cash Flow</div>
+        <div class="sum-card-value" id="s-cf">$0</div>
+        <div class="sum-card-sub" id="s-cf-annual">$0 / yr</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-card-label">Portfolio Value</div>
+        <div class="sum-card-value" id="s-arv">$0</div>
+        <div class="sum-card-sub">Sum of ARVs</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-card-label">Total Equity</div>
+        <div class="sum-card-value" id="s-equity">$0</div>
+        <div class="sum-card-sub">Value minus balances</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-card-label">Avg Cash-on-Cash</div>
+        <div class="sum-card-value" id="s-coc">0%</div>
+        <div class="sum-card-sub">Annual return on invested</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-card-label">Occupancy</div>
+        <div class="sum-card-value" id="s-occ-pct">0%</div>
+        <div class="sum-card-sub" id="s-occ2">0 occupied / 0 vacant</div>
+      </div>
+    </div>
+
+    <!-- PROPERTY DETAIL / NO PROPERTY -->
+    <div id="no-prop">
+      <div id="no-prop-inner">
+        <div class="big-icon">&#127968;</div>
+        <p>Select a property from the sidebar, or add your first property to get started.</p>
+        <button class="btn btn-gold" onclick="openAddProperty()">+ Add Property</button>
+      </div>
+    </div>
+
+    <div id="prop-detail" style="display:none; flex-direction:column; gap:20px;"></div>
+
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="modal-overlay" id="modal-prop">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-prop-title">Add Property</span>
+      <button class="modal-close" onclick="closeModal('modal-prop')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid" id="prop-form"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-prop')">Cancel</button>
+      <button class="btn btn-gold" onclick="savePropForm()">Save Property</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-unit">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-unit-title">Add Unit</span>
+      <button class="modal-close" onclick="closeModal('modal-unit')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid" id="unit-form"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-unit')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveUnitForm()">Save Unit</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-payment">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-payment-title">Add Payment</span>
+      <button class="modal-close" onclick="closeModal('modal-payment')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid" id="payment-form"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-payment')">Cancel</button>
+      <button class="btn btn-gold" onclick="savePaymentForm()">Save Payment</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-maint">
+  <div class="modal">
+    <div class="modal-header">
+      <span class="modal-title" id="modal-maint-title">Add Maintenance</span>
+      <button class="modal-close" onclick="closeModal('modal-maint')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-grid" id="maint-form"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-maint')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveMaintForm()">Save Item</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modal-expense">
+  <div class="modal" style="width:440px">
+    <div class="modal-header">
+      <span class="modal-title">Edit Expenses</span>
+      <button class="modal-close" onclick="closeModal('modal-expense')">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="expense-form" style="display:flex;flex-direction:column;gap:12px;"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('modal-expense')">Cancel</button>
+      <button class="btn btn-gold" onclick="saveExpenseForm()">Save Expenses</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// HELPERS
+// ============================================================
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+function fmt(n, decimals) {
+  if (n == null || isNaN(n)) return '$0';
+  const d = decimals != null ? decimals : 0;
+  return '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+}
+function fmtPct(n) {
+  if (n == null || isNaN(n)) return '0%';
+  return Number(n).toFixed(2) + '%';
+}
+function esc(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function num(v) { return parseFloat(v) || 0; }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+
+// ============================================================
+// MARKET LABELS
+// ============================================================
+const MARKETS = {
+  'blue-ridge':  'Blue Ridge, GA',
+  'ellijay':     'Ellijay, GA',
+  'dahlonega':   'Dahlonega, GA',
+  'destin':      'Destin, FL',
+  '30a':         '30A / Santa Rosa Beach, FL',
+  'pcb':         'Panama City Beach, FL',
+  'georgia':     'Georgia (LTR)',
+  'other':       'Other'
+};
+function marketLabel(m) { return MARKETS[m] || m || '—'; }
+
+// ============================================================
+// DATA
+// ============================================================
+const STORE_KEY = 'anchorpro_rentals';
+let data = { properties: [] };
+let selectedPropId = null;
+let editingId = null;
+
+function load() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (raw) data = JSON.parse(raw);
+  } catch(e) {}
+  if (!data.properties) data.properties = [];
+}
+
+function save() {
+  localStorage.setItem(STORE_KEY, JSON.stringify(data));
+}
+
+function getProp(id) {
+  return data.properties.find(p => p.id === id);
+}
+
+// ============================================================
+// SEED DATA
+// ============================================================
+function seedData() {
+  if (data.properties.length > 0) return;
+
+  // --- Existing LTR seed ---
+  const pid = uid();
+  const u1 = uid(); const u2 = uid();
+  const ltr = {
+    id: pid,
+    propertyType: 'ltr',
+    market: 'georgia',
+    address: '2847 Magnolia Ave',
+    city: 'Tampa',
+    state: 'FL',
+    zip: '33605',
+    type: 'Duplex',
+    purchaseDate: '2023-06-15',
+    purchasePrice: 185000,
+    arv: 260000,
+    rehabCost: 42000,
+    refiDate: '2024-01-10',
+    refiLoanAmount: 208000,
+    refiLoanRate: 7.25,
+    refiPI: 1420,
+    currentValue: 265000,
+    remainingBalance: 204500,
+    units: [
+      { id: u1, unitNum: '1A', tenantName: 'Marcus Williams', leaseStart: '2024-02-01', leaseEnd: '2025-01-31', rent: 1250, status: 'Occupied' },
+      { id: u2, unitNum: '1B', tenantName: 'Sandra Torres', leaseStart: '2024-03-01', leaseEnd: '2025-02-28', rent: 1200, status: 'Occupied' }
+    ],
+    expenses: {
+      mortgage: 1420,
+      tax: 280,
+      insurance: 120,
+      vacancy: null,
+      maintenance: null,
+      management: 0,
+      other: 0
+    },
+    ledger: [
+      { id: uid(), month: '2024-12', unit: '1A', expected: 1250, received: 1250, datePaid: '2024-12-01', status: 'Paid', notes: '' },
+      { id: uid(), month: '2024-12', unit: '1B', expected: 1200, received: 1200, datePaid: '2024-12-03', status: 'Paid', notes: '' },
+      { id: uid(), month: '2025-01', unit: '1A', expected: 1250, received: 1250, datePaid: '2025-01-01', status: 'Paid', notes: '' },
+      { id: uid(), month: '2025-01', unit: '1B', expected: 1200, received: 900,  datePaid: '2025-01-08', status: 'Partial', notes: 'Partial - rest due 1/15' },
+      { id: uid(), month: '2025-02', unit: '1A', expected: 1250, received: 1250, datePaid: '2025-02-01', status: 'Paid', notes: '' },
+      { id: uid(), month: '2025-02', unit: '1B', expected: 1200, received: 1200, datePaid: '2025-02-02', status: 'Paid', notes: '' },
+    ],
+    maintenance: [
+      { id: uid(), date: '2024-11-15', description: 'HVAC filter replacement + tune-up', vendor: 'Cool Air Services', cost: 185, status: 'Complete', notes: '' },
+      { id: uid(), date: '2025-01-20', description: 'Unit 1B — leaky faucet repair', vendor: 'Self', cost: 45, status: 'Complete', notes: 'Parts only' }
+    ]
+  };
+
+  // --- VTR seed: Blue Ridge Cabin ---
+  const vtrId = uid();
+  const vtr = {
+    id: vtrId,
+    propertyType: 'vtr',
+    market: 'blue-ridge',
+    address: 'Blue Ridge Cabin — Ironwood VR',
+    city: 'Blue Ridge',
+    state: 'GA',
+    zip: '30513',
+    type: 'SFH',
+    purchaseDate: '2024-03-01',
+    purchasePrice: 385000,
+    arv: 450000,
+    rehabCost: 45000,
+    refiDate: '2024-09-01',
+    refiLoanAmount: 337500,
+    refiLoanRate: 7.5,
+    refiPI: 1890,
+    currentValue: 450000,
+    remainingBalance: 335000,
+    // VR income fields
+    nightlyRate: 225,
+    occupancyPct: 68,
+    platformFee: 3,
+    cleaningFee: 175,
+    avgTurns: 8,
+    // VR expenses (non-auto)
+    expenses: {
+      mortgage: 1890,
+      tax: 320,
+      insurance: 280,
+      utilities: 350,
+      supplies: 150,
+      other: 0
+    },
+    units: [],
+    ledger: [],
+    maintenance: []
+  };
+
+  data.properties.push(ltr, vtr);
+  save();
+}
+
+// ============================================================
+// CALCULATIONS
+// ============================================================
+function calcProp(p) {
+  const isVTR = p.propertyType === 'vtr';
+
+  if (isVTR) {
+    // --- VTR path ---
+    const nightlyRate  = num(p.nightlyRate);
+    const occupancyPct = num(p.occupancyPct) || 65;
+    const grossMonthly = nightlyRate * (occupancyPct / 100) * 30;
+    const totalRent    = grossMonthly; // alias for downstream compatibility
+
+    const exp = p.expenses || {};
+    const mortgage   = num(exp.mortgage !== undefined ? exp.mortgage : p.refiPI);
+    const tax        = num(exp.tax);
+    const insurance  = num(exp.insurance);
+    const utilities  = num(exp.utilities);
+    const suppliesRaw = exp.supplies != null ? num(exp.supplies) : grossMonthly * 0.02;
+    const supplies   = suppliesRaw;
+    const other      = num(exp.other);
+
+    const platformFeeRate = num(p.platformFee != null ? p.platformFee : 3) / 100;
+    const platformFeeAmt  = grossMonthly * platformFeeRate;
+    const pmFeeRate       = 0.25;
+    const pmFeeAmt        = grossMonthly * pmFeeRate;
+
+    const avgTurns       = num(p.avgTurns) || Math.round((occupancyPct / 100) * 30 / 3.5);
+    const cleaningTotal  = num(p.cleaningFee) * avgTurns;
+
+    const totalExp = mortgage + tax + insurance + utilities + supplies + other + platformFeeAmt + pmFeeAmt + cleaningTotal;
+    const netCF    = totalRent - totalExp;
+    const annualCF = netCF * 12;
+
+    const refiCashOut  = num(p.refiLoanAmount) - num(p.purchasePrice) - num(p.rehabCost);
+    const cashInvested = num(p.purchasePrice) + num(p.rehabCost) - Math.max(0, refiCashOut);
+    const coc          = cashInvested > 0 ? (annualCF / cashInvested) * 100 : 0;
+    const currentVal   = num(p.currentValue) || num(p.arv);
+    const equity       = currentVal - num(p.remainingBalance);
+
+    return {
+      isVTR: true,
+      totalRent, grossMonthly, nightlyRate, occupancyPct,
+      mortgage, tax, insurance, utilities, supplies, other,
+      platformFeeAmt, pmFeeAmt, cleaningTotal, avgTurns,
+      totalExp, netCF, annualCF,
+      cashInvested, coc, currentVal, equity,
+      refiCashOut,
+      // LTR compat stubs
+      vacancy: 0, maintenance: 0, management: 0,
+      pmFee: pmFeeAmt, pmProcessing: platformFeeAmt, pmTotal: pmFeeAmt + platformFeeAmt,
+      occupied: 0, vacant: 0
+    };
+  }
+
+  // --- LTR path (original logic unchanged) ---
+  const totalRent    = p.units.reduce((s, u) => s + num(u.rent), 0);
+  const vacancyRate  = 0.08;
+  const maintRate    = 0.05;
+  const exp          = p.expenses || {};
+  const mortgage     = num(exp.mortgage !== null && exp.mortgage !== undefined ? exp.mortgage : p.refiPI);
+  const tax          = num(exp.tax);
+  const insurance    = num(exp.insurance);
+  const vacancy      = exp.vacancy != null ? num(exp.vacancy) : totalRent * vacancyRate;
+  const maintenance  = exp.maintenance != null ? num(exp.maintenance) : totalRent * maintRate;
+  const management   = num(exp.management);
+  const pmFee        = totalRent * 0.09;
+  const pmProcessing = totalRent * 0.035;
+  const pmTotal      = pmFee + pmProcessing;
+  const other        = num(exp.other);
+  const totalExp     = mortgage + tax + insurance + vacancy + maintenance + management + pmTotal + other;
+  const netCF        = totalRent - totalExp;
+  const annualCF     = netCF * 12;
+  const refiCashOut  = num(p.refiLoanAmount) - num(p.purchasePrice) - num(p.rehabCost);
+  const cashInvested = num(p.purchasePrice) + num(p.rehabCost) - Math.max(0, refiCashOut);
+  const coc          = cashInvested > 0 ? (annualCF / cashInvested) * 100 : 0;
+  const currentVal   = num(p.currentValue) || num(p.arv);
+  const equity       = currentVal - num(p.remainingBalance);
+  const occupied     = p.units.filter(u => u.status === 'Occupied').length;
+  const vacant       = p.units.filter(u => u.status === 'Vacant').length;
+  return {
+    isVTR: false,
+    totalRent, mortgage, tax, insurance, vacancy, maintenance, management,
+    pmFee, pmProcessing, pmTotal, other,
+    totalExp, netCF, annualCF, cashInvested, coc, currentVal, equity,
+    occupied, vacant, refiCashOut
+  };
+}
+
+function calcPortfolio() {
+  let doors = 0, rent = 0, exp = 0, cf = 0, arv = 0, equity = 0, invested = 0, annualCF = 0, occ = 0, vac = 0, cocSum = 0, cocCount = 0;
+  for (const p of data.properties) {
+    const c = calcProp(p);
+    if (p.propertyType === 'vtr') {
+      doors += 1; // count VTR as 1 door
+    } else {
+      doors += p.units.length;
+      occ += c.occupied;
+      vac += c.vacant;
+    }
+    rent   += c.totalRent;
+    exp    += c.totalExp;
+    cf     += c.netCF;
+    arv    += c.currentVal;
+    equity += c.equity;
+    annualCF += c.annualCF;
+    invested += c.cashInvested;
+    if (c.cashInvested > 0) { cocSum += c.coc; cocCount++; }
+  }
+  const avgCoc = cocCount > 0 ? cocSum / cocCount : 0;
+  return { doors, rent, exp, cf, arv, equity, annualCF, invested, occ, vac, avgCoc };
+}
+
+// ============================================================
+// RENDER SIDEBAR
+// ============================================================
+function renderSidebar() {
+  const list     = document.getElementById('prop-list');
+  const countEl  = document.getElementById('prop-count');
+  countEl.textContent = data.properties.length + ' propert' + (data.properties.length === 1 ? 'y' : 'ies');
+  list.innerHTML = '';
+  if (data.properties.length === 0) {
+    list.innerHTML = '<div class="empty"><div class="empty-text">No properties yet</div></div>';
+    return;
+  }
+  for (const p of data.properties) {
+    const c      = calcProp(p);
+    const isVTR  = p.propertyType === 'vtr';
+    const card   = document.createElement('div');
+    card.className = 'prop-card' + (p.id === selectedPropId ? ' active' : '');
+
+    let metaHtml = '';
+    if (isVTR) {
+      metaHtml = `
+        <span>${esc(p.city)}, ${esc(p.state)}</span>
+        <span class="str-badge">STR</span>
+        <span style="color:var(--teal)">${esc(marketLabel(p.market))}</span>
+      `;
+    } else {
+      metaHtml = `
+        <span>${esc(p.city)}, ${esc(p.state)}</span>
+        <span class="ltr-badge">LTR</span>
+        <span>${esc(p.type)}</span>
+        <span>${p.units.length} unit${p.units.length !== 1 ? 's' : ''}</span>
+      `;
+    }
+
+    let occHtml = '';
+    if (isVTR) {
+      occHtml = `${num(p.occupancyPct)}% occ &bull; ${fmt(c.nightlyRate)}/night &bull; ${fmt(c.grossMonthly)}/mo gross`;
+    } else {
+      occHtml = `${c.occupied} occ / ${c.vacant} vac &bull; ${fmt(c.totalRent)}/mo rent`;
+    }
+
+    card.innerHTML = `
+      <div class="prop-card-addr">${esc(p.address)}</div>
+      <div class="prop-card-meta">${metaHtml}</div>
+      <div class="prop-card-flow ${c.netCF >= 0 ? 'pos' : 'neg'}">${fmt(c.netCF)}/mo</div>
+      <div class="prop-card-occ">${occHtml}</div>
+    `;
+    card.addEventListener('click', () => selectProp(p.id));
+    list.appendChild(card);
+  }
+}
+
+// ============================================================
+// RENDER SUMMARY
+// ============================================================
+function renderSummary() {
+  const s = calcPortfolio();
+  document.getElementById('s-doors').textContent = s.doors;
+  document.getElementById('s-occ').textContent = s.occ + ' occ / ' + s.vac + ' vac';
+  document.getElementById('s-rent').textContent = fmt(s.rent);
+  document.getElementById('s-exp').textContent  = fmt(s.exp);
+  const cfEl = document.getElementById('s-cf');
+  cfEl.textContent = fmt(s.cf);
+  cfEl.className = 'sum-card-value ' + (s.cf >= 0 ? 'pos' : 'neg');
+  document.getElementById('s-cf-annual').textContent = fmt(s.annualCF) + ' / yr';
+  document.getElementById('s-arv').textContent    = fmt(s.arv);
+  document.getElementById('s-equity').textContent = fmt(s.equity);
+  document.getElementById('s-coc').textContent    = fmtPct(s.avgCoc);
+  document.getElementById('s-occ-pct').textContent = s.doors > 0 ? Math.round((s.occ / s.doors) * 100) + '%' : '0%';
+  document.getElementById('s-occ2').textContent   = s.occ + ' occupied / ' + s.vac + ' vacant';
+}
+
+// ============================================================
+// SELECT PROPERTY
+// ============================================================
+function selectProp(id) {
+  selectedPropId = id;
+  renderSidebar();
+  renderDetail();
+  document.getElementById('no-prop').style.display = 'none';
+  document.getElementById('prop-detail').style.display = 'flex';
+}
+
+// ============================================================
+// RENDER DETAIL
+// ============================================================
+function renderDetail() {
+  const p = getProp(selectedPropId);
+  if (!p) return;
+  const c         = calcProp(p);
+  const isVTR     = p.propertyType === 'vtr';
+  const container = document.getElementById('prop-detail');
+  container.innerHTML = '';
+
+  // ---- PROPERTY INFO ----
+  const badgeHtml = isVTR
+    ? `<span class="str-badge" style="font-size:12px;padding:3px 10px;">STR / Vacation Rental</span>`
+    : `<span class="ltr-badge" style="font-size:12px;padding:3px 10px;">LTR / Long-Term Rental</span>`;
+
+  const infoSec = mkSection('Property Info', `
+    <div style="display:flex;gap:8px;margin-bottom:12px;align-items:center;">
+      ${badgeHtml}
+      <button class="btn btn-sm" onclick="openEditProperty('${p.id}')">&#9998; Edit Property</button>
+      <button class="btn btn-sm btn-danger" onclick="deleteProp('${p.id}')">&#128465; Delete</button>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-field"><div class="detail-label">Address</div><div class="detail-value">${esc(p.address)}</div></div>
+      <div class="detail-field"><div class="detail-label">City</div><div class="detail-value">${esc(p.city)}, ${esc(p.state)} ${esc(p.zip)}</div></div>
+      <div class="detail-field"><div class="detail-label">Type</div><div class="detail-value">${esc(p.type)}</div></div>
+      ${isVTR ? `<div class="detail-field"><div class="detail-label">Market</div><div class="detail-value teal">${esc(marketLabel(p.market))}</div></div>` : ''}
+      <div class="detail-field"><div class="detail-label">Purchase Date</div><div class="detail-value">${esc(p.purchaseDate)}</div></div>
+      <div class="detail-field"><div class="detail-label">Purchase Price</div><div class="detail-value">${fmt(p.purchasePrice)}</div></div>
+      <div class="detail-field"><div class="detail-label">Rehab Cost</div><div class="detail-value">${fmt(p.rehabCost)}</div></div>
+      <div class="detail-field"><div class="detail-label">ARV at Purchase</div><div class="detail-value">${fmt(p.arv)}</div></div>
+      <div class="detail-field"><div class="detail-label">Current Value</div><div class="detail-value">${fmt(p.currentValue || p.arv)}</div></div>
+      <div class="detail-field"><div class="detail-label">Refi Date</div><div class="detail-value">${esc(p.refiDate)}</div></div>
+      <div class="detail-field"><div class="detail-label">Refi Loan Amount</div><div class="detail-value">${fmt(p.refiLoanAmount)}</div></div>
+      <div class="detail-field"><div class="detail-label">Refi Rate</div><div class="detail-value">${p.refiLoanRate}%</div></div>
+      <div class="detail-field"><div class="detail-label">Monthly P&amp;I</div><div class="detail-value">${fmt(p.refiPI)}</div></div>
+      <div class="detail-field"><div class="detail-label">Remaining Balance</div><div class="detail-value">${fmt(p.remainingBalance)}</div></div>
+      <div class="detail-field"><div class="detail-label">Refi Cash Out</div><div class="detail-value ${c.refiCashOut >= 0 ? 'pos' : 'neg'}">${fmt(c.refiCashOut)}</div></div>
+    </div>
+  `);
+  container.appendChild(infoSec);
+
+  // ---- VTR: Income Summary + Expenses ----
+  if (isVTR) {
+    const grossAnnual = c.grossMonthly * 12;
+
+    const vrIncomeSec = mkSection('VR Income Summary', `
+      <div class="vr-income-grid">
+        <div class="vr-income-item">
+          <div class="vr-income-label">Nightly Rate</div>
+          <div class="vr-income-value big">${fmt(c.nightlyRate)}</div>
+        </div>
+        <div class="vr-income-item">
+          <div class="vr-income-label">Occupancy</div>
+          <div class="vr-income-value big">${c.occupancyPct}%</div>
+        </div>
+        <div class="vr-income-item">
+          <div class="vr-income-label">Gross Monthly Revenue</div>
+          <div class="vr-income-value big">${fmt(c.grossMonthly)}</div>
+        </div>
+        <div class="vr-income-item">
+          <div class="vr-income-label">Avg Turns / Month</div>
+          <div class="vr-income-value">${c.avgTurns}</div>
+        </div>
+        <div class="vr-income-item">
+          <div class="vr-income-label">Platform</div>
+          <div class="vr-income-value">Airbnb / VRBO</div>
+        </div>
+        <div class="vr-income-item">
+          <div class="vr-income-label">Market</div>
+          <div class="vr-income-value">${esc(marketLabel(p.market))}</div>
+        </div>
+      </div>
+    `);
+    container.appendChild(vrIncomeSec);
+
+    // VTR Expenses
+    const exp = p.expenses || {};
+    const vrExpSec = mkSection('Monthly Expenses (STR)', `
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div class="expense-row"><span class="expense-label">Mortgage (P&amp;I)</span><span class="expense-amount">${fmt(c.mortgage)}</span></div>
+        <div class="expense-row"><span class="expense-label">Property Tax</span><span class="expense-amount">${fmt(c.tax)}</span></div>
+        <div class="expense-row"><span class="expense-label">Insurance (STR Policy)</span><span class="expense-amount">${fmt(c.insurance)}</span></div>
+        <div class="expense-row"><span class="expense-label">Platform Fee (${num(p.platformFee || 3)}% of gross revenue — Airbnb/VRBO)</span><span class="expense-amount auto">${fmt(c.platformFeeAmt)}</span></div>
+        <div class="expense-row"><span class="expense-label">PM Fee (25% of gross revenue — Ty Jackson / RE License)</span><span class="expense-amount auto">${fmt(c.pmFeeAmt)}</span></div>
+        <div class="expense-row"><span class="expense-label">Cleaning / Turnover (${fmt(p.cleaningFee)} &times; ${c.avgTurns} turns)</span><span class="expense-amount auto">${fmt(c.cleaningTotal)}</span></div>
+        <div class="expense-row"><span class="expense-label">Utilities</span><span class="expense-amount">${fmt(c.utilities)}</span></div>
+        <div class="expense-row"><span class="expense-label">Supplies / Restocking ${exp.supplies == null ? '(2% default)' : ''}</span><span class="expense-amount ${exp.supplies == null ? 'auto' : ''}">${fmt(c.supplies)}</span></div>
+        <div class="expense-row"><span class="expense-label">Other</span><span class="expense-amount">${fmt(c.other)}</span></div>
+        <div class="expense-row" style="border-top:1px solid var(--gold2);margin-top:4px;">
+          <span class="expense-label" style="font-weight:700;color:var(--cream)">Total Monthly Expenses</span>
+          <span class="expense-amount" style="color:var(--gold);font-size:16px;">${fmt(c.totalExp)}</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <button class="btn btn-sm" onclick="openExpenseEdit('${p.id}')">&#9998; Edit Expenses</button>
+      </div>
+    `);
+    container.appendChild(vrExpSec);
+
+    // VR Performance
+    const vrPerfSec = mkSection('VR Performance', `
+      <div class="vr-perf-grid">
+        <div class="vr-perf-card">
+          <div class="vr-perf-label">Occupancy Rate</div>
+          <div class="vr-perf-value">${c.occupancyPct}%</div>
+        </div>
+        <div class="vr-perf-card">
+          <div class="vr-perf-label">Gross Annual Revenue</div>
+          <div class="vr-perf-value cream">${fmt(grossAnnual)}</div>
+        </div>
+        <div class="vr-perf-card">
+          <div class="vr-perf-label">Net Annual Cash Flow</div>
+          <div class="vr-perf-value ${c.annualCF >= 0 ? 'pos' : 'neg'}">${fmt(c.annualCF)}</div>
+        </div>
+        <div class="vr-perf-card">
+          <div class="vr-perf-label">Annual PM Fees (25%)</div>
+          <div class="vr-perf-value gold">${fmt(c.pmFeeAmt * 12)}</div>
+        </div>
+        <div class="vr-perf-card">
+          <div class="vr-perf-label">Annual Platform Fees (${num(p.platformFee||3)}%)</div>
+          <div class="vr-perf-value gold">${fmt(c.platformFeeAmt * 12)}</div>
+        </div>
+        <div class="vr-perf-card">
+          <div class="vr-perf-label">Cash-on-Cash Return</div>
+          <div class="vr-perf-value ${c.coc >= 0 ? 'pos' : 'neg'}">${fmtPct(c.coc)}</div>
+        </div>
+      </div>
+    `);
+    container.appendChild(vrPerfSec);
+
+  } else {
+    // ---- LTR: Units table ----
+    const unitRows = p.units.map((u) => `
+      <tr>
+        <td>${esc(u.unitNum)}</td>
+        <td>${esc(u.tenantName) || '<span style="color:var(--text3)">—</span>'}</td>
+        <td>${esc(u.leaseStart)}</td>
+        <td>${esc(u.leaseEnd)}</td>
+        <td>${fmt(u.rent)}</td>
+        <td><span class="status-badge status-${(u.status||'vacant').toLowerCase()}">${esc(u.status)}</span></td>
+        <td>
+          <button class="icon-btn" onclick="openEditUnit('${p.id}','${u.id}')" title="Edit">&#9998;</button>
+          <button class="icon-btn del" onclick="deleteUnit('${p.id}','${u.id}')" title="Delete">&#128465;</button>
+        </td>
+      </tr>
+    `).join('') || '<tr><td colspan="7" class="empty">No units. Add one below.</td></tr>';
+
+    const unitSec = mkSection('Units', `
+      <div class="action-bar">
+        <h4>${p.units.length} Unit${p.units.length !== 1 ? 's' : ''} — ${fmt(c.totalRent)}/mo gross rent</h4>
+        <button class="btn btn-sm btn-gold" onclick="openAddUnit('${p.id}')">+ Add Unit</button>
+      </div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>Unit #</th><th>Tenant</th><th>Lease Start</th><th>Lease End</th><th>Monthly Rent</th><th>Status</th><th></th></tr></thead>
+          <tbody>${unitRows}</tbody>
+        </table>
+      </div>
+    `);
+    container.appendChild(unitSec);
+
+    // LTR Expenses
+    const exp = p.expenses || {};
+    const vacAmt  = exp.vacancy    != null ? num(exp.vacancy)    : c.totalRent * 0.08;
+    const maintAmt = exp.maintenance != null ? num(exp.maintenance) : c.totalRent * 0.05;
+    const expSec = mkSection('Monthly Expenses', `
+      <div style="display:flex;flex-direction:column;gap:0;">
+        <div class="expense-row"><span class="expense-label">Mortgage (P&amp;I)</span><span class="expense-amount">${fmt(c.mortgage)}</span></div>
+        <div class="expense-row"><span class="expense-label">Property Tax</span><span class="expense-amount">${fmt(c.tax)}</span></div>
+        <div class="expense-row"><span class="expense-label">Insurance</span><span class="expense-amount">${fmt(c.insurance)}</span></div>
+        <div class="expense-row"><span class="expense-label">Vacancy Reserve (${exp.vacancy != null ? 'custom' : '8% of rent'})</span><span class="expense-amount ${exp.vacancy == null ? 'auto' : ''}">${fmt(vacAmt)}</span></div>
+        <div class="expense-row"><span class="expense-label">Maintenance Reserve (${exp.maintenance != null ? 'custom' : '5% of rent'})</span><span class="expense-amount ${exp.maintenance == null ? 'auto' : ''}">${fmt(maintAmt)}</span></div>
+        <div class="expense-row"><span class="expense-label">Property Management (9% of rent)</span><span class="expense-amount auto">${fmt(c.pmFee)}</span></div>
+        <div class="expense-row"><span class="expense-label">Payment Processing (3.5% of rent)</span><span class="expense-amount auto">${fmt(c.pmProcessing)}</span></div>
+        <div class="expense-row"><span class="expense-label" style="color:var(--gold);font-size:11px;">&#8627; PM + Processing flows to Ironwood LLC (12.5% total)</span><span class="expense-amount" style="color:var(--gold);font-size:11px;">${fmt(c.pmTotal)}/mo</span></div>
+        <div class="expense-row"><span class="expense-label">Other</span><span class="expense-amount">${fmt(c.other)}</span></div>
+        <div class="expense-row" style="border-top:1px solid var(--gold2);margin-top:4px;">
+          <span class="expense-label" style="font-weight:700;color:var(--cream)">Total Monthly Expenses</span>
+          <span class="expense-amount" style="color:var(--gold);font-size:16px;">${fmt(c.totalExp)}</span>
+        </div>
+      </div>
+      <div style="margin-top:14px;">
+        <button class="btn btn-sm" onclick="openExpenseEdit('${p.id}')">&#9998; Edit Expenses</button>
+      </div>
+    `);
+    container.appendChild(expSec);
+  }
+
+  // ---- CASH FLOW SUMMARY (shared) ----
+  const cfSec = mkSection('Cash Flow Summary', `
+    <div class="cf-grid">
+      <div class="cf-item"><div class="cf-label">${isVTR ? 'Gross Monthly Revenue' : 'Gross Monthly Rent'}</div><div class="cf-value cream">${fmt(c.totalRent)}</div></div>
+      <div class="cf-item"><div class="cf-label">Monthly Expenses</div><div class="cf-value cream">${fmt(c.totalExp)}</div></div>
+      <div class="cf-item"><div class="cf-label">Net Monthly Cash Flow</div><div class="cf-value ${c.netCF >= 0 ? 'pos' : 'neg'}">${fmt(c.netCF)}</div></div>
+      <div class="cf-item"><div class="cf-label">Annual Cash Flow</div><div class="cf-value ${c.annualCF >= 0 ? 'pos' : 'neg'}">${fmt(c.annualCF)}</div></div>
+      <div class="cf-item"><div class="cf-label">Cash Invested</div><div class="cf-value gold">${fmt(c.cashInvested)}</div></div>
+      <div class="cf-item"><div class="cf-label">Cash-on-Cash Return</div><div class="cf-value ${c.coc >= 0 ? 'pos' : 'neg'}">${fmtPct(c.coc)}</div></div>
+      <div class="cf-item"><div class="cf-label">Current Value</div><div class="cf-value gold">${fmt(c.currentVal)}</div></div>
+      <div class="cf-item"><div class="cf-label">Remaining Balance</div><div class="cf-value cream">${fmt(p.remainingBalance)}</div></div>
+      <div class="cf-item"><div class="cf-label">Total Equity</div><div class="cf-value ${c.equity >= 0 ? 'pos' : 'neg'}">${fmt(c.equity)}</div></div>
+    </div>
+  `);
+  container.appendChild(cfSec);
+
+  // ---- CHART (shared) ----
+  container.appendChild(renderChart(p, c));
+
+  // ---- RENT LEDGER (shared) ----
+  const ledger   = (p.ledger || []).slice().reverse();
+  const payRows  = ledger.map(e => `
+    <tr>
+      <td>${esc(e.month)}</td>
+      <td>${esc(e.unit)}</td>
+      <td>${fmt(e.expected)}</td>
+      <td>${fmt(e.received)}</td>
+      <td>${esc(e.datePaid)}</td>
+      <td><span class="status-badge status-${(e.status||'').toLowerCase()}">${esc(e.status)}</span></td>
+      <td>${esc(e.notes)}</td>
+      <td>
+        <button class="icon-btn" onclick="openEditPayment('${p.id}','${e.id}')" title="Edit">&#9998;</button>
+        <button class="icon-btn del" onclick="deletePayment('${p.id}','${e.id}')" title="Delete">&#128465;</button>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="8" class="empty">No payments logged yet.</td></tr>';
+
+  const ledgerSec = mkSection(isVTR ? 'Revenue Ledger' : 'Rent Ledger', `
+    <div class="action-bar">
+      <h4>${ledger.length} record${ledger.length !== 1 ? 's' : ''}</h4>
+      <button class="btn btn-sm btn-gold" onclick="openAddPayment('${p.id}')">+ Add Entry</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Month</th><th>Unit/Note</th><th>Expected</th><th>Received</th><th>Date</th><th>Status</th><th>Notes</th><th></th></tr></thead>
+        <tbody>${payRows}</tbody>
+      </table>
+    </div>
+  `);
+  container.appendChild(ledgerSec);
+
+  // ---- MAINTENANCE LOG (shared) ----
+  const maint = (p.maintenance || []).slice().reverse();
+  const maintRows = maint.map(m => `
+    <tr>
+      <td>${esc(m.date)}</td>
+      <td>${esc(m.description)}</td>
+      <td>${esc(m.vendor)}</td>
+      <td>${fmt(m.cost)}</td>
+      <td><span class="status-badge status-${(m.status||'').toLowerCase()}">${esc(m.status)}</span></td>
+      <td>${esc(m.notes)}</td>
+      <td>
+        <button class="icon-btn" onclick="openEditMaint('${p.id}','${m.id}')" title="Edit">&#9998;</button>
+        <button class="icon-btn del" onclick="deleteMaint('${p.id}','${m.id}')" title="Delete">&#128465;</button>
+      </td>
+    </tr>
+  `).join('') || '<tr><td colspan="7" class="empty">No maintenance items logged yet.</td></tr>';
+  const totalMaintCost = maint.reduce((s,m) => s + num(m.cost), 0);
+
+  const maintSec = mkSection('Maintenance Log', `
+    <div class="action-bar">
+      <h4>${maint.length} item${maint.length !== 1 ? 's' : ''} &mdash; Total: ${fmt(totalMaintCost)}</h4>
+      <button class="btn btn-sm btn-gold" onclick="openAddMaint('${p.id}')">+ Add Item</button>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Date</th><th>Description</th><th>Vendor</th><th>Cost</th><th>Status</th><th>Notes</th><th></th></tr></thead>
+        <tbody>${maintRows}</tbody>
+      </table>
+    </div>
+  `);
+  container.appendChild(maintSec);
+
+  // ---- PARTNERSHIP (shared) ----
+  const partSec = mkSection('Partnership Split — Anchor Pro Solutions &times; Landon Renovations', `
+    <div class="partner-grid">
+      <div class="partner-card">
+        <div class="partner-name">Annual Cash Flow</div>
+        <div class="partner-val">${fmt(c.annualCF)}</div>
+        <div class="partner-pct">100%</div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-name">Anchor Pro Solutions</div>
+        <div class="partner-val ${c.annualCF / 2 >= 0 ? 'pos' : 'neg'}">${fmt(c.annualCF / 2)}</div>
+        <div class="partner-pct">50% share</div>
+      </div>
+      <div class="partner-card">
+        <div class="partner-name">Landon Renovations</div>
+        <div class="partner-val ${c.annualCF / 2 >= 0 ? 'pos' : 'neg'}">${fmt(c.annualCF / 2)}</div>
+        <div class="partner-pct">50% share</div>
+        <div class="partner-note">Jeff's labor compensated during rehab: Phase 1 @ $50/hr or Phase 2 @ 30% gross profit.</div>
+      </div>
+    </div>
+  `);
+  container.appendChild(partSec);
+}
+
+// ============================================================
+// CHART
+// ============================================================
+function renderChart(p, c) {
+  const ledger = p.ledger || [];
+  const maint  = p.maintenance || [];
+  const months = [];
+  const now    = new Date();
+  for (let i = 11; i >= 0; i--) {
+    const d     = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const key   = d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+    const label = d.toLocaleString('en-US', { month: 'short', year: '2-digit' });
+    months.push({ key, label });
+  }
+
+  const monthData = months.map(m => {
+    const income    = ledger.filter(e => e.month === m.key).reduce((s, e) => s + num(e.received), 0);
+    const maintCost = maint.filter(e => e.date && e.date.startsWith(m.key)).reduce((s, e) => s + num(e.cost), 0);
+    const fixedExp  = c.mortgage + c.tax + c.insurance + (c.management || 0) + (c.other || 0);
+    const expenses  = fixedExp + maintCost;
+    const cf        = income > 0 ? income - expenses : null;
+    return { ...m, cf };
+  });
+
+  const validCFs = monthData.filter(m => m.cf !== null).map(m => m.cf);
+  const maxAbs   = validCFs.length > 0 ? Math.max(Math.abs(Math.min(...validCFs)), Math.abs(Math.max(...validCFs)), 1) : 1;
+  const maxHeight = 100;
+
+  const bars = monthData.map(m => {
+    if (m.cf === null) {
+      return `<div class="chart-bar-col">
+        <div class="chart-val" style="color:var(--text3)">—</div>
+        <div style="flex:1;display:flex;align-items:center;justify-content:center;"><div style="height:2px;width:100%;background:var(--border)"></div></div>
+        <div class="chart-label">${m.label}</div>
+      </div>`;
+    }
+    const pct   = Math.abs(m.cf) / maxAbs;
+    const h     = Math.max(2, Math.round(pct * maxHeight));
+    const isPos = m.cf >= 0;
+    return `<div class="chart-bar-col">
+      <div class="chart-val ${isPos ? 'pos' : 'neg'}">${fmt(m.cf)}</div>
+      <div style="flex:1;display:flex;align-items:${isPos ? 'flex-end' : 'flex-start'}">
+        <div class="chart-bar ${isPos ? 'pos-bar' : 'neg-bar'}" style="height:${h}px;width:100%"></div>
+      </div>
+      <div class="chart-label">${m.label}</div>
+    </div>`;
+  }).join('');
+
+  const sec = document.createElement('div');
+  sec.className = 'section';
+  sec.innerHTML = `
+    <div class="section-header"><span class="section-title">Monthly Cash Flow — Last 12 Months</span><span style="font-size:11px;color:var(--text3)">Based on ledger received vs. fixed expenses</span></div>
+    <div class="section-body">
+      <div class="chart-wrap">
+        <div class="chart-bar-row">${bars}</div>
+        <div class="chart-baseline"></div>
+      </div>
+    </div>
+  `;
+  return sec;
+}
+
+// ============================================================
+// SECTION HELPER
+// ============================================================
+function mkSection(title, bodyHTML) {
+  const sec = document.createElement('div');
+  sec.className = 'section';
+  sec.innerHTML = `
+    <div class="section-header"><span class="section-title">${title}</span></div>
+    <div class="section-body">${bodyHTML}</div>
+  `;
+  return sec;
+}
+
+// ============================================================
+// PROPERTY FORM
+// ============================================================
+function openAddProperty() {
+  editingId = null;
+  document.getElementById('modal-prop-title').textContent = 'Add Property';
+  renderPropForm(null);
+  openModal('modal-prop');
+}
+function openEditProperty(id) {
+  editingId = id;
+  document.getElementById('modal-prop-title').textContent = 'Edit Property';
+  renderPropForm(getProp(id));
+  openModal('modal-prop');
+}
+
+function renderPropForm(p) {
+  const v    = k => p ? esc(p[k] != null ? p[k] : '') : '';
+  const isVTR = p ? p.propertyType === 'vtr' : false;
+  // Show/hide VTR fields via JS after type change
+  document.getElementById('prop-form').innerHTML = `
+    <div class="form-section-label">Property Details</div>
+    <div class="form-group form-full"><label class="form-label">Street Address / Name</label><input class="form-input" id="pf-address" value="${v('address')}" placeholder="123 Main St"></div>
+    <div class="form-group"><label class="form-label">City</label><input class="form-input" id="pf-city" value="${v('city')}" placeholder="Tampa"></div>
+    <div class="form-group"><label class="form-label">State</label><input class="form-input" id="pf-state" value="${v('state')}" placeholder="FL"></div>
+    <div class="form-group"><label class="form-label">ZIP</label><input class="form-input" id="pf-zip" value="${v('zip')}" placeholder="33605"></div>
+    <div class="form-group"><label class="form-label">Property Type</label>
+      <select class="form-input" id="pf-type">
+        ${['SFH','Duplex','Triplex','Quad'].map(t => `<option ${(p && p.type===t)?'selected':''}>${t}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Rental Strategy</label>
+      <select class="form-input" id="pf-propertyType" onchange="toggleVTRFields()">
+        <option value="ltr" ${!isVTR ? 'selected' : ''}>LTR — Long-Term Rental</option>
+        <option value="vtr" ${isVTR ? 'selected' : ''}>STR — Vacation / Short-Term Rental</option>
+      </select>
+    </div>
+    <div class="form-group" id="pf-market-group" style="${isVTR ? '' : 'display:none'}">
+      <label class="form-label">Market</label>
+      <select class="form-input" id="pf-market">
+        ${Object.entries(MARKETS).map(([k, lbl]) => `<option value="${k}" ${(p && p.market===k)?'selected':''}>${esc(lbl)}</option>`).join('')}
+      </select>
+    </div>
+    <hr class="form-sep">
+    <div class="form-section-label">Acquisition</div>
+    <div class="form-group"><label class="form-label">Purchase Date</label><input type="date" class="form-input" id="pf-purchaseDate" value="${v('purchaseDate')}"></div>
+    <div class="form-group"><label class="form-label">Purchase Price ($)</label><input type="number" class="form-input" id="pf-purchasePrice" value="${p ? p.purchasePrice : ''}" placeholder="185000"></div>
+    <div class="form-group"><label class="form-label">Rehab Cost ($)</label><input type="number" class="form-input" id="pf-rehabCost" value="${p ? p.rehabCost : ''}" placeholder="42000"></div>
+    <div class="form-group"><label class="form-label">ARV at Purchase ($)</label><input type="number" class="form-input" id="pf-arv" value="${p ? p.arv : ''}" placeholder="260000"></div>
+    <hr class="form-sep">
+    <div class="form-section-label">Refinance</div>
+    <div class="form-group"><label class="form-label">Refi Date</label><input type="date" class="form-input" id="pf-refiDate" value="${v('refiDate')}"></div>
+    <div class="form-group"><label class="form-label">Refi Loan Amount ($)</label><input type="number" class="form-input" id="pf-refiLoanAmount" value="${p ? p.refiLoanAmount : ''}" placeholder="208000"></div>
+    <div class="form-group"><label class="form-label">Loan Rate (%)</label><input type="number" step="0.01" class="form-input" id="pf-refiLoanRate" value="${p ? p.refiLoanRate : ''}" placeholder="7.25"></div>
+    <div class="form-group"><label class="form-label">Monthly P&amp;I ($)</label><input type="number" class="form-input" id="pf-refiPI" value="${p ? p.refiPI : ''}" placeholder="1420"></div>
+    <hr class="form-sep">
+    <div class="form-section-label">Current Status</div>
+    <div class="form-group"><label class="form-label">Current Value ($)</label><input type="number" class="form-input" id="pf-currentValue" value="${p ? p.currentValue : ''}" placeholder="265000"></div>
+    <div class="form-group"><label class="form-label">Remaining Balance ($)</label><input type="number" class="form-input" id="pf-remainingBalance" value="${p ? p.remainingBalance : ''}" placeholder="204500"></div>
+    <hr class="form-sep">
+    <div class="form-section-label vr" id="vr-fields-header" style="${isVTR ? '' : 'display:none'}">STR / Vacation Rental Settings</div>
+    <div class="form-group" id="pf-nightlyRate-group" style="${isVTR ? '' : 'display:none'}">
+      <label class="form-label">Nightly Rate ($)</label>
+      <input type="number" class="form-input" id="pf-nightlyRate" value="${p ? (p.nightlyRate||'') : ''}" placeholder="225">
+    </div>
+    <div class="form-group" id="pf-occupancyPct-group" style="${isVTR ? '' : 'display:none'}">
+      <label class="form-label">Occupancy % (default 65-70)</label>
+      <input type="number" class="form-input" id="pf-occupancyPct" value="${p ? (p.occupancyPct||'') : ''}" placeholder="65">
+    </div>
+    <div class="form-group" id="pf-platformFee-group" style="${isVTR ? '' : 'display:none'}">
+      <label class="form-label">Platform Fee % (default 3)</label>
+      <input type="number" step="0.1" class="form-input" id="pf-platformFee" value="${p ? (p.platformFee!=null?p.platformFee:'') : ''}" placeholder="3">
+    </div>
+    <div class="form-group" id="pf-cleaningFee-group" style="${isVTR ? '' : 'display:none'}">
+      <label class="form-label">Cleaning Fee per Turn ($)</label>
+      <input type="number" class="form-input" id="pf-cleaningFee" value="${p ? (p.cleaningFee||'') : ''}" placeholder="175">
+    </div>
+    <div class="form-group" id="pf-avgTurns-group" style="${isVTR ? '' : 'display:none'}">
+      <label class="form-label">Avg Turns / Month</label>
+      <input type="number" class="form-input" id="pf-avgTurns" value="${p ? (p.avgTurns||'') : ''}" placeholder="8">
+    </div>
+  `;
+}
+
+function toggleVTRFields() {
+  const isVTR = document.getElementById('pf-propertyType').value === 'vtr';
+  const ids = ['pf-market-group','vr-fields-header','pf-nightlyRate-group','pf-occupancyPct-group','pf-platformFee-group','pf-cleaningFee-group','pf-avgTurns-group'];
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = isVTR ? '' : 'none';
+  });
+}
+
+function savePropForm() {
+  const g  = id => document.getElementById(id).value.trim();
+  const gn = id => parseFloat(document.getElementById(id).value) || 0;
+  const propertyType = g('pf-propertyType') || 'ltr';
+  const isVTR = propertyType === 'vtr';
+
+  const propData = {
+    address: g('pf-address'), city: g('pf-city'), state: g('pf-state'), zip: g('pf-zip'),
+    type: g('pf-type'), propertyType,
+    market: g('pf-market') || 'georgia',
+    purchaseDate: g('pf-purchaseDate'), purchasePrice: gn('pf-purchasePrice'),
+    rehabCost: gn('pf-rehabCost'), arv: gn('pf-arv'), refiDate: g('pf-refiDate'),
+    refiLoanAmount: gn('pf-refiLoanAmount'),
+    refiLoanRate: parseFloat(document.getElementById('pf-refiLoanRate').value) || 0,
+    refiPI: gn('pf-refiPI'), currentValue: gn('pf-currentValue'), remainingBalance: gn('pf-remainingBalance')
+  };
+
+  if (isVTR) {
+    propData.nightlyRate   = gn('pf-nightlyRate');
+    propData.occupancyPct  = parseFloat(document.getElementById('pf-occupancyPct').value) || 65;
+    propData.platformFee   = parseFloat(document.getElementById('pf-platformFee').value) || 3;
+    propData.cleaningFee   = gn('pf-cleaningFee');
+    propData.avgTurns      = gn('pf-avgTurns') || 8;
+  }
+
+  if (!propData.address) { alert('Address is required.'); return; }
+
+  if (editingId) {
+    const p = getProp(editingId);
+    Object.assign(p, propData);
+    if (!p.expenses) {
+      p.expenses = isVTR
+        ? { mortgage: p.refiPI, tax: 0, insurance: 0, utilities: 0, supplies: null, other: 0 }
+        : { mortgage: p.refiPI, tax: 0, insurance: 0, vacancy: null, maintenance: null, management: 0, other: 0 };
+    } else {
+      p.expenses.mortgage = p.refiPI;
+    }
+  } else {
+    const newProp = {
+      id: uid(), ...propData,
+      units: [],
+      expenses: isVTR
+        ? { mortgage: propData.refiPI, tax: 0, insurance: 0, utilities: 0, supplies: null, other: 0 }
+        : { mortgage: propData.refiPI, tax: 0, insurance: 0, vacancy: null, maintenance: null, management: 0, other: 0 },
+      ledger: [], maintenance: []
+    };
+    data.properties.push(newProp);
+    selectedPropId = newProp.id;
+  }
+  save(); closeModal('modal-prop'); renderAll();
+  if (selectedPropId) { document.getElementById('no-prop').style.display = 'none'; document.getElementById('prop-detail').style.display = 'flex'; }
+}
+
+// ============================================================
+// DELETE PROPERTY
+// ============================================================
+function deleteProp(id) {
+  if (!confirm('Delete this property and all its data? This cannot be undone.')) return;
+  data.properties = data.properties.filter(p => p.id !== id);
+  if (selectedPropId === id) {
+    selectedPropId = data.properties.length > 0 ? data.properties[0].id : null;
+    if (!selectedPropId) {
+      document.getElementById('no-prop').style.display = 'flex';
+      document.getElementById('prop-detail').style.display = 'none';
+    }
+  }
+  save(); renderAll();
+}
+
+// ============================================================
+// UNIT FORM
+// ============================================================
+let currentPropId = null;
+let currentUnitId = null;
+function openAddUnit(pid) {
+  currentPropId = pid; currentUnitId = null;
+  document.getElementById('modal-unit-title').textContent = 'Add Unit';
+  renderUnitForm(null, pid);
+  openModal('modal-unit');
+}
+function openEditUnit(pid, uid_) {
+  currentPropId = pid; currentUnitId = uid_;
+  document.getElementById('modal-unit-title').textContent = 'Edit Unit';
+  const p = getProp(pid);
+  const u = p ? p.units.find(x => x.id === uid_) : null;
+  renderUnitForm(u, pid);
+  openModal('modal-unit');
+}
+function renderUnitForm(u, pid) {
+  const v = k => u ? esc(u[k] != null ? u[k] : '') : '';
+  document.getElementById('unit-form').innerHTML = `
+    <div class="form-group"><label class="form-label">Unit #</label><input class="form-input" id="uf-unitNum" value="${v('unitNum')}" placeholder="1A"></div>
+    <div class="form-group"><label class="form-label">Status</label>
+      <select class="form-input" id="uf-status">
+        ${['Occupied','Vacant','Notice'].map(s => `<option ${u&&u.status===s?'selected':''}>${s}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-group"><label class="form-label">Tenant Name</label><input class="form-input" id="uf-tenantName" value="${v('tenantName')}" placeholder="Jane Smith"></div>
+    <div class="form-group"><label class="form-label">Monthly Rent ($)</label><input type="number" class="form-input" id="uf-rent" value="${u ? u.rent : ''}" placeholder="1200"></div>
+    <div class="form-group"><label class="form-label">Lease Start</label><input type="date" class="form-input" id="uf-leaseStart" value="${v('leaseStart')}"></div>
+    <div class="form-group"><label class="form-label">Lease End</label><input type="date" class="form-input" id="uf-leaseEnd" value="${v('leaseEnd')}"></div>
+  `;
+}
+function saveUnitForm() {
+  const g = id => document.getElementById(id).value.trim();
+  const unitData = {
+    unitNum: g('uf-unitNum'), tenantName: g('uf-tenantName'),
+    leaseStart: g('uf-leaseStart'), leaseEnd: g('uf-leaseEnd'),
+    rent: parseFloat(document.getElementById('uf-rent').value) || 0,
+    status: g('uf-status')
+  };
+  const p = getProp(currentPropId);
+  if (!p) return;
+  if (currentUnitId) {
+    const u = p.units.find(x => x.id === currentUnitId);
+    if (u) Object.assign(u, unitData);
+  } else {
+    p.units.push({ id: uid(), ...unitData });
+  }
+  save(); closeModal('modal-unit'); renderAll();
+}
+function deleteUnit(pid, uid_) {
+  if (!confirm('Delete this unit?')) return;
+  const p = getProp(pid);
+  if (p) p.units = p.units.filter(u => u.id !== uid_);
+  save(); renderAll();
+}
+
+// ============================================================
+// PAYMENT FORM
+// ============================================================
+let currentPayId = null;
+function openAddPayment(pid) {
+  currentPropId = pid; currentPayId = null;
+  document.getElementById('modal-payment-title').textContent = 'Add Payment';
+  renderPaymentForm(null, pid);
+  openModal('modal-payment');
+}
+function openEditPayment(pid, eid) {
+  currentPropId = pid; currentPayId = eid;
+  document.getElementById('modal-payment-title').textContent = 'Edit Payment';
+  const p = getProp(pid);
+  const e = p ? (p.ledger || []).find(x => x.id === eid) : null;
+  renderPaymentForm(e, pid);
+  openModal('modal-payment');
+}
+function renderPaymentForm(e, pid) {
+  const p        = getProp(pid);
+  const isVTR    = p && p.propertyType === 'vtr';
+  const unitOpts = (!isVTR && p ? p.units : []).map(u => `<option ${e&&e.unit===u.unitNum?'selected':''}>${esc(u.unitNum)}</option>`).join('');
+  const v        = k => e ? esc(e[k] != null ? e[k] : '') : '';
+  const today    = new Date().toISOString().slice(0,10);
+  const thisMonth = today.slice(0,7);
+  const unitField = isVTR
+    ? `<div class="form-group"><label class="form-label">Note / Source</label><input class="form-input" id="ef-unit" value="${v('unit')}" placeholder="Airbnb / VRBO"></div>`
+    : `<div class="form-group"><label class="form-label">Unit</label><select class="form-input" id="ef-unit">${unitOpts}</select></div>`;
+  document.getElementById('payment-form').innerHTML = `
+    <div class="form-group"><label class="form-label">Month (YYYY-MM)</label><input class="form-input" id="ef-month" value="${v('month') || thisMonth}" placeholder="2025-01"></div>
+    ${unitField}
+    <div class="form-group"><label class="form-label">Expected ($)</label><input type="number" class="form-input" id="ef-expected" value="${e ? e.expected : ''}" placeholder="1200"></div>
+    <div class="form-group"><label class="form-label">Received ($)</label><input type="number" class="form-input" id="ef-received" value="${e ? e.received : ''}" placeholder="1200"></div>
+    <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="ef-datePaid" value="${v('datePaid') || today}"></div>
+    <div class="form-group"><label class="form-label">Status</label>
+      <select class="form-input" id="ef-status">
+        ${['Paid','Late','Partial','Unpaid'].map(s => `<option ${e&&e.status===s?'selected':''}>${s}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-group form-full"><label class="form-label">Notes</label><textarea class="form-input" id="ef-notes">${v('notes')}</textarea></div>
+  `;
+}
+function savePaymentForm() {
+  const g = id => document.getElementById(id).value.trim();
+  const payData = {
+    month: g('ef-month'), unit: g('ef-unit'),
+    expected: parseFloat(document.getElementById('ef-expected').value) || 0,
+    received: parseFloat(document.getElementById('ef-received').value) || 0,
+    datePaid: g('ef-datePaid'), status: g('ef-status'), notes: g('ef-notes')
+  };
+  const p = getProp(currentPropId);
+  if (!p) return;
+  if (!p.ledger) p.ledger = [];
+  if (currentPayId) {
+    const e = p.ledger.find(x => x.id === currentPayId);
+    if (e) Object.assign(e, payData);
+  } else {
+    p.ledger.push({ id: uid(), ...payData });
+  }
+  save(); closeModal('modal-payment'); renderAll();
+}
+function deletePayment(pid, eid) {
+  if (!confirm('Delete this payment record?')) return;
+  const p = getProp(pid);
+  if (p) p.ledger = (p.ledger || []).filter(e => e.id !== eid);
+  save(); renderAll();
+}
+
+// ============================================================
+// MAINTENANCE FORM
+// ============================================================
+let currentMaintId = null;
+function openAddMaint(pid) {
+  currentPropId = pid; currentMaintId = null;
+  document.getElementById('modal-maint-title').textContent = 'Add Maintenance Item';
+  renderMaintForm(null);
+  openModal('modal-maint');
+}
+function openEditMaint(pid, mid) {
+  currentPropId = pid; currentMaintId = mid;
+  document.getElementById('modal-maint-title').textContent = 'Edit Maintenance Item';
+  const p = getProp(pid);
+  const m = p ? (p.maintenance || []).find(x => x.id === mid) : null;
+  renderMaintForm(m);
+  openModal('modal-maint');
+}
+function renderMaintForm(m) {
+  const v = k => m ? esc(m[k] != null ? m[k] : '') : '';
+  const today = new Date().toISOString().slice(0,10);
+  document.getElementById('maint-form').innerHTML = `
+    <div class="form-group"><label class="form-label">Date</label><input type="date" class="form-input" id="mf-date" value="${v('date') || today}"></div>
+    <div class="form-group"><label class="form-label">Status</label>
+      <select class="form-input" id="mf-status">
+        ${['Pending','Complete'].map(s => `<option ${m&&m.status===s?'selected':''}>${s}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-group form-full"><label class="form-label">Description</label><input class="form-input" id="mf-description" value="${v('description')}" placeholder="HVAC filter replacement"></div>
+    <div class="form-group"><label class="form-label">Vendor</label><input class="form-input" id="mf-vendor" value="${v('vendor')}" placeholder="Self or Contractor"></div>
+    <div class="form-group"><label class="form-label">Cost ($)</label><input type="number" class="form-input" id="mf-cost" value="${m ? m.cost : ''}" placeholder="0"></div>
+    <div class="form-group form-full"><label class="form-label">Notes</label><textarea class="form-input" id="mf-notes">${v('notes')}</textarea></div>
+  `;
+}
+function saveMaintForm() {
+  const g = id => document.getElementById(id).value.trim();
+  const maintData = {
+    date: g('mf-date'), description: g('mf-description'), vendor: g('mf-vendor'),
+    cost: parseFloat(document.getElementById('mf-cost').value) || 0,
+    status: g('mf-status'), notes: g('mf-notes')
+  };
+  const p = getProp(currentPropId);
+  if (!p) return;
+  if (!p.maintenance) p.maintenance = [];
+  if (currentMaintId) {
+    const m = p.maintenance.find(x => x.id === currentMaintId);
+    if (m) Object.assign(m, maintData);
+  } else {
+    p.maintenance.push({ id: uid(), ...maintData });
+  }
+  save(); closeModal('modal-maint'); renderAll();
+}
+function deleteMaint(pid, mid) {
+  if (!confirm('Delete this maintenance item?')) return;
+  const p = getProp(pid);
+  if (p) p.maintenance = (p.maintenance || []).filter(m => m.id !== mid);
+  save(); renderAll();
+}
+
+// ============================================================
+// EXPENSE FORM — detects LTR vs VTR
+// ============================================================
+function openExpenseEdit(pid) {
+  currentPropId = pid;
+  const p = getProp(pid);
+  if (!p) return;
+  const c      = calcProp(p);
+  const exp    = p.expenses || {};
+  const isVTR  = p.propertyType === 'vtr';
+
+  if (isVTR) {
+    // VTR expense form: mortgage, tax, insurance, utilities, supplies, other
+    // Platform fee, PM fee, cleaning are auto-calc — not editable here
+    document.getElementById('expense-form').innerHTML = `
+      <p style="font-size:11px;color:var(--teal);margin-bottom:4px;">STR property — platform fee (${num(p.platformFee||3)}%), PM fee (25%), and cleaning/turnover are auto-calculated from gross revenue and are not editable here. Edit nightly rate, occupancy, and turn settings via Edit Property.</p>
+      <div class="form-group">
+        <label class="form-label">Mortgage P&amp;I ($)</label>
+        <input type="number" class="form-input" id="xf-mortgage" value="${c.mortgage}" placeholder="${p.refiPI}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Property Tax / Month ($)</label>
+        <input type="number" class="form-input" id="xf-tax" value="${exp.tax || 0}" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Insurance / Month ($) <span style="color:var(--text3)">(STR policy)</span></label>
+        <input type="number" class="form-input" id="xf-insurance" value="${exp.insurance || 0}" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Utilities / Month ($)</label>
+        <input type="number" class="form-input" id="xf-utilities" value="${exp.utilities || 0}" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Supplies / Restocking ($) <span style="color:var(--text3)">leave blank for 2% default</span></label>
+        <input type="number" class="form-input" id="xf-supplies" value="${exp.supplies != null ? exp.supplies : ''}" placeholder="auto (2%)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Other ($)</label>
+        <input type="number" class="form-input" id="xf-other" value="${exp.other || 0}" placeholder="0">
+      </div>
+    `;
+  } else {
+    // LTR expense form (original)
+    document.getElementById('expense-form').innerHTML = `
+      <div class="form-group">
+        <label class="form-label">Mortgage P&amp;I ($) <span style="color:var(--text3)">(auto from refi)</span></label>
+        <input type="number" class="form-input" id="xf-mortgage" value="${c.mortgage}" placeholder="${p.refiPI}">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Property Tax / Month ($)</label>
+        <input type="number" class="form-input" id="xf-tax" value="${exp.tax || 0}" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Insurance / Month ($)</label>
+        <input type="number" class="form-input" id="xf-insurance" value="${exp.insurance || 0}" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Vacancy Reserve ($) <span style="color:var(--text3)">leave blank for 8% default</span></label>
+        <input type="number" class="form-input" id="xf-vacancy" value="${exp.vacancy != null ? exp.vacancy : ''}" placeholder="auto (8%)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Maintenance Reserve ($) <span style="color:var(--text3)">leave blank for 5% default</span></label>
+        <input type="number" class="form-input" id="xf-maintenance" value="${exp.maintenance != null ? exp.maintenance : ''}" placeholder="auto (5%)">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Property Management ($)</label>
+        <input type="number" class="form-input" id="xf-management" value="${exp.management || 0}" placeholder="0">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Other ($)</label>
+        <input type="number" class="form-input" id="xf-other" value="${exp.other || 0}" placeholder="0">
+      </div>
+    `;
+  }
+  openModal('modal-expense');
+}
+
+function saveExpenseForm() {
+  const gv = id => { const el = document.getElementById(id); return (!el || el.value.trim() === '') ? null : parseFloat(el.value) || 0; };
+  const gn = id => { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; };
+  const p  = getProp(currentPropId);
+  if (!p) return;
+  if (!p.expenses) p.expenses = {};
+  const isVTR = p.propertyType === 'vtr';
+
+  p.expenses.mortgage  = gv('xf-mortgage');
+  p.expenses.tax       = gn('xf-tax');
+  p.expenses.insurance = gn('xf-insurance');
+  p.expenses.other     = gn('xf-other');
+
+  if (isVTR) {
+    p.expenses.utilities = gn('xf-utilities');
+    p.expenses.supplies  = gv('xf-supplies');
+    // Remove LTR-only keys if they somehow exist
+    delete p.expenses.vacancy;
+    delete p.expenses.maintenance;
+    delete p.expenses.management;
+  } else {
+    p.expenses.vacancy     = gv('xf-vacancy');
+    p.expenses.maintenance = gv('xf-maintenance');
+    p.expenses.management  = gn('xf-management');
+  }
+
+  save(); closeModal('modal-expense'); renderAll();
+}
+
+// ============================================================
+// EXPORT / IMPORT
+// ============================================================
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  const dateStr = new Date().toISOString().slice(0,10);
+  a.href = url; a.download = `rental_dashboard_${dateStr}.json`;
+  a.click(); URL.revokeObjectURL(url);
+}
+function importJSON(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (!imported.properties) throw new Error('Invalid format');
+      if (!confirm(`Import ${imported.properties.length} properties? This will replace all current data.`)) return;
+      data = imported;
+      selectedPropId = data.properties.length > 0 ? data.properties[0].id : null;
+      save(); renderAll();
+      if (selectedPropId) { document.getElementById('no-prop').style.display = 'none'; document.getElementById('prop-detail').style.display = 'flex'; }
+    } catch(err) { alert('Invalid JSON file: ' + err.message); }
+  };
+  reader.readAsText(file);
+  input.value = '';
+}
+
+// ============================================================
+// RENDER ALL
+// ============================================================
+function renderAll() {
+  renderSummary();
+  renderSidebar();
+  if (selectedPropId && getProp(selectedPropId)) {
+    renderDetail();
+    document.getElementById('no-prop').style.display = 'none';
+    document.getElementById('prop-detail').style.display = 'flex';
+  } else if (!selectedPropId) {
+    document.getElementById('no-prop').style.display = 'flex';
+    document.getElementById('prop-detail').style.display = 'none';
+  }
+}
+
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => { if (e.target === el) el.classList.remove('open'); });
+});
+
+// ============================================================
+// INIT
+// ============================================================
+load();
+seedData();
+if (data.properties.length > 0) selectedPropId = data.properties[0].id;
+renderAll();
+</script>
+</body>
+</html>

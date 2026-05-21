@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood LLC — Master Timeline</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:     #0a0a0a;
+  --s1:     #111;
+  --s2:     #1a1a1a;
+  --s3:     #222;
+  --border: #2a2a2a;
+  --cream:  #f5f0e8;
+  --muted:  #888;
+  --dim:    #444;
+  --gold:   #c9a84c;
+  --blue:   #4a9eda;
+  --green:  #4caf7d;
+  --purple: #9b7fd4;
+  --orange: #e0874a;
+  --teal:   #4ab8c1;
+  --red:    #e05555;
+  --yellow: #e0c44a;
+}
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+
+/* TOPBAR */
+.topbar { background: linear-gradient(135deg,#1a1a1a,#0a0a0a); border-bottom: 2px solid var(--gold); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; }
+.tb-brand { display: flex; align-items: center; gap: 12px; }
+.tb-logo { width: 36px; height: 36px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
+.tb-name { font-size: 15px; font-weight: 700; color: var(--cream); }
+.tb-sub  { font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; }
+.btn-print { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 7px 18px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; }
+.btn-print:hover { background: var(--gold); color: #0a0a0a; }
+@media print { .topbar { display: none; } body { background: #fff; color: #0a0a0a; } }
+
+/* HERO */
+.hero { text-align: center; padding: 52px 24px 36px; }
+.hero-tag { display: inline-block; background: var(--s2); border: 1px solid var(--border); color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 5px 16px; border-radius: 20px; margin-bottom: 16px; }
+.hero h1 { font-size: 38px; font-weight: 900; color: var(--cream); margin-bottom: 8px; letter-spacing: .02em; }
+.hero h1 span { color: var(--gold); }
+.hero-sub { font-size: 13px; color: var(--muted); max-width: 600px; margin: 0 auto 12px; line-height: 1.7; }
+
+/* WRAP */
+.wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
+
+/* SECTION TITLES */
+.sec-title { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 12px; margin: 48px 0 20px; }
+.sec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+/* ERA BAND */
+.era-band { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; border-radius: 10px; overflow: hidden; margin-bottom: 32px; }
+.era { padding: 14px 12px; text-align: center; }
+.era-label { font-size: 11px; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
+.era-range { font-size: 10px; opacity: .7; margin-top: 3px; }
+.era.e1 { background: #1a1500; border-bottom: 3px solid var(--gold); }
+.era.e2 { background: #0d1e2a; border-bottom: 3px solid var(--blue); }
+.era.e3 { background: #0d1f16; border-bottom: 3px solid var(--green); }
+.era.e4 { background: #1a0e28; border-bottom: 3px solid var(--purple); }
+.era.e5 { background: #1a1208; border-bottom: 3px solid var(--orange); }
+.era.e6 { background: #0d1e1f; border-bottom: 3px solid var(--teal); }
+.era.e1 .era-label { color: var(--gold); }
+.era.e2 .era-label { color: var(--blue); }
+.era.e3 .era-label { color: var(--green); }
+.era.e4 .era-label { color: var(--purple); }
+.era.e5 .era-label { color: var(--orange); }
+.era.e6 .era-label { color: var(--teal); }
+
+/* SWIMLANE TIMELINE */
+.timeline-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 48px; }
+.swimlane { display: grid; grid-template-columns: 160px repeat(6, 1fr); min-width: 900px; }
+.lane-label { background: var(--s2); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 10px 14px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; }
+.lane-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 8px; background: var(--s1); min-height: 54px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.lane-cell:last-child { border-right: none; }
+.swimlane:last-child .lane-label,
+.swimlane:last-child .lane-cell { border-bottom: none; }
+
+.tl-chip { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 12px; white-space: nowrap; letter-spacing: .03em; }
+.tl-chip.gold   { background: #1a1500; color: var(--gold);   border: 1px solid var(--gold); }
+.tl-chip.blue   { background: #0d1e2a; color: var(--blue);   border: 1px solid var(--blue); }
+.tl-chip.green  { background: #0d1f16; color: var(--green);  border: 1px solid var(--green); }
+.tl-chip.purple { background: #1a0e28; color: var(--purple); border: 1px solid var(--purple); }
+.tl-chip.orange { background: #1a1208; color: var(--orange); border: 1px solid var(--orange); }
+.tl-chip.teal   { background: #0d1e1f; color: var(--teal);   border: 1px solid var(--teal); }
+
+/* DIFFICULTY BADGES */
+.diff { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 3px 9px; border-radius: 12px; }
+.diff-go     { background: #0d2010; color: #4caf7d; border: 1px solid #2a5a30; }
+.diff-mod    { background: #1a1800; color: #e0c44a; border: 1px solid #4a4000; }
+.diff-hard   { background: #200d0d; color: #e05555; border: 1px solid #5a2020; }
+.diff-long   { background: #1a1a1a; color: #888;    border: 1px solid #333; }
+
+/* INITIATIVE CARDS */
+.cards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 48px; }
+@media (max-width: 900px) { .cards-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 580px) { .cards-grid { grid-template-columns: 1fr; } }
+
+.init-card { background: var(--s1); border: 1px solid var(--border); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: border-color .15s; }
+.init-card:hover { border-color: var(--dim); }
+.init-card.cat-deal   { border-left: 3px solid var(--gold); }
+.init-card.cat-ltr    { border-left: 3px solid var(--blue); }
+.init-card.cat-vr     { border-left: 3px solid var(--teal); }
+.init-card.cat-entity { border-left: 3px solid var(--purple); }
+.init-card.cat-mkt    { border-left: 3px solid var(--orange); }
+.init-card.cat-give   { border-left: 3px solid var(--green); }
+.init-card.cat-jeff   { border-left: 3px solid #e0874a; }
+.init-card.cat-ty     { border-left: 3px solid var(--gold); }
+
+.ic-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.ic-name { font-size: 13px; font-weight: 700; color: var(--cream); line-height: 1.4; }
+.ic-body { font-size: 11px; color: var(--muted); line-height: 1.7; }
+.ic-meta { display: flex; flex-direction: column; gap: 5px; font-size: 11px; }
+.ic-meta-row { display: flex; gap: 6px; align-items: flex-start; }
+.ic-meta-label { color: var(--dim); min-width: 60px; flex-shrink: 0; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; padding-top: 1px; }
+.ic-meta-val { color: var(--cream); }
+.ic-meta-val.go   { color: var(--green); }
+.ic-meta-val.warn { color: var(--yellow); }
+.ic-meta-val.hard { color: var(--red); }
+.ic-meta-val.long { color: var(--muted); }
+
+/* ANALYSIS GRID */
+.analysis-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 48px; }
+@media(max-width:700px) { .analysis-grid { grid-template-columns: 1fr 1fr; } }
+.analysis-card { background: var(--s2); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+.ac-num { font-size: 32px; font-weight: 900; margin-bottom: 4px; }
+.ac-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
+.ac-list { list-style: none; }
+.ac-list li { font-size: 11px; color: var(--muted); padding: 3px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
+.ac-list li:last-child { border-bottom: none; }
+.ac-list li::before { content: '›'; flex-shrink: 0; }
+
+/* GIVING BACK */
+.give-banner { background: linear-gradient(135deg, #0d1f16, #0a0a0a); border: 1px solid #2a5a30; border-radius: 12px; padding: 28px 32px; margin-bottom: 48px; }
+.give-mission { font-size: 15px; line-height: 1.8; color: var(--cream); font-style: italic; margin-bottom: 20px; border-left: 3px solid var(--green); padding-left: 16px; }
+.give-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+@media(max-width:700px) { .give-grid { grid-template-columns: 1fr; } }
+.give-card { background: #0a1a0d; border: 1px solid #2a5a30; border-radius: 8px; padding: 14px 16px; }
+.give-card .gc-title { font-size: 12px; font-weight: 700; color: var(--green); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.give-card .gc-body { font-size: 11px; color: var(--muted); line-height: 1.7; }
+.give-card .gc-action { margin-top: 8px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--green); }
+
+/* FOOTER */
+.doc-footer { text-align: center; padding: 24px; font-size: 11px; color: var(--dim); border-top: 1px solid var(--border); letter-spacing: .04em; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="tb-brand">
+    <div class="tb-logo">IW</div>
+    <div>
+      <div class="tb-name">Ironwood LLC — Master Timeline</div>
+      <div class="tb-sub">Anchor Pro Solutions × Landon Renovations · Full Company Roadmap</div>
+    </div>
+  </div>
+  <button class="btn-print" onclick="window.print()">Print / Save PDF</button>
+</div>
+
+<div class="hero">
+  <div class="hero-tag">Strategic Roadmap · Full Vision</div>
+  <h1>The <span>Full Picture</span></h1>
+  <div class="hero-sub">From first deal to generational wealth — every initiative, every phase, every honest assessment of what's easy, what's hard, and what takes time.</div>
+</div>
+
+<div class="wrap">
+
+  <!-- ERA BAND -->
+  <div class="sec-title">Six Eras of Growth</div>
+  <div class="era-band">
+    <div class="era e1"><div class="era-label">Launch</div><div class="era-range">Months 1–6</div></div>
+    <div class="era e2"><div class="era-label">Momentum</div><div class="era-range">Months 6–18</div></div>
+    <div class="era e3"><div class="era-label">Portfolio</div><div class="era-range">Years 2–3</div></div>
+    <div class="era e4"><div class="era-label">Scale</div><div class="era-range">Years 3–5</div></div>
+    <div class="era e5"><div class="era-label">Holdings</div><div class="era-range">Years 5–8</div></div>
+    <div class="era e6"><div class="era-label">Legacy</div><div class="era-range">Years 8+</div></div>
+  </div>
+
+  <!-- SWIMLANE TIMELINE -->
+  <div class="sec-title">Initiative Timeline by Lane</div>
+  <div class="timeline-wrap">
+
+    <!-- HEADER ROW -->
+    <div class="swimlane">
+      <div class="lane-label" style="background:#0a0a0a;color:var(--dim);">Lane</div>
+      <div class="lane-cell" style="background:#1a1500;justify-content:center;"><span style="font-size:10px;font-weight:700;color:var(--gold);">LAUNCH · Mo 1–6</span></div>
+      <div class="lane-cell" style="background:#0d1e2a;justify-content:center;"><span style="font-size:10px;font-weight:700;color:var(--blue);">MOMENTUM · Mo 6–18</span></div>
+      <div class="lane-cell" style="background:#0d1f16;justify-content:center;"><span style="font-size:10px;font-weight:700;color:var(--green);">PORTFOLIO · Yr 2–3</span></div>
+      <div class="lane-cell" style="background:#1a0e28;justify-content:center;"><span style="font-size:10px;font-weight:700;color:var(--purple);">SCALE · Yr 3–5</span></div>
+      <div class="lane-cell" style="background:#1a1208;justify-content:center;"><span style="font-size:10px;font-weight:700;color:var(--orange);">HOLDINGS · Yr 5–8</span></div>
+      <div class="lane-cell" style="background:#0d1e1f;justify-content:center;"><span style="font-size:10px;font-weight:700;color:var(--teal);">LEGACY · Yr 8+</span></div>
+    </div>
+
+    <!-- DEALS & REVENUE -->
+    <div class="swimlane">
+      <div class="lane-label">Deals &amp; Revenue</div>
+      <div class="lane-cell"><span class="tl-chip gold">Remodels</span><span class="tl-chip gold">Flips</span></div>
+      <div class="lane-cell"><span class="tl-chip blue">2+ Parallel Deals</span><span class="tl-chip blue">Wholesale</span></div>
+      <div class="lane-cell"><span class="tl-chip green">Consistent Deal Flow</span></div>
+      <div class="lane-cell"><span class="tl-chip purple">Systemized Pipeline</span></div>
+      <div class="lane-cell"><span class="tl-chip orange">Deal + Rental Balance</span></div>
+      <div class="lane-cell"><span class="tl-chip teal">Legacy Hold Strategy</span></div>
+    </div>
+
+    <!-- LTR RENTALS -->
+    <div class="swimlane">
+      <div class="lane-label">LT Rentals</div>
+      <div class="lane-cell"><span style="font-size:10px;color:var(--dim);">—</span></div>
+      <div class="lane-cell"><span class="tl-chip blue">BRRRR #1</span><span class="tl-chip blue">Section 8 / VASH</span></div>
+      <div class="lane-cell"><span class="tl-chip green">3–5 Doors</span><span class="tl-chip green">Property Sub-LLCs</span></div>
+      <div class="lane-cell"><span class="tl-chip purple">Multi-family eval</span></div>
+      <div class="lane-cell"><span class="tl-chip orange">10+ Doors</span></div>
+      <div class="lane-cell"><span class="tl-chip teal">20+ Doors · Generational</span></div>
+    </div>
+
+    <!-- VACATION RENTALS -->
+    <div class="swimlane">
+      <div class="lane-label">Vacation Rentals</div>
+      <div class="lane-cell"><span style="font-size:10px;color:var(--dim);">—</span></div>
+      <div class="lane-cell"><span style="font-size:10px;color:var(--dim);">Research + Lender</span></div>
+      <div class="lane-cell"><span class="tl-chip green">VR #1 Blue Ridge</span></div>
+      <div class="lane-cell"><span class="tl-chip purple">FL Coast Entry</span><span class="tl-chip purple">2–3 VR Props</span></div>
+      <div class="lane-cell"><span class="tl-chip orange">VR Portfolio 4–6</span><span class="tl-chip orange">Direct Booking</span></div>
+      <div class="lane-cell"><span class="tl-chip teal">VR Brand · Ironwood Stays</span></div>
+    </div>
+
+    <!-- ENTITY & LEGAL -->
+    <div class="swimlane">
+      <div class="lane-label">Entity &amp; Legal</div>
+      <div class="lane-cell"><span class="tl-chip gold">Ironwood LLC ✓</span><span class="tl-chip gold">GA Foreign Qual ✓</span></div>
+      <div class="lane-cell"><span class="tl-chip blue">DSCR Lender Lock</span></div>
+      <div class="lane-cell"><span class="tl-chip green">Property Sub-LLCs</span><span class="tl-chip green">STR permits</span></div>
+      <div class="lane-cell"><span class="tl-chip purple">Holdings Activation</span><span class="tl-chip purple">Private Money</span></div>
+      <div class="lane-cell"><span class="tl-chip orange">Outside Investors</span><span class="tl-chip orange">Foundation eval</span></div>
+      <div class="lane-cell"><span class="tl-chip teal">Ironwood Foundation 501c3</span></div>
+    </div>
+
+    <!-- MARKETING -->
+    <div class="swimlane">
+      <div class="lane-label">Marketing &amp; Brand</div>
+      <div class="lane-cell"><span class="tl-chip gold">Social Media</span><span class="tl-chip gold">Direct Mail</span></div>
+      <div class="lane-cell"><span class="tl-chip blue">YouTube Launch</span><span class="tl-chip blue">Brand Presence</span></div>
+      <div class="lane-cell"><span class="tl-chip green">YouTube Growth</span><span class="tl-chip green">Local Recognition</span></div>
+      <div class="lane-cell"><span class="tl-chip purple">YouTube Monetize</span><span class="tl-chip purple">Referral Network</span></div>
+      <div class="lane-cell"><span class="tl-chip orange">Regional Brand</span></div>
+      <div class="lane-cell"><span class="tl-chip teal">Education / Speaking</span></div>
+    </div>
+
+    <!-- FINANCING -->
+    <div class="swimlane">
+      <div class="lane-label">Financing &amp; Capital</div>
+      <div class="lane-cell"><span class="tl-chip gold">Self-Fund + HML</span></div>
+      <div class="lane-cell"><span class="tl-chip blue">DSCR #1</span><span class="tl-chip blue">HML Relationships</span></div>
+      <div class="lane-cell"><span class="tl-chip green">Refi + Recycle</span><span class="tl-chip green">Private Money</span></div>
+      <div class="lane-cell"><span class="tl-chip purple">Holdings Capital Stack</span></div>
+      <div class="lane-cell"><span class="tl-chip orange">Outside Investors</span></div>
+      <div class="lane-cell"><span class="tl-chip teal">REIT Evaluation</span></div>
+    </div>
+
+    <!-- GIVING BACK -->
+    <div class="swimlane">
+      <div class="lane-label">Giving Back</div>
+      <div class="lane-cell"><span class="tl-chip gold">Hire First (Jeff crew)</span></div>
+      <div class="lane-cell"><span class="tl-chip blue">Section 8 / VASH</span><span class="tl-chip blue">Reentry Workers</span></div>
+      <div class="lane-cell"><span class="tl-chip green">Transitional Housing</span><span class="tl-chip green">Vet Unit Dedicated</span></div>
+      <div class="lane-cell"><span class="tl-chip purple">LIHTC Evaluation</span></div>
+      <div class="lane-cell"><span class="tl-chip orange">Foundation Planning</span></div>
+      <div class="lane-cell"><span class="tl-chip teal">Ironwood Foundation 501c3</span></div>
+    </div>
+
+    <!-- TY LICENSE -->
+    <div class="swimlane">
+      <div class="lane-label">Ty — License</div>
+      <div class="lane-cell"><span class="tl-chip gold">Salesperson Active ✓</span></div>
+      <div class="lane-cell"><span class="tl-chip blue">Buyer/Listing Commissions</span></div>
+      <div class="lane-cell"><span class="tl-chip green">PM — Own Portfolio</span><span class="tl-chip green">Broker Coursework</span></div>
+      <div class="lane-cell"><span class="tl-chip purple">Broker Exam</span></div>
+      <div class="lane-cell"><span class="tl-chip orange">Broker License Active</span></div>
+      <div class="lane-cell"><span class="tl-chip teal">Full Broker Authority</span></div>
+    </div>
+
+    <!-- JEFF OPS -->
+    <div class="swimlane">
+      <div class="lane-label">Jeff — Ops</div>
+      <div class="lane-cell"><span class="tl-chip gold">Phase 1 $50/hr</span><span class="tl-chip gold">Sub Network</span></div>
+      <div class="lane-cell"><span class="tl-chip blue">Phase 2 Trigger</span><span class="tl-chip blue">30% Gross Profit</span></div>
+      <div class="lane-cell"><span class="tl-chip green">GC License pursuit</span><span class="tl-chip green">Proven Systems</span></div>
+      <div class="lane-cell"><span class="tl-chip purple">GC License Active</span></div>
+      <div class="lane-cell"><span class="tl-chip orange">Larger Contracts</span></div>
+      <div class="lane-cell"><span class="tl-chip teal">Senior Ops Role</span></div>
+    </div>
+
+  </div><!-- end timeline-wrap -->
+
+  <!-- DIFFICULTY ANALYSIS -->
+  <div class="sec-title">Difficulty Analysis</div>
+  <div class="analysis-grid">
+    <div class="analysis-card">
+      <div class="ac-num" style="color:var(--green);">12</div>
+      <div class="ac-label">🟢 Straightforward — Do Now</div>
+      <ul class="ac-list">
+        <li>Residential Flips</li>
+        <li>Remodel Contracts</li>
+        <li>First LTR Rental</li>
+        <li>Section 8 / VASH Tenants</li>
+        <li>Hire First (reentry crew)</li>
+        <li>Ty Salesperson license (active)</li>
+        <li>Social media + autoposting</li>
+        <li>Direct mail campaigns</li>
+        <li>YouTube channel launch</li>
+        <li>Ironwood LLC (done)</li>
+        <li>Jeff Phase 1 $50/hr</li>
+        <li>Sub network build</li>
+      </ul>
+    </div>
+    <div class="analysis-card">
+      <div class="ac-num" style="color:var(--yellow);">14</div>
+      <div class="ac-label">🟡 Moderate — Plan This Year</div>
+      <ul class="ac-list">
+        <li>BRRRR #1 (DSCR lender)</li>
+        <li>Wholesale / assignment</li>
+        <li>VR #1 — Blue Ridge GA</li>
+        <li>VR #1 — FL Emerald Coast</li>
+        <li>Multi-family acquisition</li>
+        <li>Transitional housing partner</li>
+        <li>Vet housing initiative</li>
+        <li>Jeff Phase 2 (30% GP)</li>
+        <li>Jeff GC License</li>
+        <li>Ironwood Holdings activation</li>
+        <li>Property sub-LLCs</li>
+        <li>DSCR lender relationship</li>
+        <li>Private money investors</li>
+        <li>YouTube monetization</li>
+      </ul>
+    </div>
+    <div class="analysis-card">
+      <div class="ac-num" style="color:var(--red);">8</div>
+      <div class="ac-label">🔴 Complex — 3-Year Horizon</div>
+      <ul class="ac-list">
+        <li>VR portfolio (3–5 props)</li>
+        <li>VR direct booking brand</li>
+        <li>Outside passive investors</li>
+        <li>Ty broker license upgrade</li>
+        <li>LIHTC (tax credit housing)</li>
+        <li>Ironwood Foundation 501c3</li>
+        <li>New construction</li>
+        <li>Jeff own crew (employees)</li>
+      </ul>
+    </div>
+    <div class="analysis-card">
+      <div class="ac-num" style="color:var(--muted);">3</div>
+      <div class="ac-label">⚫ Long Game — 5+ Years</div>
+      <ul class="ac-list">
+        <li>REIT evaluation (20+ doors)</li>
+        <li>Paid speaking / education</li>
+        <li>Regional brand dominance</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- INITIATIVE CARDS -->
+  <div class="sec-title">All Initiatives — Detailed Breakdown</div>
+
+  <!-- DEALS -->
+  <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Deals &amp; Revenue</div>
+  <div class="cards-grid" style="margin-bottom:32px;">
+
+    <div class="init-card cat-deal">
+      <div class="ic-top"><div class="ic-name">Residential Flips</div><span class="diff diff-go">Do Now</span></div>
+      <div class="ic-body">Buy distressed, renovate, sell. Core revenue engine. Every flip funds the next deal and builds the track record needed for rentals and investors.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val go">Launch — ongoing</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">HML + Jeff crew + deal pipeline</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">$25K–$60K net per deal</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val go">You already have everything to start</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-deal">
+      <div class="ic-top"><div class="ic-name">Remodel Contracts</div><span class="diff diff-go">Do Now</span></div>
+      <div class="ic-body">Renovation work for homeowners. Immediate cash flow while you build the acquisition pipeline. Keeps Jeff and crew working between flips.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val go">Day 1</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Client Service Agreement + Scope of Work + marketing</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">$8K–$30K net per job</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val go">Simplest revenue line — start immediately</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-deal">
+      <div class="ic-top"><div class="ic-name">Wholesale / Assignment</div><span class="diff diff-mod">Moderate</span></div>
+      <div class="ic-body">Find a deal, put it under contract, assign it to another investor for a fee. No rehab needed. Good for leads that don't fit Ironwood's buy box.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val warn">Months 6–12</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Buyer list + Ty's license (helps) + contract knowledge</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">$3K–$15K per assignment, zero rehab risk</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val warn">Easy money on leads you'd pass on anyway</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-deal">
+      <div class="ic-top"><div class="ic-name">New Construction</div><span class="diff diff-hard">Complex</span></div>
+      <div class="ic-body">Ground-up residential builds. High margin but requires GC license, land entitlement, longer timelines, and significantly more capital.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val hard">Year 4+ / Jeff GC license active</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Jeff GC license + land + construction financing + permits</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">$50K–$150K+ per build</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val hard">Don't rush this. Rehab expertise first.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- LTR -->
+  <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--blue);margin-bottom:12px;">Long-Term Rentals</div>
+  <div class="cards-grid" style="margin-bottom:32px;">
+
+    <div class="init-card cat-ltr">
+      <div class="ic-top"><div class="ic-name">BRRRR #1 — First Rental</div><span class="diff diff-mod">Moderate</span></div>
+      <div class="ic-body">Buy, Rehab, Rent, Refinance, Repeat. The wealth-building engine. Cash-out refi funds the next deal. First one takes the most work — after that the system runs.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val warn">Months 6–12 (DSCR lender locked first)</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">DSCR lender + 70% ARV deal + stable tenant</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">$400–$800/mo cash flow + equity + refi capital</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val warn">Start lender conversations now, before you have the deal</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-ltr">
+      <div class="ic-top"><div class="ic-name">Section 8 / VASH Tenants</div><span class="diff diff-go">Do Now</span></div>
+      <div class="ic-body">Accept Housing Choice Vouchers (Section 8) or VA Supportive Housing (VASH) tenants on your rentals. Government pays rent directly to you — most reliable rent stream available.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val go">First rental — no additional work</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Property passes HUD inspection (minor) + landlord registration</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">Guaranteed govt payment + mission impact + low vacancy</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val go">Easiest giving-back move. Zero extra complexity.</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-ltr">
+      <div class="ic-top"><div class="ic-name">Multi-Family Acquisition</div><span class="diff diff-mod">Moderate</span></div>
+      <div class="ic-body">2–4 unit properties (duplex, triplex, quad). More doors per deal, DSCR qualification easier with multiple rent streams. Natural portfolio growth.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val warn">Year 2–3 / after SFR BRRRR proven</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">DSCR lender for 2–4 unit + larger capital stack</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">$1,200–$2,500/mo cash flow per property</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val warn">More complexity per deal — earn it with SFR first</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-ltr">
+      <div class="ic-top"><div class="ic-name">Transitional Housing Partnership</div><span class="diff diff-mod">Moderate</span></div>
+      <div class="ic-body">Partner with a Georgia reentry or veteran nonprofit. They manage the tenants and wrap-around services. You own the asset and receive grant-backed, stable rent.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val warn">Year 2 / after first rental running</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Georgia Justice Project / Atlanta Mission outreach</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">Stable rent + mission impact + community brand</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val warn">Nonprofits are easy to work with — just make the call</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- VR -->
+  <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--teal);margin-bottom:12px;">Vacation Rentals</div>
+  <div class="cards-grid" style="margin-bottom:32px;">
+
+    <div class="init-card cat-vr">
+      <div class="ic-top"><div class="ic-name">VR #1 — Blue Ridge / Ellijay / Dahlonega GA</div><span class="diff diff-mod">Moderate</span></div>
+      <div class="ic-body">North GA mountain cabin STR. Easier market to enter than FL coast — lower purchase price, less HOA restriction, strong year-round occupancy driven by Atlanta proximity.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val warn">Year 2 / after BRRRR #1 cash-flowing</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">STR permit (county-level) + STR insurance + DSCR or HML</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">$225–$350/night · 65–70% occ · $4,400–$7,000/mo gross</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val warn">Best first VR market. Start here before FL coast.</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-vr">
+      <div class="ic-top"><div class="ic-name">VR — Destin / 30A / PCB FL</div><span class="diff diff-mod">Moderate</span></div>
+      <div class="ic-body">Florida Emerald Coast beach STR. Higher nightly rates and occupancy than GA mountains but more competition, stricter STR regulations, and higher purchase prices.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val warn">Year 3 / after GA VR proven</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">FL STR license + HOA clearance + FL insurance (higher)</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">$300–$600/night · 70–75% occ · $6,300–$13,500/mo gross</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val warn">Higher ceiling, higher cost. Do GA first.</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-vr">
+      <div class="ic-top"><div class="ic-name">VR Portfolio (3–5 Properties)</div><span class="diff diff-hard">Complex</span></div>
+      <div class="ic-body">Scaling to 3–5 VR properties across both markets. Strong cash flow but capital intensive — each property is $300K–$600K+. Requires systemized guest management.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val hard">Year 4–5</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Strong flip cash flow + DSCR track record + pricing tool (PriceLabs/Wheelhouse)</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">$15K–$35K/mo gross VR revenue at portfolio scale</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val hard">Capital is the constraint. Flips fund this.</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-vr">
+      <div class="ic-top"><div class="ic-name">Direct Booking — Ironwood Stays</div><span class="diff diff-hard">Complex</span></div>
+      <div class="ic-body">Build ironwoodstays.com or similar direct booking site. Reduces Airbnb/VRBO dependency and 3% platform fees. Requires audience and marketing to drive direct traffic.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val hard">Year 4–5 / after 3+ VR properties</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Website + booking software (Lodgify/Hospitable) + email list</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">Save 3% platform fee across all properties — meaningful at scale</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val hard">Worth doing at 3+ props. Not before.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ENTITY & CAPITAL -->
+  <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--purple);margin-bottom:12px;">Entity &amp; Capital</div>
+  <div class="cards-grid" style="margin-bottom:32px;">
+
+    <div class="init-card cat-entity">
+      <div class="ic-top"><div class="ic-name">DSCR Lending Relationship</div><span class="diff diff-mod">Moderate</span></div>
+      <div class="ic-body">Qualify on rental income, not personal DTI. Essential for scaling the rental portfolio without capping out on conventional loans. Start the conversation before you need it.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val warn">Month 3–6 / before BRRRR #1</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">1–2 completed deals as track record + lender outreach</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val warn">Build the relationship early — it takes time to get approved</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-entity">
+      <div class="ic-top"><div class="ic-name">Property Sub-LLCs</div><span class="diff diff-mod">Moderate</span></div>
+      <div class="ic-body">Each rental property (especially VR) in its own single-purpose LLC for liability isolation. Ironwood LLC holds the membership interests in each. ~$500/ea in Delaware.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val warn">As each rental/VR property is acquired</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Registered agent + $500 formation + Unanimous Consent</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val warn">Do this from the start — don't move properties in later</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-entity">
+      <div class="ic-top"><div class="ic-name">Ironwood Holdings Activation</div><span class="diff diff-mod">Moderate</span></div>
+      <div class="ic-body">Activate Ironwood Holdings as a parent entity above Ironwood LLC. Opens the door to outside investors at the Holdings level without disturbing the core 50/50.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val warn">$1M+ portfolio value (per Operating Agreement)</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Legal counsel + Unanimous Consent + new operating agreement</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val warn">DBA is already active — formal activation waits for scale</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-entity">
+      <div class="ic-top"><div class="ic-name">Outside Passive Investors</div><span class="diff diff-hard">Complex</span></div>
+      <div class="ic-body">Bring in passive capital at the project or Holdings level. Requires a Private Placement Memorandum (PPM), securities compliance, and a proven track record to pitch.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val hard">Year 4–5 / Holdings activated</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Securities attorney + PPM + track record + pitch deck</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val hard">Don't shortcut the legal. PPM protects you.</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-entity">
+      <div class="ic-top"><div class="ic-name">REIT Evaluation</div><span class="diff diff-long">Long Game</span></div>
+      <div class="ic-body">Convert to or form a Real Estate Investment Trust. Requires 90% income distribution, 100+ shareholders, and significant compliance overhead. Only makes sense at major scale.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val long">20+ doors / $5M+ portfolio</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Independent legal + tax counsel + both members agree</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val long">Don't think about this before Phase 4. Not before.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TY LICENSE -->
+  <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Ty — License &amp; Skills</div>
+  <div class="cards-grid" style="margin-bottom:32px;">
+
+    <div class="init-card cat-ty">
+      <div class="ic-top"><div class="ic-name">Active Salesperson License (Current)</div><span class="diff diff-go">Active Now</span></div>
+      <div class="ic-body">Buyer commissions on acquisitions, listing commissions on dispositions, MLS access, PM rights on own portfolio. All value flows to Ironwood — no external clients.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">Value</span><span class="ic-meta-val go">2.5–3% both sides + 12.5% LTR PM + 25% VR PM</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val go">Most valuable single asset in the business structure</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-ty">
+      <div class="ic-top"><div class="ic-name">Broker License Upgrade</div><span class="diff diff-hard">Complex</span></div>
+      <div class="ic-body">Georgia broker license requires 3 years experience + 60 hours coursework + broker exam. Eliminates the affiliated brokerage split — Ty keeps 100% of commissions on Ironwood deals.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val hard">Year 3–4 (clock starts now)</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">3 yrs active + 60 hr course + GA broker exam</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">Saves brokerage split on every Ironwood transaction — compounds significantly</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val hard">Start the coursework now. The time passes anyway.</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JEFF OPS -->
+  <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:12px;">Jeff — Operations</div>
+  <div class="cards-grid" style="margin-bottom:32px;">
+
+    <div class="init-card cat-jeff">
+      <div class="ic-top"><div class="ic-name">Jeff GC License — Georgia</div><span class="diff diff-mod">Moderate</span></div>
+      <div class="ic-body">Georgia General Contractor license requires passing the trade exam + 2 years verifiable experience. Opens larger contracts, pulls permits independently, and adds credibility.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val warn">Year 2–3</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">GA contractor exam + 2 yrs documented experience + application</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Upside</span><span class="ic-meta-val">Larger contract value + pull own permits + more credibility with lenders</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val warn">Straightforward process — just requires time and study</span></div>
+      </div>
+    </div>
+
+    <div class="init-card cat-jeff">
+      <div class="ic-top"><div class="ic-name">Jeff's Own Crew (W-2 Employees)</div><span class="diff diff-hard">Complex</span></div>
+      <div class="ic-body">Moving from subcontractors to employees. Gives more control and continuity but adds payroll, workers' comp, HR compliance, and significant overhead.</div>
+      <div class="ic-meta">
+        <div class="ic-meta-row"><span class="ic-meta-label">When</span><span class="ic-meta-val hard">Year 4+ / consistent deal volume</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Needs</span><span class="ic-meta-val">Payroll system + workers comp insurance + HR compliance + steady workload</span></div>
+        <div class="ic-meta-row"><span class="ic-meta-label">Honest</span><span class="ic-meta-val hard">Don't do this until you have 3+ deals/month consistently</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- GIVING BACK -->
+  <div class="sec-title">Giving Back — Social Impact Initiatives</div>
+  <div class="give-banner">
+    <div class="give-mission">"Ironwood LLC believes that real estate wealth should create opportunity, not just accumulate it. Through affordable housing, veteran support, reentry employment, and community investment, we build more than properties — we build stability for people who need it most."</div>
+    <div class="give-grid">
+
+      <div class="give-card">
+        <div class="gc-title">🏠 Section 8 / VASH Housing</div>
+        <div class="gc-body">Accept Housing Choice Vouchers and VA Supportive Housing vouchers on Ironwood rentals. Government pays rent directly — most reliable payment stream available. Zero additional complexity. Helps veterans and low-income families simultaneously.</div>
+        <div class="gc-action">🟢 Do on first rental — no extra work required</div>
+      </div>
+
+      <div class="give-card">
+        <div class="gc-title">🔨 Hire First — Reentry Workers</div>
+        <div class="gc-body">Jeff's crew hires parolees through Georgia Justice Project and Honest Jobs. Government subsidizes wages during training period. Workers get a trade skill and employment record. Ironwood gets reliable labor with reduced cost. Win on every side.</div>
+        <div class="gc-action">🟢 Call Georgia Justice Project — start now</div>
+      </div>
+
+      <div class="give-card">
+        <div class="gc-title">🏘️ Transitional Housing Partnership</div>
+        <div class="gc-body">Partner with a Georgia reentry or veteran nonprofit. They screen and manage tenants, provide wrap-around services, and often have grant-backed rent payments. You own the asset and provide the housing. No property management burden on Ironwood.</div>
+        <div class="gc-action">🟡 Year 2 — reach out to Atlanta Mission or similar</div>
+      </div>
+
+      <div class="give-card">
+        <div class="gc-title">🎖️ Dedicated Veteran Unit</div>
+        <div class="gc-body">Designate one unit or property specifically for VASH voucher veterans. Partner with the local VA office. Creates a consistent relationship, fills vacancies faster, and builds a story that strengthens the Ironwood brand in the community.</div>
+        <div class="gc-action">🟡 Year 2–3 alongside rental portfolio build</div>
+      </div>
+
+      <div class="give-card">
+        <div class="gc-title">💰 LIHTC — Low Income Housing Tax Credit</div>
+        <div class="gc-body">Federal and state tax credits for qualifying affordable housing projects. Complex 10-year compliance period but generates significant tax offset. Worth evaluating when the portfolio reaches 10+ units and Holdings is activated.</div>
+        <div class="gc-action">🔴 Year 4–5 — requires tax counsel + CPA</div>
+      </div>
+
+      <div class="give-card">
+        <div class="gc-title">🌱 Ironwood Foundation 501(c)(3)</div>
+        <div class="gc-body">Nonprofit arm that takes donations, applies for grants, and partners with the LLC to renovate and provide transitional housing. The LLC does the rehab work (paid at market rate), the Foundation holds the mission. This is how large operators formalize their community work.</div>
+        <div class="gc-action">⚫ Year 8+ — build the story informally first</div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="doc-footer">
+  Ironwood LLC dba Ironwood Holdings · Delaware LLC · Georgia Foreign Qualification<br/>
+  Anchor Pro Solutions (Ty Jackson) × Landon Renovations (Jeff &amp; Jordan Sarabia) · Master Strategic Timeline · Confidential · May 2026
+</div>
+
+</body>
+</html>

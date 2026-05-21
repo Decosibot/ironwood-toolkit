@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MAO Calculator — Ironwood Renovations</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #0a0a0a;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px 60px;
+      color: #fff;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .header .brand {
+      font-size: 11px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: #b8b0a0;
+      margin-bottom: 8px;
+    }
+
+    .header h1 {
+      font-size: 28px;
+      font-weight: bold;
+      color: #fff;
+      margin-bottom: 6px;
+    }
+
+    .header p {
+      font-size: 13px;
+      color: #b8b0a0;
+    }
+
+    .card {
+      background: #111111;
+      border-radius: 12px;
+      padding: 28px 32px;
+      width: 100%;
+      max-width: 680px;
+      margin-bottom: 20px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .card-title {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #b8b0a0;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #2a2a2a;
+    }
+
+    /* PROPERTY TYPE TOGGLE */
+    .type-toggle {
+      display: flex;
+      gap: 0;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid #2a2a2a;
+      margin-bottom: 24px;
+    }
+
+    .type-btn {
+      flex: 1;
+      padding: 12px 16px;
+      background: #0a0a0a;
+      color: #b8b0a0;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'Arial', sans-serif;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .type-btn.active {
+      background: #1a1410;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .type-btn .rule-badge {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 1px;
+      margin-top: 3px;
+      opacity: 0.7;
+    }
+
+    /* INPUTS */
+    .input-group {
+      margin-bottom: 18px;
+    }
+
+    .input-group label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #b8b0a0;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .input-group label .hint {
+      font-size: 11px;
+      color: #6b6560;
+      font-style: italic;
+    }
+
+    .input-row {
+      display: flex;
+      align-items: center;
+      background: #0a0a0a;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .input-row:focus-within {
+      border-color: #c9a84c;
+    }
+
+    .input-prefix {
+      padding: 12px 14px;
+      color: #b8b0a0;
+      font-size: 14px;
+      font-weight: bold;
+      background: #080808;
+      border-right: 1px solid #2a2a2a;
+    }
+
+    .input-row input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: #fff;
+      font-size: 15px;
+      font-family: 'Arial', sans-serif;
+      padding: 12px 14px;
+    }
+
+    .input-row input::placeholder { color: #6b6560; }
+
+    /* SLIDER */
+    .slider-group {
+      margin-bottom: 18px;
+    }
+
+    .slider-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: #b8b0a0;
+      margin-bottom: 8px;
+    }
+
+    .slider-value {
+      color: #b8b0a0;
+      font-weight: bold;
+    }
+
+    input[type="range"] {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 4px;
+      border-radius: 2px;
+      background: #2a2a2a;
+      outline: none;
+      cursor: pointer;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #c9a84c;
+      cursor: pointer;
+      border: 2px solid #fff;
+    }
+
+    /* CALCULATE BUTTON */
+    .calc-btn {
+      width: 100%;
+      padding: 16px;
+      background: linear-gradient(135deg, #c9a84c, #e8c97a);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      font-family: 'Arial', sans-serif;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: opacity 0.2s;
+      margin-top: 8px;
+    }
+
+    .calc-btn:hover { opacity: 0.9; }
+    .calc-btn:active { opacity: 0.8; }
+
+    /* RESULTS */
+    .results-card {
+      background: #111111;
+      border-radius: 12px;
+      width: 100%;
+      max-width: 680px;
+      overflow: hidden;
+      border: 1px solid #2a2a2a;
+      display: none;
+    }
+
+    .results-card.visible { display: block; }
+
+    .results-header {
+      background: linear-gradient(135deg, #1a1410, #0a0a0a);
+      padding: 20px 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .results-header h2 {
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #f5f0e8;
+    }
+
+    .verdict {
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .verdict.go { background: #1e3a1e; color: #5a8a5a; }
+    .verdict.no-go { background: #3a1a1a; color: #8a3a3a; }
+    .verdict.caution { background: #3a2e1a; color: #c9843a; }
+
+    .results-body { padding: 24px 28px; }
+
+    .mao-display {
+      text-align: center;
+      padding: 24px;
+      background: #0a0a0a;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .mao-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #b8b0a0;
+      margin-bottom: 8px;
+    }
+
+    .mao-amount {
+      font-size: 42px;
+      font-weight: bold;
+      color: #5a8a5a;
+      font-family: 'Georgia', serif;
+    }
+
+    .mao-amount.warning { color: #c9843a; }
+    .mao-amount.danger { color: #8a3a3a; }
+
+    .mao-sub {
+      font-size: 12px;
+      color: #b8b0a0;
+      margin-top: 6px;
+    }
+
+    .breakdown-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .breakdown-item {
+      background: #0a0a0a;
+      border-radius: 8px;
+      padding: 14px 16px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .breakdown-item .b-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #6b6560;
+      margin-bottom: 6px;
+    }
+
+    .breakdown-item .b-value {
+      font-size: 17px;
+      font-weight: bold;
+      color: #fff;
+    }
+
+    .breakdown-item .b-value.positive { color: #5a8a5a; }
+    .breakdown-item .b-value.negative { color: #8a3a3a; }
+    .breakdown-item .b-value.neutral { color: #c9843a; }
+
+    .formula-trace {
+      background: #080808;
+      border-radius: 8px;
+      padding: 18px 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      color: #b8b0a0;
+      line-height: 2;
+      margin-bottom: 20px;
+      border: 1px solid #2a2a2a;
+    }
+
+    .formula-trace .ft-label { color: #6b6560; }
+    .formula-trace .ft-value { color: #f5f0e8; }
+    .formula-trace .ft-result { color: #5a8a5a; font-weight: bold; }
+    .formula-trace .ft-rule { color: #c9843a; }
+    .formula-trace .ft-sep {
+      display: block;
+      border-top: 1px solid #2a2a2a;
+      margin: 4px 0;
+    }
+
+    .advice-box {
+      border-radius: 8px;
+      padding: 16px 18px;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .advice-box.go { background: #0d1e0d; border: 1px solid #1e3a1e; color: #5a8a5a; }
+    .advice-box.no-go { background: #1e0d0d; border: 1px solid #3a1a1a; color: #8a3a3a; }
+    .advice-box.caution { background: #1e180d; border: 1px solid #3a2e1a; color: #c9843a; }
+
+    /* PRINT */
+    .print-btn {
+      width: 100%;
+      max-width: 680px;
+      padding: 13px;
+      background: transparent;
+      color: #b8b0a0;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      font-size: 13px;
+      font-family: 'Arial', sans-serif;
+      cursor: pointer;
+      margin-top: 14px;
+      letter-spacing: 1px;
+      transition: all 0.2s;
+    }
+
+    .print-btn:hover { background: #111111; }
+
+    /* DIVIDER */
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin: 16px 0;
+    }
+
+    .section-divider span {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #6b6560;
+      white-space: nowrap;
+    }
+
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #2a2a2a;
+    }
+
+    @media (max-width: 520px) {
+      .breakdown-grid { grid-template-columns: 1fr; }
+      .card { padding: 20px 18px; }
+      .results-body { padding: 18px; }
+      .mao-amount { font-size: 32px; }
+    }
+
+    @media print {
+      body { background: #fff; color: #000; padding: 0; }
+      .card, .results-card { background: #f5f0e0; border-color: #d4cfc0; }
+      .calc-btn, .print-btn, .type-toggle { display: none; }
+      .results-card { display: block !important; }
+      .mao-display { background: #f5f0e0; border-color: #c9a84c; }
+      .mao-amount { color: #1a1410; }
+      .breakdown-item { background: #fff; border-color: #d4cfc0; }
+      .formula-trace { background: #f5f0e0; color: #2a2a2a; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="brand">Ironwood Renovations</div>
+  <h1>MAO Calculator</h1>
+  <p>Maximum Allowable Offer — BRRRR Deal Analyzer</p>
+</div>
+
+<!-- INPUT CARD -->
+<div class="card">
+  <div class="card-title">Property Type</div>
+
+  <div class="type-toggle">
+    <button class="type-btn active" onclick="setType('improved')" id="btn-improved">
+      Improved / Residential
+      <span class="rule-badge">70% RULE</span>
+    </button>
+    <button class="type-btn" onclick="setType('land')" id="btn-land">
+      Raw Land
+      <span class="rule-badge">65% RULE</span>
+    </button>
+  </div>
+
+  <div class="card-title">Deal Inputs</div>
+
+  <div class="input-group">
+    <label>
+      After Repair Value (ARV)
+      <span class="hint">Comparable sales in the area</span>
+    </label>
+    <div class="input-row">
+      <span class="input-prefix">$</span>
+      <input type="number" id="arv" placeholder="150,000" min="0" step="1000" oninput="liveCalc()"/>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>
+      Property Square Footage
+      <span class="hint">Used to estimate rehab cost at $125–$135/sqft</span>
+    </label>
+    <div class="input-row" style="gap:10px; flex-wrap:wrap; align-items:center;">
+      <input type="number" id="sqft" placeholder="1,500" min="0" step="50" oninput="calcRehabFromSqft()" style="background:#1a1a1a;border:1px solid #2a2a2a;color:#fff;border-radius:8px;padding:10px 14px;font-size:16px;width:130px;"/>
+      <span style="color:#888; font-size:12px;">sq ft</span>
+      <span style="color:#c9a84c; font-size:12px; margin-left:4px;" id="sqft-range-label">× $130/sqft</span>
+    </div>
+    <div style="margin-top:10px;">
+      <div style="display:flex; justify-content:space-between; font-size:11px; color:#888; margin-bottom:4px;">
+        <span>$125/sqft</span>
+        <span id="sqft-rate-label" style="color:#c9a84c; font-weight:bold;">$130/sqft</span>
+        <span>$135/sqft</span>
+      </div>
+      <input type="range" id="sqft-rate" min="125" max="135" step="1" value="130"
+        oninput="document.getElementById('sqft-rate-label').textContent='$'+this.value+'/sqft';
+                 document.getElementById('sqft-range-label').textContent='× $'+this.value+'/sqft';
+                 calcRehabFromSqft();"
+        style="width:100%; accent-color:#c9a84c;"/>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>
+      Estimated Rehab Cost
+      <span class="hint">Auto-calculated from sqft above, or enter manually</span>
+    </label>
+    <div class="input-row">
+      <span class="input-prefix">$</span>
+      <input type="number" id="rehab" placeholder="25,000" min="0" step="500" oninput="liveCalc()"/>
+    </div>
+  </div>
+
+  <div class="section-divider"><span>Closing &amp; Carrying Costs</span></div>
+
+  <div class="slider-group">
+    <div class="slider-label">
+      <span>Closing Costs (Buy Side)</span>
+      <span class="slider-value" id="closing-pct-label">3%</span>
+    </div>
+    <input type="range" id="closing-pct" min="1" max="6" step="0.5" value="3" oninput="updateSliderLabel('closing-pct','closing-pct-label','%'); liveCalc()"/>
+  </div>
+
+  <div class="input-group">
+    <label>
+      Monthly Carrying Cost (Loan Interest, Utilities, Taxes)
+      <span class="hint">Hard money interest + expenses per month</span>
+    </label>
+    <div class="input-row">
+      <span class="input-prefix">$</span>
+      <input type="number" id="carrying-monthly" placeholder="800" min="0" step="50" oninput="liveCalc()"/>
+    </div>
+  </div>
+
+  <div class="slider-group">
+    <div class="slider-label">
+      <span>Estimated Rehab Duration</span>
+      <span class="slider-value" id="rehab-months-label">3 months</span>
+    </div>
+    <input type="range" id="rehab-months" min="1" max="12" step="1" value="3" oninput="updateSliderLabel('rehab-months','rehab-months-label',' months'); liveCalc()"/>
+  </div>
+
+  <div class="section-divider"><span>Rental Income Projection</span></div>
+
+  <div class="input-group">
+    <label>
+      Expected Monthly Rent
+      <span class="hint">After rehab, stabilized rent</span>
+    </label>
+    <div class="input-row">
+      <span class="input-prefix">$</span>
+      <input type="number" id="rent" placeholder="1200" min="0" step="50" oninput="liveCalc()"/>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>
+      Expected Refinance Loan Amount
+      <span class="hint">ARV × 75% LTV typical for DSCR/conventional</span>
+    </label>
+    <div class="input-row">
+      <span class="input-prefix">$</span>
+      <input type="number" id="refi-loan" placeholder="112,500" min="0" step="1000" oninput="liveCalc()"/>
+    </div>
+  </div>
+
+  <div class="input-group">
+    <label>
+      Estimated Monthly Loan Payment (after refi)
+      <span class="hint">PITI on the refinanced loan</span>
+    </label>
+    <div class="input-row">
+      <span class="input-prefix">$</span>
+      <input type="number" id="loan-payment" placeholder="850" min="0" step="25" oninput="liveCalc()"/>
+    </div>
+  </div>
+
+  <div style="border-top:1px solid #2a2a2a; margin:20px 0 16px; padding-top:18px;">
+    <div style="font-size:11px; color:#c9a84c; text-transform:uppercase; letter-spacing:1px; font-weight:700; margin-bottom:14px;">Profit Waterfall Inputs</div>
+
+    <div class="input-group">
+      <label>
+        Jeff's Labor Hours on This Deal
+        <span class="hint">Total hours × $50/hr — paid before profit split</span>
+      </label>
+      <div class="input-row">
+        <input type="number" id="jeff-hours" placeholder="160" min="0" step="8"/>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>
+        Ironwood Renovations Management Fee %
+        <span class="hint">% of total capital invested — typically 3–5%</span>
+      </label>
+      <div class="input-row">
+        <input type="number" id="mgmt-fee-pct" placeholder="4" min="0" max="10" step="0.5"/>
+        <span style="color:#999; margin-left:6px; font-size:14px;">%</span>
+      </div>
+    </div>
+
+    <div class="input-group">
+      <label>
+        Marketing Retainer (Total for This Deal)
+        <span class="hint">Jordan + Ty combined — paid before profit split</span>
+      </label>
+      <div class="input-row">
+        <span class="input-prefix">$</span>
+        <input type="number" id="mkt-retainer" placeholder="500" min="0" step="100"/>
+      </div>
+    </div>
+  </div>
+
+  <button class="calc-btn" onclick="calculate()">CALCULATE MAO &amp; DEAL ANALYSIS</button>
+</div>
+
+<!-- RESULTS CARD -->
+<div class="results-card" id="results">
+
+  <div class="results-header">
+    <h2>Deal Analysis Result</h2>
+    <div class="verdict" id="verdict-badge">—</div>
+  </div>
+
+  <div class="results-body">
+
+    <div class="mao-display">
+      <div class="mao-label">Maximum Allowable Offer</div>
+      <div class="mao-amount" id="mao-display">$0</div>
+      <div class="mao-sub" id="mao-sub">Based on — rule</div>
+    </div>
+
+    <div class="breakdown-grid">
+      <div class="breakdown-item">
+        <div class="b-label">Max All-In Cost</div>
+        <div class="b-value" id="r-max-all-in">—</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-label">Total Costs (Rehab + Closing + Carrying)</div>
+        <div class="b-value" id="r-total-costs">—</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-label">Cash Returned at Refi</div>
+        <div class="b-value" id="r-cash-returned">—</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-label">Est. Monthly Cash Flow</div>
+        <div class="b-value" id="r-cashflow">—</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-label">Equity Built at ARV</div>
+        <div class="b-value" id="r-equity">—</div>
+      </div>
+      <div class="breakdown-item">
+        <div class="b-label">All-In Cost / ARV Ratio</div>
+        <div class="b-value" id="r-ratio">—</div>
+      </div>
+      <div class="breakdown-item" style="border-top:1px solid #2a2a2a; padding-top:12px;">
+        <div class="b-label">Ty — Ironwood Renovations (50%)</div>
+        <div class="b-value positive" id="r-anchor-share">—</div>
+      </div>
+      <div class="breakdown-item" style="border-top:1px solid #2a2a2a; padding-top:12px;">
+        <div class="b-label">Jeff — Ironwood Renovations (50%)</div>
+        <div class="b-value positive" id="r-landon-share">—</div>
+      </div>
+    </div>
+
+    <div class="formula-trace" id="formula-trace">
+      <!-- populated by JS -->
+    </div>
+
+    <div class="advice-box" id="advice-box">
+      <!-- populated by JS -->
+    </div>
+
+  </div>
+</div>
+
+<button class="print-btn" id="print-btn" style="display:none;" onclick="window.print()">PRINT / SAVE AS PDF</button>
+
+<script>
+  let propertyType = 'improved';
+
+  function setType(type) {
+    propertyType = type;
+    document.getElementById('btn-improved').classList.toggle('active', type === 'improved');
+    document.getElementById('btn-land').classList.toggle('active', type === 'land');
+    liveCalc();
+  }
+
+  function updateSliderLabel(sliderId, labelId, suffix) {
+    document.getElementById(labelId).textContent = document.getElementById(sliderId).value + suffix;
+  }
+
+  function calcRehabFromSqft() {
+    const sqft = parseFloat(document.getElementById('sqft').value) || 0;
+    const rate = parseFloat(document.getElementById('sqft-rate').value) || 130;
+    if (sqft > 0) {
+      document.getElementById('rehab').value = Math.round(sqft * rate / 500) * 500;
+    }
+    liveCalc();
+  }
+
+  function fmt(n) {
+    if (isNaN(n)) return '—';
+    return '$' + Math.round(n).toLocaleString();
+  }
+
+  function fmtPct(n) {
+    return (n * 100).toFixed(1) + '%';
+  }
+
+  function liveCalc() {
+    const arv = parseFloat(document.getElementById('arv').value) || 0;
+    if (arv > 0) {
+      const rule = propertyType === 'land' ? 0.65 : 0.70;
+      const refiSuggested = arv * 0.75;
+      if (!document.getElementById('refi-loan').value) {
+        document.getElementById('refi-loan').placeholder = Math.round(refiSuggested).toLocaleString();
+      }
+    }
+  }
+
+  function calculate() {
+    const arv             = parseFloat(document.getElementById('arv').value) || 0;
+    const rehab           = parseFloat(document.getElementById('rehab').value) || 0;
+    const closingPct      = parseFloat(document.getElementById('closing-pct').value) / 100;
+    const carryingMonthly = parseFloat(document.getElementById('carrying-monthly').value) || 0;
+    const rehabMonths     = parseFloat(document.getElementById('rehab-months').value) || 3;
+    const rent            = parseFloat(document.getElementById('rent').value) || 0;
+    const refiLoan        = parseFloat(document.getElementById('refi-loan').value) || (arv * 0.75);
+    const loanPayment     = parseFloat(document.getElementById('loan-payment').value) || 0;
+
+    if (arv === 0) {
+      alert('Please enter an ARV to continue.');
+      return;
+    }
+
+    const rule       = propertyType === 'land' ? 0.65 : 0.70;
+    const rulePct    = propertyType === 'land' ? '65%' : '70%';
+    const ruleLabel  = propertyType === 'land' ? 'Raw Land Rule (65%)' : 'Improved Property Rule (70%)';
+
+    const closingCosts   = arv * closingPct;
+    const carryingCosts  = carryingMonthly * rehabMonths;
+    const totalCosts     = rehab + closingCosts + carryingCosts;
+    const maxAllIn       = arv * rule;
+    const mao            = maxAllIn - totalCosts;
+
+    // Capital invested = MAO (offer price) + total costs
+    const totalCapital   = mao + totalCosts;
+    const cashReturned   = refiLoan - totalCapital;
+
+    // Cash flow: rent - vacancy (8%) - repairs (7%) - insurance/tax est ($200) - loan payment
+    const vacancyRes     = rent * 0.08;
+    const repairsRes     = rent * 0.07;
+    const expenses       = 200; // est insurance+tax monthly
+    const noi            = rent - vacancyRes - repairsRes - expenses;
+    const cashFlow       = noi - loanPayment;
+
+    // Equity
+    const equity = arv - refiLoan;
+    const ratio  = totalCapital / arv;
+
+    // Verdict
+    let verdict, verdictClass, advice;
+
+    const passRatio   = ratio <= rule;
+    const passCashFlow = cashFlow >= 150;
+    const maoPositive  = mao > 0;
+
+    if (maoPositive && passRatio && passCashFlow) {
+      verdict = 'GO'; verdictClass = 'go';
+      advice = `<strong>This deal works.</strong> Your all-in cost is ${fmtPct(ratio)} of ARV — within the ${rulePct} rule. Monthly cash flow of ${fmt(cashFlow)} clears the $150 minimum. At refinance you ${cashReturned >= 0 ? 'pull out ' + fmt(cashReturned) + ' of your capital to redeploy' : 'leave ' + fmt(Math.abs(cashReturned)) + ' in the deal — still manageable if cash flow is strong'}. Make your offer at or below ${fmt(mao)}.`;
+    } else if (!maoPositive) {
+      verdict = 'NO-GO'; verdictClass = 'no-go';
+      advice = `<strong>The numbers don't work at current inputs.</strong> Your rehab, closing, and carrying costs exceed the maximum all-in cost allowed by the ${rulePct} rule. Either the ARV needs to be higher, the rehab cost lower, or the purchase price needs to come down significantly. Walk away unless the seller has significant flexibility.`;
+    } else if (!passRatio) {
+      verdict = 'CAUTION'; verdictClass = 'caution';
+      advice = `<strong>Tight deal — proceed carefully.</strong> Your all-in cost ratio of ${fmtPct(ratio)} exceeds the ${rulePct} rule. You're taking on more risk than the partnership's guidelines allow. Consider negotiating the purchase price down to ${fmt(mao)} or reducing rehab scope before moving forward.`;
+    } else {
+      verdict = 'CAUTION'; verdictClass = 'caution';
+      advice = `<strong>MAO looks acceptable but cash flow is below target.</strong> Monthly cash flow of ${fmt(cashFlow)} is below the $150 minimum. Review whether the rent estimate is conservative or if the loan terms can be improved. A DSCR loan with better terms could close the gap.`;
+    }
+
+    // Formula trace
+    // Profit waterfall inputs
+    const jeffHours       = parseFloat(document.getElementById('jeff-hours').value) || 0;
+    const mgmtFeePct      = parseFloat(document.getElementById('mgmt-fee-pct').value) / 100 || 0.04;
+    const mktRetainer     = parseFloat(document.getElementById('mkt-retainer').value) || 0;
+
+    // Gross profit = cash returned at refi (equity event) — or use rent-based NOI * 12 for hold
+    // For waterfall we use the refi cash-out event as the distributable profit event
+    const grossProfit     = cashReturned > 0 ? cashReturned : 0;
+    const jeffLabor       = jeffHours * 50;
+    const mgmtFee         = totalCapital * mgmtFeePct;
+    const netDist         = Math.max(0, grossProfit - jeffLabor - mgmtFee - mktRetainer);
+    const anchorShare     = netDist * 0.50;
+    const landonShare     = netDist * 0.50;
+
+    const traceHTML = `
+<span class="ft-label">ARV                         </span><span class="ft-value">${fmt(arv)}</span>
+<span class="ft-label">× ${ruleLabel}   </span><span class="ft-rule">× ${rule}</span>
+<span class="ft-sep"></span>
+<span class="ft-label">Max All-In Cost             </span><span class="ft-value">${fmt(maxAllIn)}</span>
+<span class="ft-label">− Rehab (incl. contingency) </span><span class="ft-value">− ${fmt(rehab)}</span>
+<span class="ft-label">− Closing Costs (${(closingPct*100).toFixed(1)}%)     </span><span class="ft-value">− ${fmt(closingCosts)}</span>
+<span class="ft-label">− Carrying Costs (${rehabMonths}mo)    </span><span class="ft-value">− ${fmt(carryingCosts)}</span>
+<span class="ft-sep"></span>
+<span class="ft-label">MAX ALLOWABLE OFFER (MAO)   </span><span class="ft-result">${fmt(mao)}</span>
+
+<span class="ft-sep"></span>
+<span class="ft-label">Refi Loan Amount            </span><span class="ft-value">${fmt(refiLoan)}</span>
+<span class="ft-label">− Total Capital Invested    </span><span class="ft-value">− ${fmt(totalCapital)}</span>
+<span class="ft-label">Cash Returned at Refi       </span><span class="ft-result">${fmt(cashReturned)}</span>
+
+<span class="ft-sep"></span>
+<span class="ft-label">Gross Rent                  </span><span class="ft-value">${fmt(rent)}</span>
+<span class="ft-label">− Vacancy (8%)              </span><span class="ft-value">− ${fmt(vacancyRes)}</span>
+<span class="ft-label">− Repairs Reserve (7%)      </span><span class="ft-value">− ${fmt(repairsRes)}</span>
+<span class="ft-label">− Insurance / Taxes (est.)  </span><span class="ft-value">− ${fmt(expenses)}</span>
+<span class="ft-label">− Loan Payment (PITI)       </span><span class="ft-value">− ${fmt(loanPayment)}</span>
+<span class="ft-sep"></span>
+<span class="ft-label">MONTHLY CASH FLOW           </span><span class="ft-result">${fmt(cashFlow)}</span>
+
+<span class="ft-sep"></span>
+<span class="comment">// PROFIT WATERFALL — At Refinance / Sale Event</span>
+<span class="ft-label">Gross Distributable (Refi Cash-Out)   </span><span class="ft-value">${fmt(grossProfit)}</span>
+<span class="ft-label">− Jeff's Labor (${jeffHours}hrs × $50/hr)          </span><span class="ft-value">− ${fmt(jeffLabor)}</span>
+<span class="ft-label">− Ironwood Mgmt Fee (${(mgmtFeePct*100).toFixed(0)}%)         </span><span class="ft-value">− ${fmt(mgmtFee)}</span>
+<span class="ft-label">− Marketing Retainer                  </span><span class="ft-value">− ${fmt(mktRetainer)}</span>
+<span class="ft-sep"></span>
+<span class="ft-label">Net Distributable Profit              </span><span class="ft-result">${fmt(netDist)}</span>
+<span class="ft-sep"></span>
+<span class="ft-label">Ty — Ironwood Renovations  (50%)           </span><span class="ft-result">${fmt(anchorShare)}</span>
+<span class="ft-label">Jeff — Ironwood Renovations    (50%)           </span><span class="ft-result">${fmt(landonShare)}</span>`;
+
+    // Populate DOM
+    document.getElementById('results').classList.add('visible');
+    document.getElementById('print-btn').style.display = 'block';
+
+    const maoEl = document.getElementById('mao-display');
+    maoEl.textContent = fmt(mao);
+    maoEl.className = 'mao-amount' + (mao < 0 ? ' danger' : mao < 10000 ? ' warning' : '');
+
+    document.getElementById('mao-sub').textContent = `Based on ${ruleLabel}`;
+    document.getElementById('verdict-badge').textContent = verdict;
+    document.getElementById('verdict-badge').className = `verdict ${verdictClass}`;
+
+    document.getElementById('r-max-all-in').textContent = fmt(maxAllIn);
+    document.getElementById('r-total-costs').textContent = fmt(totalCosts);
+
+    const crEl = document.getElementById('r-cash-returned');
+    crEl.textContent = fmt(cashReturned);
+    crEl.className = 'b-value ' + (cashReturned >= 0 ? 'positive' : 'negative');
+
+    const cfEl = document.getElementById('r-cashflow');
+    cfEl.textContent = fmt(cashFlow) + '/mo';
+    cfEl.className = 'b-value ' + (cashFlow >= 150 ? 'positive' : cashFlow >= 0 ? 'neutral' : 'negative');
+
+    document.getElementById('r-equity').textContent = fmt(equity);
+    document.getElementById('r-equity').className = 'b-value positive';
+
+    const ratioEl = document.getElementById('r-ratio');
+    ratioEl.textContent = fmtPct(ratio);
+    ratioEl.className = 'b-value ' + (ratio <= rule ? 'positive' : 'negative');
+
+    document.getElementById('r-anchor-share').textContent = fmt(anchorShare);
+    document.getElementById('r-landon-share').textContent = fmt(landonShare);
+
+    document.getElementById('formula-trace').innerHTML = traceHTML;
+
+    const advEl = document.getElementById('advice-box');
+    advEl.innerHTML = advice;
+    advEl.className = `advice-box ${verdictClass}`;
+
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // Initialize slider labels
+  updateSliderLabel('closing-pct', 'closing-pct-label', '%');
+  updateSliderLabel('rehab-months', 'rehab-months-label', ' months');
+</script>
+
+</body>
+</html>

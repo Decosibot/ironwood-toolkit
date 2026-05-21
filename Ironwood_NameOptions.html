@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Company Name Options — Ironwood Partnership</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:  #0a0a0a;
+    --cream:  #f5f0e8;
+    --gold:   #c9a84c;
+    --gold-lt: #e8d48a;
+    --border: #d0c8b8;
+    --muted:  #777;
+    --light:  #faf7f2;
+    --ink:    #1a1208;
+  }
+
+  body {
+    background: #e8e4dc;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 13px;
+    color: var(--ink);
+    min-height: 100vh;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* ── TOOLBAR ── */
+  .toolbar {
+    background: var(--black);
+    color: var(--cream);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .toolbar-brand {
+    font-family: 'Arial', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    color: var(--gold);
+    text-transform: uppercase;
+  }
+  .btn {
+    border: none;
+    cursor: pointer;
+    padding: 8px 20px;
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 3px;
+    background: var(--gold);
+    color: var(--black);
+  }
+  @media print { .toolbar { display: none !important; } }
+
+  /* ── PAGE ── */
+  .page-wrap {
+    max-width: 820px;
+    margin: 28px auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 16px rgba(0,0,0,.12);
+    padding: 56px 64px 60px;
+  }
+
+  @media print {
+    body { background: #fff; }
+    .page-wrap {
+      margin: 0;
+      box-shadow: none;
+      border: none;
+      padding: 44px 52px 52px;
+      max-width: 100%;
+    }
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--black);
+    padding-bottom: 20px;
+    margin-bottom: 32px;
+    gap: 20px;
+  }
+
+  .brand-block .brand-name {
+    font-family: 'Arial', sans-serif;
+    font-size: 18px;
+    font-weight: 900;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--black);
+    line-height: 1.1;
+  }
+
+  .brand-block .brand-sub {
+    font-family: 'Arial', sans-serif;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .doc-meta {
+    text-align: right;
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.8;
+  }
+
+  .doc-title {
+    text-align: center;
+    margin-bottom: 6px;
+  }
+
+  .doc-title h1 {
+    font-family: 'Arial', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--black);
+  }
+
+  .doc-subtitle {
+    text-align: center;
+    font-family: 'Arial', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+
+  /* ── GOLD BAR ── */
+  .gold-bar {
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+    margin: 10px 0 28px;
+  }
+
+  /* ── TIER HEADER ── */
+  .tier-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 28px 0 14px;
+  }
+
+  .tier-label {
+    font-family: 'Arial', sans-serif;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--black);
+    padding: 5px 14px;
+    white-space: nowrap;
+  }
+
+  .tier-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+    letter-spacing: .06em;
+    font-style: italic;
+  }
+
+  .tier-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* ── NAME TABLE ── */
+  .name-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .name-table thead tr {
+    background: var(--black);
+    color: var(--cream);
+  }
+
+  .name-table thead th {
+    padding: 8px 14px;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-align: left;
+  }
+
+  .name-table thead th:first-child { width: 36px; text-align: center; }
+  .name-table thead th:nth-child(2) { width: 120px; }
+
+  .name-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background .1s;
+  }
+
+  .name-table tbody tr:nth-child(even) { background: var(--light); }
+
+  .name-table tbody td {
+    padding: 10px 14px;
+    font-size: 12px;
+    color: var(--ink);
+    vertical-align: middle;
+    line-height: 1.4;
+  }
+
+  .name-table tbody td:first-child {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--muted);
+    font-family: 'Arial', sans-serif;
+  }
+
+  .name-main {
+    font-size: 14px;
+    font-weight: 900;
+    color: var(--black);
+    letter-spacing: .02em;
+    font-family: 'Georgia', serif;
+  }
+
+  .name-sub {
+    font-size: 10px;
+    color: var(--muted);
+    margin-top: 2px;
+    font-family: 'Arial', sans-serif;
+  }
+
+  .layer-cell {
+    font-size: 11px;
+    color: #3a3020;
+    line-height: 1.7;
+  }
+
+  .layer-cell span {
+    display: block;
+  }
+
+  .layer-legal { color: var(--muted); font-size: 10px; }
+  .layer-hold  { color: #3a3020; font-weight: 600; }
+  .layer-reno  { color: var(--black); }
+
+  /* ── TOP 3 PICKS ── */
+  .picks-section {
+    margin-top: 36px;
+    border-top: 2px solid var(--black);
+    padding-top: 24px;
+  }
+
+  .picks-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .picks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+  }
+
+  .pick-card {
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--gold);
+    padding: 16px 18px;
+    background: var(--light);
+  }
+
+  .pick-rank {
+    font-family: 'Arial', sans-serif;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 6px;
+  }
+
+  .pick-name {
+    font-family: 'Georgia', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--black);
+    margin-bottom: 8px;
+    letter-spacing: .02em;
+  }
+
+  .pick-why {
+    font-family: 'Arial', sans-serif;
+    font-size: 11px;
+    color: #3a3020;
+    line-height: 1.65;
+  }
+
+  /* ── SELECTION ROW ── */
+  .selection-section {
+    margin-top: 36px;
+    padding: 20px 24px;
+    border: 1px solid var(--border);
+    background: var(--cream);
+  }
+
+  .selection-title {
+    font-family: 'Arial', sans-serif;
+    font-size: 9px;
+    font-weight: 900;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 16px;
+  }
+
+  .selection-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .sig-field {
+    font-family: 'Arial', sans-serif;
+  }
+
+  .sig-label {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  .sig-line {
+    border-bottom: 1px solid #aaa;
+    height: 28px;
+    margin-bottom: 4px;
+  }
+
+  .sig-sub {
+    font-size: 9px;
+    color: var(--muted);
+  }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    margin-top: 32px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-family: 'Arial', sans-serif;
+    font-size: 9px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+
+  /* ── CHECKBOX ── */
+  .cb {
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid #aaa;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+
+  @media print {
+    .picks-grid { grid-template-columns: 1fr 1fr 1fr; }
+    .pick-card { background: var(--light) !important; }
+    .name-table tbody tr:nth-child(even) { background: #f5f3ee !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="toolbar-brand">Company Name Options — Partnership Review</div>
+  <button class="btn" onclick="window.print()">Print / Save PDF</button>
+</div>
+
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="brand-block">
+      <div class="brand-name">Partnership Name Review</div>
+      <div class="brand-sub">Anchor Pro Solutions × Landon Renovations · Confidential</div>
+    </div>
+    <div class="doc-meta">
+      Prepared: May 2026<br/>
+      Status: Under Review<br/>
+      Version: 1.0
+    </div>
+  </div>
+
+  <div class="doc-title"><h1>Company Name Options</h1></div>
+  <div class="doc-subtitle">15 candidates across three tiers · Review and select below</div>
+  <div class="gold-bar"></div>
+
+  <!-- CONTEXT NOTE -->
+  <p style="font-family:'Arial',sans-serif;font-size:11.5px;color:#3a3020;line-height:1.75;margin-bottom:28px;">
+    Each name is evaluated across three brand layers: the <strong>legal entity</strong> (LLC), the <strong>investor-facing brand</strong> (Holdings), and the <strong>consumer-facing renovation brand</strong> (Renovations). The selected name should be strong across all three, available for Georgia LLC registration and domain registration, and scalable as the portfolio grows.
+  </p>
+
+  <!-- ══════════════════════
+       TIER 1
+  ══════════════════════ -->
+  <div class="tier-header">
+    <div class="tier-label">Tier 1</div>
+    <div class="tier-title">Strong &amp; Scalable — Feel like holding companies</div>
+    <div class="tier-rule"></div>
+  </div>
+
+  <table class="name-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Legal Entity</th>
+        <th>Investor Brand</th>
+        <th>Renovation Brand</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td><div class="name-main">Forge Properties</div></td>
+        <td class="layer-cell">Forge Properties LLC</td>
+        <td class="layer-cell">Forge Holdings</td>
+        <td class="layer-cell">Forge Renovations</td>
+      </tr>
+      <tr>
+        <td>2</td>
+        <td><div class="name-main">Ridgeline Homes</div></td>
+        <td class="layer-cell">Ridgeline Homes LLC</td>
+        <td class="layer-cell">Ridgeline Holdings</td>
+        <td class="layer-cell">Ridgeline Renovations</td>
+      </tr>
+      <tr>
+        <td>3</td>
+        <td><div class="name-main">Stonegate Properties</div></td>
+        <td class="layer-cell">Stonegate Properties LLC</td>
+        <td class="layer-cell">Stonegate Holdings</td>
+        <td class="layer-cell">Stonegate Renovations</td>
+      </tr>
+      <tr>
+        <td>4</td>
+        <td><div class="name-main">Keystone Homes</div></td>
+        <td class="layer-cell">Keystone Homes LLC</td>
+        <td class="layer-cell">Keystone Holdings</td>
+        <td class="layer-cell">Keystone Renovations</td>
+      </tr>
+      <tr>
+        <td>5</td>
+        <td><div class="name-main">Cornerstone Properties</div></td>
+        <td class="layer-cell">Cornerstone Properties LLC</td>
+        <td class="layer-cell">Cornerstone Holdings</td>
+        <td class="layer-cell">Cornerstone Renovations</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ══════════════════════
+       TIER 2
+  ══════════════════════ -->
+  <div class="tier-header">
+    <div class="tier-label">Tier 2</div>
+    <div class="tier-title">Georgia Rooted — Feel local &amp; grounded</div>
+    <div class="tier-rule"></div>
+  </div>
+
+  <table class="name-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Legal Entity</th>
+        <th>Investor Brand</th>
+        <th>Renovation Brand</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>6</td>
+        <td><div class="name-main">Redstone Homes</div></td>
+        <td class="layer-cell">Redstone Homes LLC</td>
+        <td class="layer-cell">Redstone Holdings</td>
+        <td class="layer-cell">Redstone Renovations</td>
+      </tr>
+      <tr>
+        <td>7</td>
+        <td><div class="name-main">Magnolia Homes</div></td>
+        <td class="layer-cell">Magnolia Homes LLC</td>
+        <td class="layer-cell">Magnolia Holdings</td>
+        <td class="layer-cell">Magnolia Renovations</td>
+      </tr>
+      <tr>
+        <td>8</td>
+        <td><div class="name-main">Cedarbrook Properties</div></td>
+        <td class="layer-cell">Cedarbrook Properties LLC</td>
+        <td class="layer-cell">Cedarbrook Holdings</td>
+        <td class="layer-cell">Cedarbrook Renovations</td>
+      </tr>
+      <tr>
+        <td>9</td>
+        <td><div class="name-main">Crestview Properties</div></td>
+        <td class="layer-cell">Crestview Properties LLC</td>
+        <td class="layer-cell">Crestview Holdings</td>
+        <td class="layer-cell">Crestview Renovations</td>
+      </tr>
+      <tr>
+        <td>10</td>
+        <td><div class="name-main">Peachtree Homes</div></td>
+        <td class="layer-cell">Peachtree Homes LLC</td>
+        <td class="layer-cell">Peachtree Holdings</td>
+        <td class="layer-cell">Peachtree Renovations</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ══════════════════════
+       TIER 3
+  ══════════════════════ -->
+  <div class="tier-header">
+    <div class="tier-label">Tier 3</div>
+    <div class="tier-title">Bold &amp; Modern — Stand out from competitors</div>
+    <div class="tier-rule"></div>
+  </div>
+
+  <table class="name-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Legal Entity</th>
+        <th>Investor Brand</th>
+        <th>Renovation Brand</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>11</td>
+        <td><div class="name-main">Onyx Properties</div></td>
+        <td class="layer-cell">Onyx Properties LLC</td>
+        <td class="layer-cell">Onyx Holdings</td>
+        <td class="layer-cell">Onyx Renovations</td>
+      </tr>
+      <tr>
+        <td>12</td>
+        <td><div class="name-main">Vanguard Homes</div></td>
+        <td class="layer-cell">Vanguard Homes LLC</td>
+        <td class="layer-cell">Vanguard Holdings</td>
+        <td class="layer-cell">Vanguard Renovations</td>
+      </tr>
+      <tr>
+        <td>13</td>
+        <td><div class="name-main">Atlas Homes</div></td>
+        <td class="layer-cell">Atlas Homes LLC</td>
+        <td class="layer-cell">Atlas Holdings</td>
+        <td class="layer-cell">Atlas Renovations</td>
+      </tr>
+      <tr>
+        <td>14</td>
+        <td><div class="name-main">Ember Properties</div></td>
+        <td class="layer-cell">Ember Properties LLC</td>
+        <td class="layer-cell">Ember Holdings</td>
+        <td class="layer-cell">Ember Renovations</td>
+      </tr>
+      <tr>
+        <td>15</td>
+        <td><div class="name-main">Pinnacle Homes</div></td>
+        <td class="layer-cell">Pinnacle Homes LLC</td>
+        <td class="layer-cell">Pinnacle Holdings</td>
+        <td class="layer-cell">Pinnacle Renovations</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- TOP 3 PICKS -->
+  <div class="picks-section">
+    <div class="picks-title">Top 3 Recommended — Based on Brand Fit, Market Positioning &amp; Scalability</div>
+    <div class="picks-grid">
+
+      <div class="pick-card">
+        <div class="pick-rank">Pick #1</div>
+        <div class="pick-name">Forge Properties</div>
+        <div class="pick-why">"Forge" is short and powerful — directly tied to building and craft. Adding "Properties" grounds it immediately as a real estate company. Works perfectly with a black/gold brand. Scales cleanly from renovation crew to holding company.</div>
+      </div>
+
+      <div class="pick-card">
+        <div class="pick-rank">Pick #2</div>
+        <div class="pick-name">Onyx Properties</div>
+        <div class="pick-why">Most unique name in the GA market. The black/gold palette was practically made for this name. "Properties" adds instant real estate credibility. Stands completely apart from the "Pro," "Elite," and "Premier" competitors.</div>
+      </div>
+
+      <div class="pick-card">
+        <div class="pick-rank">Pick #3</div>
+        <div class="pick-name">Ridgeline Homes</div>
+        <div class="pick-why">Georgia geography feel without being overdone. "Homes" makes it approachable to motivated sellers while "Ridgeline Holdings" still sounds strong to lenders and investors. Works across all three brand layers.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SELECTION BOX -->
+  <div class="selection-section" style="margin-top:32px;">
+    <div class="selection-title">Partner Selection — Sign Off on Chosen Name</div>
+    <div style="font-family:'Arial',sans-serif;font-size:11px;color:#3a3020;line-height:1.7;margin-bottom:20px;">
+      Once a name is selected, verify availability at the <strong>Georgia Secretary of State</strong> (sos.ga.gov) and check domain availability before filing. Both partners initial below to confirm the selection.
+    </div>
+
+    <div style="background:#fff;border:1px solid var(--border);padding:14px 18px;margin-bottom:20px;">
+      <div style="font-family:'Arial',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Selected Name</div>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <div style="font-family:'Georgia',serif;font-size:22px;font-weight:700;color:var(--black);border-bottom:1px solid #aaa;min-width:280px;height:36px;padding-bottom:4px;"></div>
+        <div style="font-family:'Arial',sans-serif;font-size:10px;color:var(--muted);">Write selected name above</div>
+      </div>
+    </div>
+
+    <div class="selection-grid">
+      <div class="sig-field">
+        <div class="sig-label">Anchor Pro Solutions — Ty Jackson</div>
+        <div class="sig-line"></div>
+        <div class="sig-sub">Initials &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</div>
+      </div>
+      <div class="sig-field">
+        <div class="sig-label">Landon Renovations — Jeff &amp; Jordan Sarabia</div>
+        <div class="sig-line"></div>
+        <div class="sig-sub">Initials &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Date</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEXT STEPS -->
+  <div style="margin-top:28px; font-family:'Arial',sans-serif;">
+    <div style="font-size:9px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Next Steps After Selection</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;">
+      <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#3a3020;line-height:1.5;"><span class="cb"></span>Check name availability — Georgia SOS (sos.ga.gov)</div>
+      <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#3a3020;line-height:1.5;"><span class="cb"></span>Check domain availability — [name].com / [name]renovations.com</div>
+      <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#3a3020;line-height:1.5;"><span class="cb"></span>Check social handles on Instagram, Facebook, YouTube</div>
+      <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#3a3020;line-height:1.5;"><span class="cb"></span>File LLC Articles of Organization</div>
+      <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#3a3020;line-height:1.5;"><span class="cb"></span>Update all 22 toolkit documents with new name</div>
+      <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#3a3020;line-height:1.5;"><span class="cb"></span>Jordan designs logo once name is locked</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="doc-footer">
+    Anchor Pro Solutions × Landon Renovations · Partnership Name Review · Confidential · May 2026
+  </div>
+
+</div>
+
+</body>
+</html>

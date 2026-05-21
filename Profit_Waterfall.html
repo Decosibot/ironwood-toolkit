@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Anchor Pro — Profit Waterfall Calculator</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --gold: #c9a84c; --cream: #f5f0e8;
+    --muted: #888; --success: #27ae60; --danger: #c0392b; --warn: #e67e22;
+  }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+
+  .topbar { background: linear-gradient(135deg,#1a1a1a,#0a0a0a); border-bottom: 1px solid var(--gold); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
+  .topbar-brand { display: flex; align-items: center; gap: 12px; }
+  .topbar-logo { width: 36px; height: 36px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
+  .topbar-title { font-size: 16px; font-weight: 700; }
+  .topbar-sub { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+
+  .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
+  .btn:hover { opacity: .85; }
+  .btn-gold { background: var(--gold); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+  .container { max-width: 1000px; margin: 0 auto; padding: 28px 20px; }
+
+  /* ── DEAL TYPE TOGGLE ── */
+  .deal-toggle { display: flex; gap: 4px; margin-bottom: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 4px; width: fit-content; flex-wrap: wrap; }
+  .deal-btn { padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 700; letter-spacing: .5px; border: none; background: transparent; color: var(--muted); transition: all .15s; }
+  .deal-btn.active { background: var(--gold); color: #0a0a0a; }
+
+  /* ── TWO COL ── */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  @media(max-width:680px){ .two-col { grid-template-columns: 1fr; } }
+
+  /* ── INPUT CARD ── */
+  .input-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .input-card h3 { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 14px; }
+  .field { margin-bottom: 12px; }
+  .field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; font-weight: 600; }
+  .field-row { display: flex; align-items: center; gap: 6px; }
+  .field-row .prefix { color: var(--muted); font-size: 13px; }
+  .field input, .field select { background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 14px; font-weight: 600; width: 100%; }
+  .field input:focus, .field select:focus { outline: 1px solid var(--gold); }
+  .field input[readonly] { color: var(--gold); cursor: default; }
+  .field .hint { font-size: 10px; color: #555; margin-top: 3px; }
+  .field .calc-result { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 14px; font-weight: 700; color: var(--gold); width: 100%; display: block; }
+
+  /* ── WATERFALL DISPLAY ── */
+  .waterfall { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
+  .wf-title { padding: 14px 20px; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+  .wf-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 20px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .wf-row:last-child { border-bottom: none; }
+  .wf-row.section-head { background: #111; font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 1px; padding: 6px 20px; }
+  .wf-row.deduct .amt { color: var(--danger); }
+  .wf-row.result { background: #161a10; }
+  .wf-row.result .label { font-weight: 700; color: var(--cream); }
+  .wf-row.result .amt { font-weight: 700; color: var(--success); font-size: 15px; }
+  .wf-row.split-anchor { background: #0d1a10; }
+  .wf-row.split-anchor .label { color: #5cb85c; font-weight: 700; }
+  .wf-row.split-anchor .amt { color: #5cb85c; font-weight: 700; font-size: 16px; }
+  .wf-row.split-landon { background: #0d1520; }
+  .wf-row.split-landon .label { color: #64b5f6; font-weight: 700; }
+  .wf-row.split-landon .amt { color: #64b5f6; font-weight: 700; font-size: 16px; }
+  .wf-row.gross { background: #1a1a10; }
+  .wf-row.gross .label { font-weight: 700; }
+  .wf-row.gross .amt { font-weight: 700; color: var(--gold); font-size: 15px; }
+  .wf-row .label { color: var(--cream); }
+  .wf-row .sub-label { font-size: 11px; color: var(--muted); }
+  .wf-row .amt { color: var(--cream); font-weight: 600; }
+
+  /* ── PARTNER CARDS ── */
+  .partner-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+  .partner-card { border-radius: 10px; padding: 20px; text-align: center; }
+  .partner-card.anchor { background: linear-gradient(135deg,#0d1a10,#1a2a1a); border: 1px solid #2a4a2a; }
+  .partner-card.landon { background: linear-gradient(135deg,#0d1520,#1a2535); border: 1px solid #2a3a50; }
+  .partner-card .pc-name { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 8px; }
+  .partner-card.anchor .pc-name { color: #5cb85c; }
+  .partner-card.landon .pc-name { color: #64b5f6; }
+  .partner-card .pc-amount { font-size: 32px; font-weight: 900; margin-bottom: 4px; }
+  .partner-card.anchor .pc-amount { color: #5cb85c; }
+  .partner-card.landon .pc-amount { color: #64b5f6; }
+  .partner-card .pc-pct { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+  .partner-card .pc-breakdown { font-size: 11px; color: var(--muted); line-height: 1.8; }
+  .partner-card .pc-breakdown span { color: var(--cream); font-weight: 600; }
+
+  /* ── BAR CHART ── */
+  .bar-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; }
+  .bar-wrap h3 { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 16px; }
+  .bar-item { margin-bottom: 12px; }
+  .bar-label-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
+  .bar-label-row .bl { color: var(--muted); }
+  .bar-label-row .bv { color: var(--cream); font-weight: 600; }
+  .bar-track { height: 10px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 5px; transition: width .4s; }
+
+  /* ── HISTORY ── */
+  .history-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
+  .history-wrap .hw-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+  .history-wrap .hw-header h3 { font-size: 12px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  table.hist-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  table.hist-table thead th { background: var(--surface2); padding: 8px 14px; text-align: left; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border); }
+  table.hist-table tbody tr { border-bottom: 1px solid var(--border); }
+  table.hist-table tbody tr:last-child { border-bottom: none; }
+  table.hist-table tbody tr:hover { background: var(--surface2); }
+  table.hist-table tbody td { padding: 9px 14px; }
+  .empty-state { text-align: center; padding: 30px; color: var(--muted); font-size: 13px; }
+
+  @media print {
+    .topbar, .deal-toggle, .btn, .history-wrap { display: none !important; }
+    body { background: #fff; color: #000; }
+    .waterfall, .partner-card, .bar-wrap, .input-card { background: #f9f9f9 !important; border-color: #ccc !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">$</div>
+    <div>
+      <div class="topbar-title">Profit Waterfall Calculator</div>
+      <div class="topbar-sub">Anchor Pro Solutions × Landon Renovations</div>
+    </div>
+  </div>
+  <div style="display:flex; gap:8px;">
+    <button class="btn btn-outline btn-sm" onclick="window.print()">&#128424; Print</button>
+    <button class="btn btn-gold btn-sm" onclick="saveToDeal()">+ Save to History</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- DEAL TYPE -->
+  <div class="deal-toggle">
+    <button class="deal-btn active" onclick="setDealType('remodel',this)">Remodel Job</button>
+    <button class="deal-btn" onclick="setDealType('brrrr',this)">BRRRR Deal</button>
+    <button class="deal-btn" onclick="setDealType('flip',this)">Flip / Sale</button>
+    <button class="deal-btn" onclick="setDealType('vtr',this)">Vacation Rental</button>
+  </div>
+
+  <!-- INPUTS -->
+  <div class="two-col">
+    <div class="input-card">
+      <h3>Revenue &amp; Gross Profit</h3>
+
+      <!-- Standard gross revenue field (hidden for VTR) -->
+      <div class="field" id="grossRevenueField">
+        <label id="rev-label">Gross Revenue (Job Total Billed)</label>
+        <div class="field-row"><span class="prefix">$</span><input type="number" id="grossRevenue" placeholder="42000" oninput="calc()"/></div>
+        <div class="hint" id="rev-hint">Total amount billed to client or received at refi/sale</div>
+      </div>
+
+      <!-- VTR-specific inputs (hidden by default) -->
+      <div id="vtrFields" style="display:none;">
+        <div class="field">
+          <label>Nightly Rate</label>
+          <div class="field-row"><span class="prefix">$</span><input type="number" id="nightlyRate" placeholder="250" min="0" oninput="calc()"/></div>
+          <div class="hint">Average nightly rate charged to guests</div>
+        </div>
+        <div class="field">
+          <label>Occupancy %</label>
+          <div class="field-row"><input type="number" id="occupancyPct" placeholder="65" min="0" max="100" value="65" oninput="calc()"/><span class="prefix">% occupied</span></div>
+          <div class="hint">Average monthly occupancy rate (default 65%)</div>
+        </div>
+        <div class="field">
+          <label>Days in Month</label>
+          <div class="field-row"><span class="calc-result" style="width:auto; padding:8px 10px; font-size:13px; flex:1;">30 days (fixed)</span></div>
+          <div class="hint">Standard 30-day month used for all calculations</div>
+        </div>
+        <div class="field">
+          <label id="rev-label">Gross Monthly VR Revenue (auto-calculated)</label>
+          <div class="field-row"><span class="prefix">$</span><input type="number" id="vtrGrossDisplay" readonly placeholder="0.00" style="color:var(--gold); cursor:default;"/></div>
+          <div class="hint" id="rev-hint">Nightly rate × occupancy % × 30 days</div>
+        </div>
+        <div class="field">
+          <label>Platform</label>
+          <div class="field-row">
+            <select id="vtrPlatform" onchange="calc()" style="background:var(--surface2);border:1px solid var(--border);color:var(--cream);border-radius:6px;padding:8px 10px;font-size:13px;flex:1;">
+              <option value="airbnb">Airbnb</option>
+              <option value="vrbo">VRBO</option>
+              <option value="both">Both</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Market</label>
+          <div class="field-row">
+            <select id="vtrMarket" onchange="calc()" style="background:var(--surface2);border:1px solid var(--border);color:var(--cream);border-radius:6px;padding:8px 10px;font-size:13px;flex:1;">
+              <option value="blueridge">Blue Ridge, GA</option>
+              <option value="ellijay">Ellijay, GA</option>
+              <option value="dahlonega">Dahlonega, GA</option>
+              <option value="destin">Destin, FL</option>
+              <option value="30a">30A, FL</option>
+              <option value="pcb">Panama City Beach, FL</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label id="cost-label-vtr">Fixed Monthly Costs (Mortgage, Tax, Insurance)</label>
+          <div class="field-row"><span class="prefix">$</span><input type="number" id="vtrFixedCosts" placeholder="2500" min="0" oninput="calc()"/></div>
+          <div class="hint">Total fixed monthly obligations for the property</div>
+        </div>
+        <div class="field">
+          <label>Cleaning / Turnover (per month)</label>
+          <div class="field-row"><span class="prefix">$</span><input type="number" id="vtrCleaning" placeholder="0" min="0" oninput="calc()"/></div>
+          <div class="hint">Total monthly cleaning and turnover costs</div>
+        </div>
+        <div class="field">
+          <label>Utilities (per month)</label>
+          <div class="field-row"><span class="prefix">$</span><input type="number" id="vtrUtilities" placeholder="0" min="0" oninput="calc()"/></div>
+          <div class="hint">Electric, water, gas, internet, etc.</div>
+        </div>
+      </div>
+
+      <!-- Standard hard costs field (hidden for VTR — VTR uses vtrFixedCosts instead) -->
+      <div class="field" id="hardCostsField">
+        <label id="cost-label">Hard Costs (Materials + Subs + Closing)</label>
+        <div class="field-row"><span class="prefix">$</span><input type="number" id="hardCosts" placeholder="18000" oninput="calc()"/></div>
+        <div class="hint">Materials, subcontractor invoices, closing costs, permits</div>
+      </div>
+
+      <div class="field">
+        <label>Ad Spend (Pre-Waterfall Business Expense)</label>
+        <div class="field-row"><span class="prefix">$</span><input type="number" id="adSpend" placeholder="500" min="0" oninput="calc()"/></div>
+        <div class="hint" id="adspend-hint">Platform costs — Meta, Google, direct mail. Deducted before waterfall. Separate from Ty's 3%.</div>
+      </div>
+      <div class="field">
+        <label>Deal / Job Name</label>
+        <input type="text" id="dealName" placeholder="123 Main St — Kitchen Remodel" oninput="calc()"/>
+      </div>
+    </div>
+
+    <div class="input-card">
+      <h3>Contributor Fees (Off the Top)</h3>
+      <div class="field">
+        <label>Jeff's Compensation Mode</label>
+        <div class="field-row">
+          <select id="jeffMode" onchange="calc()" style="background:var(--surface2);border:1px solid var(--border);color:var(--cream);border-radius:6px;padding:8px 10px;font-size:13px;flex:1;">
+            <option value="hourly">Phase 1 — Hourly ($50/hr)</option>
+            <option value="pct">Phase 2 — 30% of Gross Profit</option>
+          </select>
+        </div>
+        <div class="hint">Converts to 30% once LLC hits $25K/mo for 2 consecutive months</div>
+      </div>
+      <div class="field" id="jeffHoursField">
+        <label>Jeff's Hours on This Job</label>
+        <div class="field-row"><input type="number" id="jeffHours" placeholder="0" min="0" oninput="calc()"/><span class="prefix">hrs × $50/hr → Landon Renovations</span></div>
+        <div class="hint" id="jeff-calc-hint">= $0</div>
+      </div>
+      <div class="field" id="jeffPctField" style="display:none;">
+        <label>Jeff's Labor % of Gross Profit</label>
+        <div class="field-row"><input type="number" id="jeffPct" placeholder="30" min="0" max="100" oninput="calc()"/><span class="prefix">% of gross profit → Landon Renovations</span></div>
+        <div class="hint" id="jeff-pct-hint">= $0 labor cut</div>
+      </div>
+      <div class="field">
+        <label>Anchor Pro Management Fee</label>
+        <div class="field-row"><input type="number" id="mgmtPct" placeholder="5" min="0" max="10" oninput="calc()"/><span class="prefix">% of gross revenue</span></div>
+        <div class="hint" id="mgmt-calc-hint">= $0</div>
+      </div>
+      <div class="field">
+        <label>Jordan Sarabia — Landon Side</label>
+        <div class="field-row"><input type="number" id="jordanPct" placeholder="3" min="0" max="20" oninput="calc()"/><span class="prefix">% of gross revenue → Landon Renovations</span></div>
+        <div class="hint" id="jordan-calc-hint">= $0</div>
+      </div>
+      <div class="field">
+        <label>Ty Jackson — Marketing (Anchor Pro Side)</label>
+        <div class="field-row"><input type="number" id="tyPct" placeholder="3" min="0" max="20" oninput="calc()"/><span class="prefix">% of gross revenue → Anchor Pro Solutions</span></div>
+        <div class="hint" id="ty-calc-hint">= $0</div>
+      </div>
+      <div class="field">
+        <label>Ty Jackson — Field Labor (Anchor Pro Side)</label>
+        <div class="field-row"><input type="number" id="tyHours" placeholder="0" min="0" oninput="calc()"/><span class="prefix">hrs × $30/hr → Anchor Pro Solutions</span></div>
+        <div class="hint" id="ty-labor-hint">= $0</div>
+      </div>
+      <div class="field" id="pmFeeField" style="display:none;">
+        <label>Property Management Fee (9% of monthly rent)</label>
+        <div class="field-row"><span class="prefix">$</span><input type="number" id="monthlyRent" placeholder="0" min="0" oninput="calc()"/><span class="prefix">monthly rent</span></div>
+        <div class="hint" id="pm-fee-hint">= $0 PM fee + $0 processing fee → Ironwood LLC waterfall</div>
+      </div>
+      <div class="field">
+        <label>Other Fees / Overhead Allocation</label>
+        <div class="field-row"><span class="prefix">$</span><input type="number" id="otherFees" placeholder="0" oninput="calc()"/></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PARTNER CARDS -->
+  <div class="partner-cards">
+    <div class="partner-card anchor">
+      <div class="pc-name">Anchor Pro Solutions</div>
+      <div class="pc-amount" id="anchorAmount">$0</div>
+      <div class="pc-pct">50% of net distributable profit</div>
+      <div class="pc-breakdown">
+        Mgmt Fee + Ty (3%): <span id="anchorMgmt">$0</span><br/>
+        Profit Split (50%): <span id="anchorSplit">$0</span><br/>
+        Total Take-Home: <span id="anchorTotal">$0</span>
+      </div>
+    </div>
+    <div class="partner-card landon">
+      <div class="pc-name">Landon Renovations</div>
+      <div class="pc-amount" id="landonAmount">$0</div>
+      <div class="pc-pct">50% of net distributable profit</div>
+      <div class="pc-breakdown">
+        Jeff's Labor: <span id="landonLabor">$0</span> <span id="landonLaborMode" style="font-size:10px;color:#888;">(hourly)</span><br/>
+        Jordan (3%): <span id="landonRetainer">$0</span><br/>
+        Profit Split (50%): <span id="landonSplit">$0</span><br/>
+        Total Take-Home: <span id="landonTotal">$0</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- WATERFALL -->
+  <div class="waterfall">
+    <div class="wf-title">
+      <span>Profit Waterfall</span>
+      <span id="wf-deal-type" style="font-size:11px; color:var(--muted);">Remodel Job</span>
+    </div>
+    <div id="waterfallRows"></div>
+  </div>
+
+  <!-- BAR CHART -->
+  <div class="bar-wrap">
+    <h3>Revenue Allocation Breakdown</h3>
+    <div id="barChart"></div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="history-wrap">
+    <div class="hw-header">
+      <h3>Deal History</h3>
+      <button class="btn btn-outline btn-sm" onclick="clearHistory()">Clear All</button>
+    </div>
+    <div id="historyBody"></div>
+  </div>
+
+</div>
+
+<script>
+let dealType = 'remodel';
+let history = JSON.parse(localStorage.getItem('anchorpro_waterfall_history') || '[]');
+
+window.onload = function() { renderHistory(); calc(); };
+
+function setDealType(type, el) {
+  dealType = type;
+  document.querySelectorAll('.deal-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+
+  const labels = { remodel: 'Remodel Job', brrrr: 'BRRRR Deal', flip: 'Flip / Sale', vtr: 'Vacation Rental' };
+  document.getElementById('wf-deal-type').textContent = labels[type];
+
+  // Show/hide VTR-specific fields vs standard fields
+  const isVTR = type === 'vtr';
+  document.getElementById('vtrFields').style.display       = isVTR ? '' : 'none';
+  document.getElementById('grossRevenueField').style.display = isVTR ? 'none' : '';
+  document.getElementById('hardCostsField').style.display   = isVTR ? 'none' : '';
+  document.getElementById('pmFeeField').style.display       = type === 'brrrr' ? '' : 'none';
+
+  // Update revenue label/hint for non-VTR types
+  if (!isVTR) {
+    const revLabel = document.getElementById('rev-label');
+    const revHint  = document.getElementById('rev-hint');
+    if (type === 'remodel') {
+      revLabel.textContent = 'Gross Revenue (Job Total Billed)';
+      revHint.textContent  = 'Total amount billed to client';
+    } else if (type === 'brrrr') {
+      revLabel.textContent = 'Cash Returned at Refinance';
+      revHint.textContent  = 'Refi loan amount minus total capital invested';
+    } else {
+      revLabel.textContent = 'Sale Proceeds (Net of Closing)';
+      revHint.textContent  = 'Sale price minus all closing costs and payoff';
+    }
+  }
+
+  calc();
+}
+
+function calc() {
+  const jeffMode   = document.getElementById('jeffMode').value;
+  const jeffHours  = parseFloat(document.getElementById('jeffHours').value) || 0;
+  const jeffPct    = parseFloat(document.getElementById('jeffPct').value) || 30;
+  const mgmtPct    = parseFloat(document.getElementById('mgmtPct').value) || 5;
+  const jordanPct  = parseFloat(document.getElementById('jordanPct').value) || 3;
+  const tyPct      = parseFloat(document.getElementById('tyPct').value) || 3;
+  const tyHours    = parseFloat(document.getElementById('tyHours').value) || 0;
+  const otherFees  = parseFloat(document.getElementById('otherFees').value) || 0;
+  const adSpend    = parseFloat(document.getElementById('adSpend').value) || 0;
+  const monthlyRent = parseFloat(document.getElementById('monthlyRent').value) || 0;
+
+  // Toggle Jeff input visibility
+  document.getElementById('jeffHoursField').style.display = jeffMode === 'hourly' ? '' : 'none';
+  document.getElementById('jeffPctField').style.display   = jeffMode === 'pct'    ? '' : 'none';
+
+  let gross, hardCosts, grossProfit;
+  let platformFee = 0, vrPmFee = 0, cleaning = 0, utilities = 0;
+  let vtrGross = 0;
+
+  if (dealType === 'vtr') {
+    const nightlyRate   = parseFloat(document.getElementById('nightlyRate').value) || 0;
+    const occupancyPct  = parseFloat(document.getElementById('occupancyPct').value) || 65;
+    const vtrFixedCosts = parseFloat(document.getElementById('vtrFixedCosts').value) || 0;
+    cleaning            = parseFloat(document.getElementById('vtrCleaning').value) || 0;
+    utilities           = parseFloat(document.getElementById('vtrUtilities').value) || 0;
+
+    vtrGross     = nightlyRate * (occupancyPct / 100) * 30;
+    gross        = vtrGross;
+    platformFee  = gross * 0.03;   // 3% platform host fee
+    vrPmFee      = gross * 0.25;   // 25% VR property management (Ty RE license)
+    hardCosts    = vtrFixedCosts;
+
+    // Update the read-only gross display
+    document.getElementById('vtrGrossDisplay').value = vtrGross.toFixed(2);
+
+    grossProfit = Math.max(0, gross - hardCosts - platformFee - vrPmFee - cleaning - utilities - adSpend);
+  } else {
+    gross        = parseFloat(document.getElementById('grossRevenue').value) || 0;
+    hardCosts    = parseFloat(document.getElementById('hardCosts').value) || 0;
+    grossProfit  = Math.max(0, gross - hardCosts - adSpend);
+  }
+
+  const jeffLabor    = jeffMode === 'hourly' ? jeffHours * 50 : grossProfit * (jeffPct / 100);
+  const mgmtFee      = gross * (mgmtPct / 100);
+  const jordanFee    = gross * (jordanPct / 100);
+  const tyFee        = gross * (tyPct / 100);
+  const tyLabor      = tyHours * 30;
+  const netDist      = Math.max(0, grossProfit - jeffLabor - mgmtFee - jordanFee - tyFee - tyLabor - otherFees);
+  const splitEach    = netDist * 0.50;
+
+  // PM fees (BRRRR only)
+  const pmFee         = dealType === 'brrrr' ? monthlyRent * 0.09 : 0;
+  const pmProcessing  = dealType === 'brrrr' ? monthlyRent * 0.035 : 0;
+  const pmTotal       = pmFee + pmProcessing;
+
+  // Anchor Pro total = mgmt fee + Ty marketing % + Ty field labor + 50% split
+  const anchorTotal  = mgmtFee + tyFee + tyLabor + splitEach;
+  // Landon total = jeff labor + jordan fee + 50% split
+  const landonTotal  = jeffLabor + jordanFee + splitEach;
+
+  // PM hint update
+  if (dealType === 'brrrr') {
+    document.getElementById('pm-fee-hint').textContent =
+      `= ${fmt(pmFee)} PM fee + ${fmt(pmProcessing)} processing (12.5% total on ${fmt(monthlyRent)}/mo rent) → Ironwood LLC`;
+  }
+
+  // Update hints
+  document.getElementById('jeff-calc-hint').textContent  = jeffMode === 'hourly'
+    ? `= ${fmt(jeffLabor)} (${jeffHours} hrs × $50/hr) → Landon Renovations`
+    : `= ${fmt(jeffLabor)} (${jeffPct}% × ${fmt(grossProfit)} gross profit) → Landon Renovations`;
+  if (document.getElementById('jeff-pct-hint'))
+    document.getElementById('jeff-pct-hint').textContent = `= ${fmt(jeffLabor)} (${jeffPct}% × ${fmt(grossProfit)} gross profit) → Landon Renovations`;
+  document.getElementById('mgmt-calc-hint').textContent  = `= ${fmt(mgmtFee)} → Anchor Pro Solutions`;
+  document.getElementById('jordan-calc-hint').textContent = `= ${fmt(jordanFee)} → Jordan Sarabia / Landon Renovations`;
+  document.getElementById('ty-calc-hint').textContent     = `= ${fmt(tyFee)} (${tyPct}% × ${fmt(gross)}) → Ty Jackson / Anchor Pro Solutions`;
+  document.getElementById('ty-labor-hint').textContent    = `= ${fmt(tyLabor)} (${tyHours} hrs × $30/hr) → Ty Jackson / Anchor Pro Solutions`;
+
+  // Partner cards
+  document.getElementById('anchorAmount').textContent = fmt(anchorTotal);
+  document.getElementById('anchorMgmt').textContent   = fmt(mgmtFee + tyFee + tyLabor);
+  document.getElementById('anchorSplit').textContent  = fmt(splitEach);
+  document.getElementById('anchorTotal').textContent  = fmt(anchorTotal);
+
+  document.getElementById('landonAmount').textContent   = fmt(landonTotal);
+  document.getElementById('landonLabor').textContent    = fmt(jeffLabor);
+  document.getElementById('landonLaborMode').textContent = jeffMode === 'hourly' ? `(${jeffHours} hrs × $50)` : `(${jeffPct}% gross profit)`;
+  document.getElementById('landonRetainer').textContent = fmt(jordanFee);
+  document.getElementById('landonSplit').textContent    = fmt(splitEach);
+  document.getElementById('landonTotal').textContent    = fmt(landonTotal);
+
+  // Build waterfall rows
+  let rows;
+
+  if (dealType === 'vtr') {
+    const nightlyRate  = parseFloat(document.getElementById('nightlyRate').value) || 0;
+    const occupancyPct = parseFloat(document.getElementById('occupancyPct').value) || 65;
+    rows = [
+      { cls: 'gross',        label: 'Gross Monthly VR Revenue',                          sub: `${fmt(nightlyRate)}/night × ${occupancyPct}% occ × 30 days`, amt: gross },
+      { cls: 'section-head', label: 'STEP 1 — VR OPERATING DEDUCTIONS',                 amt: null },
+      { cls: 'deduct',       label: 'Platform Fee (3%)',                                  sub: 'Airbnb / VRBO host fee — pre-waterfall', amt: -platformFee },
+      { cls: 'deduct',       label: 'PM Fee (25% — Ty Jackson, RE License)',              sub: 'VR property management — Anchor Pro', amt: -vrPmFee },
+      { cls: 'deduct',       label: 'Fixed Monthly Costs (Mortgage, Tax, Insurance)',     sub: 'Property fixed obligations', amt: -hardCosts },
+      ...(cleaning > 0 ? [{ cls: 'deduct', label: 'Cleaning / Turnover',                 sub: 'Monthly cleaning costs', amt: -cleaning }] : []),
+      ...(utilities > 0 ? [{ cls: 'deduct', label: 'Utilities',                           sub: 'Electric, water, gas, internet, etc.', amt: -utilities }] : []),
+      ...(adSpend > 0   ? [{ cls: 'deduct', label: 'Ad Spend (Meta, Google, Direct Mail)',sub: 'Pre-waterfall business expense', amt: -adSpend }] : []),
+      { cls: 'result',       label: 'Gross Profit',                                       amt: grossProfit },
+      { cls: 'section-head', label: 'STEP 2 — CONTRIBUTOR FEES',                         amt: null },
+      { cls: 'deduct',       label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50/hr)` : `Jeff's Labor (${jeffPct}% of gross profit)`, sub: '→ Landon Renovations', amt: -jeffLabor },
+      { cls: 'deduct',       label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`,                  sub: '→ Anchor Pro Solutions', amt: -mgmtFee },
+      { cls: 'deduct',       label: `Jordan Sarabia (${jordanPct}% of revenue)`,           sub: '→ Landon Renovations', amt: -jordanFee },
+      { cls: 'deduct',       label: `Ty Jackson — Marketing (${tyPct}% of revenue)`,       sub: '→ Anchor Pro Solutions', amt: -tyFee },
+      ...(tyLabor > 0   ? [{ cls: 'deduct', label: `Ty Jackson — Field Labor (${tyHours} hrs × $30/hr)`, sub: '→ Anchor Pro Solutions', amt: -tyLabor }] : []),
+      ...(otherFees > 0 ? [{ cls: 'deduct', label: 'Other Fees / Overhead', sub: '', amt: -otherFees }] : []),
+      { cls: 'result',       label: 'Net Distributable Profit',                            amt: netDist },
+      { cls: 'section-head', label: 'STEP 3 — 50/50 SPLIT',                               amt: null },
+      { cls: 'split-anchor', label: 'Anchor Pro Solutions (50%)', sub: 'Profit split',     amt: splitEach },
+      { cls: 'split-landon', label: 'Landon Renovations (50%)',   sub: 'Profit split',     amt: splitEach },
+    ];
+  } else {
+    rows = [
+      { cls: 'gross',        label: 'Gross Revenue / Proceeds',                  amt: gross },
+      { cls: 'section-head', label: 'STEP 1 — HARD COSTS',                       amt: null },
+      { cls: 'deduct',       label: 'Materials, Subs, Closing Costs', sub: 'Off the top', amt: -hardCosts },
+      ...(adSpend > 0 ? [{ cls: 'deduct', label: 'Ad Spend (Meta, Google, Direct Mail)', sub: 'Pre-waterfall business expense', amt: -adSpend }] : []),
+      { cls: 'result',       label: 'Gross Profit',                               amt: grossProfit },
+      { cls: 'section-head', label: 'STEP 2 — CONTRIBUTOR FEES',                 amt: null },
+      { cls: 'deduct',       label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50/hr)` : `Jeff's Labor (${jeffPct}% of gross profit)`, sub: '→ Landon Renovations', amt: -jeffLabor },
+      { cls: 'deduct',       label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`,          sub: '→ Anchor Pro Solutions', amt: -mgmtFee },
+      { cls: 'deduct',       label: `Jordan Sarabia (${jordanPct}% of revenue)`,  sub: '→ Landon Renovations', amt: -jordanFee },
+      { cls: 'deduct',       label: `Ty Jackson — Marketing (${tyPct}% of revenue)`, sub: '→ Anchor Pro Solutions', amt: -tyFee },
+      ...(tyLabor > 0 ? [{ cls: 'deduct', label: `Ty Jackson — Field Labor (${tyHours} hrs × $30/hr)`, sub: '→ Anchor Pro Solutions', amt: -tyLabor }] : []),
+      ...(otherFees > 0 ? [{ cls: 'deduct', label: 'Other Fees / Overhead', sub: '', amt: -otherFees }] : []),
+      { cls: 'result',       label: 'Net Distributable Profit',                   amt: netDist },
+      ...(pmTotal > 0 ? [
+        { cls: 'section-head', label: 'STEP 2B — PROPERTY MANAGEMENT INCOME', amt: null },
+        { cls: 'gross',        label: `PM Fee (9% of ${fmt(monthlyRent)}/mo rent)`, sub: '→ Ironwood LLC waterfall', amt: pmFee },
+        { cls: 'gross',        label: `Payment Processing Fee (3.5% of rent)`,      sub: '→ Ironwood LLC waterfall', amt: pmProcessing },
+        { cls: 'result',       label: `Total PM Revenue (12.5% of rent)`,            amt: pmTotal },
+      ] : []),
+      { cls: 'section-head', label: 'STEP 3 — 50/50 SPLIT',                      amt: null },
+      { cls: 'split-anchor', label: 'Anchor Pro Solutions (50%)', sub: 'Profit split', amt: splitEach },
+      { cls: 'split-landon', label: 'Landon Renovations (50%)',   sub: 'Profit split', amt: splitEach },
+    ];
+  }
+
+  document.getElementById('waterfallRows').innerHTML = rows.map(r => {
+    if (r.cls === 'section-head') return `<div class="wf-row section-head"><span>${r.label}</span></div>`;
+    const amtStr = r.amt === null ? '' : (r.amt < 0 ? '− ' + fmt(Math.abs(r.amt)) : fmt(r.amt));
+    return `
+      <div class="wf-row ${r.cls}">
+        <div>
+          <div class="label">${r.label}</div>
+          ${r.sub ? `<div class="sub-label">${r.sub}</div>` : ''}
+        </div>
+        <div class="amt">${amtStr}</div>
+      </div>`;
+  }).join('');
+
+  // Bar chart
+  const total = gross || 1;
+  let bars;
+
+  if (dealType === 'vtr') {
+    bars = [
+      { label: 'Platform Fee (3% — Airbnb/VRBO)', val: platformFee, color: '#c0392b' },
+      { label: 'PM Fee (25% — Ty Jackson, RE License)', val: vrPmFee, color: '#c9a84c' },
+      { label: 'Fixed Monthly Costs', val: hardCosts, color: '#8e44ad' },
+      ...(cleaning > 0   ? [{ label: 'Cleaning / Turnover', val: cleaning, color: '#e67e22' }] : []),
+      ...(utilities > 0  ? [{ label: 'Utilities', val: utilities, color: '#7f8c8d' }] : []),
+      ...(adSpend > 0    ? [{ label: 'Ad Spend', val: adSpend, color: '#e74c3c' }] : []),
+      { label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50)` : `Jeff's Labor (${jeffPct}% gross profit)`, val: jeffLabor, color: '#3498db' },
+      { label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`, val: mgmtFee, color: '#2ecc71' },
+      { label: `Jordan Sarabia (${jordanPct}%)`, val: jordanFee, color: '#ce93d8' },
+      { label: `Ty Jackson — Marketing (${tyPct}%)`, val: tyFee, color: '#80cbc4' },
+      ...(tyLabor > 0    ? [{ label: `Ty Jackson — Field Labor (${tyHours} hrs × $30)`, val: tyLabor, color: '#4db6ac' }] : []),
+      { label: 'Anchor Pro Split (50%)', val: splitEach, color: '#27ae60' },
+      { label: 'Landon Split (50%)', val: splitEach, color: '#2980b9' },
+    ].filter(b => b.val > 0);
+  } else {
+    bars = [
+      { label: 'Hard Costs', val: hardCosts, color: '#c0392b' },
+      ...(adSpend > 0 ? [{ label: 'Ad Spend', val: adSpend, color: '#e74c3c' }] : []),
+      { label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50)` : `Jeff's Labor (${jeffPct}% gross profit)`, val: jeffLabor, color: '#3498db' },
+      { label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`, val: mgmtFee, color: '#c9a84c' },
+      { label: `Jordan Sarabia (${jordanPct}%)`, val: jordanFee, color: '#ce93d8' },
+      { label: `Ty Jackson — Marketing (${tyPct}%)`, val: tyFee, color: '#80cbc4' },
+      ...(tyLabor > 0 ? [{ label: `Ty Jackson — Field Labor (${tyHours} hrs × $30)`, val: tyLabor, color: '#4db6ac' }] : []),
+      { label: 'Other Fees', val: otherFees, color: '#7f8c8d' },
+      ...(pmTotal > 0 ? [{ label: `PM Fee + Processing (12.5% of rent)`, val: pmTotal, color: '#c9a84c' }] : []),
+      { label: 'Anchor Pro Split (50%)', val: splitEach, color: '#27ae60' },
+      { label: 'Landon Split (50%)', val: splitEach, color: '#2980b9' },
+    ].filter(b => b.val > 0);
+  }
+
+  document.getElementById('barChart').innerHTML = bars.map(b => {
+    const pct = Math.min(100, (b.val / total) * 100);
+    return `
+      <div class="bar-item">
+        <div class="bar-label-row"><span class="bl">${b.label}</span><span class="bv">${fmt(b.val)} (${pct.toFixed(1)}%)</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${b.color};"></div></div>
+      </div>`;
+  }).join('') || '<div class="empty-state">Enter values above to see the breakdown.</div>';
+}
+
+function saveToDeal() {
+  const adSpend   = parseFloat(document.getElementById('adSpend').value) || 0;
+  const jeffMode  = document.getElementById('jeffMode').value;
+  const jeffHoursS = parseFloat(document.getElementById('jeffHours').value) || 0;
+  const jeffPctS   = parseFloat(document.getElementById('jeffPct').value) || 30;
+  const mgmtPct   = parseFloat(document.getElementById('mgmtPct').value) || 5;
+  const jordanPct = parseFloat(document.getElementById('jordanPct').value) || 3;
+  const tyPct     = parseFloat(document.getElementById('tyPct').value) || 3;
+  const tyHoursS  = parseFloat(document.getElementById('tyHours').value) || 0;
+  const otherFees = parseFloat(document.getElementById('otherFees').value) || 0;
+  const name      = document.getElementById('dealName').value.trim() || 'Unnamed Deal';
+
+  let gross, hardCosts, grossProfit;
+  let platformFee = 0, vrPmFee = 0, cleaning = 0, utilities = 0;
+
+  if (dealType === 'vtr') {
+    const nightlyRate   = parseFloat(document.getElementById('nightlyRate').value) || 0;
+    const occupancyPct  = parseFloat(document.getElementById('occupancyPct').value) || 65;
+    const vtrFixedCosts = parseFloat(document.getElementById('vtrFixedCosts').value) || 0;
+    cleaning            = parseFloat(document.getElementById('vtrCleaning').value) || 0;
+    utilities           = parseFloat(document.getElementById('vtrUtilities').value) || 0;
+    gross        = nightlyRate * (occupancyPct / 100) * 30;
+    platformFee  = gross * 0.03;
+    vrPmFee      = gross * 0.25;
+    hardCosts    = vtrFixedCosts;
+    grossProfit  = Math.max(0, gross - hardCosts - platformFee - vrPmFee - cleaning - utilities - adSpend);
+  } else {
+    gross       = parseFloat(document.getElementById('grossRevenue').value) || 0;
+    hardCosts   = parseFloat(document.getElementById('hardCosts').value) || 0;
+    grossProfit = Math.max(0, gross - hardCosts - adSpend);
+  }
+
+  if (!gross) { alert('Enter a gross revenue amount first.'); return; }
+
+  const jeffLabor   = jeffMode === 'hourly' ? jeffHoursS * 50 : grossProfit * (jeffPctS / 100);
+  const mgmtFee     = gross * (mgmtPct / 100);
+  const jordanFee   = gross * (jordanPct / 100);
+  const tyFee       = gross * (tyPct / 100);
+  const tyLabor     = tyHoursS * 30;
+  const netDist     = Math.max(0, grossProfit - jeffLabor - mgmtFee - jordanFee - tyFee - tyLabor - otherFees);
+  const splitEach   = netDist * 0.50;
+
+  history.unshift({
+    id: uid(), date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+    name, type: dealType, gross, netDist, splitEach,
+    anchorTotal: mgmtFee + tyFee + tyLabor + splitEach, landonTotal: jeffLabor + jordanFee + splitEach
+  });
+  localStorage.setItem('anchorpro_waterfall_history', JSON.stringify(history));
+  renderHistory();
+  alert(`"${name}" saved to history.`);
+}
+
+function renderHistory() {
+  const el = document.getElementById('historyBody');
+  if (history.length === 0) {
+    el.innerHTML = '<div class="empty-state">No deals saved yet. Fill in a deal and click "+ Save to History".</div>';
+    return;
+  }
+  const totAnchor = history.reduce((s,d) => s + (d.anchorTotal||0), 0);
+  const totLandon = history.reduce((s,d) => s + (d.landonTotal||0), 0);
+  const typeLabels = { remodel: 'Remodel', brrrr: 'BRRRR', flip: 'Flip', vtr: 'Vacation Rental' };
+  el.innerHTML = `
+    <table class="hist-table">
+      <thead><tr><th>Date</th><th>Deal / Job</th><th>Type</th><th>Gross Revenue</th><th>Net Distributable</th><th>Anchor Pro</th><th>Landon Renovations</th></tr></thead>
+      <tbody>
+        ${history.map(d => `
+          <tr>
+            <td>${d.date}</td>
+            <td>${esc(d.name)}</td>
+            <td style="color:var(--muted)">${typeLabels[d.type] || d.type}</td>
+            <td>${fmt(d.gross)}</td>
+            <td style="color:var(--gold)">${fmt(d.netDist)}</td>
+            <td style="color:#5cb85c; font-weight:700;">${fmt(d.anchorTotal)}</td>
+            <td style="color:#64b5f6; font-weight:700;">${fmt(d.landonTotal)}</td>
+          </tr>`).join('')}
+        <tr style="background:#111; font-weight:700; border-top:2px solid var(--gold);">
+          <td colspan="5" style="color:var(--gold); font-size:11px; text-transform:uppercase; letter-spacing:.5px;">TOTALS (${history.length} deal${history.length===1?'':'s'})</td>
+          <td style="color:#5cb85c;">${fmt(totAnchor)}</td>
+          <td style="color:#64b5f6;">${fmt(totLandon)}</td>
+        </tr>
+      </tbody>
+    </table>`;
+}
+
+function clearHistory() {
+  if (!confirm('Clear all deal history?')) return;
+  history = [];
+  localStorage.removeItem('anchorpro_waterfall_history');
+  renderHistory();
+}
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function fmt(n) { return '$' + (parseFloat(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>

@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood LLC — Monthly P&L</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+  --border: #2a2a2a; --gold: #c9a84c; --cream: #f5f0e8;
+  --muted: #888; --success: #27ae60; --danger: #c0392b;
+  --anchor-bg: #0d1a10; --anchor-border: #2a4a2a; --anchor-text: #5cb85c;
+  --landon-bg: #0d1520; --landon-border: #2a3a50; --landon-text: #64b5f6;
+}
+body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.topbar { background: linear-gradient(135deg,#1a1a1a,#0a0a0a); border-bottom: 2px solid var(--gold); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; position: sticky; top: 0; z-index: 100; }
+.topbar-brand { display: flex; align-items: center; gap: 12px; }
+.topbar-logo { width: 38px; height: 38px; background: var(--gold); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px; color: #0a0a0a; letter-spacing: -1px; }
+.topbar-title { font-size: 15px; font-weight: 700; color: var(--cream); }
+.topbar-sub { font-size: 10px; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+.topbar-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.month-selector { background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 7px 10px; font-size: 13px; font-weight: 600; }
+.month-selector:focus { outline: 1px solid var(--gold); }
+
+/* ── BUTTONS ── */
+.btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: opacity .15s, transform .1s; letter-spacing: .3px; }
+.btn:hover { opacity: .85; transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+.btn-gold { background: var(--gold); color: #0a0a0a; }
+.btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); }
+.btn-sm { padding: 5px 10px; font-size: 11px; }
+.btn-danger { background: transparent; border: 1px solid #c0392b44; color: #c0392b; }
+
+/* ── CONTAINER ── */
+.container { max-width: 1100px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* ── REPORT HEADER ── */
+.report-header { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; }
+.rh-left { }
+.rh-title { font-size: 28px; font-weight: 800; color: var(--cream); letter-spacing: -0.5px; }
+.rh-period { font-size: 18px; color: var(--gold); font-weight: 700; margin-top: 4px; }
+.rh-meta { margin-top: 12px; display: flex; flex-direction: column; gap: 4px; }
+.rh-meta span { font-size: 12px; color: var(--muted); }
+.rh-meta span strong { color: var(--cream); font-weight: 600; }
+.rh-right { text-align: right; }
+.rh-logo-block { }
+.rh-logo-lg { width: 56px; height: 56px; background: var(--gold); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 24px; color: #0a0a0a; margin-left: auto; }
+.rh-company { font-size: 14px; font-weight: 700; color: var(--cream); margin-top: 8px; }
+.rh-tagline { font-size: 10px; color: var(--gold); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+
+/* ── SECTION ── */
+.section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 24px; overflow: hidden; }
+.section-header { background: var(--surface2); border-bottom: 1px solid var(--border); padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; }
+.section-title { font-size: 11px; color: var(--gold); font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; gap: 8px; }
+.section-num { background: var(--gold); color: #0a0a0a; width: 20px; height: 20px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; }
+.section-body { padding: 20px; }
+
+/* ── INPUT TABLE ── */
+.input-table { width: 100%; border-collapse: collapse; }
+.input-table th { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; padding: 6px 10px; border-bottom: 1px solid var(--border); text-align: left; }
+.input-table th.amt-col { text-align: right; width: 160px; }
+.input-table th.type-col { width: 190px; }
+.input-table th.proj-col { width: 170px; }
+.input-table th.del-col { width: 44px; }
+.input-table td { padding: 6px 6px; border-bottom: 1px solid #1e1e1e; vertical-align: middle; }
+.input-table tr:last-child td { border-bottom: none; }
+.input-table input[type="text"],
+.input-table input[type="number"],
+.input-table select { background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 5px; padding: 7px 9px; font-size: 13px; width: 100%; }
+.input-table input[type="number"] { text-align: right; }
+.input-table input:focus, .input-table select:focus { outline: 1px solid var(--gold); }
+.input-table select option { background: #1e1e1e; }
+.table-footer { display: flex; justify-content: space-between; align-items: center; padding: 14px 20px; border-top: 1px solid var(--border); background: #111; }
+.table-footer .total-label { font-size: 12px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.table-footer .total-val { font-size: 18px; font-weight: 800; color: var(--gold); }
+
+/* ── COMP TABLE (fixed rows) ── */
+.comp-table { width: 100%; border-collapse: collapse; }
+.comp-table td { padding: 8px 10px; border-bottom: 1px solid #1e1e1e; vertical-align: middle; }
+.comp-table tr:last-child td { border-bottom: none; }
+.comp-table .person { font-size: 13px; font-weight: 700; color: var(--cream); }
+.comp-table .role { font-size: 11px; color: var(--muted); }
+.comp-table .mode-badge { font-size: 10px; color: var(--gold); background: #1e1a10; border: 1px solid #3a2f10; padding: 2px 7px; border-radius: 4px; display: inline-block; margin-top: 2px; }
+.comp-table input[type="number"] { background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 5px; padding: 7px 9px; font-size: 13px; font-weight: 700; text-align: right; width: 140px; }
+.comp-table input:focus { outline: 1px solid var(--gold); }
+.comp-table .amt-cell { text-align: right; }
+
+/* ── WATERFALL ── */
+.waterfall { border-radius: 10px; overflow: hidden; border: 1px solid var(--border); }
+.wf-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--border); }
+.wf-row:last-child { border-bottom: none; }
+.wf-row.wf-head { background: #111; font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 1px; padding: 7px 20px; }
+.wf-row .wf-label { font-size: 13px; color: var(--cream); }
+.wf-row .wf-amt { font-size: 13px; font-weight: 700; color: var(--cream); }
+.wf-row.deduct .wf-label { color: #aaa; }
+.wf-row.deduct .wf-amt { color: var(--danger); }
+.wf-row.gross-profit { background: #1a1a10; }
+.wf-row.gross-profit .wf-label { font-weight: 700; color: var(--cream); }
+.wf-row.gross-profit .wf-amt { font-weight: 800; color: var(--gold); font-size: 16px; }
+.wf-row.net-dist { background: #0f1a0f; }
+.wf-row.net-dist .wf-label { font-weight: 800; color: var(--cream); font-size: 14px; }
+.wf-row.net-dist .wf-amt { font-weight: 800; color: var(--success); font-size: 18px; }
+.wf-row.split-anchor { background: var(--anchor-bg); }
+.wf-row.split-anchor .wf-label { font-weight: 700; color: var(--anchor-text); }
+.wf-row.split-anchor .wf-amt { font-weight: 800; color: var(--anchor-text); font-size: 16px; }
+.wf-row.split-landon { background: var(--landon-bg); }
+.wf-row.split-landon .wf-label { font-weight: 700; color: var(--landon-text); }
+.wf-row.split-landon .wf-amt { font-weight: 800; color: var(--landon-text); font-size: 16px; }
+.wf-inline-input { background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 5px; padding: 6px 9px; font-size: 13px; font-weight: 700; text-align: right; width: 160px; }
+.wf-inline-input:focus { outline: 1px solid var(--gold); }
+
+/* ── PARTNER CARDS ── */
+.partner-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media(max-width:680px){ .partner-cards { grid-template-columns: 1fr; } }
+.partner-card { border-radius: 10px; padding: 22px; }
+.partner-card.anchor { background: linear-gradient(135deg, var(--anchor-bg), #1a2a1a); border: 1px solid var(--anchor-border); }
+.partner-card.landon { background: linear-gradient(135deg, var(--landon-bg), #1a2535); border: 1px solid var(--landon-border); }
+.pc-name { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 800; margin-bottom: 14px; }
+.anchor .pc-name { color: var(--anchor-text); }
+.landon .pc-name { color: var(--landon-text); }
+.pc-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #ffffff0a; font-size: 12px; color: #aaa; }
+.pc-row:last-of-type { border-bottom: none; }
+.pc-row .pc-val { font-weight: 700; color: var(--cream); }
+.pc-total-row { margin-top: 14px; padding-top: 12px; border-top: 2px solid; display: flex; justify-content: space-between; align-items: center; }
+.anchor .pc-total-row { border-color: var(--anchor-border); }
+.landon .pc-total-row { border-color: var(--landon-border); }
+.pc-total-label { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+.pc-total-val { font-size: 24px; font-weight: 900; color: var(--gold); }
+
+/* ── PORTFOLIO SNAPSHOT ── */
+.snapshot-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-bottom: 16px; }
+.snap-field { }
+.snap-field label { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 5px; }
+.snap-field input { background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 9px 11px; font-size: 14px; font-weight: 600; width: 100%; }
+.snap-field input:focus { outline: 1px solid var(--gold); }
+.snap-notes label { display: block; font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 5px; }
+.snap-notes textarea { background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 10px 12px; font-size: 13px; width: 100%; min-height: 90px; resize: vertical; font-family: inherit; line-height: 1.5; }
+.snap-notes textarea:focus { outline: 1px solid var(--gold); }
+
+/* ── YTD TABLE ── */
+.ytd-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ytd-table th { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; padding: 9px 12px; border-bottom: 1px solid var(--border); text-align: right; }
+.ytd-table th:first-child { text-align: left; }
+.ytd-table td { padding: 9px 12px; border-bottom: 1px solid #1a1a1a; text-align: right; color: var(--cream); }
+.ytd-table td:first-child { text-align: left; color: var(--gold); font-weight: 700; }
+.ytd-table tr:hover td { background: #1a1a1a; }
+.ytd-table tfoot td { border-top: 2px solid var(--border); font-weight: 800; color: var(--gold); background: #111; }
+.ytd-table tfoot td:first-child { color: var(--cream); }
+.ytd-empty { color: var(--muted); font-size: 13px; text-align: center; padding: 24px; }
+
+/* ── SAVE STATUS ── */
+.save-bar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-bottom: 20px; }
+.save-status { font-size: 11px; color: var(--muted); }
+.save-status.saved { color: var(--success); }
+.save-status.unsaved { color: var(--gold); }
+
+/* ── DIVIDER ── */
+.section-divider { height: 1px; background: var(--border); margin: 8px 0; }
+
+/* ── PRINT ── */
+@media print {
+  .topbar, .save-bar, .btn, .btn-sm, .table-add-row { display: none !important; }
+  body { background: #fff; color: #111; font-size: 12px; }
+  :root {
+    --bg: #fff; --surface: #fff; --surface2: #f7f7f7;
+    --border: #ddd; --gold: #b8860b; --cream: #111;
+    --muted: #555; --success: #1a6b2a; --danger: #b30000;
+    --anchor-bg: #e8f5e9; --anchor-border: #a5d6a7; --anchor-text: #1b5e20;
+    --landon-bg: #e3f2fd; --landon-border: #90caf9; --landon-text: #0d47a1;
+  }
+  .container { padding: 16px; max-width: 100%; }
+  .section { border: 1px solid #ccc; break-inside: avoid; margin-bottom: 16px; }
+  .waterfall { break-inside: avoid; }
+  .wf-row.net-dist, .wf-row.gross-profit, .wf-row.split-anchor, .wf-row.split-landon { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .partner-card.anchor, .partner-card.landon { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .partner-cards { display: grid; grid-template-columns: 1fr 1fr; }
+  .report-header { border: 1px solid #ccc; break-inside: avoid; }
+  .topbar { display: none; }
+  input, select, textarea { border: 1px solid #ccc !important; background: #fff !important; color: #111 !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ TOPBAR ═══════════════════ -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">IW</div>
+    <div>
+      <div class="topbar-title">Ironwood LLC — Monthly P&amp;L</div>
+      <div class="topbar-sub">Partner Financial Report</div>
+    </div>
+  </div>
+  <div class="topbar-controls">
+    <input type="month" id="monthPicker" class="month-selector" />
+    <button class="btn btn-outline" onclick="printReport()">Print Report</button>
+    <button class="btn btn-outline" onclick="exportJSON()">Export JSON</button>
+    <button class="btn btn-gold" onclick="newMonth()">New Month</button>
+  </div>
+</div>
+
+<!-- ═══════════════════ CONTAINER ═══════════════════ -->
+<div class="container">
+
+  <!-- Save Bar -->
+  <div class="save-bar">
+    <span class="save-status" id="saveStatus">All changes auto-saved</span>
+    <button class="btn btn-ghost btn-sm" onclick="saveData()">Save Now</button>
+  </div>
+
+  <!-- ── REPORT HEADER ── -->
+  <div class="report-header">
+    <div class="rh-left">
+      <div class="rh-title">Monthly P&amp;L Report</div>
+      <div class="rh-period" id="headerPeriod">— —</div>
+      <div class="rh-meta">
+        <span>Generated: <strong id="headerGenerated">—</strong></span>
+        <span>Report No: <strong id="headerReportNo">PL-0001</strong></span>
+        <span>Period: <strong id="headerPeriodFull">—</strong></span>
+      </div>
+    </div>
+    <div class="rh-right">
+      <div class="rh-logo-block">
+        <div class="rh-logo-lg">IW</div>
+        <div class="rh-company">Ironwood LLC</div>
+        <div class="rh-tagline">Real Estate Operations</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 1 — REVENUE ═══════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">1</span> Revenue</div>
+    </div>
+    <div class="section-body" style="padding:0;">
+      <table class="input-table" id="revenueTable">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th class="type-col">Type</th>
+            <th class="amt-col">Amount ($)</th>
+            <th class="del-col"></th>
+          </tr>
+        </thead>
+        <tbody id="revenueBody"></tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <button class="btn btn-outline btn-sm table-add-row" onclick="addRow('revenue')">+ Add Revenue Row</button>
+      <div>
+        <span class="total-label">Total Revenue &nbsp;</span>
+        <span class="total-val" id="totalRevenue">$0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 2 — HARD COSTS ═══════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">2</span> Hard Costs (Project Level)</div>
+    </div>
+    <div class="section-body" style="padding:0;">
+      <table class="input-table" id="costsTable">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th class="proj-col">Project / Property</th>
+            <th class="type-col">Type</th>
+            <th class="amt-col">Amount ($)</th>
+            <th class="del-col"></th>
+          </tr>
+        </thead>
+        <tbody id="costsBody"></tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <button class="btn btn-outline btn-sm table-add-row" onclick="addRow('costs')">+ Add Cost Row</button>
+      <div>
+        <span class="total-label">Total Hard Costs &nbsp;</span>
+        <span class="total-val" id="totalCosts">$0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 3 — OPERATING EXPENSES ═══════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">3</span> Operating Expenses</div>
+    </div>
+    <div class="section-body" style="padding:0;">
+      <table class="input-table" id="expensesTable">
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th class="type-col">Category</th>
+            <th class="amt-col">Amount ($)</th>
+            <th class="del-col"></th>
+          </tr>
+        </thead>
+        <tbody id="expensesBody"></tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <button class="btn btn-outline btn-sm table-add-row" onclick="addRow('expenses')">+ Add Expense Row</button>
+      <div>
+        <span class="total-label">Total Op Expenses &nbsp;</span>
+        <span class="total-val" id="totalExpenses">$0.00</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 4 — COMPENSATION ═══════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">4</span> Compensation Paid This Month</div>
+    </div>
+    <div class="section-body" style="padding:0 0 0 0;">
+      <table class="comp-table" id="compTable">
+        <tbody>
+          <tr>
+            <td><div class="person">Jeff Sarabia</div><div class="role">Field Labor</div><div class="mode-badge">Phase 1: $50/hr  |  Phase 2: 30% GP</div></td>
+            <td class="amt-cell"><input type="number" id="comp_jeff" min="0" step="0.01" placeholder="0.00" oninput="recalcAll()" /></td>
+          </tr>
+          <tr>
+            <td><div class="person">Jordan Sarabia</div><div class="role">Marketing Fee (3%)</div></td>
+            <td class="amt-cell"><input type="number" id="comp_jordan" min="0" step="0.01" placeholder="0.00" oninput="recalcAll()" /></td>
+          </tr>
+          <tr>
+            <td><div class="person">Ty Jackson</div><div class="role">Marketing Fee (3%)</div></td>
+            <td class="amt-cell"><input type="number" id="comp_ty_mktg" min="0" step="0.01" placeholder="0.00" oninput="recalcAll()" /></td>
+          </tr>
+          <tr>
+            <td><div class="person">Ty Jackson</div><div class="role">Field Labor ($30/hr)</div></td>
+            <td class="amt-cell"><input type="number" id="comp_ty_labor" min="0" step="0.01" placeholder="0.00" oninput="recalcAll()" /></td>
+          </tr>
+          <tr>
+            <td><div class="person">Ty Jackson</div><div class="role">PM Fees — LTR (9% + 3.5%)</div></td>
+            <td class="amt-cell"><input type="number" id="comp_ty_pm" min="0" step="0.01" placeholder="0.00" oninput="recalcAll()" /></td>
+          </tr>
+          <tr>
+            <td><div class="person">Ty Jackson</div><div class="role">VR Management (25%)</div></td>
+            <td class="amt-cell"><input type="number" id="comp_ty_vr" min="0" step="0.01" placeholder="0.00" oninput="recalcAll()" /></td>
+          </tr>
+          <tr>
+            <td><div class="person">Ty Jackson</div><div class="role">RE Commissions</div></td>
+            <td class="amt-cell"><input type="number" id="comp_ty_re" min="0" step="0.01" placeholder="0.00" oninput="recalcAll()" /></td>
+          </tr>
+          <tr>
+            <td><div class="person">Anchor Pro</div><div class="role">Management Fee (5%)</div></td>
+            <td class="amt-cell"><input type="number" id="comp_anchor" min="0" step="0.01" placeholder="0.00" oninput="recalcAll()" /></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <span class="total-label">Total Compensation</span>
+      <span class="total-val" id="totalComp">$0.00</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 5 — WATERFALL ═══════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">5</span> Profit Waterfall Summary</div>
+    </div>
+    <div class="section-body">
+      <div class="waterfall">
+        <div class="wf-row">
+          <span class="wf-label">Gross Revenue</span>
+          <span class="wf-amt" id="wf_revenue">$0.00</span>
+        </div>
+        <div class="wf-row deduct">
+          <span class="wf-label">Less: Hard Costs</span>
+          <span class="wf-amt" id="wf_hardcosts">($0.00)</span>
+        </div>
+        <div class="wf-row deduct">
+          <span class="wf-label">Less: Ad Spend</span>
+          <span class="wf-amt" id="wf_adspend_display">($0.00)</span>
+        </div>
+        <div class="wf-row gross-profit">
+          <span class="wf-label">= Gross Profit</span>
+          <span class="wf-amt" id="wf_grossprofit">$0.00</span>
+        </div>
+        <div class="wf-row deduct" style="background:#0f0f0f;">
+          <span class="wf-label">Less: All Compensation</span>
+          <span class="wf-amt" id="wf_comp">($0.00)</span>
+        </div>
+        <div class="wf-row net-dist">
+          <span class="wf-label">= Net Distributable Profit</span>
+          <span class="wf-amt" id="wf_net">$0.00</span>
+        </div>
+        <div class="wf-row wf-head">Partner Distribution (50 / 50)</div>
+        <div class="wf-row split-anchor">
+          <span class="wf-label">Anchor Pro Share (50%)</span>
+          <span class="wf-amt" id="wf_anchor_share">$0.00</span>
+        </div>
+        <div class="wf-row split-landon">
+          <span class="wf-label">Landon Share (50%)</span>
+          <span class="wf-amt" id="wf_landon_share">$0.00</span>
+        </div>
+      </div>
+
+      <div style="margin-top:16px; display:flex; align-items:center; gap:12px;">
+        <label style="font-size:11px; color:var(--muted); text-transform:uppercase; letter-spacing:1px; font-weight:700; white-space:nowrap;">Ad Spend (input)</label>
+        <div style="position:relative;">
+          <span style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:13px;">$</span>
+          <input type="number" id="adSpendInput" class="wf-inline-input" style="padding-left:22px;" min="0" step="0.01" placeholder="0.00" oninput="recalcAll()" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 6 — PARTNER DISTRIBUTION ═══════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">6</span> Partner Distribution Summary</div>
+    </div>
+    <div class="section-body">
+      <div class="partner-cards">
+
+        <!-- Anchor Pro -->
+        <div class="partner-card anchor">
+          <div class="pc-name">Anchor Pro — This Month</div>
+          <div class="pc-row"><span>Mgmt Fee (5%)</span><span class="pc-val" id="pc_anchor_mgmt">$0.00</span></div>
+          <div class="pc-row"><span>Ty — Marketing Fee</span><span class="pc-val" id="pc_ty_mktg">$0.00</span></div>
+          <div class="pc-row"><span>Ty — Field Labor</span><span class="pc-val" id="pc_ty_labor">$0.00</span></div>
+          <div class="pc-row"><span>Ty — PM Fees</span><span class="pc-val" id="pc_ty_pm">$0.00</span></div>
+          <div class="pc-row"><span>Ty — VR Management</span><span class="pc-val" id="pc_ty_vr">$0.00</span></div>
+          <div class="pc-row"><span>Ty — RE Commissions</span><span class="pc-val" id="pc_ty_re">$0.00</span></div>
+          <div class="pc-row"><span>50% Net Split</span><span class="pc-val" id="pc_anchor_split">$0.00</span></div>
+          <div class="pc-total-row">
+            <span class="pc-total-label" style="color:var(--anchor-text);">Total</span>
+            <span class="pc-total-val" id="pc_anchor_total">$0.00</span>
+          </div>
+        </div>
+
+        <!-- Landon -->
+        <div class="partner-card landon">
+          <div class="pc-name">Landon — This Month</div>
+          <div class="pc-row"><span>Jeff — Field Labor</span><span class="pc-val" id="pc_jeff">$0.00</span></div>
+          <div class="pc-row"><span>Jordan — Marketing Fee</span><span class="pc-val" id="pc_jordan">$0.00</span></div>
+          <div class="pc-row"><span>50% Net Split</span><span class="pc-val" id="pc_landon_split">$0.00</span></div>
+          <div class="pc-total-row">
+            <span class="pc-total-label" style="color:var(--landon-text);">Total</span>
+            <span class="pc-total-val" id="pc_landon_total">$0.00</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 7 — PORTFOLIO SNAPSHOT ═══════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">7</span> Portfolio Snapshot</div>
+    </div>
+    <div class="section-body">
+      <div class="snapshot-grid">
+        <div class="snap-field">
+          <label>Active Deals</label>
+          <input type="number" id="snap_active" min="0" step="1" placeholder="0" oninput="markUnsaved()" />
+        </div>
+        <div class="snap-field">
+          <label>Deals Closed This Month</label>
+          <input type="number" id="snap_closed" min="0" step="1" placeholder="0" oninput="markUnsaved()" />
+        </div>
+        <div class="snap-field">
+          <label>LTR Doors</label>
+          <input type="number" id="snap_ltr_doors" min="0" step="1" placeholder="0" oninput="markUnsaved()" />
+        </div>
+        <div class="snap-field">
+          <label>VR Properties</label>
+          <input type="number" id="snap_vr_props" min="0" step="1" placeholder="0" oninput="markUnsaved()" />
+        </div>
+        <div class="snap-field">
+          <label>Gross VR Revenue This Month ($)</label>
+          <input type="number" id="snap_vr_rev" min="0" step="0.01" placeholder="0.00" oninput="markUnsaved()" />
+        </div>
+        <div class="snap-field">
+          <label>Gross LTR Revenue This Month ($)</label>
+          <input type="number" id="snap_ltr_rev" min="0" step="0.01" placeholder="0.00" oninput="markUnsaved()" />
+        </div>
+        <div class="snap-field">
+          <label>Operating Reserve Balance ($)</label>
+          <input type="number" id="snap_reserve" min="0" step="0.01" placeholder="0.00" oninput="markUnsaved()" />
+        </div>
+      </div>
+      <div class="snap-notes">
+        <label>Notes</label>
+        <textarea id="snap_notes" placeholder="Partner notes, context, open items..." oninput="markUnsaved()"></textarea>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════ SECTION 8 — YTD SUMMARY ═══════════════════ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">8</span> Year-to-Date Summary</div>
+      <button class="btn btn-ghost btn-sm" onclick="renderYTD()">Refresh YTD</button>
+    </div>
+    <div class="section-body" style="padding:0;">
+      <div id="ytdContainer">
+        <div class="ytd-empty">No saved months found. Data will appear here after saving at least one month.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ══════════════════════════════════════════════════════════
+//  IRONWOOD LLC — MONTHLY P&L  |  Vanilla JS Core
+// ══════════════════════════════════════════════════════════
+
+const REVENUE_TYPES  = ['Flip Sale','Remodel Job','LTR Rent','VR Rent','PM Fee','Processing Fee','Commission','Other'];
+const COST_TYPES     = ['Materials','Subs','Closing Costs','Permits','Other'];
+const EXPENSE_CATS   = ['Fixed','Variable','Labor','Marketing','Admin','Insurance','Utilities','Platform Fees','Other'];
+
+let saveTimer = null;
+
+// ── Helpers ──────────────────────────────────────────────
+
+function fmt(n) {
+  if (isNaN(n) || n === null || n === undefined) return '$0.00';
+  return '$' + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+}
+function fmtNeg(n) {
+  if (!n || n === 0) return '($0.00)';
+  return '($' + Math.abs(n).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2}) + ')';
+}
+function v(id) { return parseFloat(document.getElementById(id)?.value) || 0; }
+function set(id, val) { const el = document.getElementById(id); if (el) el.textContent = val; }
+
+function currentKey() {
+  return 'ironwood_pl_' + document.getElementById('monthPicker').value;
+}
+
+// ── Month / Report Setup ─────────────────────────────────
+
+function initMonthPicker() {
+  const now = new Date();
+  const def = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+  document.getElementById('monthPicker').value = def;
+  updateHeader();
+}
+
+function updateHeader() {
+  const val = document.getElementById('monthPicker').value;
+  if (!val) return;
+  const [yr, mo] = val.split('-');
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const label = months[parseInt(mo)-1] + ' ' + yr;
+  set('headerPeriod', label);
+  set('headerPeriodFull', label);
+  const today = new Date();
+  set('headerGenerated', today.toLocaleDateString('en-US', {month:'long', day:'numeric', year:'numeric'}));
+  updateReportNo();
+  loadData();
+  renderYTD();
+}
+
+function updateReportNo() {
+  const key = currentKey();
+  let existing = JSON.parse(localStorage.getItem(key) || 'null');
+  if (existing && existing.reportNo) {
+    set('headerReportNo', existing.reportNo);
+    return;
+  }
+  // Auto-increment
+  let maxNo = 0;
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('ironwood_pl_')) {
+      const d = JSON.parse(localStorage.getItem(k) || '{}');
+      if (d.reportNo) {
+        const n = parseInt(d.reportNo.replace('PL-','')) || 0;
+        if (n > maxNo) maxNo = n;
+      }
+    }
+  }
+  set('headerReportNo', 'PL-' + String(maxNo + 1).padStart(4,'0'));
+}
+
+// ── Row Builders ─────────────────────────────────────────
+
+function makeSelect(options, cls) {
+  return '<select class="' + cls + '" onchange="recalcAll()">' +
+    options.map(o => '<option>' + o + '</option>').join('') + '</select>';
+}
+
+function addRow(type, desc, amt, t1, t2) {
+  let tbody, html;
+  if (type === 'revenue') {
+    tbody = document.getElementById('revenueBody');
+    const idx = tbody.children.length;
+    html = `<tr data-idx="${idx}">
+      <td><input type="text" placeholder="e.g. 123 Oak St — Flip Sale" value="${desc||''}" oninput="recalcAll()" /></td>
+      <td>${makeSelect(REVENUE_TYPES,'')}</td>
+      <td><input type="number" min="0" step="0.01" value="${amt||''}" placeholder="0.00" oninput="recalcAll()" /></td>
+      <td><button class="btn btn-danger btn-sm" onclick="delRow(this)">✕</button></td>
+    </tr>`;
+    tbody.insertAdjacentHTML('beforeend', html);
+    if (t1) tbody.lastElementChild.querySelectorAll('select')[0].value = t1;
+  } else if (type === 'costs') {
+    tbody = document.getElementById('costsBody');
+    html = `<tr>
+      <td><input type="text" placeholder="e.g. Framing — 456 Pine" value="${desc||''}" oninput="recalcAll()" /></td>
+      <td><input type="text" placeholder="Property / Project" value="${t2||''}" oninput="recalcAll()" /></td>
+      <td>${makeSelect(COST_TYPES,'')}</td>
+      <td><input type="number" min="0" step="0.01" value="${amt||''}" placeholder="0.00" oninput="recalcAll()" /></td>
+      <td><button class="btn btn-danger btn-sm" onclick="delRow(this)">✕</button></td>
+    </tr>`;
+    tbody.insertAdjacentHTML('beforeend', html);
+    if (t1) tbody.lastElementChild.querySelectorAll('select')[0].value = t1;
+  } else if (type === 'expenses') {
+    tbody = document.getElementById('expensesBody');
+    html = `<tr>
+      <td><input type="text" placeholder="e.g. QuickBooks subscription" value="${desc||''}" oninput="recalcAll()" /></td>
+      <td>${makeSelect(EXPENSE_CATS,'')}</td>
+      <td><input type="number" min="0" step="0.01" value="${amt||''}" placeholder="0.00" oninput="recalcAll()" /></td>
+      <td><button class="btn btn-danger btn-sm" onclick="delRow(this)">✕</button></td>
+    </tr>`;
+    tbody.insertAdjacentHTML('beforeend', html);
+    if (t1) tbody.lastElementChild.querySelectorAll('select')[0].value = t1;
+  }
+  recalcAll();
+}
+
+function delRow(btn) {
+  btn.closest('tr').remove();
+  recalcAll();
+}
+
+// ── Totals ───────────────────────────────────────────────
+
+function sumTable(tbodyId, amtColIndex) {
+  const rows = document.getElementById(tbodyId).querySelectorAll('tr');
+  let total = 0;
+  rows.forEach(r => {
+    const inputs = r.querySelectorAll('input[type="number"]');
+    if (inputs.length > 0) total += parseFloat(inputs[inputs.length-1].value) || 0;
+  });
+  return total;
+}
+
+function recalcAll() {
+  // Section totals
+  const rev      = sumTable('revenueBody', 2);
+  const hardCost = sumTable('costsBody', 3);
+  const opExp    = sumTable('expensesBody', 2);
+  const adSpend  = v('adSpendInput');
+
+  const jeff      = v('comp_jeff');
+  const jordan    = v('comp_jordan');
+  const tyMktg    = v('comp_ty_mktg');
+  const tyLabor   = v('comp_ty_labor');
+  const tyPM      = v('comp_ty_pm');
+  const tyVR      = v('comp_ty_vr');
+  const tyRE      = v('comp_ty_re');
+  const anchor    = v('comp_anchor');
+
+  const totalComp = jeff + jordan + tyMktg + tyLabor + tyPM + tyVR + tyRE + anchor;
+  const grossProfit = rev - hardCost - adSpend;
+  const netDist = grossProfit - totalComp;
+  const anchorShare = netDist / 2;
+  const landonShare = netDist / 2;
+
+  // Anchor Pro total = their fees + ty's fees + 50% split
+  const anchorTotal = anchor + tyMktg + tyLabor + tyPM + tyVR + tyRE + anchorShare;
+  // Landon total = jeff + jordan + 50% split
+  const landonTotal = jeff + jordan + landonShare;
+
+  // Section footers
+  set('totalRevenue', fmt(rev));
+  set('totalCosts',   fmt(hardCost));
+  set('totalExpenses', fmt(opExp));
+  set('totalComp',    fmt(totalComp));
+
+  // Waterfall
+  set('wf_revenue',    fmt(rev));
+  set('wf_hardcosts',  fmtNeg(hardCost));
+  set('wf_adspend_display', fmtNeg(adSpend));
+  set('wf_grossprofit', fmt(grossProfit));
+  set('wf_comp',       fmtNeg(totalComp));
+  set('wf_net',        fmt(netDist));
+  set('wf_anchor_share', fmt(anchorShare));
+  set('wf_landon_share', fmt(landonShare));
+
+  // Color net dist based on sign
+  const netEl = document.getElementById('wf_net');
+  if (netEl) netEl.style.color = netDist < 0 ? 'var(--danger)' : 'var(--success)';
+
+  // Partner cards
+  set('pc_anchor_mgmt',  fmt(anchor));
+  set('pc_ty_mktg',      fmt(tyMktg));
+  set('pc_ty_labor',     fmt(tyLabor));
+  set('pc_ty_pm',        fmt(tyPM));
+  set('pc_ty_vr',        fmt(tyVR));
+  set('pc_ty_re',        fmt(tyRE));
+  set('pc_anchor_split', fmt(anchorShare));
+  set('pc_anchor_total', fmt(anchorTotal));
+
+  set('pc_jeff',         fmt(jeff));
+  set('pc_jordan',       fmt(jordan));
+  set('pc_landon_split', fmt(landonShare));
+  set('pc_landon_total', fmt(landonTotal));
+
+  markUnsaved();
+  scheduleSave();
+}
+
+// ── Save / Load ──────────────────────────────────────────
+
+function markUnsaved() {
+  const el = document.getElementById('saveStatus');
+  el.textContent = 'Unsaved changes';
+  el.className = 'save-status unsaved';
+}
+
+function scheduleSave() {
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(saveData, 1500);
+}
+
+function collectData() {
+  // Revenue rows
+  const revRows = [];
+  document.getElementById('revenueBody').querySelectorAll('tr').forEach(r => {
+    const inputs = r.querySelectorAll('input');
+    const sel    = r.querySelector('select');
+    revRows.push({ desc: inputs[0]?.value||'', type: sel?.value||'', amt: inputs[1]?.value||'' });
+  });
+
+  // Cost rows
+  const costRows = [];
+  document.getElementById('costsBody').querySelectorAll('tr').forEach(r => {
+    const inputs = r.querySelectorAll('input');
+    const sel    = r.querySelector('select');
+    costRows.push({ desc: inputs[0]?.value||'', proj: inputs[1]?.value||'', type: sel?.value||'', amt: inputs[2]?.value||'' });
+  });
+
+  // Expense rows
+  const expRows = [];
+  document.getElementById('expensesBody').querySelectorAll('tr').forEach(r => {
+    const inputs = r.querySelectorAll('input');
+    const sel    = r.querySelector('select');
+    expRows.push({ desc: inputs[0]?.value||'', type: sel?.value||'', amt: inputs[1]?.value||'' });
+  });
+
+  return {
+    reportNo:     document.getElementById('headerReportNo').textContent,
+    month:        document.getElementById('monthPicker').value,
+    generated:    document.getElementById('headerGenerated').textContent,
+    revenue:      revRows,
+    hardCosts:    costRows,
+    expenses:     expRows,
+    comp: {
+      jeff:      document.getElementById('comp_jeff').value,
+      jordan:    document.getElementById('comp_jordan').value,
+      ty_mktg:   document.getElementById('comp_ty_mktg').value,
+      ty_labor:  document.getElementById('comp_ty_labor').value,
+      ty_pm:     document.getElementById('comp_ty_pm').value,
+      ty_vr:     document.getElementById('comp_ty_vr').value,
+      ty_re:     document.getElementById('comp_ty_re').value,
+      anchor:    document.getElementById('comp_anchor').value,
+    },
+    adSpend:      document.getElementById('adSpendInput').value,
+    snapshot: {
+      active:    document.getElementById('snap_active').value,
+      closed:    document.getElementById('snap_closed').value,
+      ltr_doors: document.getElementById('snap_ltr_doors').value,
+      vr_props:  document.getElementById('snap_vr_props').value,
+      vr_rev:    document.getElementById('snap_vr_rev').value,
+      ltr_rev:   document.getElementById('snap_ltr_rev').value,
+      reserve:   document.getElementById('snap_reserve').value,
+      notes:     document.getElementById('snap_notes').value,
+    }
+  };
+}
+
+function saveData() {
+  const data = collectData();
+  localStorage.setItem(currentKey(), JSON.stringify(data));
+  const el = document.getElementById('saveStatus');
+  el.textContent = 'Saved ' + new Date().toLocaleTimeString();
+  el.className = 'save-status saved';
+  renderYTD();
+}
+
+function loadData() {
+  const raw = localStorage.getItem(currentKey());
+  if (!raw) {
+    clearForm();
+    return;
+  }
+  const d = JSON.parse(raw);
+
+  // Clear
+  document.getElementById('revenueBody').innerHTML = '';
+  document.getElementById('costsBody').innerHTML = '';
+  document.getElementById('expensesBody').innerHTML = '';
+
+  // Revenue
+  (d.revenue || []).forEach(r => addRow('revenue', r.desc, r.amt, r.type));
+  // Costs
+  (d.hardCosts || []).forEach(r => addRow('costs', r.desc, r.amt, r.type, r.proj));
+  // Expenses
+  (d.expenses || []).forEach(r => addRow('expenses', r.desc, r.amt, r.type));
+
+  // Comp
+  const c = d.comp || {};
+  ['jeff','jordan','ty_mktg','ty_labor','ty_pm','ty_vr','ty_re','anchor'].forEach(k => {
+    const el = document.getElementById('comp_' + k);
+    if (el) el.value = c[k] || '';
+  });
+
+  document.getElementById('adSpendInput').value = d.adSpend || '';
+
+  const s = d.snapshot || {};
+  document.getElementById('snap_active').value    = s.active || '';
+  document.getElementById('snap_closed').value    = s.closed || '';
+  document.getElementById('snap_ltr_doors').value = s.ltr_doors || '';
+  document.getElementById('snap_vr_props').value  = s.vr_props || '';
+  document.getElementById('snap_vr_rev').value    = s.vr_rev || '';
+  document.getElementById('snap_ltr_rev').value   = s.ltr_rev || '';
+  document.getElementById('snap_reserve').value   = s.reserve || '';
+  document.getElementById('snap_notes').value     = s.notes || '';
+
+  if (d.reportNo) set('headerReportNo', d.reportNo);
+
+  recalcAll();
+
+  const el = document.getElementById('saveStatus');
+  el.textContent = 'Loaded from storage';
+  el.className = 'save-status saved';
+}
+
+function clearForm() {
+  document.getElementById('revenueBody').innerHTML = '';
+  document.getElementById('costsBody').innerHTML = '';
+  document.getElementById('expensesBody').innerHTML = '';
+  ['jeff','jordan','ty_mktg','ty_labor','ty_pm','ty_vr','ty_re','anchor'].forEach(k => {
+    const el = document.getElementById('comp_' + k);
+    if (el) el.value = '';
+  });
+  document.getElementById('adSpendInput').value = '';
+  document.getElementById('snap_active').value = '';
+  document.getElementById('snap_closed').value = '';
+  document.getElementById('snap_ltr_doors').value = '';
+  document.getElementById('snap_vr_props').value = '';
+  document.getElementById('snap_vr_rev').value = '';
+  document.getElementById('snap_ltr_rev').value = '';
+  document.getElementById('snap_reserve').value = '';
+  document.getElementById('snap_notes').value = '';
+  recalcAll();
+}
+
+// ── YTD ──────────────────────────────────────────────────
+
+function getCalcFromData(d) {
+  const rev      = (d.revenue||[]).reduce((s,r) => s + (parseFloat(r.amt)||0), 0);
+  const hardCost = (d.hardCosts||[]).reduce((s,r) => s + (parseFloat(r.amt)||0), 0);
+  const opExp    = (d.expenses||[]).reduce((s,r) => s + (parseFloat(r.amt)||0), 0);
+  const adSpend  = parseFloat(d.adSpend)||0;
+  const c        = d.comp||{};
+  const totalComp= ['jeff','jordan','ty_mktg','ty_labor','ty_pm','ty_vr','ty_re','anchor'].reduce((s,k) => s+(parseFloat(c[k])||0), 0);
+  const gross    = rev - hardCost - adSpend;
+  const net      = gross - totalComp;
+  const anchorShare = net/2;
+  const landonShare = net/2;
+  const anchorTotal = (parseFloat(c.anchor)||0) + (parseFloat(c.ty_mktg)||0) + (parseFloat(c.ty_labor)||0) + (parseFloat(c.ty_pm)||0) + (parseFloat(c.ty_vr)||0) + (parseFloat(c.ty_re)||0) + anchorShare;
+  const landonTotal = (parseFloat(c.jeff)||0) + (parseFloat(c.jordan)||0) + landonShare;
+  return { rev, hardCost, opExp, net, anchorTotal, landonTotal };
+}
+
+function renderYTD() {
+  const container = document.getElementById('ytdContainer');
+  const months = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    const k = localStorage.key(i);
+    if (k && k.startsWith('ironwood_pl_')) {
+      const d = JSON.parse(localStorage.getItem(k)||'{}');
+      if (d.month) months.push({ key: k, data: d });
+    }
+  }
+  if (!months.length) {
+    container.innerHTML = '<div class="ytd-empty">No saved months found. Data will appear here after saving at least one month.</div>';
+    return;
+  }
+  months.sort((a,b) => a.data.month.localeCompare(b.data.month));
+
+  const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtMonth(ym) {
+    if (!ym) return '—';
+    const [yr,mo] = ym.split('-');
+    return monthNames[parseInt(mo)-1] + ' ' + yr;
+  }
+
+  let totals = { rev:0, hardCost:0, opExp:0, net:0, anchor:0, landon:0 };
+  let rows = '';
+  months.forEach(m => {
+    const c = getCalcFromData(m.data);
+    totals.rev += c.rev;
+    totals.hardCost += c.hardCost;
+    totals.opExp += c.opExp;
+    totals.net += c.net;
+    totals.anchor += c.anchorTotal;
+    totals.landon += c.landonTotal;
+    rows += `<tr>
+      <td>${fmtMonth(m.data.month)}</td>
+      <td>${fmt(c.rev)}</td>
+      <td>${fmt(c.hardCost)}</td>
+      <td>${fmt(c.opExp)}</td>
+      <td>${fmt(c.net)}</td>
+      <td style="color:var(--anchor-text)">${fmt(c.anchorTotal)}</td>
+      <td style="color:var(--landon-text)">${fmt(c.landonTotal)}</td>
+    </tr>`;
+  });
+
+  container.innerHTML = `<table class="ytd-table">
+    <thead>
+      <tr>
+        <th>Month</th>
+        <th>Revenue</th>
+        <th>Hard Costs</th>
+        <th>Op Expenses</th>
+        <th>Net Dist.</th>
+        <th>Anchor Pro</th>
+        <th>Landon</th>
+      </tr>
+    </thead>
+    <tbody>${rows}</tbody>
+    <tfoot>
+      <tr>
+        <td>YTD TOTAL</td>
+        <td>${fmt(totals.rev)}</td>
+        <td>${fmt(totals.hardCost)}</td>
+        <td>${fmt(totals.opExp)}</td>
+        <td>${fmt(totals.net)}</td>
+        <td style="color:var(--anchor-text)">${fmt(totals.anchor)}</td>
+        <td style="color:var(--landon-text)">${fmt(totals.landon)}</td>
+      </tr>
+    </tfoot>
+  </table>`;
+}
+
+// ── Toolbar Actions ──────────────────────────────────────
+
+function printReport() {
+  saveData();
+  window.print();
+}
+
+function exportJSON() {
+  const data = collectData();
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'Ironwood_PL_' + (data.month || 'export') + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function newMonth() {
+  const cur = document.getElementById('monthPicker').value;
+  if (!cur) return;
+  const [yr, mo] = cur.split('-').map(Number);
+  let newMo = mo + 1, newYr = yr;
+  if (newMo > 12) { newMo = 1; newYr++; }
+  const next = newYr + '-' + String(newMo).padStart(2,'0');
+  if (confirm('Start a new blank report for ' + next + '? Current month data is already saved.')) {
+    document.getElementById('monthPicker').value = next;
+    clearForm();
+    updateHeader();
+  }
+}
+
+// ── Month picker change ──────────────────────────────────
+document.getElementById('monthPicker').addEventListener('change', updateHeader);
+
+// ── Init ─────────────────────────────────────────────────
+initMonthPicker();
+// Add one blank row to each table on fresh load if no data
+if (!localStorage.getItem(currentKey())) {
+  addRow('revenue');
+  addRow('costs');
+  addRow('expenses');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ironwood Renovations · Homeowner One-Pager</title>
+  <style>
+    /* ── Variables ─────────────────────────────────────────────── */
+    :root {
+      --black:  #0a0a0a;
+      --cream:  #f5f0e8;
+      --gold:   #c9a84c;
+      --gold-lt: #dfc06e;
+      --white:  #ffffff;
+      --text:   #1a1a1a;
+      --muted:  #5a5040;
+      --rule:   #d6ccb4;
+
+      --serif: Georgia, 'Times New Roman', serif;
+      --sans:  'Helvetica Neue', Arial, sans-serif;
+    }
+
+    /* ── Reset ─────────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #e8e3d8;
+      font-family: var(--sans);
+      color: var(--text);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+
+    /* ── Toolbar (screen only) ─────────────────────────────────── */
+    #toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 24px;
+      background: var(--black);
+      border-bottom: 2px solid var(--gold);
+      box-shadow: 0 2px 12px rgba(0,0,0,0.45);
+    }
+    #toolbar .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    #toolbar .brand-mark {
+      width: 32px;
+      height: 32px;
+      background: var(--gold);
+      clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+      flex-shrink: 0;
+    }
+    #toolbar .brand-text {
+      font-family: var(--serif);
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.04em;
+    }
+    #toolbar .brand-text span {
+      display: block;
+      font-family: var(--sans);
+      font-size: 10px;
+      font-weight: 400;
+      color: #9a8a6a;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-top: 1px;
+    }
+    #toolbar button {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 8px 20px;
+      background: transparent;
+      border: 1.5px solid var(--gold);
+      border-radius: 3px;
+      color: var(--gold);
+      font-family: var(--sans);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background 0.18s, color 0.18s;
+    }
+    #toolbar button:hover {
+      background: var(--gold);
+      color: var(--black);
+    }
+    #toolbar button svg {
+      width: 14px;
+      height: 14px;
+      fill: currentColor;
+    }
+
+    /* ── Page wrapper ──────────────────────────────────────────── */
+    #page-outer {
+      display: flex;
+      justify-content: center;
+      padding: 28px 16px 40px;
+    }
+    #page {
+      width: 100%;
+      max-width: 760px;
+      background: var(--white);
+      box-shadow: 0 4px 40px rgba(0,0,0,0.22);
+    }
+
+    /* ── 1. TOP HEADER BAND ────────────────────────────────────── */
+    .header-band {
+      background: var(--black);
+      padding: 28px 40px 24px;
+      text-align: center;
+      border-bottom: 3px solid var(--gold);
+    }
+    .header-band .wordmark {
+      font-family: var(--serif);
+      font-size: 34px;
+      font-weight: 700;
+      color: var(--gold);
+      letter-spacing: 0.03em;
+      line-height: 1.1;
+    }
+    .header-band .wordmark em {
+      font-style: normal;
+      color: var(--gold-lt);
+    }
+    .header-band .tagline {
+      margin-top: 7px;
+      font-size: 11.5px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: #b89a50;
+    }
+    .header-band .tagline .dot {
+      display: inline-block;
+      margin: 0 6px;
+      color: var(--gold);
+      opacity: 0.6;
+    }
+    .header-band .region {
+      margin-top: 6px;
+      font-size: 10px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #5a5040;
+    }
+
+    /* ── 2. HERO STATEMENT ─────────────────────────────────────── */
+    .hero {
+      background: var(--cream);
+      padding: 30px 44px 26px;
+      border-bottom: 1px solid var(--rule);
+      position: relative;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    }
+    .hero h1 {
+      font-family: var(--serif);
+      font-size: 27px;
+      font-weight: 700;
+      color: var(--black);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+    .hero h1 span {
+      color: var(--gold);
+    }
+    .hero p {
+      font-size: 13.5px;
+      line-height: 1.72;
+      color: #3a3020;
+      max-width: 600px;
+    }
+
+    /* ── 3. THREE VALUE COLUMNS ────────────────────────────────── */
+    .value-row {
+      display: flex;
+      gap: 0;
+      background: var(--white);
+      border-bottom: 1px solid var(--rule);
+    }
+    .value-card {
+      flex: 1;
+      padding: 20px 22px 18px;
+      border-right: 1px solid var(--rule);
+      position: relative;
+    }
+    .value-card:last-child { border-right: none; }
+    .value-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--gold);
+    }
+    .value-card .vc-icon {
+      width: 28px;
+      height: 28px;
+      margin-bottom: 8px;
+    }
+    .value-card h3 {
+      font-family: var(--serif);
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 5px;
+      letter-spacing: 0.01em;
+    }
+    .value-card p {
+      font-size: 11.5px;
+      line-height: 1.65;
+      color: var(--muted);
+    }
+
+    /* ── 4. HOW IT WORKS ───────────────────────────────────────── */
+    .how-section {
+      background: var(--cream);
+      padding: 22px 40px 20px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .section-label {
+      font-size: 9.5px;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+    .steps {
+      display: flex;
+      gap: 0;
+    }
+    .step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding-right: 16px;
+      position: relative;
+    }
+    .step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 11px;
+      right: 0;
+      width: 1px;
+      height: 30px;
+      background: var(--rule);
+    }
+    .step-num {
+      width: 22px;
+      height: 22px;
+      background: var(--gold);
+      color: var(--black);
+      border-radius: 50%;
+      font-size: 11px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 7px;
+      flex-shrink: 0;
+    }
+    .step h4 {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 3px;
+      line-height: 1.3;
+    }
+    .step p {
+      font-size: 10.5px;
+      line-height: 1.55;
+      color: var(--muted);
+      padding-right: 8px;
+    }
+
+    /* ── 5. WHO WE HELP ─────────────────────────────────────────── */
+    .who-section {
+      background: var(--white);
+      padding: 20px 40px 18px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .who-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 5px 28px;
+      margin-top: 2px;
+    }
+    .who-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      font-size: 11.5px;
+      line-height: 1.55;
+      color: #2a2010;
+      padding: 3px 0;
+    }
+    .who-item::before {
+      content: '';
+      display: block;
+      width: 5px;
+      height: 5px;
+      background: var(--gold);
+      border-radius: 50%;
+      margin-top: 5px;
+      flex-shrink: 0;
+    }
+
+    /* ── 6. ABOUT ───────────────────────────────────────────────── */
+    .about-section {
+      background: var(--cream);
+      padding: 18px 40px 16px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .about-section p {
+      font-size: 11px;
+      line-height: 1.72;
+      color: #3a3020;
+    }
+    .about-section p + p {
+      margin-top: 6px;
+    }
+    .about-section strong {
+      color: var(--black);
+      font-weight: 700;
+    }
+
+    /* ── 7. CONTACT CTA BAND ────────────────────────────────────── */
+    .cta-band {
+      background: var(--gold);
+      padding: 22px 40px 18px;
+    }
+    .cta-band h2 {
+      font-family: var(--serif);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--black);
+      letter-spacing: 0.01em;
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+    .cta-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 7px 32px;
+      margin-bottom: 12px;
+    }
+    .cta-field {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .cta-field label {
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(10,10,10,0.6);
+    }
+    .cta-field .fill-line {
+      border: none;
+      border-bottom: 1.5px solid rgba(10,10,10,0.35);
+      background: transparent;
+      padding: 3px 0;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--black);
+      width: 100%;
+      outline: none;
+      font-family: var(--sans);
+    }
+    .cta-field .fill-line::placeholder {
+      color: rgba(10,10,10,0.3);
+      font-weight: 400;
+    }
+    .cta-field .cta-value {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--black);
+      padding: 3px 0;
+      border-bottom: 1.5px solid rgba(10,10,10,0.18);
+    }
+    .cta-nudge {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--black);
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+    .cta-sub {
+      font-size: 9.5px;
+      color: rgba(10,10,10,0.55);
+      letter-spacing: 0.1em;
+    }
+
+    /* ── Footer ─────────────────────────────────────────────────── */
+    .footer {
+      background: var(--black);
+      padding: 9px 40px;
+      text-align: center;
+    }
+    .footer p {
+      font-size: 8.5px;
+      letter-spacing: 0.1em;
+      color: #5a5040;
+      text-transform: uppercase;
+    }
+
+    /* ── Print styles ───────────────────────────────────────────── */
+    @media print {
+      @page {
+        size: letter portrait;
+        margin: 0.35in 0.4in 0.35in;
+      }
+
+      #toolbar { display: none !important; }
+
+      body {
+        background: none;
+        margin: 0;
+      }
+
+      #page-outer {
+        padding: 0;
+        display: block;
+      }
+
+      #page {
+        max-width: 100%;
+        width: 100%;
+        box-shadow: none;
+        page-break-after: avoid;
+      }
+
+      /* Tighten spacing slightly for print */
+      .header-band      { padding: 20px 32px 16px; }
+      .header-band .wordmark { font-size: 28px; }
+      .hero             { padding: 18px 32px 14px; }
+      .hero h1          { font-size: 22px; }
+      .value-card       { padding: 14px 16px 12px; }
+      .how-section      { padding: 14px 32px 12px; }
+      .who-section      { padding: 14px 32px 12px; }
+      .about-section    { padding: 12px 32px 10px; }
+      .cta-band         { padding: 16px 32px 12px; }
+      .footer           { padding: 7px 32px; }
+
+      /* Ensure colors print */
+      .header-band, .footer { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .cta-band, .value-card::before, .hero::before { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Toolbar ─────────────────────────────────────────────── -->
+  <div id="toolbar">
+    <div class="brand">
+      <div class="brand-mark"></div>
+      <div class="brand-text">
+        Ironwood Renovations
+        <span>Ironwood LLC &nbsp;·&nbsp; Georgia</span>
+      </div>
+    </div>
+    <button onclick="window.print()">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M19 8H5c-1.66 0-3 1.34-3 3v6h4v4h12v-4h4v-6c0-1.66-1.34-3-3-3zm-3 11H8v-5h8v5zm3-7c-.55 0-1-.45-1-1s.45-1 1-1 1 .45 1 1-.45 1-1 1zm-1-9H6v4h12V3z"/>
+      </svg>
+      Print One-Pager
+    </button>
+  </div>
+
+  <!-- ── Page ────────────────────────────────────────────────── -->
+  <div id="page-outer">
+    <div id="page">
+
+      <!-- 1. Header Band -->
+      <div class="header-band">
+        <div class="wordmark"><em>Ironwood</em> Renovations</div>
+        <div class="tagline">
+          We Buy Houses
+          <span class="dot">·</span>
+          We Renovate Right
+          <span class="dot">·</span>
+          We Close Fast
+        </div>
+        <div class="region">Serving Georgia Homeowners</div>
+      </div>
+
+      <!-- 2. Hero Statement -->
+      <div class="hero">
+        <h1>Ready to Sell? <span>We Make It Simple.</span></h1>
+        <p>
+          We're a local Georgia renovation and investment team that works directly with homeowners — no middlemen, no runaround. We buy homes in any condition: no repairs needed, no agent fees, no hassle. We close on your timeline, whether that's two weeks or two months.
+        </p>
+      </div>
+
+      <!-- 3. Three Value Columns -->
+      <div class="value-row">
+
+        <div class="value-card">
+          <!-- House icon -->
+          <svg class="vc-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14 3L2 13h3v11h7v-7h4v7h7V13h3L14 3z" fill="#c9a84c" opacity="0.9"/>
+            <path d="M14 3L2 13h3v11h7v-7h4v7h7V13h3L14 3z" stroke="#0a0a0a" stroke-width="1" fill="none"/>
+          </svg>
+          <h3>Any Condition</h3>
+          <p>We buy as-is. No repairs, no cleaning, no prep work required. Leave it exactly as it is.</p>
+        </div>
+
+        <div class="value-card">
+          <!-- Clock icon -->
+          <svg class="vc-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="14" r="10" fill="#c9a84c" opacity="0.9"/>
+            <circle cx="14" cy="14" r="10" stroke="#0a0a0a" stroke-width="1" fill="none"/>
+            <path d="M14 8v6l4 2" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <h3>Fast Close</h3>
+          <p>We can close in as little as 14 days, or work around your schedule. You set the date.</p>
+        </div>
+
+        <div class="value-card">
+          <!-- No-fee icon -->
+          <svg class="vc-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="14" cy="14" r="10" fill="#c9a84c" opacity="0.9"/>
+            <circle cx="14" cy="14" r="10" stroke="#0a0a0a" stroke-width="1" fill="none"/>
+            <text x="14" y="18" text-anchor="middle" font-size="11" font-weight="700" fill="#0a0a0a" font-family="Georgia,serif">$</text>
+            <path d="M8 8l12 12" stroke="#0a0a0a" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <h3>No Fees</h3>
+          <p>No agent commissions, no closing surprises, no hidden costs. You keep more of your sale.</p>
+        </div>
+
+      </div>
+
+      <!-- 4. How It Works -->
+      <div class="how-section">
+        <div class="section-label">How It Works</div>
+        <div class="steps">
+
+          <div class="step">
+            <div class="step-num">1</div>
+            <h4>Call or Text Us</h4>
+            <p>Free, no-obligation conversation. We listen first.</p>
+          </div>
+
+          <div class="step">
+            <div class="step-num">2</div>
+            <h4>We Visit the Property</h4>
+            <p>Quick walkthrough — usually the same week you reach out.</p>
+          </div>
+
+          <div class="step">
+            <div class="step-num">3</div>
+            <h4>We Make an Offer</h4>
+            <p>Fair cash offer delivered within 24–48 hours. No pressure.</p>
+          </div>
+
+          <div class="step">
+            <div class="step-num">4</div>
+            <h4>You Choose the Date</h4>
+            <p>We close when you're ready. Simple as that.</p>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 5. Who We Help -->
+      <div class="who-section">
+        <div class="section-label">We Work With Homeowners Who Are&hellip;</div>
+        <div class="who-grid">
+          <div class="who-item">Managing an inherited property you don't want to keep</div>
+          <div class="who-item">Behind on payments or facing foreclosure</div>
+          <div class="who-item">Going through a divorce or major life change</div>
+          <div class="who-item">Dealing with a property that needs major repairs</div>
+          <div class="who-item">Relocating and need to sell quickly</div>
+          <div class="who-item">A tired landlord ready to move on</div>
+        </div>
+      </div>
+
+      <!-- 6. About -->
+      <div class="about-section">
+        <div class="section-label">About Us</div>
+        <p>
+          <strong>Ironwood Renovations</strong> is a Georgia-based real estate investment company. We're a small, focused team that takes genuine pride in every property we touch. When we buy from you, we renovate with care and give homes the new life they deserve.
+        </p>
+        <p>
+          We believe in straight talk, fair terms, and doing right by the people we work with.
+        </p>
+      </div>
+
+      <!-- 7. Contact CTA Band -->
+      <div class="cta-band">
+        <h2>Get Your Free Cash Offer Today</h2>
+        <div class="cta-grid">
+
+          <div class="cta-field">
+            <label>Phone</label>
+            <input class="fill-line" type="tel" placeholder="(___) ___-____" />
+          </div>
+
+          <div class="cta-field">
+            <label>Email</label>
+            <div class="cta-value">tysellshomes96@gmail.com</div>
+          </div>
+
+          <div class="cta-field">
+            <label>Website</label>
+            <input class="fill-line" type="text" placeholder="www._______________" />
+          </div>
+
+          <div class="cta-field" style="justify-content:flex-end;">
+            <div class="cta-nudge">Text &ldquo;OFFER&rdquo; to get started</div>
+            <div class="cta-sub">Ironwood Renovations &nbsp;·&nbsp; Ironwood LLC &nbsp;·&nbsp; Georgia</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p>Ironwood LLC dba Ironwood Renovations &nbsp;&middot;&nbsp; Licensed Real Estate Professional &nbsp;&middot;&nbsp; Georgia</p>
+      </div>
+
+    </div><!-- #page -->
+  </div><!-- #page-outer -->
+
+</body>
+</html>

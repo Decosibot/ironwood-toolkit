@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood Renovations — Client Service Agreement</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:    #0a0a0a;
+    --cream:  #f5f0e8;
+    --gold:   #c9a84c;
+    --light:  #faf7f2;
+    --border: #d0c8b8;
+    --muted:  #777;
+  }
+
+  body {
+    background: #e8e4dc;
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 13px;
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  /* ── SCREEN TOOLBAR ── */
+  .toolbar {
+    background: var(--ink);
+    color: var(--cream);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    print-color-adjust: exact;
+  }
+  .toolbar-brand { font-family: 'Segoe UI', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--gold); }
+  .toolbar-actions { display: flex; gap: 8px; }
+  .btn { border: none; cursor: pointer; padding: 7px 16px; border-radius: 4px; font-family: 'Segoe UI', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .03em; }
+  .btn-gold { background: var(--gold); color: var(--ink); }
+  .btn-outline { background: transparent; border: 1px solid #555; color: var(--cream); }
+
+  @media print { .toolbar { display: none !important; } }
+
+  /* ── PAGE ── */
+  .page-wrap {
+    max-width: 820px;
+    margin: 28px auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    box-shadow: 0 2px 12px rgba(0,0,0,.12);
+    padding: 60px 70px;
+  }
+
+  @media print {
+    body { background: #fff; }
+    .page-wrap { margin: 0; box-shadow: none; border: none; padding: 48px 56px; max-width: 100%; }
+  }
+
+  /* ── HEADER ── */
+  .doc-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 20px;
+    margin-bottom: 28px;
+    gap: 20px;
+  }
+  .doc-logo-block { flex: 1; }
+  .doc-logo-name {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    color: var(--ink);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+  .doc-logo-sub {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .doc-meta { text-align: right; font-family: 'Segoe UI', sans-serif; font-size: 11px; color: var(--muted); line-height: 1.7; }
+  .doc-type {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    margin-top: 6px;
+    text-align: center;
+  }
+
+  /* ── SECTION ── */
+  .doc-title {
+    text-align: center;
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 20px;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    margin-bottom: 6px;
+  }
+  .doc-subtitle { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 28px; font-family: 'Segoe UI', sans-serif; }
+
+  h2 {
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .1em;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+    margin: 22px 0 10px;
+  }
+
+  p { line-height: 1.75; margin-bottom: 10px; font-size: 12.5px; }
+  ol, ul { padding-left: 22px; margin-bottom: 10px; }
+  li { margin-bottom: 6px; line-height: 1.7; font-size: 12.5px; }
+
+  /* ── INFO GRID ── */
+  .info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: 20px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .info-grid .ig-row {
+    display: contents;
+  }
+  .info-grid .ig-label {
+    background: var(--cream);
+    padding: 8px 12px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    color: var(--muted);
+    border-bottom: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+  }
+  .info-grid .ig-value {
+    background: #fff;
+    padding: 8px 12px;
+    font-size: 12px;
+    color: var(--ink);
+    border-bottom: 1px solid var(--border);
+  }
+  .info-grid .ig-label:last-of-type,
+  .info-grid .ig-value:last-of-type { border-bottom: none; }
+
+  /* ── FILL LINE ── */
+  .fill-line {
+    border: none;
+    border-bottom: 1px solid #aaa;
+    width: 100%;
+    margin-bottom: 4px;
+    height: 22px;
+    background: transparent;
+    font-family: 'Georgia', serif;
+    font-size: 12.5px;
+    color: var(--ink);
+    outline: none;
+  }
+  .fill-label { font-family: 'Segoe UI', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 2px; }
+  .field-group { margin-bottom: 14px; }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; }
+  .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 14px; }
+
+  /* ── CLAUSE BOX ── */
+  .clause-box {
+    background: var(--cream);
+    border-left: 3px solid var(--gold);
+    padding: 12px 16px;
+    font-size: 12px;
+    line-height: 1.7;
+    margin: 14px 0;
+    font-family: 'Segoe UI', sans-serif;
+  }
+
+  /* ── SIGNATURE ── */
+  .sig-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+  .sig-party { font-family: 'Segoe UI', sans-serif; }
+  .sig-party-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; }
+  .sig-line { border-bottom: 1px solid var(--ink); margin-bottom: 4px; height: 36px; }
+  .sig-sub { font-size: 10px; color: var(--muted); }
+
+  /* ── FOOTER ── */
+  .doc-footer {
+    margin-top: 32px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-family: 'Segoe UI', sans-serif;
+    font-size: 10px;
+    color: var(--muted);
+    text-align: center;
+    letter-spacing: .04em;
+  }
+
+  /* ── INITIALS BOX ── */
+  .initials-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 24px;
+    margin-top: 10px;
+    font-family: 'Segoe UI', sans-serif;
+  }
+  .initials-block { text-align: center; }
+  .initials-line { border-bottom: 1px solid #aaa; width: 60px; height: 22px; display: inline-block; }
+  .initials-label { font-size: 9px; text-transform: uppercase; color: var(--muted); letter-spacing: .05em; margin-top: 2px; }
+
+  @media print {
+    .fill-line { border-bottom: 1px solid #000; }
+    input.fill-line { -webkit-print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <span class="toolbar-brand">Ironwood Renovations — Client Service Agreement</span>
+  <div class="toolbar-actions">
+    <button class="btn btn-outline" onclick="window.print()">Print / Save PDF</button>
+  </div>
+</div>
+
+<div class="page-wrap">
+
+  <!-- HEADER -->
+  <div class="doc-header">
+    <div class="doc-logo-block">
+      <div class="doc-logo-name">Ironwood Renovations</div>
+      <div class="doc-logo-sub">Licensed Contractor · Georgia</div>
+    </div>
+    <div class="doc-meta">
+      Agreement No. <strong id="docNum">CSA-______</strong><br/>
+      Date: <strong id="docDate">______________</strong><br/>
+      <div style="margin-top:8px; font-size:10px; color:#aaa;">Page 1 of 1</div>
+    </div>
+  </div>
+
+  <div class="doc-title">Client Service Agreement</div>
+  <div class="doc-subtitle">Residential Renovation Contract · Read carefully before signing</div>
+
+  <!-- PARTIES -->
+  <h2>Section 1 — Parties</h2>
+  <div class="info-grid">
+    <div class="ig-label">Contractor</div>
+    <div class="ig-value">Ironwood LLC dba Ironwood Renovations · Georgia</div>
+    <div class="ig-label">Contact</div>
+    <div class="ig-value">tysellshomes96@gmail.com</div>
+    <div class="ig-label">Client Name</div>
+    <div class="ig-value"><input class="fill-line" id="clientName" placeholder="Full legal name(s)"/></div>
+    <div class="ig-label">Property Address</div>
+    <div class="ig-value"><input class="fill-line" id="propAddr" placeholder="Street, City, State, ZIP"/></div>
+    <div class="ig-label">Client Phone</div>
+    <div class="ig-value"><input class="fill-line" id="clientPhone" placeholder="(___) ___-____"/></div>
+    <div class="ig-label">Client Email</div>
+    <div class="ig-value"><input class="fill-line" id="clientEmail" placeholder="email@example.com"/></div>
+  </div>
+
+  <!-- SCOPE -->
+  <h2>Section 2 — Scope of Work</h2>
+  <p>The Contractor agrees to perform the renovation work described in the attached Scope of Work document ("Scope"), which is incorporated herein by reference. Work is limited to items listed in the Scope. Any additions or changes must be documented via a signed Change Order before work begins.</p>
+  <div class="field-row">
+    <div class="field-group">
+      <div class="fill-label">Scope of Work Document #</div>
+      <input class="fill-line" id="scopeNum" placeholder="SOW-______"/>
+    </div>
+    <div class="field-group">
+      <div class="fill-label">Estimated Start Date</div>
+      <input class="fill-line" id="startDate" placeholder="MM/DD/YYYY"/>
+    </div>
+  </div>
+  <div class="field-group">
+    <div class="fill-label">Estimated Completion</div>
+    <input class="fill-line" id="endDate" placeholder="MM/DD/YYYY (subject to change — see Section 5)"/>
+  </div>
+
+  <!-- PAYMENT -->
+  <h2>Section 3 — Payment Terms</h2>
+  <div class="field-row-3">
+    <div class="field-group">
+      <div class="fill-label">Total Contract Price</div>
+      <input class="fill-line" id="totalPrice" placeholder="$"/>
+    </div>
+    <div class="field-group">
+      <div class="fill-label">Deposit Due at Signing</div>
+      <input class="fill-line" id="depositAmt" placeholder="$"/>
+    </div>
+    <div class="field-group">
+      <div class="fill-label">Balance Due at Completion</div>
+      <input class="fill-line" id="balanceAmt" placeholder="$"/>
+    </div>
+  </div>
+
+  <ol>
+    <li><strong>Deposit:</strong> A non-refundable deposit is due upon signing this Agreement. Work will not commence until deposit is received.</li>
+    <li><strong>Progress Payments:</strong> If applicable, progress payments are due as outlined in the attached Scope. Contractor may pause work if a scheduled progress payment is 5+ days past due.</li>
+    <li><strong>Final Payment:</strong> Balance is due upon substantial completion, prior to final walkthrough sign-off. Payment methods accepted: check payable to <em>Ironwood LLC</em>, ACH transfer, or other mutually agreed method. Cash is not accepted.</li>
+    <li><strong>Late Payments:</strong> Balances unpaid 10 days past due accrue interest at 1.5% per month (18% APR) and may trigger a mechanic's lien filing.</li>
+  </ol>
+
+  <!-- CHANGE ORDERS -->
+  <h2>Section 4 — Change Orders</h2>
+  <p>Any modification to the Scope, schedule, or price — including unforeseen conditions discovered during demolition — requires a written Change Order signed by both parties before additional work proceeds. Verbal approvals are not binding. Unforeseen structural, mechanical, electrical, or plumbing issues discovered after demo may result in a Change Order to adjust scope and price; Contractor will notify Client in writing within 2 business days of discovery.</p>
+
+  <!-- SCHEDULE & DELAYS -->
+  <h2>Section 5 — Schedule &amp; Delays</h2>
+  <p>Completion dates are estimates. Contractor is not liable for delays caused by: material lead times, weather, permit timelines, subcontractor availability, or Client-initiated change orders. Client-caused delays (late selections, restricted access, late payments) may extend the schedule at Contractor's discretion and may incur additional costs.</p>
+
+  <!-- WARRANTIES -->
+  <h2>Section 6 — Workmanship Warranty</h2>
+  <p>Contractor warrants all labor for <input class="fill-line" style="width:80px;display:inline-block;" id="warrantyPeriod" placeholder="1 year"/> from the date of substantial completion. Warranty covers defects in workmanship only. Manufacturer warranties on materials and fixtures pass through to Client as provided by the manufacturer. Warranty is void if Client or third parties perform work on warranted items without Contractor approval.</p>
+
+  <!-- LIEN RIGHTS -->
+  <h2>Section 7 — Lien Rights Notice</h2>
+  <div class="clause-box">
+    <strong>NOTICE TO OWNER:</strong> Under Georgia law (O.C.G.A. § 44-14-360 et seq.), any contractor, subcontractor, laborer, or supplier who furnishes labor, services, or materials for improvements to real property and is not paid may have a valid lien against your property. A lien waiver will be provided upon final payment in full.
+  </div>
+
+  <!-- INSURANCE & LIABILITY -->
+  <h2>Section 8 — Insurance &amp; Liability</h2>
+  <p>Contractor carries general liability insurance. Client is responsible for maintaining homeowner's insurance on the property during the project. Contractor is not responsible for pre-existing conditions, damage from Client's failure to maintain utilities, or losses due to Client-provided materials or Owner-furnished items. Contractor's total liability shall not exceed the total contract price.</p>
+
+  <!-- DISPUTE RESOLUTION -->
+  <h2>Section 9 — Dispute Resolution</h2>
+  <p>The parties agree to attempt good-faith resolution of any dispute within 15 days of written notice. If unresolved, disputes shall be submitted to binding arbitration in the county where the property is located under the rules of the American Arbitration Association. The prevailing party shall be entitled to recover reasonable attorney's fees and costs.</p>
+
+  <!-- TERMINATION -->
+  <h2>Section 10 — Termination</h2>
+  <p>Either party may terminate this Agreement with 10 days written notice. Upon termination, Client shall pay for all work completed to date plus any non-cancellable material orders. Deposit is non-refundable. If Client terminates without cause after work begins, Client owes Contractor a termination fee equal to 15% of the remaining contract balance.</p>
+
+  <!-- ENTIRE AGREEMENT -->
+  <h2>Section 11 — Entire Agreement</h2>
+  <p>This Agreement, together with the attached Scope of Work, constitutes the entire agreement between the parties. It supersedes all prior discussions, proposals, and representations. Amendments must be in writing and signed by both parties. This Agreement is governed by the laws of the State of Georgia.</p>
+
+  <!-- SIGNATURES -->
+  <div class="sig-block">
+    <div class="sig-party">
+      <div class="sig-party-label">Contractor — Ironwood LLC</div>
+      <div class="sig-line"></div>
+      <div class="sig-sub">Authorized Representative · Ironwood LLC</div>
+      <div style="margin-top:12px;">
+        <div class="fill-label">Date</div>
+        <input class="fill-line" style="width:160px;" id="sigDateContractor" placeholder="MM/DD/YYYY"/>
+      </div>
+    </div>
+    <div class="sig-party">
+      <div class="sig-party-label">Client</div>
+      <div class="sig-line"></div>
+      <div class="sig-sub"><input class="fill-line" id="sigClientName" placeholder="Print full name"/></div>
+      <div style="margin-top:12px;">
+        <div class="fill-label">Date</div>
+        <input class="fill-line" style="width:160px;" id="sigDateClient" placeholder="MM/DD/YYYY"/>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:20px; font-family:'Segoe UI',sans-serif; font-size:10px; color:var(--muted);">
+    <strong>Co-Client (if applicable):</strong><br/>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px; margin-top:8px;">
+      <div>
+        <div class="fill-label">Signature</div>
+        <div class="sig-line"></div>
+        <input class="fill-line" id="coClientName" placeholder="Print full name"/>
+      </div>
+      <div>
+        <div class="fill-label">Date</div>
+        <input class="fill-line" id="sigDateCoClient" placeholder="MM/DD/YYYY"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="doc-footer">
+    Ironwood LLC dba Ironwood Renovations · Georgia<br/>
+    Client Service Agreement · Retain a copy for your records
+  </div>
+
+</div>
+
+<script>
+  // Auto-populate agreement number and date
+  (function() {
+    const today = new Date();
+    const mo = String(today.getMonth()+1).padStart(2,'0');
+    const dy = String(today.getDate()).padStart(2,'0');
+    const yr = today.getFullYear();
+    document.getElementById('docDate').textContent = `${mo}/${dy}/${yr}`;
+
+    const saved = localStorage.getItem('ironwood_csa_counter');
+    const n = saved ? parseInt(saved) + 1 : 1001;
+    localStorage.setItem('ironwood_csa_counter', n);
+    document.getElementById('docNum').textContent = `CSA-${n}`;
+  })();
+</script>
+
+</body>
+</html>

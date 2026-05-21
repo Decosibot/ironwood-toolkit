@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Anchor Pro — Operational Costs Tracker</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #0a0a0a;
+    --surface:  #141414;
+    --surface2: #1e1e1e;
+    --border:   #2a2a2a;
+    --gold:     #c9a84c;
+    --gold-dim: #a07c30;
+    --cream:    #f5f0e8;
+    --muted:    #999;
+    --danger:   #c0392b;
+    --success:  #27ae60;
+    --warn:     #e67e22;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 14px;
+    min-height: 100vh;
+  }
+
+  /* ── TOP BAR ── */
+  .topbar {
+    background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
+    border-bottom: 1px solid var(--gold);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .topbar-brand { display: flex; align-items: center; gap: 12px; }
+  .topbar-logo {
+    width: 36px; height: 36px;
+    background: var(--gold);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 16px; color: #0a0a0a;
+  }
+  .topbar-title { font-size: 16px; font-weight: 700; color: var(--cream); }
+  .topbar-sub   { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+
+  .topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+  /* ── BUTTONS ── */
+  .btn {
+    padding: 8px 16px; border: none; border-radius: 6px;
+    font-size: 12px; font-weight: 600; cursor: pointer; letter-spacing: .5px;
+    transition: opacity .15s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn-gold   { background: var(--gold); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+  .btn-danger  { background: var(--danger); color: #fff; }
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 24px; }
+
+  /* ── PERIOD SELECTOR ── */
+  .period-bar {
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 18px; margin-bottom: 24px;
+  }
+  .period-bar label { color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
+  .period-bar select, .period-bar input[type="text"] {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    border-radius: 6px; padding: 6px 10px; font-size: 13px;
+  }
+  .period-bar select:focus, .period-bar input:focus { outline: 1px solid var(--gold); }
+
+  /* ── SUMMARY CARDS ── */
+  .summary-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px; margin-bottom: 28px;
+  }
+  .summary-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px 18px;
+  }
+  .summary-card.accent { border-color: var(--gold); }
+  .summary-card .sc-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .summary-card .sc-value { font-size: 22px; font-weight: 700; color: var(--cream); }
+  .summary-card .sc-value.gold { color: var(--gold); }
+  .summary-card .sc-value.danger { color: var(--danger); }
+  .summary-card .sc-value.success { color: var(--success); }
+  .summary-card .sc-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+  /* ── TABS ── */
+  .tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+  .tab {
+    padding: 8px 18px; border-radius: 6px; cursor: pointer;
+    font-size: 12px; font-weight: 600; letter-spacing: .5px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
+    transition: all .15s;
+  }
+  .tab.active { background: var(--gold); color: #0a0a0a; border-color: var(--gold); }
+  .tab:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+
+  /* ── TABLE ── */
+  .table-wrap {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden; margin-bottom: 20px;
+  }
+  .table-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 18px; border-bottom: 1px solid var(--border);
+  }
+  .table-header h3 { font-size: 14px; color: var(--gold); font-weight: 700; }
+
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    background: var(--surface2); padding: 10px 14px;
+    text-align: left; font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .8px; font-weight: 600;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .1s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--surface2); }
+  tbody td { padding: 10px 14px; vertical-align: middle; }
+
+  /* editable cells */
+  .editable {
+    background: transparent; border: none; color: var(--cream);
+    font-size: 13px; font-family: inherit; width: 100%;
+    padding: 4px 6px; border-radius: 4px;
+  }
+  .editable:focus {
+    outline: 1px solid var(--gold); background: var(--surface2);
+  }
+  .editable.num { text-align: right; }
+
+  .category-badge {
+    display: inline-block; padding: 2px 8px; border-radius: 12px;
+    font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase;
+  }
+  .cat-fixed    { background: #1a2a1a; color: #4caf50; }
+  .cat-variable { background: #2a1a10; color: #ff9800; }
+  .cat-labor    { background: #1a1a2a; color: #64b5f6; }
+  .cat-marketing { background: #2a1a2a; color: #ce93d8; }
+  .cat-admin    { background: #1e1a10; color: #c9a84c; }
+
+  /* status toggle */
+  .status-btn {
+    padding: 3px 10px; border-radius: 12px; font-size: 10px; font-weight: 700;
+    cursor: pointer; border: none; letter-spacing: .5px; text-transform: uppercase;
+  }
+  .status-paid    { background: #1a2a1a; color: #4caf50; }
+  .status-pending { background: #2a1a10; color: #ff9800; }
+  .status-skip    { background: #1a1a1a; color: #666; }
+
+  .delete-btn {
+    background: none; border: none; cursor: pointer; color: #444;
+    font-size: 16px; line-height: 1; padding: 2px 6px; border-radius: 4px;
+    transition: color .15s;
+  }
+  .delete-btn:hover { color: var(--danger); }
+
+  /* ── ADD ROW ── */
+  .add-row-form {
+    display: flex; gap: 8px; flex-wrap: wrap; align-items: flex-end;
+    padding: 14px 18px; background: var(--surface2); border-top: 1px solid var(--border);
+  }
+  .add-row-form .field { display: flex; flex-direction: column; gap: 4px; }
+  .add-row-form label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+  .add-row-form input, .add-row-form select {
+    background: var(--surface); border: 1px solid var(--border); color: var(--cream);
+    border-radius: 6px; padding: 6px 10px; font-size: 13px; min-width: 120px;
+  }
+  .add-row-form input:focus, .add-row-form select:focus { outline: 1px solid var(--gold); }
+
+  /* ── BUDGET PROGRESS BAR ── */
+  .progress-wrap { margin-bottom: 24px; }
+  .progress-wrap h3 { font-size: 13px; color: var(--gold); margin-bottom: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .progress-item { margin-bottom: 10px; }
+  .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
+  .progress-bar { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 4px; transition: width .3s; }
+  .fill-ok   { background: var(--success); }
+  .fill-warn { background: var(--warn); }
+  .fill-over { background: var(--danger); }
+
+  /* ── NOTES PANEL ── */
+  .notes-panel {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 18px; margin-bottom: 20px;
+  }
+  .notes-panel h3 { font-size: 13px; color: var(--gold); margin-bottom: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .notes-panel textarea {
+    width: 100%; min-height: 80px;
+    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    border-radius: 6px; padding: 10px; font-size: 13px; font-family: inherit;
+    resize: vertical;
+  }
+  .notes-panel textarea:focus { outline: 1px solid var(--gold); }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center; padding: 40px; color: var(--muted); font-size: 13px;
+  }
+
+  /* ── FOOTER ── */
+  .app-footer {
+    text-align: center; padding: 20px; color: var(--muted); font-size: 11px;
+    border-top: 1px solid var(--border); margin-top: 20px;
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">A</div>
+    <div>
+      <div class="topbar-title">Operational Costs Tracker</div>
+      <div class="topbar-sub">Anchor Pro Solutions</div>
+    </div>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn btn-outline btn-sm" onclick="loadFromFile()">&#8599; Import</button>
+    <button class="btn btn-outline btn-sm" onclick="exportJSON()">&#8595; Export</button>
+    <button class="btn btn-gold btn-sm" onclick="saveToLocalStorage()">&#10003; Save</button>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- PERIOD SELECTOR -->
+  <div class="period-bar">
+    <label>Month</label>
+    <select id="selMonth" onchange="switchPeriod()">
+      <option value="01">January</option><option value="02">February</option>
+      <option value="03">March</option><option value="04">April</option>
+      <option value="05" selected>May</option><option value="06">June</option>
+      <option value="07">July</option><option value="08">August</option>
+      <option value="09">September</option><option value="10">October</option>
+      <option value="11">November</option><option value="12">December</option>
+    </select>
+    <select id="selYear" onchange="switchPeriod()">
+      <option value="2026" selected>2026</option>
+      <option value="2027">2027</option>
+    </select>
+    <label style="margin-left:16px;">Monthly Revenue (Gross)</label>
+    <input type="text" id="inputRevenue" placeholder="$0.00" style="width:130px;" oninput="refreshSummary()"/>
+    <label style="margin-left:16px;">Budget Target</label>
+    <input type="text" id="inputBudget" placeholder="$1,000.00" style="width:130px;" oninput="refreshSummary()"/>
+  </div>
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-grid">
+    <div class="summary-card accent">
+      <div class="sc-label">Total Expenses</div>
+      <div class="sc-value gold" id="totalExpenses">$0</div>
+      <div class="sc-sub" id="totalCount">0 items</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Fixed Costs</div>
+      <div class="sc-value" id="totalFixed">$0</div>
+      <div class="sc-sub">Recurring monthly</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Variable Costs</div>
+      <div class="sc-value" id="totalVariable">$0</div>
+      <div class="sc-sub">Project-tied</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Labor</div>
+      <div class="sc-value" id="totalLabor">$0</div>
+      <div class="sc-sub" id="jeffHours">Jeff: 0 hrs @ $50/hr</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Paid</div>
+      <div class="sc-value success" id="totalPaid">$0</div>
+      <div class="sc-sub">Cleared</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Pending</div>
+      <div class="sc-value" id="totalPending" style="color:var(--warn)">$0</div>
+      <div class="sc-sub">Due / unpaid</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Net Cash Flow</div>
+      <div class="sc-value" id="netCashFlow">—</div>
+      <div class="sc-sub">Revenue minus expenses</div>
+    </div>
+    <div class="summary-card">
+      <div class="sc-label">Budget Remaining</div>
+      <div class="sc-value" id="budgetRemaining">—</div>
+      <div class="sc-sub">vs. target</div>
+    </div>
+    <div class="summary-card" id="jeffThresholdCard">
+      <div class="sc-label">Jeff Phase 2 Threshold</div>
+      <div class="sc-value" id="jeffThresholdVal">—</div>
+      <div class="sc-sub" id="jeffThresholdSub">$25K/mo × 2 months to convert</div>
+    </div>
+  </div>
+
+  <!-- CATEGORY PROGRESS BARS -->
+  <div class="progress-wrap">
+    <h3>Spending by Category</h3>
+    <div id="categoryBars"></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('all',this)">All Items</div>
+    <div class="tab" onclick="switchTab('fixed',this)">Fixed</div>
+    <div class="tab" onclick="switchTab('variable',this)">Variable</div>
+    <div class="tab" onclick="switchTab('labor',this)">Labor</div>
+    <div class="tab" onclick="switchTab('marketing',this)">Marketing</div>
+    <div class="tab" onclick="switchTab('admin',this)">Admin</div>
+  </div>
+
+  <!-- EXPENSE TABLE -->
+  <div class="table-wrap">
+    <div class="table-header">
+      <h3 id="tableTitle">All Expenses</h3>
+      <span id="filteredTotal" style="color:var(--gold);font-size:13px;font-weight:700;"></span>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Category</th>
+          <th>Description</th>
+          <th>Vendor / Payee</th>
+          <th style="text-align:right">Amount</th>
+          <th>Due / Date</th>
+          <th>Status</th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="expenseBody"></tbody>
+    </table>
+
+    <!-- ADD ROW FORM -->
+    <div class="add-row-form">
+      <div class="field">
+        <label>Category</label>
+        <select id="newCat">
+          <option value="fixed">Fixed</option>
+          <option value="variable">Variable</option>
+          <option value="labor">Labor</option>
+          <option value="marketing">Marketing</option>
+          <option value="admin">Admin</option>
+        </select>
+      </div>
+      <div class="field" style="flex:2">
+        <label>Description</label>
+        <input id="newDesc" type="text" placeholder="e.g. General Liability Insurance"/>
+      </div>
+      <div class="field">
+        <label>Vendor</label>
+        <input id="newVendor" type="text" placeholder="e.g. State Farm"/>
+      </div>
+      <div class="field">
+        <label>Amount ($)</label>
+        <input id="newAmt" type="number" step="0.01" placeholder="0.00" style="width:110px;"/>
+      </div>
+      <div class="field">
+        <label>Due Date</label>
+        <input id="newDate" type="date"/>
+      </div>
+      <button class="btn btn-gold" onclick="addRow()" style="align-self:flex-end;margin-bottom:1px;">+ Add</button>
+    </div>
+  </div>
+
+  <!-- JEFF LABOR CALCULATOR -->
+  <div class="table-wrap">
+    <div class="table-header">
+      <h3 id="jeffLogTitle">Jeff's Labor Log — Phase 1 · $50/hr</h3>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span style="font-size:11px;color:var(--muted);">Compensation Mode:</span>
+        <button id="jeffModeBtn" class="btn btn-outline btn-sm" onclick="toggleJeffMode()" title="Click to switch phase">Phase 1 — $50/hr</button>
+        <span id="jeffModeHint" style="font-size:10px;color:var(--muted);">Converts to 30% at $25K/mo × 2 months</span>
+      </div>
+    </div>
+    <div id="jeffPhaseNote" style="padding:10px 18px;background:#1a1a2a;border-bottom:1px solid var(--border);font-size:11px;color:#64b5f6;display:none;">
+      <strong>Phase 2 Active — 30% of Gross Profit.</strong> Hours are tracked for reference but Jeff's compensation flows from the Profit Waterfall, not hourly. Log hours to keep a record of time on each job.
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Project / Task</th>
+          <th>Date</th>
+          <th style="text-align:right">Hours</th>
+          <th style="text-align:right" id="jeffRateHeader">Rate</th>
+          <th style="text-align:right" id="jeffAmtHeader">Amount</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="jeffBody"></tbody>
+    </table>
+    <div class="add-row-form">
+      <div class="field" style="flex:2">
+        <label>Project / Task</label>
+        <input id="jeffTask" type="text" placeholder="e.g. Framing — 123 Main St"/>
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input id="jeffDate" type="date"/>
+      </div>
+      <div class="field">
+        <label>Hours</label>
+        <input id="jeffHrs" type="number" step="0.5" placeholder="8" style="width:90px;"/>
+      </div>
+      <button class="btn btn-gold" onclick="addJeffRow()" style="align-self:flex-end;">+ Log Hours</button>
+    </div>
+  </div>
+
+  <!-- TY FIELD LABOR LOG -->
+  <div class="table-wrap" style="margin-top:24px;">
+    <div class="table-header">
+      <h3>Ty's Field Labor Log — $30/hr</h3>
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span style="font-size:11px;color:var(--muted);">Rate: $30.00/hr · Pre-approved hours only · Billed through Anchor Pro</span>
+      </div>
+    </div>
+    <div style="padding:10px 18px;background:#1a1a0a;border-bottom:1px solid var(--border);font-size:11px;color:#c9a84c;">
+      Field labor hours are separate from Ty's 3% marketing compensation. These hours cover on-site work alongside Jeff and must be pre-approved per job. Rate is fixed at $30/hr.
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Project / Task</th>
+          <th>Date</th>
+          <th style="text-align:right">Hours</th>
+          <th style="text-align:right">Rate</th>
+          <th style="text-align:right">Amount</th>
+          <th>Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="tyBody"></tbody>
+    </table>
+    <div class="add-row-form">
+      <div class="field" style="flex:2">
+        <label>Project / Task</label>
+        <input id="tyTask" type="text" placeholder="e.g. Demo &amp; cleanup — 123 Main St"/>
+      </div>
+      <div class="field">
+        <label>Date</label>
+        <input id="tyDate" type="date"/>
+      </div>
+      <div class="field">
+        <label>Hours</label>
+        <input id="tyHrs" type="number" step="0.5" placeholder="4" style="width:90px;"/>
+      </div>
+      <button class="btn btn-gold" onclick="addTyRow()" style="align-self:flex-end;">+ Log Hours</button>
+    </div>
+  </div>
+
+  <!-- NOTES -->
+  <div class="notes-panel">
+    <h3>Monthly Notes</h3>
+    <textarea id="monthNotes" placeholder="Observations, anomalies, action items for this month..."></textarea>
+  </div>
+
+</div>
+
+<div class="app-footer">Anchor Pro Solutions — Operational Costs Tracker · All data saved locally in your browser</div>
+
+<!-- HIDDEN FILE INPUT -->
+<input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleFileLoad(event)"/>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentPeriod = '2026-05'; // YYYY-MM
+let allData = {}; // keyed by period: { expenses:[], jeffRows:[], revenue:'', budget:'', notes:'', jeffMode:'hourly' }
+let jeffCompMode = 'hourly'; // 'hourly' | 'pct' — global, persisted in localStorage separately
+
+const CAT_LABELS = { fixed:'Fixed', variable:'Variable', labor:'Labor', marketing:'Marketing', admin:'Admin' };
+const CAT_CLASS  = { fixed:'cat-fixed', variable:'cat-variable', labor:'cat-labor', marketing:'cat-marketing', admin:'cat-admin' };
+
+let activeTab = 'all';
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+window.onload = function() {
+  const saved = localStorage.getItem('anchorpro_opcosts');
+  if (saved) allData = JSON.parse(saved);
+  const savedMode = localStorage.getItem('anchorpro_jeff_mode');
+  if (savedMode) jeffCompMode = savedMode;
+  const now = new Date();
+  const mo = String(now.getMonth()+1).padStart(2,'0');
+  const yr = now.getFullYear();
+  currentPeriod = `${yr}-${mo}`;
+  document.getElementById('selMonth').value = mo;
+  document.getElementById('selYear').value = String(yr);
+  loadPeriod();
+  updateJeffModeUI();
+};
+
+function toggleJeffMode() {
+  jeffCompMode = jeffCompMode === 'hourly' ? 'pct' : 'hourly';
+  localStorage.setItem('anchorpro_jeff_mode', jeffCompMode);
+  updateJeffModeUI();
+  renderJeffTable();
+  refreshSummary();
+}
+
+function updateJeffModeUI() {
+  const isHourly = jeffCompMode === 'hourly';
+  document.getElementById('jeffLogTitle').textContent = isHourly
+    ? "Jeff's Labor Log — Phase 1 · $50/hr"
+    : "Jeff's Labor Log — Phase 2 · 30% of Gross Profit";
+  document.getElementById('jeffModeBtn').textContent = isHourly ? 'Phase 1 — $50/hr' : 'Phase 2 — 30% GP';
+  document.getElementById('jeffModeBtn').style.borderColor = isHourly ? 'var(--gold)' : '#64b5f6';
+  document.getElementById('jeffModeBtn').style.color = isHourly ? 'var(--gold)' : '#64b5f6';
+  document.getElementById('jeffModeHint').textContent = isHourly
+    ? 'Converts to 30% at $25K/mo × 2 consecutive months'
+    : 'Phase 2 active — compensation via Profit Waterfall';
+  document.getElementById('jeffPhaseNote').style.display = isHourly ? 'none' : 'block';
+  document.getElementById('jeffRateHeader').textContent = isHourly ? 'Rate' : 'Mode';
+  document.getElementById('jeffAmtHeader').textContent  = isHourly ? 'Amount' : 'Hrs (Reference)';
+  // Labor summary card sub-label
+  const lbl = document.getElementById('jeffHours');
+  if (lbl) lbl.textContent = isHourly ? `Jeff: tracked hrs @ $50/hr` : `Jeff: Phase 2 · via Profit Waterfall`;
+}
+
+function getPeriodData() {
+  if (!allData[currentPeriod]) {
+    allData[currentPeriod] = { expenses: [], jeffRows: [], tyRows: [], revenue: '', budget: '', notes: '' };
+    // seed defaults first period
+    if (Object.keys(allData).length === 1) seedDefaults();
+  }
+  return allData[currentPeriod];
+}
+
+function seedDefaults() {
+  const d = allData[currentPeriod];
+  const today = new Date().toISOString().split('T')[0];
+  d.expenses = [
+    { id: uid(), cat:'fixed',    desc:'Registered Agent Fee',        vendor:'Georgia SOS',     amt:20,   date:today, status:'pending', notes:'' },
+    { id: uid(), cat:'fixed',    desc:'General Liability Insurance', vendor:'State Farm',       amt:150,  date:today, status:'pending', notes:'$1M policy' },
+    { id: uid(), cat:'fixed',    desc:'QuickBooks Simple Start',     vendor:'Intuit',           amt:30,   date:today, status:'pending', notes:'' },
+    { id: uid(), cat:'fixed',    desc:'Google Workspace',            vendor:'Google',           amt:14,   date:today, status:'pending', notes:'Business email' },
+    { id: uid(), cat:'marketing',desc:'Ad Spend — Social Media',     vendor:'Meta / Instagram', amt:200,  date:today, status:'pending', notes:'' },
+    { id: uid(), cat:'admin',    desc:'P.O. Box / Virtual Office',   vendor:'UPS Store',        amt:25,   date:today, status:'pending', notes:'' },
+    { id: uid(), cat:'admin',    desc:'Office Supplies / Printing',  vendor:'Misc',             amt:40,   date:today, status:'pending', notes:'Contracts, stamps' },
+  ];
+  d.budget = '700';
+}
+
+// ─── PERIOD SWITCHING ─────────────────────────────────────────────────────────
+function switchPeriod() {
+  saveCurrentPeriod();
+  const mo = document.getElementById('selMonth').value;
+  const yr = document.getElementById('selYear').value;
+  currentPeriod = `${yr}-${mo}`;
+  loadPeriod();
+}
+
+function loadPeriod() {
+  const d = getPeriodData();
+  document.getElementById('inputRevenue').value = d.revenue || '';
+  document.getElementById('inputBudget').value  = d.budget  || '';
+  document.getElementById('monthNotes').value   = d.notes   || '';
+  renderTable();
+  renderJeffTable();
+  renderTyTable();
+  refreshSummary();
+}
+
+function saveCurrentPeriod() {
+  const d = getPeriodData();
+  d.revenue = document.getElementById('inputRevenue').value;
+  d.budget  = document.getElementById('inputBudget').value;
+  d.notes   = document.getElementById('monthNotes').value;
+}
+
+// ─── TAB SWITCH ───────────────────────────────────────────────────────────────
+function switchTab(tab, el) {
+  activeTab = tab;
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderTable();
+}
+
+// ─── RENDER EXPENSE TABLE ────────────────────────────────────────────────────
+function renderTable() {
+  const d = getPeriodData();
+  const rows = activeTab === 'all' ? d.expenses : d.expenses.filter(r => r.cat === activeTab);
+  const tbody = document.getElementById('expenseBody');
+  const titles = { all:'All Expenses', fixed:'Fixed Expenses', variable:'Variable Expenses', labor:'Labor', marketing:'Marketing', admin:'Admin' };
+  document.getElementById('tableTitle').textContent = titles[activeTab] || 'Expenses';
+
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state">No entries yet. Add one below.</div></td></tr>`;
+    document.getElementById('filteredTotal').textContent = '';
+    return;
+  }
+
+  const total = rows.reduce((s,r)=> s + parseFloat(r.amt||0), 0);
+  document.getElementById('filteredTotal').textContent = 'Total: ' + fmt(total);
+
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td><span class="category-badge ${CAT_CLASS[r.cat]||''}">${CAT_LABELS[r.cat]||r.cat}</span></td>
+      <td><input class="editable" value="${esc(r.desc)}" onchange="updateField('${r.id}','desc',this.value)" style="min-width:160px;"/></td>
+      <td><input class="editable" value="${esc(r.vendor)}" onchange="updateField('${r.id}','vendor',this.value)" style="min-width:110px;"/></td>
+      <td><input class="editable num" value="${fmtNum(r.amt)}" onchange="updateField('${r.id}','amt',this.value);refreshSummary()" style="width:90px;"/></td>
+      <td><input class="editable" type="date" value="${r.date||''}" onchange="updateField('${r.id}','date',this.value)" style="width:130px;"/></td>
+      <td>
+        <button class="status-btn status-${r.status}" onclick="cycleStatus('${r.id}')">${capitalize(r.status)}</button>
+      </td>
+      <td><input class="editable" value="${esc(r.notes)}" onchange="updateField('${r.id}','notes',this.value)" style="min-width:100px;"/></td>
+      <td><button class="delete-btn" onclick="deleteRow('${r.id}')" title="Delete">&#215;</button></td>
+    </tr>
+  `).join('');
+}
+
+// ─── RENDER JEFF TABLE ────────────────────────────────────────────────────────
+function renderJeffTable() {
+  const d = getPeriodData();
+  const tbody = document.getElementById('jeffBody');
+  if (!d.jeffRows || d.jeffRows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">No hours logged yet.</div></td></tr>`;
+    return;
+  }
+  const isHourly = jeffCompMode === 'hourly';
+  tbody.innerHTML = d.jeffRows.map(r => {
+    const hrs = parseFloat(r.hrs) || 0;
+    const amt = hrs * 50;
+    const rateCell = isHourly
+      ? `<td style="text-align:right;color:var(--muted)">$50.00</td>`
+      : `<td style="text-align:right;font-size:11px;color:#64b5f6;">30% GP</td>`;
+    const amtCell = isHourly
+      ? `<td style="text-align:right;color:var(--gold);font-weight:700;">${fmt(amt)}</td>`
+      : `<td style="text-align:right;color:var(--muted);font-size:12px;">${hrs} hrs</td>`;
+    return `
+      <tr>
+        <td><input class="editable" value="${esc(r.task)}" onchange="updateJeffField('${r.id}','task',this.value)" style="min-width:180px;"/></td>
+        <td><input class="editable" type="date" value="${r.date||''}" onchange="updateJeffField('${r.id}','date',this.value)" style="width:130px;"/></td>
+        <td style="text-align:right"><input class="editable num" value="${r.hrs}" onchange="updateJeffField('${r.id}','hrs',this.value);refreshSummary()" style="width:70px;"/></td>
+        ${rateCell}
+        ${amtCell}
+        <td><button class="status-btn status-${r.status}" onclick="cycleJeffStatus('${r.id}')">${capitalize(r.status)}</button></td>
+        <td><button class="delete-btn" onclick="deleteJeffRow('${r.id}')">&#215;</button></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ─── RENDER TY TABLE ─────────────────────────────────────────────────────────
+function renderTyTable() {
+  const d = getPeriodData();
+  const tbody = document.getElementById('tyBody');
+  if (!d.tyRows || d.tyRows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7"><div class="empty-state">No hours logged yet.</div></td></tr>`;
+    return;
+  }
+  tbody.innerHTML = d.tyRows.map(r => {
+    const hrs = parseFloat(r.hrs) || 0;
+    const amt = hrs * 30;
+    return `
+      <tr>
+        <td><input class="editable" value="${esc(r.task)}" onchange="updateTyField('${r.id}','task',this.value)" style="min-width:180px;"/></td>
+        <td><input class="editable" type="date" value="${r.date||''}" onchange="updateTyField('${r.id}','date',this.value)" style="width:130px;"/></td>
+        <td style="text-align:right"><input class="editable num" value="${r.hrs}" onchange="updateTyField('${r.id}','hrs',this.value);refreshSummary()" style="width:70px;"/></td>
+        <td style="text-align:right;color:var(--muted)">$30.00</td>
+        <td style="text-align:right;color:var(--gold);font-weight:700;">${fmt(amt)}</td>
+        <td><button class="status-btn status-${r.status}" onclick="cycleTyStatus('${r.id}')">${capitalize(r.status)}</button></td>
+        <td><button class="delete-btn" onclick="deleteTyRow('${r.id}')">&#215;</button></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ─── SUMMARY REFRESH ─────────────────────────────────────────────────────────
+function refreshSummary() {
+  const d = getPeriodData();
+  const expenses = d.expenses || [];
+  const jeffRows = d.jeffRows || [];
+
+  const totals = { fixed:0, variable:0, labor:0, marketing:0, admin:0 };
+  let paid = 0, pending = 0;
+
+  expenses.forEach(r => {
+    const a = parseFloat(r.amt) || 0;
+    totals[r.cat] = (totals[r.cat]||0) + a;
+    if (r.status === 'paid') paid += a; else if (r.status !== 'skip') pending += a;
+  });
+
+  let jeffTotal = 0, jeffHrs = 0;
+  const isHourly = jeffCompMode === 'hourly';
+  jeffRows.forEach(r => {
+    const h = parseFloat(r.hrs)||0;
+    jeffHrs += h;
+    if (isHourly) {
+      const a = h * 50;
+      jeffTotal += a;
+      totals.labor = (totals.labor||0) + a;
+      if (r.status === 'paid') paid += a; else if (r.status !== 'skip') pending += a;
+    }
+  });
+
+  const tyRows = d.tyRows || [];
+  let tyTotal = 0, tyHrs = 0;
+  tyRows.forEach(r => {
+    const h = parseFloat(r.hrs)||0;
+    tyHrs += h;
+    const a = h * 30;
+    tyTotal += a;
+    totals.labor = (totals.labor||0) + a;
+    if (r.status === 'paid') paid += a; else if (r.status !== 'skip') pending += a;
+  });
+
+  const total = expenses.reduce((s,r)=> s + (parseFloat(r.amt)||0), 0) + jeffTotal + tyTotal;
+  const count = expenses.length + jeffRows.length + tyRows.length;
+
+  document.getElementById('totalExpenses').textContent = fmt(total);
+  document.getElementById('totalCount').textContent = count + ' item' + (count===1?'':'s');
+  document.getElementById('totalFixed').textContent = fmt(totals.fixed||0);
+  document.getElementById('totalVariable').textContent = fmt(totals.variable||0);
+  document.getElementById('totalLabor').textContent = isHourly ? fmt(totals.labor||0) : fmt(tyTotal) + ' (Ty only; Jeff via Waterfall)';
+  document.getElementById('jeffHours').textContent = isHourly
+    ? `Jeff: ${jeffHrs} hrs @ $50/hr = ${fmt(jeffHrs * 50)} · Ty: ${tyHrs} hrs @ $30/hr = ${fmt(tyHrs * 30)}`
+    : `Jeff: ${jeffHrs} hrs logged · Phase 2 active · Ty: ${tyHrs} hrs @ $30/hr = ${fmt(tyHrs * 30)}`;
+  document.getElementById('totalPaid').textContent = fmt(paid);
+  document.getElementById('totalPending').textContent = fmt(pending);
+
+  const rev = parseMoney(document.getElementById('inputRevenue').value);
+  const bud = parseMoney(document.getElementById('inputBudget').value);
+
+  if (rev > 0) {
+    const net = rev - total;
+    const el = document.getElementById('netCashFlow');
+    el.textContent = fmt(Math.abs(net));
+    el.className = 'sc-value ' + (net >= 0 ? 'success' : 'danger');
+    if (net < 0) el.textContent = '-' + el.textContent;
+  } else {
+    document.getElementById('netCashFlow').textContent = '—';
+    document.getElementById('netCashFlow').className = 'sc-value';
+  }
+
+  if (bud > 0) {
+    const rem = bud - total;
+    const el = document.getElementById('budgetRemaining');
+    el.textContent = fmt(Math.abs(rem));
+    el.className = 'sc-value ' + (rem >= 0 ? 'success' : 'danger');
+    if (rem < 0) el.textContent = '-' + el.textContent;
+  } else {
+    document.getElementById('budgetRemaining').textContent = '—';
+    document.getElementById('budgetRemaining').className = 'sc-value';
+  }
+
+  // Jeff Phase 2 threshold card
+  const thresholdCard = document.getElementById('jeffThresholdCard');
+  const thresholdVal  = document.getElementById('jeffThresholdVal');
+  const thresholdSub  = document.getElementById('jeffThresholdSub');
+  if (jeffCompMode === 'pct') {
+    thresholdVal.textContent = 'Active';
+    thresholdVal.className = 'sc-value success';
+    thresholdSub.textContent = 'Phase 2 — 30% of gross profit';
+  } else {
+    const revNum = parseMoney(document.getElementById('inputRevenue').value);
+    const pct = revNum > 0 ? Math.min(100, Math.round((revNum / 25000) * 100)) : 0;
+    thresholdVal.textContent = revNum > 0 ? fmt(revNum) + ' / $25K' : '—';
+    thresholdVal.className = 'sc-value ' + (revNum >= 25000 ? 'success' : revNum >= 15000 ? '' : 'danger');
+    thresholdSub.textContent = revNum >= 25000 ? `${pct}% — if next month also ≥ $25K, convert Jeff` : `${pct}% of $25K threshold`;
+  }
+
+  // category bars
+  const barsEl = document.getElementById('categoryBars');
+  const cats = ['fixed','variable','labor','marketing','admin'];
+  const maxAmt = Math.max(...cats.map(c => totals[c]||0), 1);
+  barsEl.innerHTML = cats.map(c => {
+    const amt = totals[c] || 0;
+    const pct = Math.min(100, (amt / maxAmt) * 100);
+    const fillClass = pct < 60 ? 'fill-ok' : pct < 85 ? 'fill-warn' : 'fill-over';
+    return `
+      <div class="progress-item">
+        <div class="progress-label">
+          <span>${CAT_LABELS[c]}</span>
+          <span>${fmt(amt)}</span>
+        </div>
+        <div class="progress-bar"><div class="progress-fill ${fillClass}" style="width:${pct}%"></div></div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ─── ADD ROW ──────────────────────────────────────────────────────────────────
+function addRow() {
+  const cat    = document.getElementById('newCat').value;
+  const desc   = document.getElementById('newDesc').value.trim();
+  const vendor = document.getElementById('newVendor').value.trim();
+  const amt    = document.getElementById('newAmt').value;
+  const date   = document.getElementById('newDate').value;
+  if (!desc || !amt) { alert('Description and Amount are required.'); return; }
+  const d = getPeriodData();
+  d.expenses.push({ id: uid(), cat, desc, vendor, amt: parseFloat(amt), date, status:'pending', notes:'' });
+  document.getElementById('newDesc').value = '';
+  document.getElementById('newVendor').value = '';
+  document.getElementById('newAmt').value = '';
+  saveToLocalStorage();
+  renderTable();
+  refreshSummary();
+}
+
+function addJeffRow() {
+  const task = document.getElementById('jeffTask').value.trim();
+  const date = document.getElementById('jeffDate').value;
+  const hrs  = document.getElementById('jeffHrs').value;
+  if (!task || !hrs) { alert('Task and Hours are required.'); return; }
+  const d = getPeriodData();
+  if (!d.jeffRows) d.jeffRows = [];
+  d.jeffRows.push({ id: uid(), task, date, hrs: parseFloat(hrs), status:'pending' });
+  document.getElementById('jeffTask').value = '';
+  document.getElementById('jeffHrs').value = '';
+  saveToLocalStorage();
+  renderJeffTable();
+  refreshSummary();
+}
+
+function addTyRow() {
+  const task = document.getElementById('tyTask').value.trim();
+  const date = document.getElementById('tyDate').value;
+  const hrs  = document.getElementById('tyHrs').value;
+  if (!task || !hrs) { alert('Task and Hours are required.'); return; }
+  const d = getPeriodData();
+  if (!d.tyRows) d.tyRows = [];
+  d.tyRows.push({ id: uid(), task, date, hrs: parseFloat(hrs), status:'pending' });
+  document.getElementById('tyTask').value = '';
+  document.getElementById('tyHrs').value = '';
+  saveToLocalStorage();
+  renderTyTable();
+  refreshSummary();
+}
+
+// ─── MUTATIONS ────────────────────────────────────────────────────────────────
+function updateField(id, field, val) {
+  const d = getPeriodData();
+  const row = d.expenses.find(r => r.id === id);
+  if (row) { row[field] = field === 'amt' ? parseFloat(val)||0 : val; }
+  saveToLocalStorage();
+}
+function updateJeffField(id, field, val) {
+  const d = getPeriodData();
+  const row = d.jeffRows.find(r => r.id === id);
+  if (row) { row[field] = field === 'hrs' ? parseFloat(val)||0 : val; }
+  saveToLocalStorage();
+}
+function updateTyField(id, field, val) {
+  const d = getPeriodData();
+  if (!d.tyRows) d.tyRows = [];
+  const row = d.tyRows.find(r => r.id === id);
+  if (row) { row[field] = field === 'hrs' ? parseFloat(val)||0 : val; }
+  saveToLocalStorage();
+}
+
+function cycleStatus(id) {
+  const states = ['pending','paid','skip'];
+  const d = getPeriodData();
+  const row = d.expenses.find(r => r.id === id);
+  if (row) { row.status = states[(states.indexOf(row.status)+1) % states.length]; }
+  saveToLocalStorage(); renderTable(); refreshSummary();
+}
+function cycleJeffStatus(id) {
+  const states = ['pending','paid','skip'];
+  const d = getPeriodData();
+  const row = d.jeffRows.find(r => r.id === id);
+  if (row) { row.status = states[(states.indexOf(row.status)+1) % states.length]; }
+  saveToLocalStorage(); renderJeffTable(); refreshSummary();
+}
+function cycleTyStatus(id) {
+  const states = ['pending','paid','skip'];
+  const d = getPeriodData();
+  if (!d.tyRows) d.tyRows = [];
+  const row = d.tyRows.find(r => r.id === id);
+  if (row) { row.status = states[(states.indexOf(row.status)+1) % states.length]; }
+  saveToLocalStorage(); renderTyTable(); refreshSummary();
+}
+
+function deleteRow(id) {
+  const d = getPeriodData();
+  d.expenses = d.expenses.filter(r => r.id !== id);
+  saveToLocalStorage(); renderTable(); refreshSummary();
+}
+function deleteJeffRow(id) {
+  const d = getPeriodData();
+  d.jeffRows = d.jeffRows.filter(r => r.id !== id);
+  saveToLocalStorage(); renderJeffTable(); refreshSummary();
+}
+function deleteTyRow(id) {
+  const d = getPeriodData();
+  if (!d.tyRows) d.tyRows = [];
+  d.tyRows = d.tyRows.filter(r => r.id !== id);
+  saveToLocalStorage(); renderTyTable(); refreshSummary();
+}
+
+// ─── PERSISTENCE ──────────────────────────────────────────────────────────────
+function saveToLocalStorage() {
+  saveCurrentPeriod();
+  localStorage.setItem('anchorpro_opcosts', JSON.stringify(allData));
+}
+
+function exportJSON() {
+  saveToLocalStorage();
+  const blob = new Blob([JSON.stringify(allData, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `AnchorPro_OpCosts_${currentPeriod}.json`;
+  a.click();
+}
+
+function loadFromFile() { document.getElementById('fileInput').click(); }
+
+function handleFileLoad(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      allData = JSON.parse(ev.target.result);
+      loadPeriod();
+      alert('Data loaded successfully.');
+    } catch { alert('Invalid JSON file.'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function fmt(n) { return '$' + (parseFloat(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtNum(n) { return (parseFloat(n)||0).toFixed(2); }
+function capitalize(s) { return s ? s[0].toUpperCase() + s.slice(1) : ''; }
+function esc(s) { return (s||'').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function parseMoney(s) { return parseFloat((s||'').replace(/[$,]/g,'')) || 0; }
+</script>
+</body>
+</html>

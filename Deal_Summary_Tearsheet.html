@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ironwood Holdings — Deal Summary</title>
+<style>
+  /* ── Reset & Variables ─────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:  #0a0a0a;
+    --cream:  #f5f0e8;
+    --gold:   #c9a84c;
+    --gold-lt:#e2c97e;
+    --red:    #c0392b;
+    --green:  #1a7a3f;
+    --border: #d4cbb8;
+    --muted:  #7a7060;
+    --page-w: 8.5in;
+  }
+
+  /* ── Screen Chrome ─────────────────────────────────────────── */
+  body {
+    background: var(--black);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 11pt;
+    color: var(--black);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* ── Toolbar (screen only) ─────────────────────────────────── */
+  #toolbar {
+    background: #111;
+    border-bottom: 2px solid var(--gold);
+    padding: 10px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  #toolbar .brand {
+    color: var(--cream);
+    font-size: 13pt;
+    letter-spacing: 0.06em;
+    font-weight: normal;
+  }
+  #toolbar .brand span {
+    color: var(--gold);
+    font-weight: bold;
+  }
+  #toolbar .toolbar-right {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .btn-print {
+    background: var(--gold);
+    color: var(--black);
+    border: none;
+    padding: 7px 22px;
+    font-size: 10pt;
+    font-family: 'Georgia', serif;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .btn-print:hover { background: var(--gold-lt); }
+
+  .btn-new {
+    background: transparent;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 6px 16px;
+    font-size: 9.5pt;
+    font-family: 'Georgia', serif;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn-new:hover { background: rgba(201,168,76,0.12); }
+
+  /* ── Page Wrapper (screen) ─────────────────────────────────── */
+  #page-wrap {
+    padding: 28px 0 60px;
+    display: flex;
+    justify-content: center;
+  }
+
+  /* ── The Page Itself ───────────────────────────────────────── */
+  .page {
+    background: #fff;
+    width: var(--page-w);
+    min-height: 11in;
+    padding: 0.45in 0.55in 0.45in 0.55in;
+    box-shadow: 0 8px 48px rgba(0,0,0,0.6);
+    position: relative;
+  }
+
+  /* ── Header ────────────────────────────────────────────────── */
+  .page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 6px;
+  }
+  .logo-block .company-name {
+    font-size: 22pt;
+    font-weight: bold;
+    letter-spacing: 0.04em;
+    color: var(--black);
+    line-height: 1.1;
+  }
+  .logo-block .company-name .highlight { color: var(--gold); }
+  .logo-block .tagline {
+    font-size: 7.5pt;
+    color: var(--muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+  .deal-meta {
+    text-align: right;
+    font-size: 8.5pt;
+    color: var(--muted);
+    line-height: 1.7;
+  }
+  .deal-meta .deal-id {
+    font-size: 12pt;
+    font-weight: bold;
+    color: var(--black);
+    letter-spacing: 0.06em;
+  }
+
+  /* ── Gold Divider ──────────────────────────────────────────── */
+  .gold-bar {
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold) 0%, var(--gold-lt) 60%, transparent 100%);
+    margin: 8px 0 14px;
+  }
+  .thin-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 10px 0;
+  }
+
+  /* ── Section Titles ────────────────────────────────────────── */
+  .section { margin-bottom: 14px; }
+  .section-title {
+    font-size: 7pt;
+    font-weight: bold;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: #0a0a0a;
+    display: inline-block;
+    padding: 2px 8px 2px 0;
+    margin-bottom: 8px;
+  }
+  /* Full-width label bar */
+  .section-header-bar {
+    background: var(--black);
+    color: var(--gold);
+    font-size: 7pt;
+    font-weight: bold;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  /* ── Input Fields ──────────────────────────────────────────── */
+  .field-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 6px;
+  }
+  .field-row.single { gap: 0; }
+  .field-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .field-group.w-half { flex: 0 0 calc(50% - 8px); }
+  .field-group.w-third { flex: 0 0 calc(33.33% - 11px); }
+  .field-group.w-two-thirds { flex: 0 0 calc(66.66% - 5px); }
+
+  label.field-label {
+    font-size: 7pt;
+    font-weight: bold;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+  input.field-input,
+  select.field-input,
+  textarea.field-input {
+    border: none;
+    border-bottom: 1.5px solid var(--border);
+    border-radius: 0;
+    background: transparent;
+    font-family: 'Georgia', serif;
+    font-size: 10.5pt;
+    color: var(--black);
+    padding: 2px 2px 3px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s;
+    -webkit-appearance: none;
+  }
+  input.field-input:focus,
+  select.field-input:focus,
+  textarea.field-input:focus {
+    border-bottom-color: var(--gold);
+  }
+  textarea.field-input {
+    resize: vertical;
+    min-height: 52px;
+    border: 1.5px solid var(--border);
+    padding: 6px;
+    font-size: 10pt;
+    line-height: 1.5;
+  }
+  textarea.field-input:focus { border-color: var(--gold); }
+  select.field-input { cursor: pointer; background: transparent; }
+
+  /* Calculated / read-only fields */
+  .calc-value {
+    font-size: 10.5pt;
+    font-weight: bold;
+    padding: 2px 2px 3px;
+    border-bottom: 1.5px dashed var(--border);
+    min-height: 24px;
+    color: var(--black);
+  }
+  .calc-value.gold { color: var(--gold); }
+  .calc-value.green { color: var(--green); }
+  .calc-value.red { color: var(--red); }
+
+  /* ── Waterfall Table ───────────────────────────────────────── */
+  .waterfall-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 9.5pt;
+  }
+  .waterfall-table th {
+    font-size: 7pt;
+    font-weight: bold;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 3px 6px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  .waterfall-table th:last-child { text-align: right; }
+  .waterfall-table td {
+    padding: 4px 6px;
+    color: var(--black);
+    vertical-align: middle;
+  }
+  .waterfall-table td:last-child {
+    text-align: right;
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+  }
+  .waterfall-table tr + tr td { border-top: 1px solid #ede8df; }
+  .waterfall-table .wf-group td {
+    background: #f9f6f0;
+    font-size: 8.5pt;
+    color: var(--muted);
+  }
+  .waterfall-table .wf-subtotal td {
+    background: #f0ebe0;
+    font-weight: bold;
+    font-size: 9.5pt;
+  }
+  .waterfall-table .wf-total td {
+    background: var(--black);
+    color: var(--cream);
+    font-size: 10pt;
+    letter-spacing: 0.04em;
+  }
+  .waterfall-table .wf-total td:last-child { color: var(--gold); }
+  .waterfall-table .wf-partner td {
+    background: #f5f0e8;
+    font-weight: bold;
+    font-size: 9.5pt;
+  }
+  .waterfall-table .wf-partner-a td:last-child { color: var(--gold); }
+  .waterfall-table .wf-partner-b td:last-child { color: #4a7c59; }
+  .wf-label-input {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .wf-inline-input {
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    font-family: 'Georgia', serif;
+    font-size: 9pt;
+    color: var(--black);
+    width: 55px;
+    outline: none;
+    padding: 1px 2px;
+    text-align: center;
+  }
+  .wf-inline-input:focus { border-bottom-color: var(--gold); }
+  .wf-inline-select {
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    font-family: 'Georgia', serif;
+    font-size: 8.5pt;
+    color: var(--black);
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    padding: 1px 2px;
+  }
+
+  /* ── Financing Grid ────────────────────────────────────────── */
+  /* reuses .field-row / .field-group */
+
+  /* ── BRRRR Section ─────────────────────────────────────────── */
+  #brrrr-section { display: none; }
+  #brrrr-section.visible { display: block; }
+
+  /* ── VR Section ─────────────────────────────────────────────── */
+  #vr-section { display: none; }
+  #vr-section.visible { display: block; }
+  #vr-market-row { display: none; }
+  #vr-market-row.visible { display: flex; }
+
+  /* ── Market Badges ──────────────────────────────────────────── */
+  .market-badge-inline {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 7pt;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    vertical-align: middle;
+    margin-left: 6px;
+  }
+  .market-badge-ga { background: #f5e8c0; color: #7a5a00; border: 1px solid #c9a84c; }
+  .market-badge-fl { background: #c0eae8; color: #006655; border: 1px solid #1a9e8f; }
+
+  /* ── Signature Block ───────────────────────────────────────── */
+  .sig-row {
+    display: flex;
+    gap: 40px;
+    margin-top: 8px;
+  }
+  .sig-block { flex: 1; }
+  .sig-line {
+    border-bottom: 1.5px solid var(--black);
+    height: 30px;
+    margin-bottom: 4px;
+  }
+  .sig-name {
+    font-size: 8pt;
+    font-weight: bold;
+    letter-spacing: 0.06em;
+    color: var(--black);
+  }
+  .sig-title {
+    font-size: 7pt;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .sig-date-row {
+    display: flex;
+    align-items: flex-end;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .sig-date-row label {
+    font-size: 7pt;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+  }
+  .sig-date-input {
+    border: none;
+    border-bottom: 1px solid var(--border);
+    background: transparent;
+    font-family: 'Georgia', serif;
+    font-size: 9.5pt;
+    color: var(--black);
+    outline: none;
+    flex: 1;
+    padding: 1px 2px;
+  }
+  .sig-date-input:focus { border-bottom-color: var(--gold); }
+
+  /* ── Footer ────────────────────────────────────────────────── */
+  .page-footer {
+    position: absolute;
+    bottom: 0.3in;
+    left: 0.55in;
+    right: 0.55in;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--border);
+    padding-top: 6px;
+  }
+  .footer-text {
+    font-size: 7pt;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+  .footer-confidential {
+    font-size: 7pt;
+    color: var(--gold);
+    font-weight: bold;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  /* ── Utility ───────────────────────────────────────────────── */
+  .two-col { display: flex; gap: 28px; }
+  .two-col > .col { flex: 1; }
+
+  /* ── Print Styles ──────────────────────────────────────────── */
+  @media print {
+    @page {
+      size: letter;
+      margin: 0;
+    }
+    body {
+      background: #fff;
+      padding: 0;
+    }
+    #toolbar { display: none !important; }
+    #page-wrap {
+      padding: 0;
+      display: block;
+    }
+    .page {
+      width: 100%;
+      min-height: auto;
+      box-shadow: none;
+      padding: 0.4in 0.5in 0.55in 0.5in;
+    }
+    input.field-input,
+    select.field-input,
+    textarea.field-input,
+    .wf-inline-input,
+    .wf-inline-select {
+      border-color: #ccc !important;
+    }
+    #brrrr-section.visible { display: block !important; }
+    #brrrr-section:not(.visible) { display: none !important; }
+    #vr-section.visible { display: block !important; }
+    #vr-section:not(.visible) { display: none !important; }
+    #vr-market-row.visible { display: flex !important; }
+    #vr-market-row:not(.visible) { display: none !important; }
+    .calc-value.green { color: var(--green) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .calc-value.red   { color: var(--red)   !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .waterfall-table .wf-total td { background: var(--black) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .waterfall-table .wf-group td { background: #f9f6f0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .waterfall-table .wf-subtotal td { background: #f0ebe0 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .waterfall-table .wf-partner td { background: #f5f0e8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .section-header-bar { background: var(--black) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════
+     TOOLBAR  (hidden on print)
+══════════════════════════════════════════════════ -->
+<div id="toolbar">
+  <div class="brand"><span>Ironwood Holdings</span> — Deal Summary</div>
+  <div class="toolbar-right">
+    <button class="btn-new" onclick="newDeal()">+ New Deal ID</button>
+    <button class="btn-print" onclick="window.print()">&#128438; Print / Save PDF</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════
+     PAGE
+══════════════════════════════════════════════════ -->
+<div id="page-wrap">
+<div class="page" id="main-page">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <div class="page-header">
+    <div class="logo-block">
+      <div class="company-name">IRONWOOD <span class="highlight">HOLDINGS</span></div>
+      <div class="tagline">Ironwood LLC &nbsp;·&nbsp; Ironwood Renovations &nbsp;·&nbsp; Deal Analysis</div>
+    </div>
+    <div class="deal-meta">
+      <div class="deal-id" id="deal-id-display">DL-0001</div>
+      <div id="deal-date-display"></div>
+      <div style="color:#aaa;font-size:7pt;margin-top:2px;">CONFIDENTIAL</div>
+    </div>
+  </div>
+  <div class="gold-bar"></div>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 1 — Deal Overview
+  ══════════════════════════════════════════════════ -->
+  <div class="section">
+    <span class="section-header-bar">01 &nbsp;—&nbsp; Deal Overview</span>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Property Address</label>
+        <input class="field-input" type="text" id="prop-address" placeholder="123 Main St, City, ST 00000">
+      </div>
+      <div class="field-group w-third">
+        <label class="field-label">Deal Type</label>
+        <select class="field-input" id="deal-type" onchange="onDealTypeChange()">
+          <option value="flip">Flip</option>
+          <option value="remodel">Remodel</option>
+          <option value="brrrr">BRRRR</option>
+          <option value="vr">Vacation Rental (STR)</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- VR Market row — visible only for VR deals -->
+    <div class="field-row" id="vr-market-row">
+      <div class="field-group w-third">
+        <label class="field-label">STR Market</label>
+        <select class="field-input" id="vr-market" onchange="recalc()">
+          <option value="">— Select Market —</option>
+          <option value="Blue Ridge, GA">Blue Ridge, GA</option>
+          <option value="Ellijay, GA">Ellijay, GA</option>
+          <option value="Dahlonega, GA">Dahlonega, GA</option>
+          <option value="Destin, FL">Destin, FL</option>
+          <option value="30A / Santa Rosa Beach, FL">30A / Santa Rosa Beach, FL</option>
+          <option value="Panama City Beach, FL">Panama City Beach, FL</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="field-group w-third">
+        <label class="field-label">Platform</label>
+        <select class="field-input" id="vr-platform">
+          <option value="airbnb">Airbnb</option>
+          <option value="vrbo">VRBO</option>
+          <option value="both">Both</option>
+        </select>
+      </div>
+      <div class="field-group w-third">
+        <label class="field-label">Market Badge</label>
+        <div style="padding:4px 0;" id="vr-market-badge-display">—</div>
+      </div>
+    </div>
+
+    <div class="two-col" style="gap:32px;">
+      <div class="col">
+        <div class="field-row">
+          <div class="field-group w-half">
+            <label class="field-label">Purchase Price</label>
+            <input class="field-input" type="text" id="purchase-price" placeholder="$0" oninput="recalc()">
+          </div>
+          <div class="field-group w-half">
+            <label class="field-label">Estimated Rehab</label>
+            <input class="field-input" type="text" id="est-rehab" placeholder="$0" oninput="recalc()">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">After Repair Value (ARV)</label>
+            <input class="field-input" type="text" id="arv" placeholder="$0" oninput="recalc()">
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="field-row">
+          <div class="field-group w-half">
+            <label class="field-label">All-In Cost</label>
+            <div class="calc-value gold" id="all-in-cost">—</div>
+          </div>
+          <div class="field-group w-half">
+            <label class="field-label">ARV Rule (≤70%)</label>
+            <div class="calc-value" id="arv-rule">—</div>
+          </div>
+        </div>
+        <div class="field-row" style="margin-top:8px;">
+          <div class="field-group">
+            <label class="field-label">Gross Revenue (Flip=ARV / Remodel override)</label>
+            <input class="field-input" type="text" id="gross-revenue-override" placeholder="Auto (ARV)" oninput="recalc()">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="thin-divider"></div>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 2 — Profit Waterfall
+  ══════════════════════════════════════════════════ -->
+  <div class="section">
+    <span class="section-header-bar">02 &nbsp;—&nbsp; Profit Waterfall</span>
+
+    <!-- Waterfall Inputs row -->
+    <div class="field-row" style="margin-bottom:8px;">
+      <div class="field-group w-third">
+        <label class="field-label">Ad Spend (pre-waterfall)</label>
+        <input class="field-input" type="text" id="ad-spend" placeholder="$0" oninput="recalc()">
+      </div>
+      <div class="field-group w-third">
+        <label class="field-label">Jeff Labor Phase</label>
+        <select class="field-input" id="jeff-phase" onchange="recalc()">
+          <option value="1">Phase 1 — $50/hr</option>
+          <option value="2">Phase 2 — 30% Gross Profit</option>
+        </select>
+      </div>
+      <div class="field-group w-third" id="jeff-hours-group">
+        <label class="field-label">Jeff Hours</label>
+        <input class="field-input" type="text" id="jeff-hours" placeholder="0" oninput="recalc()">
+      </div>
+    </div>
+    <div class="field-row" style="margin-bottom:10px;">
+      <div class="field-group w-third">
+        <label class="field-label">Ty Field Labor Hours</label>
+        <input class="field-input" type="text" id="ty-hours" placeholder="0" oninput="recalc()">
+      </div>
+      <div class="field-group w-two-thirds"></div>
+    </div>
+
+    <!-- Waterfall Display Table -->
+    <table class="waterfall-table" id="waterfall-table">
+      <thead>
+        <tr>
+          <th style="width:60%">Line Item</th>
+          <th style="width:40%">Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="wf-group"><td>Gross Revenue</td><td id="wf-gross-rev">—</td></tr>
+        <tr class="wf-group"><td style="padding-left:18px;">− Purchase Price</td><td id="wf-purchase">—</td></tr>
+        <tr class="wf-group"><td style="padding-left:18px;">− Estimated Rehab</td><td id="wf-rehab">—</td></tr>
+        <tr class="wf-group"><td style="padding-left:18px;">− Ad Spend</td><td id="wf-adspend">—</td></tr>
+        <tr class="wf-subtotal"><td>Gross Profit</td><td id="wf-gross-profit">—</td></tr>
+
+        <tr><td style="padding-left:14px; color:var(--muted); font-size:8.5pt;">− Jeff Labor (<span id="wf-jeff-phase-label">Ph.1 $50/hr</span>)</td><td id="wf-jeff-labor">—</td></tr>
+        <tr><td style="padding-left:14px; color:var(--muted); font-size:8.5pt;">− Anchor Pro Mgmt Fee (5% Gross Rev)</td><td id="wf-anchor-mgmt">—</td></tr>
+        <tr><td style="padding-left:14px; color:var(--muted); font-size:8.5pt;">− Jordan Marketing (3% Gross Rev)</td><td id="wf-jordan-mkt">—</td></tr>
+        <tr><td style="padding-left:14px; color:var(--muted); font-size:8.5pt;">− Ty Marketing (3% Gross Rev)</td><td id="wf-ty-mkt">—</td></tr>
+        <tr><td style="padding-left:14px; color:var(--muted); font-size:8.5pt;">− Ty Field Labor (<span id="wf-ty-hours-label">0</span> hrs × $30)</td><td id="wf-ty-labor">—</td></tr>
+
+        <tr class="wf-subtotal"><td>Net Distributable</td><td id="wf-net-dist">—</td></tr>
+
+        <tr><td style="padding-left:14px; color:var(--muted); font-size:8.5pt;">50% Net Dist → Anchor Pro</td><td id="wf-anchor-split">—</td></tr>
+        <tr><td style="padding-left:14px; color:var(--muted); font-size:8.5pt;">50% Net Dist → Landon</td><td id="wf-landon-split">—</td></tr>
+
+        <tr class="wf-partner wf-partner-a">
+          <td>&#9654; Anchor Pro Total (Mgmt + Ty Mkt + Ty Labor + 50% Dist)</td>
+          <td id="wf-anchor-total">—</td>
+        </tr>
+        <tr class="wf-partner wf-partner-b">
+          <td>&#9654; Landon Total (Jeff Labor + Jordan Mkt + 50% Dist)</td>
+          <td id="wf-landon-total">—</td>
+        </tr>
+        <tr class="wf-total">
+          <td>TOTAL DISTRIBUTED</td>
+          <td id="wf-total-dist">—</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="thin-divider"></div>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 3 — Financing
+  ══════════════════════════════════════════════════ -->
+  <div class="section">
+    <span class="section-header-bar">03 &nbsp;—&nbsp; Financing</span>
+    <div class="field-row">
+      <div class="field-group w-third">
+        <label class="field-label">Loan Type</label>
+        <select class="field-input" id="loan-type">
+          <option value="">— Select —</option>
+          <option>Cash</option>
+          <option>Hard Money</option>
+          <option>Conventional</option>
+          <option>DSCR</option>
+          <option>Private Money</option>
+        </select>
+      </div>
+      <div class="field-group w-third">
+        <label class="field-label">Loan Amount</label>
+        <input class="field-input" type="text" id="loan-amount" placeholder="$0" oninput="recalc()">
+      </div>
+      <div class="field-group w-third">
+        <label class="field-label">Lender Name</label>
+        <input class="field-input" type="text" id="lender-name" placeholder="Lender">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group w-third">
+        <label class="field-label">Interest Rate</label>
+        <input class="field-input" type="text" id="interest-rate" placeholder="0.00%">
+      </div>
+      <div class="field-group w-third">
+        <label class="field-label">Loan Term</label>
+        <input class="field-input" type="text" id="loan-term" placeholder="12 months">
+      </div>
+      <div class="field-group w-third">
+        <label class="field-label">Monthly Payment</label>
+        <input class="field-input" type="text" id="monthly-payment" placeholder="$0" oninput="recalc()">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group w-third">
+        <label class="field-label">Points / Fees</label>
+        <input class="field-input" type="text" id="points-fees" placeholder="$0 or X pts">
+      </div>
+      <div class="field-group w-two-thirds"></div>
+    </div>
+  </div>
+
+  <div class="thin-divider"></div>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 4 — BRRRR Analysis (conditional)
+  ══════════════════════════════════════════════════ -->
+  <div class="section" id="brrrr-section">
+    <span class="section-header-bar">04 &nbsp;—&nbsp; BRRRR Analysis</span>
+    <div class="two-col" style="gap:32px;">
+      <div class="col">
+        <div class="field-row">
+          <div class="field-group w-half">
+            <label class="field-label">Monthly Rent</label>
+            <input class="field-input" type="text" id="monthly-rent" placeholder="$0" oninput="recalc()">
+          </div>
+          <div class="field-group w-half">
+            <label class="field-label">Monthly Expenses</label>
+            <input class="field-input" type="text" id="monthly-exp" placeholder="$0" oninput="recalc()">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group w-half">
+            <label class="field-label">Net Monthly Cash Flow</label>
+            <div class="calc-value" id="net-monthly-cf">—</div>
+          </div>
+          <div class="field-group w-half">
+            <label class="field-label">Annual Cash Flow</label>
+            <div class="calc-value" id="annual-cf">—</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">DSCR (Rent ÷ Mo. Payment, green ≥ 1.25)</label>
+            <div class="calc-value" id="dscr-val">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Refi ARV</label>
+            <input class="field-input" type="text" id="refi-arv" placeholder="$0" oninput="recalc()">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group w-half">
+            <label class="field-label">Refi LTV @ 75%</label>
+            <div class="calc-value gold" id="refi-ltv">—</div>
+          </div>
+          <div class="field-group w-half">
+            <label class="field-label">Cash Out (Refi − All-In)</label>
+            <div class="calc-value" id="cash-out">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- thin-divider injected by JS only when BRRRR visible, skip here for cleanliness -->
+  <div class="thin-divider" id="brrrr-divider" style="display:none;"></div>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 4b — VR Analysis (conditional)
+  ══════════════════════════════════════════════════ -->
+  <div class="section" id="vr-section">
+    <span class="section-header-bar">04 &nbsp;—&nbsp; Vacation Rental Analysis</span>
+    <div class="two-col" style="gap:32px;">
+      <div class="col">
+        <div class="field-row">
+          <div class="field-group w-half">
+            <label class="field-label">Nightly Rate ($)</label>
+            <input class="field-input" type="text" id="vr-nightly" placeholder="$0" oninput="recalc()">
+          </div>
+          <div class="field-group w-half">
+            <label class="field-label">Target Occupancy (%)</label>
+            <input class="field-input" type="text" id="vr-occupancy" placeholder="65" oninput="recalc()">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Gross Monthly Revenue (nightly &times; occ% &times; 30)</label>
+            <div class="calc-value gold" id="vr-gross-monthly">—</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group w-half">
+            <label class="field-label">Platform Fee (3%)</label>
+            <div class="calc-value" id="vr-platform-fee">—</div>
+          </div>
+          <div class="field-group w-half">
+            <label class="field-label">PM Fee (25%)</label>
+            <div class="calc-value" id="vr-pm-fee">—</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Net Monthly Revenue (after platform + PM fees)</label>
+            <div class="calc-value" id="vr-net-monthly-rev">—</div>
+          </div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Monthly Fixed Costs (mortgage + tax + insurance)</label>
+            <input class="field-input" type="text" id="vr-fixed-costs" placeholder="$0" oninput="recalc()">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group w-half">
+            <label class="field-label">Net Monthly Cash Flow</label>
+            <div class="calc-value" id="vr-net-cashflow">—</div>
+          </div>
+          <div class="field-group w-half">
+            <label class="field-label">Annual Cash Flow</label>
+            <div class="calc-value" id="vr-annual-cashflow">—</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">Projected Annual Gross Revenue</label>
+            <div class="calc-value gold" id="vr-annual-gross">—</div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field-group">
+            <label class="field-label">ARV Rule Check (All-In &divide; ARV)</label>
+            <div class="calc-value" id="vr-arv-rule">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="thin-divider" id="vr-divider" style="display:none;"></div>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 5 — Notes / Deal Thesis
+  ══════════════════════════════════════════════════ -->
+  <div class="section">
+    <span class="section-header-bar">05 &nbsp;—&nbsp; Notes &amp; Deal Thesis</span>
+    <textarea class="field-input" id="deal-notes" style="width:100%;min-height:60px;" placeholder="Describe the deal thesis, exit strategy, key risks, and any relevant market notes…"></textarea>
+  </div>
+
+  <div class="thin-divider"></div>
+
+  <!-- ══════════════════════════════════════════════════
+       SECTION 6 — Approval / Sign-Off
+  ══════════════════════════════════════════════════ -->
+  <div class="section" style="margin-bottom: 0.55in;">
+    <span class="section-header-bar">06 &nbsp;—&nbsp; Approval &amp; Sign-Off</span>
+    <div class="sig-row">
+      <div class="sig-block">
+        <div class="sig-line"></div>
+        <div class="sig-name">Ty Jackson</div>
+        <div class="sig-title">Managing Member — Anchor Pro Solutions / Ironwood LLC</div>
+        <div class="sig-date-row">
+          <label>Date:</label>
+          <input class="sig-date-input" type="text" id="sig-date-ty" placeholder="__________">
+        </div>
+      </div>
+      <div class="sig-block">
+        <div class="sig-line"></div>
+        <div class="sig-name">Jeff Sarabia</div>
+        <div class="sig-title">Landon Renovations — Ironwood LLC</div>
+        <div class="sig-date-row">
+          <label>Date:</label>
+          <input class="sig-date-input" type="text" id="sig-date-jeff" placeholder="__________">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Footer ──────────────────────────────────────────────── -->
+  <div class="page-footer">
+    <div class="footer-text">Ironwood LLC dba Ironwood Holdings &nbsp;·&nbsp; Deal Analysis</div>
+    <div class="footer-confidential">Confidential</div>
+    <div class="footer-text" id="footer-deal-id">DL-0001 &nbsp;·&nbsp; <span id="footer-date"></span></div>
+  </div>
+
+</div><!-- /.page -->
+</div><!-- /#page-wrap -->
+
+<!-- ══════════════════════════════════════════════════
+     JAVASCRIPT
+══════════════════════════════════════════════════ -->
+<script>
+/* ── Deal ID (localStorage counter) ─────────────────────────── */
+function getDealId() {
+  let n = parseInt(localStorage.getItem('ironwood_deal_counter') || '0', 10);
+  return 'DL-' + String(n).padStart(4, '0');
+}
+function incrementDealId() {
+  let n = parseInt(localStorage.getItem('ironwood_deal_counter') || '0', 10) + 1;
+  localStorage.setItem('ironwood_deal_counter', n);
+  return 'DL-' + String(n).padStart(4, '0');
+}
+function newDeal() {
+  if (!confirm('Assign a new Deal ID? (Current sheet will not be saved.)')) return;
+  const id = incrementDealId();
+  setDealId(id);
+}
+function setDealId(id) {
+  document.getElementById('deal-id-display').textContent = id;
+  document.getElementById('footer-deal-id').innerHTML =
+    id + ' &nbsp;·&nbsp; ' + document.getElementById('footer-date').textContent;
+}
+
+/* ── Date ────────────────────────────────────────────────────── */
+function formatDate(d) {
+  const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return months[d.getMonth()] + ' ' + d.getDate() + ', ' + d.getFullYear();
+}
+(function initPage() {
+  // Initialize deal ID — use existing or start at 1
+  let stored = localStorage.getItem('ironwood_deal_counter');
+  if (!stored) {
+    localStorage.setItem('ironwood_deal_counter', '1');
+    stored = '1';
+  }
+  const id = 'DL-' + String(parseInt(stored, 10)).padStart(4, '0');
+  const dateStr = formatDate(new Date());
+  document.getElementById('deal-id-display').textContent = id;
+  document.getElementById('deal-date-display').textContent = dateStr;
+  document.getElementById('footer-date').textContent = dateStr;
+  document.getElementById('footer-deal-id').innerHTML =
+    id + ' &nbsp;·&nbsp; ' + dateStr;
+})();
+
+/* ── Helpers ─────────────────────────────────────────────────── */
+function parseMoney(str) {
+  if (!str) return 0;
+  const n = parseFloat(str.replace(/[$,%\s]/g, '').replace(/,/g, ''));
+  return isNaN(n) ? 0 : n;
+}
+function fmt(n) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  const abs = Math.abs(n);
+  const sign = n < 0 ? '-' : '';
+  return sign + '$' + abs.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
+}
+function fmtPct(n) {
+  if (isNaN(n) || !isFinite(n)) return '—';
+  return n.toFixed(1) + '%';
+}
+function setCalc(id, val, className) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  el.textContent = val;
+  el.className = 'calc-value' + (className ? ' ' + className : '');
+}
+function setWF(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = val;
+}
+
+/* ── Deal Type Change ────────────────────────────────────────── */
+function onDealTypeChange() {
+  const type = document.getElementById('deal-type').value;
+  const brrrr   = document.getElementById('brrrr-section');
+  const bDiv    = document.getElementById('brrrr-divider');
+  const vrSec   = document.getElementById('vr-section');
+  const vrDiv   = document.getElementById('vr-divider');
+  const vrMktRow= document.getElementById('vr-market-row');
+
+  // BRRRR
+  if (type === 'brrrr') {
+    brrrr.classList.add('visible');
+    bDiv.style.display = 'block';
+  } else {
+    brrrr.classList.remove('visible');
+    bDiv.style.display = 'none';
+  }
+
+  // VR
+  if (type === 'vr') {
+    vrSec.classList.add('visible');
+    vrDiv.style.display = 'block';
+    vrMktRow.classList.add('visible');
+    // default occupancy
+    const occEl = document.getElementById('vr-occupancy');
+    if (!occEl.value) occEl.value = '65';
+  } else {
+    vrSec.classList.remove('visible');
+    vrDiv.style.display = 'none';
+    vrMktRow.classList.remove('visible');
+  }
+
+  recalc();
+}
+
+/* ── VR Market Badge ─────────────────────────────────────────── */
+function getVRMarketBadge(market) {
+  if (!market) return '—';
+  const gaMarkets = ['Blue Ridge, GA','Ellijay, GA','Dahlonega, GA'];
+  const flMarkets = ['Destin, FL','30A / Santa Rosa Beach, FL','Panama City Beach, FL'];
+  if (gaMarkets.includes(market)) return '<span class="market-badge-inline market-badge-ga">GA MTN</span>';
+  if (flMarkets.includes(market)) return '<span class="market-badge-inline market-badge-fl">FL COAST</span>';
+  return market;
+}
+
+/* ── Jeff Labor Phase toggle ─────────────────────────────────── */
+function updateJeffPhaseUI() {
+  const ph = document.getElementById('jeff-phase').value;
+  const hg = document.getElementById('jeff-hours-group');
+  hg.style.opacity = ph === '1' ? '1' : '0.4';
+  hg.style.pointerEvents = ph === '1' ? 'auto' : 'none';
+  document.getElementById('wf-jeff-phase-label').textContent =
+    ph === '1' ? 'Ph.1 — $50/hr' : 'Ph.2 — 30% Gross Profit';
+}
+document.getElementById('jeff-phase').addEventListener('change', function() {
+  updateJeffPhaseUI(); recalc();
+});
+
+/* ── Main Recalc ─────────────────────────────────────────────── */
+function recalc() {
+  const dealType   = document.getElementById('deal-type').value;
+  const purchase   = parseMoney(document.getElementById('purchase-price').value);
+  const rehab      = parseMoney(document.getElementById('est-rehab').value);
+  const arv        = parseMoney(document.getElementById('arv').value);
+  const adSpend    = parseMoney(document.getElementById('ad-spend').value);
+  const jeffPhase  = document.getElementById('jeff-phase').value;
+  const jeffHours  = parseMoney(document.getElementById('jeff-hours').value);
+  const tyHours    = parseMoney(document.getElementById('ty-hours').value);
+  const grossRevOvr= parseMoney(document.getElementById('gross-revenue-override').value);
+
+  // All-In Cost
+  const allIn = purchase + rehab;
+  setCalc('all-in-cost', allIn ? fmt(allIn) : '—', 'gold');
+
+  // ARV Rule
+  if (allIn > 0 && arv > 0) {
+    const pct = (allIn / arv) * 100;
+    setCalc('arv-rule', fmtPct(pct), pct <= 70 ? 'green' : 'red');
+  } else {
+    setCalc('arv-rule', '—', '');
+  }
+
+  // Gross Revenue
+  let grossRev = 0;
+  if (grossRevOvr > 0) {
+    grossRev = grossRevOvr;
+  } else if (dealType === 'flip' || dealType === 'brrrr') {
+    grossRev = arv;
+  } else {
+    // remodel: user must fill override
+    grossRev = arv; // fallback to ARV if not overridden
+  }
+
+  // Gross Profit
+  const grossProfit = grossRev - purchase - rehab - adSpend;
+
+  // Fees
+  const jeffLabor    = jeffPhase === '1' ? jeffHours * 50 : Math.max(0, grossProfit * 0.30);
+  const anchorMgmt   = grossRev * 0.05;
+  const jordanMkt    = grossRev * 0.03;
+  const tyMkt        = grossRev * 0.03;
+  const tyLabor      = tyHours * 30;
+
+  // Net Distributable
+  const totalFees    = jeffLabor + anchorMgmt + jordanMkt + tyMkt + tyLabor;
+  const netDist      = grossProfit - totalFees;
+
+  // Partner splits
+  const halfDist     = netDist / 2;
+  const anchorTotal  = anchorMgmt + tyMkt + tyLabor + halfDist;
+  const landonTotal  = jeffLabor  + jordanMkt       + halfDist;
+  const totalDist    = anchorTotal + landonTotal;
+
+  // ── Update Waterfall Table ──
+  setWF('wf-gross-rev',    grossRev    ? fmt(grossRev)    : '—');
+  setWF('wf-purchase',     purchase    ? fmt(purchase)    : '—');
+  setWF('wf-rehab',        rehab       ? fmt(rehab)       : '—');
+  setWF('wf-adspend',      adSpend     ? fmt(adSpend)     : '—');
+  setWF('wf-gross-profit', grossRev    ? fmt(grossProfit) : '—');
+  setWF('wf-jeff-labor',   jeffLabor   ? fmt(jeffLabor)   : '—');
+  setWF('wf-anchor-mgmt',  anchorMgmt  ? fmt(anchorMgmt)  : '—');
+  setWF('wf-jordan-mkt',   jordanMkt   ? fmt(jordanMkt)   : '—');
+  setWF('wf-ty-mkt',       tyMkt       ? fmt(tyMkt)       : '—');
+  setWF('wf-ty-labor',     tyLabor     ? fmt(tyLabor)     : '—');
+  setWF('wf-net-dist',     grossRev    ? fmt(netDist)     : '—');
+  setWF('wf-anchor-split', grossRev    ? fmt(halfDist)    : '—');
+  setWF('wf-landon-split', grossRev    ? fmt(halfDist)    : '—');
+  setWF('wf-anchor-total', grossRev    ? fmt(anchorTotal) : '—');
+  setWF('wf-landon-total', grossRev    ? fmt(landonTotal) : '—');
+  setWF('wf-total-dist',   grossRev    ? fmt(totalDist)   : '—');
+
+  document.getElementById('wf-ty-hours-label').textContent = tyHours || '0';
+
+  // ── BRRRR Calcs ──
+  if (dealType === 'brrrr') {
+    const monthlyRent   = parseMoney(document.getElementById('monthly-rent').value);
+    const monthlyExp    = parseMoney(document.getElementById('monthly-exp').value);
+    const monthlyPmt    = parseMoney(document.getElementById('monthly-payment').value);
+    const refiArv       = parseMoney(document.getElementById('refi-arv').value);
+
+    const netMonthlyCF  = monthlyRent - monthlyExp - monthlyPmt;
+    const annualCF      = netMonthlyCF * 12;
+    const refiLTV       = refiArv * 0.75;
+    const cashOut       = refiLTV - allIn;
+    const dscr          = monthlyPmt > 0 ? monthlyRent / monthlyPmt : 0;
+
+    setCalc('net-monthly-cf', monthlyRent ? fmt(netMonthlyCF) : '—',
+            netMonthlyCF >= 0 ? 'green' : 'red');
+    setCalc('annual-cf',      monthlyRent ? fmt(annualCF)     : '—',
+            annualCF >= 0 ? 'green' : 'red');
+    setCalc('refi-ltv',       refiArv     ? fmt(refiLTV)      : '—', 'gold');
+    setCalc('cash-out',       refiArv     ? fmt(cashOut)      : '—',
+            cashOut >= 0 ? 'green' : 'red');
+
+    if (dscr > 0) {
+      setCalc('dscr-val', dscr.toFixed(2) + 'x', dscr >= 1.25 ? 'green' : 'red');
+    } else {
+      setCalc('dscr-val', '—', '');
+    }
+  }
+
+  // ── VR Calcs ──
+  if (dealType === 'vr') {
+    const nightly      = parseMoney(document.getElementById('vr-nightly').value);
+    const occupancy    = parseMoney(document.getElementById('vr-occupancy').value) || 65;
+    const fixedCosts   = parseMoney(document.getElementById('vr-fixed-costs').value);
+    const market       = document.getElementById('vr-market').value;
+
+    const grossMonthly = nightly * (occupancy / 100) * 30;
+    const platformFee  = grossMonthly * 0.03;
+    const pmFee        = grossMonthly * 0.25;
+    const netMonthlyRev= grossMonthly - platformFee - pmFee;
+    const netCashflow  = netMonthlyRev - fixedCosts;
+    const annualCF     = netCashflow * 12;
+    const annualGross  = grossMonthly * 12;
+
+    setCalc('vr-gross-monthly',  nightly ? fmt(grossMonthly) : '—', 'gold');
+    setCalc('vr-platform-fee',   nightly ? fmt(platformFee)  : '—', '');
+    setCalc('vr-pm-fee',         nightly ? fmt(pmFee)        : '—', '');
+    setCalc('vr-net-monthly-rev',nightly ? fmt(netMonthlyRev): '—',
+            netMonthlyRev >= 0 ? 'green' : 'red');
+    setCalc('vr-net-cashflow',   nightly ? fmt(netCashflow)  : '—',
+            netCashflow >= 0 ? 'green' : 'red');
+    setCalc('vr-annual-cashflow',nightly ? fmt(annualCF)     : '—',
+            annualCF >= 0 ? 'green' : 'red');
+    setCalc('vr-annual-gross',   nightly ? fmt(annualGross)  : '—', 'gold');
+
+    // ARV Rule for VR
+    if (allIn > 0 && arv > 0) {
+      const pct = (allIn / arv) * 100;
+      setCalc('vr-arv-rule', fmtPct(pct) + (pct <= 70 ? ' — GO (≤70%)' : ' — EXCEEDS 70%'), pct <= 70 ? 'green' : 'red');
+    } else {
+      setCalc('vr-arv-rule', '—', '');
+    }
+
+    // Market badge display
+    const badgeEl = document.getElementById('vr-market-badge-display');
+    if (badgeEl) badgeEl.innerHTML = getVRMarketBadge(market);
+  }
+}
+
+/* ── Init UI ─────────────────────────────────────────────────── */
+updateJeffPhaseUI();
+recalc();
+</script>
+</body>
+</html>
