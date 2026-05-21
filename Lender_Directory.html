@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood Renovations — Lender Directory</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
+    --green: #4caf50; --red: #e53935; --yellow: #f9a825; --blue: #42a5f5;
+  }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  .header {
+    background: linear-gradient(160deg, #0a0a0a 0%, #141008 50%, #1a1408 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 32px 32px 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .logo-box {
+    width: 48px; height: 48px; background: var(--gold); border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 900; font-size: 18px; color: #0a0a0a; flex-shrink: 0;
+  }
+  .header-text h1 { font-size: 22px; font-weight: 800; }
+  .header-text p { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+  .toolbar {
+    background: var(--surface); border-bottom: 1px solid var(--border);
+    padding: 14px 24px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  .toolbar input[type="text"] {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    border-radius: 6px; padding: 8px 12px; font-size: 13px; width: 240px; outline: none;
+  }
+  .toolbar input[type="text"]:focus { border-color: var(--gold); }
+  .toolbar select {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none; cursor: pointer;
+  }
+  .btn {
+    padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
+    cursor: pointer; border: none; transition: opacity .15s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn-gold { background: var(--gold); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--cream); }
+  .btn-outline:hover { border-color: var(--gold); }
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+
+  .container { max-width: 1300px; margin: 0 auto; padding: 28px 24px 60px; }
+
+  .stats-row { display: flex; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+  .stat-pill {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 10px 18px; font-size: 12px; color: var(--muted);
+  }
+  .stat-pill strong { color: var(--cream); font-size: 18px; display: block; margin-bottom: 2px; }
+
+  .lender-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(380px, 1fr)); gap: 16px; }
+
+  .lender-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 20px 22px; position: relative; transition: border-color .2s;
+  }
+  .lender-card:hover { border-color: #3a3a3a; }
+  .lender-card.preferred { border-color: var(--gold); }
+
+  .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; gap: 10px; }
+  .card-lender-name { font-size: 16px; font-weight: 800; color: var(--cream); }
+  .card-contact-name { font-size: 12px; color: var(--gold); margin-top: 3px; }
+  .card-type-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+
+  .badge {
+    display: inline-block; font-size: 10px; font-weight: 700; padding: 3px 8px;
+    border-radius: 20px; text-transform: uppercase; letter-spacing: .04em;
+  }
+  .badge-hml { background: rgba(184,147,62,.15); color: var(--gold); border: 1px solid rgba(184,147,62,.3); }
+  .badge-broker { background: rgba(66,165,245,.15); color: var(--blue); border: 1px solid rgba(66,165,245,.3); }
+  .badge-private { background: rgba(76,175,80,.15); color: var(--green); border: 1px solid rgba(76,175,80,.3); }
+  .badge-active { background: rgba(76,175,80,.12); color: var(--green); border: 1px solid rgba(76,175,80,.25); }
+  .badge-prospect { background: rgba(249,168,37,.12); color: var(--yellow); border: 1px solid rgba(249,168,37,.25); }
+  .badge-used { background: rgba(184,147,62,.12); color: var(--gold); border: 1px solid rgba(184,147,62,.25); }
+  .badge-inactive { background: rgba(136,136,136,.1); color: var(--muted); border: 1px solid var(--border); }
+
+  .terms-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px;
+  }
+  .term-box {
+    background: var(--surface2); border-radius: 7px; padding: 9px 10px; text-align: center;
+  }
+  .term-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 3px; }
+  .term-value { font-size: 14px; font-weight: 700; color: var(--cream); }
+  .term-value.gold { color: var(--gold); }
+
+  .contact-row { display: flex; align-items: center; gap: 16px; margin-bottom: 12px; flex-wrap: wrap; }
+  .contact-item { font-size: 13px; }
+  .contact-item a { color: var(--gold); text-decoration: none; }
+  .contact-item a:hover { text-decoration: underline; }
+
+  .notes-box {
+    background: var(--surface2); border-radius: 7px; padding: 11px 13px;
+    border-left: 3px solid var(--gold); margin-bottom: 14px;
+  }
+  .notes-title { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin-bottom: 7px; }
+  .notes-list { list-style: none; }
+  .notes-list li { font-size: 12px; color: var(--cream); line-height: 1.7; padding-left: 12px; position: relative; }
+  .notes-list li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-size: 10px; top: 1px; }
+
+  .deal-note {
+    background: rgba(184,147,62,.06); border: 1px solid rgba(184,147,62,.2);
+    border-radius: 7px; padding: 10px 13px; margin-bottom: 14px; font-size: 12px;
+    color: var(--cream); line-height: 1.6;
+  }
+  .deal-note-label { font-size: 10px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+
+  .card-actions { display: flex; gap: 8px; }
+
+  .preferred-star {
+    position: absolute; top: 14px; right: 52px;
+    font-size: 16px; cursor: pointer; opacity: .3; transition: opacity .15s;
+  }
+  .preferred-star:hover { opacity: 1; }
+  .lender-card.preferred .preferred-star { opacity: 1; }
+
+  /* Modal */
+  .modal-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,.8); z-index: 200;
+    align-items: center; justify-content: center; padding: 20px;
+  }
+  .modal-overlay.open { display: flex; }
+  .modal {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 28px; width: 100%; max-width: 620px; max-height: 92vh;
+    overflow-y: auto; position: relative;
+  }
+  .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 20px; }
+  .modal-close {
+    position: absolute; top: 16px; right: 16px;
+    background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer;
+  }
+  .modal-close:hover { color: var(--cream); }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-grid .full { grid-column: 1 / -1; }
+  .field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+  .field input, .field select, .field textarea {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 13px;
+    font-family: inherit; outline: none;
+  }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+  .field textarea { resize: vertical; min-height: 80px; }
+
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  .empty-state { text-align: center; padding: 60px 24px; color: var(--muted); }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+
+  .section-label {
+    font-size: 10px; color: var(--gold); text-transform: uppercase;
+    letter-spacing: 2px; font-weight: 700; margin: 0 0 14px;
+    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .section-count { color: var(--muted); font-size: 11px; letter-spacing: 0; font-weight: 400; }
+
+  footer { text-align: center; padding: 24px; font-size: 11px; color: #444; border-top: 1px solid var(--border); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-box">IW</div>
+  <div class="header-text">
+    <h1>Lender Directory</h1>
+    <p>Ironwood Renovations — Hard Money, Private &amp; Bridge Lenders</p>
+  </div>
+</div>
+
+<div class="toolbar">
+  <input type="text" id="search-input" placeholder="Search lender, contact, notes…" oninput="renderAll()"/>
+  <select id="type-filter" onchange="renderAll()">
+    <option value="">All Types</option>
+    <option value="Hard Money">Hard Money</option>
+    <option value="Broker">Broker</option>
+    <option value="Private">Private</option>
+  </select>
+  <select id="status-filter" onchange="renderAll()">
+    <option value="">All Statuses</option>
+    <option value="prospect">Prospect</option>
+    <option value="active">Active</option>
+    <option value="used">Previously Used</option>
+    <option value="inactive">Inactive</option>
+  </select>
+  <button class="btn btn-gold" onclick="openModal()">+ Add Lender</button>
+  <button class="btn btn-outline" onclick="exportCSV()">Export CSV</button>
+</div>
+
+<div class="container">
+  <div class="stats-row" id="stats-row"></div>
+  <div class="section-label" id="results-label">All Lenders <span class="section-count" id="results-count"></span></div>
+  <div class="lender-grid" id="lender-root"></div>
+</div>
+
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2 id="modal-title">Add Lender</h2>
+    <div class="form-grid">
+      <div class="field full">
+        <label>Lender / Company Name *</label>
+        <input type="text" id="f-name" placeholder="e.g. Ground Floor"/>
+      </div>
+      <div class="field">
+        <label>Contact Name</label>
+        <input type="text" id="f-contact" placeholder="e.g. Ben Spinek"/>
+      </div>
+      <div class="field">
+        <label>Phone</label>
+        <input type="text" id="f-phone" placeholder="e.g. 470-228-2326"/>
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input type="text" id="f-email" placeholder="contact@lender.com"/>
+      </div>
+      <div class="field">
+        <label>Type</label>
+        <select id="f-type">
+          <option value="Hard Money">Hard Money</option>
+          <option value="Broker">Broker</option>
+          <option value="Private">Private</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Status</label>
+        <select id="f-status">
+          <option value="prospect">Prospect</option>
+          <option value="active">Active</option>
+          <option value="used">Previously Used</option>
+          <option value="inactive">Inactive</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Interest Rate</label>
+        <input type="text" id="f-rate" placeholder="e.g. 11%–15% or 9.5%"/>
+      </div>
+      <div class="field">
+        <label>Points / Origination</label>
+        <input type="text" id="f-points" placeholder="e.g. 2 points"/>
+      </div>
+      <div class="field">
+        <label>LTV / ARV %</label>
+        <input type="text" id="f-ltv" placeholder="e.g. 70%"/>
+      </div>
+      <div class="field">
+        <label>Term (months)</label>
+        <input type="text" id="f-term" placeholder="e.g. 12–18 months"/>
+      </div>
+      <div class="field full">
+        <label>Deal / Project Notes (ARV, build cost, special terms)</label>
+        <input type="text" id="f-deal" placeholder="e.g. ARV $420K · Build cost $280K–$295K all-in"/>
+      </div>
+      <div class="field full">
+        <label>Key Terms &amp; Requirements (one per line)</label>
+        <textarea id="f-notes" placeholder="e.g. Mortgage payments deferred until sale&#10;Max 18 months&#10;Land leveraged back to us"></textarea>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveLender()">Save Lender</button>
+    </div>
+  </div>
+</div>
+
+<footer>Ironwood Renovations · Lender Directory · Internal Use Only · Atlanta Metro</footer>
+
+<script>
+const STORAGE_KEY = 'ironwood-lenders-v1';
+let lenders = [];
+let editingId = null;
+
+const DEFAULTS = [
+  {
+    name: 'Duke Allen & Co',
+    contact: 'Joseph Castaneda',
+    phone: '305-522-6126',
+    email: '',
+    type: 'Hard Money',
+    status: 'prospect',
+    rate: '11%–15%',
+    points: '',
+    ltv: '70%',
+    term: '3–5 months',
+    deal: '',
+    notes: 'Refinance us out of land that was paid cash for\nFund 100% of construction cost\nLand will be leveraged back to us',
+    preferred: false,
+  },
+  {
+    name: 'Ground Floor',
+    contact: 'Ben Spinek',
+    phone: '470-228-2326',
+    email: '',
+    type: 'Hard Money',
+    status: 'prospect',
+    rate: '9.5%',
+    points: '',
+    ltv: '70%',
+    term: '3.5 months',
+    deal: 'ARV $420K · Build needs to be $280K–$295K all-in',
+    notes: 'Mortgage payments deferred until sale of home (~$3,000/mo in interest)\nMax 18 months\nDoes not finance sewer tap\nLand will be leveraged back to us',
+    preferred: false,
+  },
+  {
+    name: 'HK Lending',
+    contact: 'LaVon Wood',
+    phone: '',
+    email: '',
+    type: 'Broker',
+    status: 'prospect',
+    rate: '10%–14%',
+    points: '2.5–3.5',
+    ltv: '70%',
+    term: '12 months (extendable)',
+    deal: '',
+    notes: '6 months of interest in reserves required\nMax term 12 months — can be extended\nClosing costs 2%–3%',
+    preferred: false,
+  },
+  {
+    name: 'Fund the Flip',
+    contact: 'Dylan',
+    phone: '216-815-1723',
+    email: '',
+    type: 'Hard Money',
+    status: 'prospect',
+    rate: '10.99%–11.49%',
+    points: '2 points',
+    ltv: '65%–70%',
+    term: '',
+    deal: '$42K land + $378K build cost · $4,000 cash to close',
+    notes: 'GC license required between us and the builder\n3 months interest reserves\nOnly pay interest on outstanding principal',
+    preferred: false,
+  },
+  {
+    name: 'Vi Capital Lending Group',
+    contact: 'Matthew Coleman',
+    phone: '678-870-4331',
+    email: '',
+    type: 'Broker',
+    status: 'prospect',
+    rate: '',
+    points: '',
+    ltv: '',
+    term: '',
+    deal: '',
+    notes: '',
+    preferred: false,
+  },
+];
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function load() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved) { lenders = JSON.parse(saved); }
+    else { lenders = DEFAULTS.map(l => ({ ...l, id: uid() })); save(); }
+  } catch(e) { lenders = []; }
+}
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(lenders)); }
+function esc(v) { return (v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function typeBadge(t) {
+  if (t === 'Hard Money') return '<span class="badge badge-hml">Hard Money</span>';
+  if (t === 'Broker') return '<span class="badge badge-broker">Broker</span>';
+  return '<span class="badge badge-private">Private</span>';
+}
+function statusBadge(s) {
+  if (s === 'active') return '<span class="badge badge-active">Active</span>';
+  if (s === 'prospect') return '<span class="badge badge-prospect">Prospect</span>';
+  if (s === 'used') return '<span class="badge badge-used">Used</span>';
+  return '<span class="badge badge-inactive">Inactive</span>';
+}
+
+function renderCard(l) {
+  const noteLines = (l.notes||'').split('\n').map(s => s.trim()).filter(Boolean);
+  const notesHTML = noteLines.length
+    ? `<div class="notes-box"><div class="notes-title">Key Terms &amp; Requirements</div><ul class="notes-list">${noteLines.map(n => `<li>${esc(n)}</li>`).join('')}</ul></div>`
+    : '';
+  const dealHTML = l.deal
+    ? `<div class="deal-note"><div class="deal-note-label">Deal / Project Notes</div>${esc(l.deal)}</div>`
+    : '';
+  const phoneHTML = l.phone
+    ? `<span class="contact-item">📞 <a href="tel:${l.phone.replace(/\D/g,'')}">${esc(l.phone)}</a></span>`
+    : '';
+  const emailHTML = l.email
+    ? `<span class="contact-item">✉ <a href="mailto:${esc(l.email)}">${esc(l.email)}</a></span>`
+    : '';
+
+  return `
+    <div class="lender-card${l.preferred?' preferred':''}" id="card-${l.id}">
+      <span class="preferred-star" onclick="togglePreferred('${l.id}')" title="Mark as preferred">★</span>
+      <div class="card-header">
+        <div>
+          <div class="card-lender-name">${esc(l.name)}</div>
+          ${l.contact ? `<div class="card-contact-name">${esc(l.contact)}</div>` : ''}
+        </div>
+        <div class="card-type-wrap">
+          ${typeBadge(l.type)}
+          ${statusBadge(l.status)}
+        </div>
+      </div>
+      <div class="terms-grid">
+        <div class="term-box">
+          <div class="term-label">Rate</div>
+          <div class="term-value gold">${esc(l.rate||'—')}</div>
+        </div>
+        <div class="term-box">
+          <div class="term-label">LTV</div>
+          <div class="term-value">${esc(l.ltv||'—')}</div>
+        </div>
+        <div class="term-box">
+          <div class="term-label">Points</div>
+          <div class="term-value">${esc(l.points||'—')}</div>
+        </div>
+        <div class="term-box" style="grid-column:1/-1">
+          <div class="term-label">Term</div>
+          <div class="term-value">${esc(l.term||'—')}</div>
+        </div>
+      </div>
+      ${(phoneHTML || emailHTML) ? `<div class="contact-row">${phoneHTML}${emailHTML}</div>` : ''}
+      ${dealHTML}
+      ${notesHTML}
+      <div class="card-actions">
+        <button class="btn btn-outline btn-sm" onclick="openModal('${l.id}')">Edit</button>
+        <button class="btn btn-outline btn-sm" style="color:var(--red);border-color:rgba(229,57,53,.3);" onclick="deleteLender('${l.id}')">Delete</button>
+      </div>
+    </div>`;
+}
+
+function filtered() {
+  const q = (document.getElementById('search-input').value||'').toLowerCase();
+  const type = document.getElementById('type-filter').value;
+  const status = document.getElementById('status-filter').value;
+  return lenders.filter(l => {
+    const matchQ = !q || [l.name, l.contact, l.notes, l.deal, l.phone].join(' ').toLowerCase().includes(q);
+    const matchType = !type || l.type === type;
+    const matchStatus = !status || l.status === status;
+    return matchQ && matchType && matchStatus;
+  });
+}
+
+function renderStats() {
+  const total = lenders.length;
+  const active = lenders.filter(l => l.status === 'active').length;
+  const hml = lenders.filter(l => l.type === 'Hard Money').length;
+  const brokers = lenders.filter(l => l.type === 'Broker').length;
+  const preferred = lenders.filter(l => l.preferred).length;
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-pill"><strong>${total}</strong>Total Lenders</div>
+    <div class="stat-pill"><strong>${hml}</strong>Hard Money</div>
+    <div class="stat-pill"><strong>${brokers}</strong>Brokers</div>
+    ${active ? `<div class="stat-pill"><strong style="color:var(--green)">${active}</strong>Active</div>` : ''}
+    ${preferred ? `<div class="stat-pill"><strong style="color:var(--gold)">${preferred}</strong>Preferred</div>` : ''}
+  `;
+}
+
+function renderAll() {
+  renderStats();
+  const list = filtered();
+  const root = document.getElementById('lender-root');
+  document.getElementById('results-count').textContent = list.length + ' lender' + (list.length !== 1 ? 's' : '');
+
+  if (!lenders.length) {
+    root.innerHTML = `<div class="empty-state"><div class="icon">🏦</div><p>No lenders yet.<br/>Click <strong>+ Add Lender</strong> to get started.</p></div>`;
+    return;
+  }
+  if (!list.length) {
+    root.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><p>No lenders match your search.</p></div>`;
+    return;
+  }
+
+  const preferred = list.filter(l => l.preferred);
+  const rest = list.filter(l => !l.preferred);
+  root.innerHTML = [...preferred, ...rest].map(renderCard).join('');
+}
+
+function openModal(id) {
+  editingId = id || null;
+  const l = id ? lenders.find(x => x.id === id) : null;
+  document.getElementById('modal-title').textContent = l ? 'Edit Lender' : 'Add Lender';
+  document.getElementById('f-name').value = l ? l.name : '';
+  document.getElementById('f-contact').value = l ? (l.contact||'') : '';
+  document.getElementById('f-phone').value = l ? (l.phone||'') : '';
+  document.getElementById('f-email').value = l ? (l.email||'') : '';
+  document.getElementById('f-type').value = l ? (l.type||'Hard Money') : 'Hard Money';
+  document.getElementById('f-status').value = l ? (l.status||'prospect') : 'prospect';
+  document.getElementById('f-rate').value = l ? (l.rate||'') : '';
+  document.getElementById('f-points').value = l ? (l.points||'') : '';
+  document.getElementById('f-ltv').value = l ? (l.ltv||'') : '';
+  document.getElementById('f-term').value = l ? (l.term||'') : '';
+  document.getElementById('f-deal').value = l ? (l.deal||'') : '';
+  document.getElementById('f-notes').value = l ? (l.notes||'') : '';
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('f-name').focus(), 50);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function saveLender() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { alert('Lender name is required.'); return; }
+  const data = {
+    name,
+    contact: document.getElementById('f-contact').value.trim(),
+    phone: document.getElementById('f-phone').value.trim(),
+    email: document.getElementById('f-email').value.trim(),
+    type: document.getElementById('f-type').value,
+    status: document.getElementById('f-status').value,
+    rate: document.getElementById('f-rate').value.trim(),
+    points: document.getElementById('f-points').value.trim(),
+    ltv: document.getElementById('f-ltv').value.trim(),
+    term: document.getElementById('f-term').value.trim(),
+    deal: document.getElementById('f-deal').value.trim(),
+    notes: document.getElementById('f-notes').value.trim(),
+  };
+  if (editingId) {
+    const idx = lenders.findIndex(l => l.id === editingId);
+    lenders[idx] = { ...lenders[idx], ...data };
+  } else {
+    lenders.push({ id: uid(), preferred: false, ...data });
+  }
+  save(); closeModal(); renderAll();
+}
+
+function deleteLender(id) {
+  const l = lenders.find(x => x.id === id);
+  if (!confirm(`Delete ${l.name}?`)) return;
+  lenders = lenders.filter(x => x.id !== id);
+  save(); renderAll();
+}
+
+function togglePreferred(id) {
+  const l = lenders.find(x => x.id === id);
+  if (l) { l.preferred = !l.preferred; save(); renderAll(); }
+}
+
+function exportCSV() {
+  if (!lenders.length) { alert('No lenders to export.'); return; }
+  const cols = ['Lender','Contact','Phone','Email','Type','Status','Rate','Points','LTV','Term','Deal Notes','Key Terms'];
+  const rows = lenders.map(l => [
+    l.name, l.contact||'', l.phone||'', l.email||'', l.type||'', l.status||'',
+    l.rate||'', l.points||'', l.ltv||'', l.term||'', l.deal||'',
+    (l.notes||'').replace(/\n/g,' | ')
+  ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
+  const csv = [cols.join(','), ...rows].join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = 'Ironwood_Lenders.csv';
+  a.click();
+}
+
+document.getElementById('modal-overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('modal-overlay')) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+load();
+renderAll();
+</script>
+</body>
+</html>
