@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood Renovations — New Construction Pipeline</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e; --surface3: #242424;
+    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
+    --green: #4caf50; --red: #e53935; --yellow: #f9a825; --blue: #42a5f5;
+  }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(160deg, #0a0a0a 0%, #141008 60%, #1a1408 100%);
+    border-bottom: 2px solid var(--gold); padding: 32px 32px 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .logo-box { width: 48px; height: 48px; background: var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #0a0a0a; flex-shrink: 0; }
+  .header-text h1 { font-size: 22px; font-weight: 800; }
+  .header-text p { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+  /* ── TABS ── */
+  .tabs { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; gap: 0; padding: 0 24px; }
+  .tab { padding: 14px 20px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; white-space: nowrap; }
+  .tab:hover { color: var(--cream); }
+  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  /* ── SHARED ── */
+  .container { max-width: 1300px; margin: 0 auto; padding: 28px 24px 60px; }
+  .btn { padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: opacity .15s; }
+  .btn:hover { opacity: .85; }
+  .btn-gold { background: var(--gold); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--cream); }
+  .btn-outline:hover { border-color: var(--gold); }
+  .btn-sm { padding: 5px 10px; font-size: 11px; }
+  .btn-red { background: transparent; border: 1px solid rgba(229,57,53,.3); color: var(--red); }
+
+  .stats-row { display: flex; gap: 14px; margin-bottom: 24px; flex-wrap: wrap; }
+  .stat-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 10px 18px; font-size: 12px; color: var(--muted); }
+  .stat-pill strong { display: block; font-size: 20px; margin-bottom: 2px; }
+
+  .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 24px; }
+  .toolbar select { background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none; cursor: pointer; }
+
+  /* ── PIPELINE CARDS ── */
+  .pipeline-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 18px; }
+
+  .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; transition: border-color .2s; }
+  .project-card:hover { border-color: #3a3a3a; }
+
+  .card-phase-bar { height: 4px; background: var(--border); }
+  .card-phase-bar .fill { height: 100%; border-radius: 0; transition: width .4s; }
+
+  .card-body { padding: 18px 20px; }
+  .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; gap: 10px; }
+  .card-title { font-size: 16px; font-weight: 800; }
+  .card-address { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+  .phase-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; flex-shrink: 0; }
+  .phase-planning  { background: rgba(66,165,245,.12); color: var(--blue); border: 1px solid rgba(66,165,245,.25); }
+  .phase-building  { background: rgba(249,168,37,.12); color: var(--yellow); border: 1px solid rgba(249,168,37,.25); }
+  .phase-seasoning { background: rgba(184,147,62,.12); color: var(--gold); border: 1px solid rgba(184,147,62,.25); }
+  .phase-refi      { background: rgba(76,175,80,.12); color: var(--green); border: 1px solid rgba(76,175,80,.25); }
+  .phase-complete  { background: rgba(136,136,136,.1); color: var(--muted); border: 1px solid var(--border); }
+
+  .metrics-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 14px; }
+  .metric-box { background: var(--surface2); border-radius: 7px; padding: 9px 10px; text-align: center; }
+  .metric-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 3px; }
+  .metric-value { font-size: 14px; font-weight: 700; }
+  .metric-value.gold { color: var(--gold); }
+  .metric-value.green { color: var(--green); }
+  .metric-value.red { color: var(--red); }
+
+  .timeline-bar { margin-bottom: 14px; }
+  .timeline-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; display: flex; justify-content: space-between; }
+  .tbar { background: var(--surface2); border-radius: 4px; height: 8px; overflow: hidden; }
+  .tbar-fill { height: 100%; border-radius: 4px; background: var(--gold); transition: width .4s; }
+  .tbar-fill.green { background: var(--green); }
+  .tbar-fill.red { background: var(--red); }
+
+  .draws-section { margin-bottom: 14px; }
+  .draws-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; font-weight: 700; }
+  .draw-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 12px; }
+  .draw-check { width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; }
+  .draw-check.done { background: var(--green); border-color: var(--green); color: #fff; }
+  .draw-label { flex: 1; color: var(--cream); }
+  .draw-amount { color: var(--gold); font-weight: 600; white-space: nowrap; }
+
+  .notes-box { background: var(--surface2); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; padding: 9px 12px; font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+
+  .card-actions { display: flex; gap: 8px; }
+
+  /* ── STRATEGY DOC ── */
+  .strategy-doc { max-width: 860px; }
+  .strategy-doc h2 { font-size: 24px; font-weight: 900; color: var(--cream); margin-bottom: 6px; }
+  .strategy-doc .subtitle { font-size: 13px; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 32px; }
+  .strategy-doc h3 { font-size: 16px; font-weight: 800; color: var(--gold); margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .strategy-doc h4 { font-size: 14px; font-weight: 700; color: var(--cream); margin: 20px 0 8px; }
+  .strategy-doc p { font-size: 14px; line-height: 1.85; color: #d0c8bc; margin-bottom: 14px; }
+  .strategy-doc ul { margin: 0 0 14px 20px; }
+  .strategy-doc ul li { font-size: 14px; line-height: 1.85; color: #d0c8bc; margin-bottom: 4px; }
+  .strategy-doc ul li strong { color: var(--cream); }
+
+  .callout { background: rgba(184,147,62,.07); border: 1px solid rgba(184,147,62,.2); border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+  .callout p { margin-bottom: 0; font-size: 13px; }
+
+  .numbers-table { width: 100%; border-collapse: collapse; margin: 16px 0 20px; font-size: 13px; }
+  .numbers-table th { background: var(--surface2); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  .numbers-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--cream); }
+  .numbers-table tr:last-child td { border-bottom: none; }
+  .numbers-table .highlight td { background: rgba(184,147,62,.06); font-weight: 700; }
+  .numbers-table .gold { color: var(--gold); font-weight: 700; }
+  .numbers-table .green { color: var(--green); font-weight: 700; }
+
+  .cycle-flow { display: flex; flex-wrap: wrap; gap: 0; margin: 20px 0; }
+  .cycle-step { background: var(--surface2); border: 1px solid var(--border); padding: 14px 16px; flex: 1; min-width: 140px; position: relative; }
+  .cycle-step:not(:last-child)::after { content: '→'; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 16px; z-index: 1; }
+  .cycle-step:first-child { border-radius: 8px 0 0 8px; }
+  .cycle-step:last-child { border-radius: 0 8px 8px 0; }
+  .cycle-num { font-size: 10px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+  .cycle-title { font-size: 13px; font-weight: 700; color: var(--cream); margin-bottom: 3px; }
+  .cycle-time { font-size: 11px; color: var(--muted); }
+
+  .year-table { width: 100%; border-collapse: collapse; margin: 16px 0 20px; font-size: 13px; }
+  .year-table th { background: var(--surface2); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  .year-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--cream); vertical-align: top; }
+  .year-table tr:last-child td { border-bottom: none; }
+  .year-table .section-row td { background: rgba(184,147,62,.05); color: var(--gold); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+
+  .risk-box { background: rgba(229,57,53,.05); border: 1px solid rgba(229,57,53,.2); border-radius: 8px; padding: 16px 20px; margin: 16px 0; }
+  .risk-box .risk-title { font-size: 12px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
+  .risk-box p { font-size: 13px; margin-bottom: 0; color: #d0c8bc; }
+
+  .action-list { background: var(--surface2); border-radius: 8px; padding: 18px 20px; margin: 20px 0; }
+  .action-list .action-title { font-size: 12px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+  .action-item { display: flex; gap: 12px; margin-bottom: 10px; font-size: 13px; line-height: 1.5; }
+  .action-num { background: var(--gold); color: #0a0a0a; font-weight: 900; font-size: 11px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .action-text { color: var(--cream); }
+  .action-text span { color: var(--muted); font-size: 12px; }
+
+  /* ── MODAL ── */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.82); z-index: 200; align-items: center; justify-content: center; padding: 20px; }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; width: 100%; max-width: 680px; max-height: 92vh; overflow-y: auto; position: relative; }
+  .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 20px; }
+  .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer; }
+  .modal-close:hover { color: var(--cream); }
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-grid .full { grid-column: 1/-1; }
+  .field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+  .field input, .field select, .field textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit; outline: none; }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+  .field textarea { resize: vertical; min-height: 70px; }
+  .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
+
+  .section-divider { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; font-weight: 700; padding: 6px 0 10px; margin-top: 6px; border-top: 1px solid var(--border); }
+
+  footer { text-align: center; padding: 24px; font-size: 11px; color: #444; border-top: 1px solid var(--border); }
+
+  @media print {
+    .tabs, .toolbar, .card-actions, .btn, footer { display: none !important; }
+    .tab-content { display: block !important; }
+    body { background: #fff; color: #111; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-box">IW</div>
+  <div class="header-text">
+    <h1>New Construction Pipeline</h1>
+    <p>Ironwood Renovations — Build · Rent · Refi · Repeat</p>
+  </div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('pipeline')">Pipeline Tracker</div>
+  <div class="tab" onclick="switchTab('strategy')">Strategy Document</div>
+</div>
+
+<!-- ════════════════ PIPELINE TRACKER ════════════════ -->
+<div id="tab-pipeline" class="tab-content active">
+<div class="container">
+  <div class="stats-row" id="stats-row"></div>
+  <div class="toolbar">
+    <select id="phase-filter" onchange="renderPipeline()">
+      <option value="">All Phases</option>
+      <option value="Planning">Planning</option>
+      <option value="Building">Building</option>
+      <option value="Seasoning">Seasoning / Leasing</option>
+      <option value="Refi">Refinancing</option>
+      <option value="Complete">Complete</option>
+    </select>
+    <button class="btn btn-gold" onclick="openModal()">+ Add Project</button>
+    <button class="btn btn-outline" onclick="exportCSV()">Export CSV</button>
+  </div>
+  <div class="pipeline-grid" id="pipeline-root"></div>
+</div>
+</div>
+
+<!-- ════════════════ STRATEGY DOCUMENT ════════════════ -->
+<div id="tab-strategy" class="tab-content">
+<div class="container">
+<div class="strategy-doc">
+
+  <h2>New Construction BRRRR Strategy</h2>
+  <div class="subtitle">Ironwood Renovations · Build · Rent · Refinance · Repeat · Every 4 Months</div>
+
+  <h3>Overview</h3>
+  <p>Ironwood Renovations' new construction strategy is built around one repeating cycle: build a duplex, place quality tenants, refinance at appraised value, pull capital back out, and use it to fund the next build. By targeting a four-month construction timeline and a DSCR cash-out refinance at completion, the company aims to recycle the same capital base across multiple builds — growing a rental portfolio without continuously raising new equity.</p>
+  <p>Each completed duplex remains in the Ironwood portfolio as a long-term income-producing asset, managed through Ironwood Property Management LLC. The equity built into each property becomes the foundation for future leverage — lines of credit, blanket mortgages, and portfolio loans — as the portfolio scales.</p>
+
+  <div class="callout">
+    <div class="callout-label">Core Thesis</div>
+    <p>Build once. Hold forever. Recycle capital. Let compounding do the rest. The goal is not to sell — it is to own as many doors as possible while the refi proceeds fund the next build.</p>
+  </div>
+
+  <h3>The Four-Month Build Cycle</h3>
+  <p>The entire strategy depends on one repeating loop. Jeff Sarabia executes the build while Ty Jackson manages lender relationships, land acquisition, and the refinance process. Jordan Sarabia handles tenant marketing so units are leased before the certificate of occupancy is issued. Every actor in the team has a defined role in each phase.</p>
+
+  <div class="cycle-flow">
+    <div class="cycle-step"><div class="cycle-num">Phase 1</div><div class="cycle-title">Land & Permits</div><div class="cycle-time">Month 0–1</div></div>
+    <div class="cycle-step"><div class="cycle-num">Phase 2</div><div class="cycle-title">Construction</div><div class="cycle-time">Month 1–4</div></div>
+    <div class="cycle-step"><div class="cycle-num">Phase 3</div><div class="cycle-title">CO & Leasing</div><div class="cycle-time">Month 4–5</div></div>
+    <div class="cycle-step"><div class="cycle-num">Phase 4</div><div class="cycle-title">Seasoning</div><div class="cycle-time">Month 5–6</div></div>
+    <div class="cycle-step"><div class="cycle-num">Phase 5</div><div class="cycle-title">Refi & Recycle</div><div class="cycle-time">Month 6–7</div></div>
+  </div>
+
+  <h4>Phase 1 — Land Acquisition and Permits (Month 0–1)</h4>
+  <p>The lot must be identified, under contract, or already owned before breaking ground. Using land that was purchased for cash as the first collateral position gives Ironwood the ability to leverage that equity through the hard money lender — receiving the land's value back as part of the construction draw. Permits must be pulled before Month 1 so construction starts on time. Any permit delays push the entire cycle back and increase carrying costs.</p>
+
+  <h4>Phase 2 — Construction (Month 1–4)</h4>
+  <p>Jeff Sarabia leads construction with Ty Jackson providing field oversight. The build budget must stay within $280,000–$295,000 all-in to make the refinance math work. Every dollar over budget either reduces the capital recycled at refi or requires additional out-of-pocket capital to close the gap. Hard money draws are released in stages tied to construction milestones — foundation, framing, mechanical rough-in, drywall, finish work, and final inspection. Draw requests must be submitted on time and inspections passed promptly to avoid delays in funding.</p>
+
+  <h4>Phase 3 — Certificate of Occupancy and Tenant Placement (Month 4–5)</h4>
+  <p>Jordan Sarabia begins marketing both units no later than Month 3 — before construction is complete. The goal is to have signed leases in hand at or before the certificate of occupancy is issued. Lenders want to see a rent roll, not projections. Having tenants in place before applying for the refinance strengthens the appraisal, satisfies DSCR underwriting requirements, and eliminates vacancy risk during the seasoning period. Target tenants: credit score 620 or above, income at least three times monthly rent, verifiable rental history.</p>
+
+  <h4>Phase 4 — Seasoning (Month 5–6)</h4>
+  <p>Most DSCR lenders require the property to be owned and stabilized for three to six months before approving a cash-out refinance. During this period, the duplex is cash-flowing — rent income covers the hard money interest payments (or in Ground Floor's case, interest is deferred until the refi closes). Ty Jackson initiates contact with the DSCR lender at the start of this period, orders the appraisal, and begins assembling the refinance package: lease agreements, rent collection records, insurance documentation, title commitment, and entity documents.</p>
+
+  <h4>Phase 5 — Cash-Out Refinance and Capital Recycle (Month 6–7)</h4>
+  <p>At a stabilized ARV of $420,000 and a 75% LTV DSCR loan, the refinance produces $315,000. After paying off the hard money balance of approximately $295,000, Ironwood walks away with roughly $20,000 in recycled capital and a long-term DSCR mortgage at approximately $1,750 per month. With two units renting at $1,400 each, monthly gross rent is $2,800 — producing approximately $1,050 per month in cash flow after the mortgage payment. The recycled $20,000 is deployed immediately into the next land acquisition, starting the cycle again.</p>
+
+  <h3>The Numbers — Per Duplex</h3>
+  <table class="numbers-table">
+    <thead><tr><th>Line Item</th><th>Amount</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Land Cost</td><td>$42,000</td><td>Cash purchase or leveraged back at refi</td></tr>
+      <tr><td>Hard Construction Cost</td><td>$253,000</td><td>Labor + materials</td></tr>
+      <tr><td>Soft Costs (permits, fees, insurance)</td><td>$15,000–$20,000</td><td>Included in all-in budget</td></tr>
+      <tr><td><strong>Total All-In Build Cost</strong></td><td><strong>$295,000</strong></td><td>Maximum budget — must not exceed</td></tr>
+      <tr><td>Hard Money Balance at Refi</td><td>~$295,000</td><td>100% construction funded by HML</td></tr>
+      <tr><td>Stabilized ARV</td><td>$420,000</td><td>Appraised after tenants placed</td></tr>
+      <tr><td>DSCR Refi at 75% LTV</td><td>$315,000</td><td>Lima One, Kiavi, or Visio</td></tr>
+      <tr class="highlight"><td>Capital Recycled (Refi − HML payoff)</td><td class="gold">~$20,000</td><td>Deployed to next land acquisition</td></tr>
+      <tr><td>Equity Retained in Property</td><td>~$105,000</td><td>$420K ARV − $315K loan</td></tr>
+      <tr><td>Gross Monthly Rent (2 units × $1,400)</td><td>$2,800/mo</td><td>Target rent per unit</td></tr>
+      <tr><td>DSCR Mortgage (~6.5%, 30yr)</td><td>~$1,750/mo</td><td>Principal + interest</td></tr>
+      <tr class="highlight"><td>Monthly Cash Flow</td><td class="green">~$1,050/mo</td><td>Before vacancy, maintenance, mgmt fee</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Lender Stack</h3>
+  <p>Two lenders are required for each cycle: a hard money lender to fund construction, and a DSCR lender to refinance at stabilization. These are two separate relationships that must both be in place before breaking ground on any project.</p>
+
+  <h4>Construction Phase — Hard Money Lenders</h4>
+  <p>Ground Floor (Ben Spinek, 470-228-2326) is the preferred construction lender for this strategy. At 9.5% interest with deferred payments until sale or refinance, Ground Floor eliminates the cash drain during construction and seasoning. Their 18-month maximum term provides sufficient runway for the full cycle. The only restriction to plan around is that Ground Floor does not finance sewer tap fees — these must be paid out of pocket or through a separate credit line at closing. Duke Allen &amp; Co (Joseph Castaneda, 305-522-6126) at 11–15% is the backup lender if Ground Floor is unavailable on a given project.</p>
+  <p>Fund the Flip (Dylan, 216-815-1723) at 10.99–11.49% requires a GC license between Ironwood and the builder. This must be resolved before Fund the Flip can be used — either by Jeff obtaining the appropriate Georgia GC license or through a licensed GC arrangement. This is a prerequisite action item before the first build.</p>
+
+  <h4>Hold Phase — DSCR Lenders</h4>
+  <p>After the property is stabilized and seasoned, a Debt Service Coverage Ratio (DSCR) loan replaces the hard money. DSCR lenders do not underwrite based on personal income — they lend based on the property's rent coverage ratio. A DSCR of 1.25 or above is standard (meaning rent must be at least 1.25 times the monthly mortgage payment). At $2,800 gross rent and a $1,750 mortgage payment, the DSCR is approximately 1.6 — well above the threshold. Target DSCR lenders: Lima One Capital, Kiavi (formerly LendingHome), Visio Lending, and CoreVest Finance. Begin conversations with at least one DSCR lender before the first build begins.</p>
+
+  <h3>The Land Problem and How to Solve It</h3>
+  <p>The single biggest bottleneck in a four-month repeating cycle is having the next lot ready before the current build finishes. If Duplex #1 refinances in Month 7 and the next lot is not under contract, the recycled capital sits idle while you search for land — breaking the cycle and costing months of compounding time.</p>
+  <p>The solution is to stay one lot ahead at all times. Before breaking ground on any duplex, the next lot must already be identified and either under contract, optioned, or owned. The $20,000 recycled from Duplex #1's refi should be committed to Lot #2 before the ink is dry on the refinance closing documents. The following approaches are available depending on capital position:</p>
+  <ul>
+    <li><strong>Cash purchase</strong> — cleanest option; use refi proceeds to buy the next lot outright before it is gone</li>
+    <li><strong>Seller financing</strong> — negotiate a small down payment with the seller carrying the balance; allows you to control the lot without tying up full capital</li>
+    <li><strong>Option agreement</strong> — pay a small option fee (typically $1,000–$5,000) to lock in the right to purchase the lot within a set window; preserves capital while securing the site</li>
+    <li><strong>Buy 2–3 lots now</strong> — if the current capital position allows, purchasing the next two or three lots immediately eliminates the land sourcing bottleneck for the next 12–18 months</li>
+  </ul>
+
+  <h3>Two-Year Growth Projection</h3>
+  <p>Assuming a four-month build cycle, a one-month lease-up, and a one-month refinance process, the following portfolio trajectory is achievable in 24 months starting from the first build:</p>
+
+  <table class="year-table">
+    <thead><tr><th>Month</th><th>Activity</th><th>Portfolio</th><th>Monthly Cash Flow</th><th>Cumulative Equity</th></tr></thead>
+    <tbody>
+      <tr class="section-row"><td colspan="5">Year 1</td></tr>
+      <tr><td>0–4</td><td>Build Duplex #1 · Land leveraged back · HML funds 100% construction</td><td>0 doors (under construction)</td><td>$0</td><td>$0</td></tr>
+      <tr><td>4–5</td><td>CO issued · Tenants placed · Seasoning begins</td><td>2 doors</td><td>Deferred (HML interest)</td><td>$105K (unrealized)</td></tr>
+      <tr><td>6–7</td><td>DSCR refi closes · $20K recycled · HML paid off · Lot #2 acquired</td><td>2 doors cash flowing</td><td class="green">~$1,050/mo</td><td>$105K</td></tr>
+      <tr><td>8–12</td><td>Build Duplex #2 on Lot #2</td><td>2 doors cash flowing</td><td>~$1,050/mo</td><td>$105K</td></tr>
+      <tr class="section-row"><td colspan="5">Year 2</td></tr>
+      <tr><td>13–14</td><td>Duplex #2 CO · Tenants · Seasoning · Lot #3 identified</td><td>4 doors</td><td>~$1,050/mo</td><td>$210K</td></tr>
+      <tr><td>15–16</td><td>Duplex #2 DSCR refi · $20K recycled · Lot #3 acquired</td><td>4 doors cash flowing</td><td class="green">~$2,100/mo</td><td>$210K</td></tr>
+      <tr><td>17–20</td><td>Build Duplex #3 on Lot #3</td><td>4 doors cash flowing</td><td>~$2,100/mo</td><td>$210K</td></tr>
+      <tr><td>21–22</td><td>Duplex #3 CO · Tenants · Seasoning · Lot #4 identified</td><td>6 doors</td><td>~$2,100/mo</td><td>$315K</td></tr>
+      <tr><td>23–24</td><td>Duplex #3 refi · $20K recycled · Lot #4 acquired</td><td>6 doors cash flowing</td><td class="green">~$3,150/mo</td><td>$315K</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout">
+    <div class="callout-label">Month 24 Snapshot</div>
+    <p><strong>6 rental doors · $3,150/mo cash flow · $315,000+ equity · 3 DSCR loans · 1 build in progress · capital recycling without new equity raises.</strong> The portfolio self-funds further growth through refinance proceeds and cash flow reinvestment.</p>
+  </div>
+
+  <h3>Risk Factors and How to Manage Them</h3>
+
+  <div class="risk-box">
+    <div class="risk-title">Risk 1 — Build Cost Overrun</div>
+    <p>If the all-in build cost exceeds $295,000, the refi proceeds may not fully pay off the hard money balance — requiring Ironwood to bring cash to the refi table. <strong>Mitigation:</strong> Fixed-price subcontractor contracts where possible. Jeff tracks actual vs. budget weekly. Any scope change requires both Members' approval before work proceeds.</p>
+  </div>
+  <div class="risk-box">
+    <div class="risk-title">Risk 2 — Appraisal Comes in Below ARV</div>
+    <p>If the DSCR appraisal comes in below $420,000, the refinance proceeds shrink and less capital is recycled. <strong>Mitigation:</strong> Build to the market, not below it. Research comparable sales (comps) before finalizing the build spec. Have a contingency plan — if the appraisal is low, challenge it with comp data or wait and re-appraise after additional appreciation.</p>
+  </div>
+  <div class="risk-box">
+    <div class="risk-title">Risk 3 — Vacancy at Refi Time</div>
+    <p>DSCR lenders require stabilized occupancy. If units are vacant at refinance, the loan may be declined or terms worsened. <strong>Mitigation:</strong> Jordan begins marketing at Month 3, one month before CO. Pre-lease both units before the certificate of occupancy is issued. Offer a move-in incentive (first week free) if needed to accelerate placement.</p>
+  </div>
+  <div class="risk-box">
+    <div class="risk-title">Risk 4 — Interest Rate Environment</div>
+    <p>If DSCR rates rise above 7.5–8%, the monthly mortgage payment increases and cash flow per door shrinks or turns negative. <strong>Mitigation:</strong> Monitor DSCR rates quarterly. If rates are unfavorable at seasoning, delay the refi by 60–90 days rather than locking in an unfavorable rate. Ground Floor's 18-month term provides this flexibility.</p>
+  </div>
+  <div class="risk-box">
+    <div class="risk-title">Risk 5 — Land Pipeline Dries Up</div>
+    <p>If the next lot is not identified before the current refi closes, recycled capital sits idle and the cycle breaks. <strong>Mitigation:</strong> Ty Jackson maintains an active lot pipeline at all times — minimum two lots identified at any point. Begin lot sourcing for Lot #2 on Day 1 of Duplex #1 construction.</p>
+  </div>
+
+  <h3>Prerequisites — What Must Be Done Before the First Build</h3>
+  <div class="action-list">
+    <div class="action-title">Action Items — Complete Before Breaking Ground</div>
+    <div class="action-item"><div class="action-num">1</div><div class="action-text"><strong>GC License</strong> — Resolve GC license requirement for Fund the Flip. Jeff obtains Georgia Residential Contractor license or arrange licensed GC relationship. <span>Required by Fund the Flip; also required for permits on most new construction projects.</span></div></div>
+    <div class="action-item"><div class="action-num">2</div><div class="action-text"><strong>DSCR Lender Pre-Approval</strong> — Contact Lima One, Kiavi, or Visio now. Understand their exact seasoning requirement, DSCR ratio threshold, rent documentation requirements, and LLC entity requirements. <span>You need to know the exit before you enter the deal.</span></div></div>
+    <div class="action-item"><div class="action-num">3</div><div class="action-text"><strong>Hard Money Commitment Letter</strong> — Get a commitment letter from Ground Floor before closing on the construction loan. Confirm they will fund 100% of construction and leverage the land value back. Confirm sewer tap is excluded and budget for it separately. <span>Contact Ben Spinek: 470-228-2326.</span></div></div>
+    <div class="action-item"><div class="action-num">4</div><div class="action-text"><strong>Lot #2 Identified</strong> — Before breaking ground on Duplex #1, have Lot #2 identified and under contract or optioned. Do not start the clock without knowing where the next build goes. <span>The cycle breaks if land sourcing lags construction.</span></div></div>
+    <div class="action-item"><div class="action-num">5</div><div class="action-text"><strong>Build Budget Locked</strong> — Jeff provides a fully itemized build budget before construction starts. Every line item priced, every subcontractor quoted. Budget must come in at $295,000 or below. <span>No budget, no start date.</span></div></div>
+    <div class="action-item"><div class="action-num">6</div><div class="action-text"><strong>Ironwood Property Management LLC Formed</strong> — Property management entity must be active before the first tenant lease is signed. All leases should be in the name of Ironwood Property Management LLC. <span>Liability isolation — do not lease in Ironwood LLC's name directly.</span></div></div>
+  </div>
+
+  <h3>Role Assignments Per Cycle</h3>
+  <table class="numbers-table">
+    <thead><tr><th>Phase</th><th>Ty Jackson</th><th>Jeff Sarabia</th><th>Jordan Sarabia</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Land &amp; Permits</strong></td><td>Lot sourcing, lender coordination, permit submission</td><td>Site evaluation, plan review</td><td>—</td></tr>
+      <tr><td><strong>Construction</strong></td><td>Draw requests, lender inspections, schedule oversight</td><td>Build execution, sub management, quality control</td><td>Begin tenant marketing (Month 3)</td></tr>
+      <tr><td><strong>CO &amp; Leasing</strong></td><td>Final inspection coordination, refi package prep</td><td>Punch list, CO walk</td><td>Tenant screening, lease signing, unit photos</td></tr>
+      <tr><td><strong>Seasoning</strong></td><td>DSCR lender communication, appraisal order, title</td><td>Warranty items, punch list close-out</td><td>Tenant onboarding, rent collection setup</td></tr>
+      <tr><td><strong>Refi &amp; Recycle</strong></td><td>Refi closing, HML payoff, Lot #2 acquisition</td><td>—</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Long-Term Vision</h3>
+  <p>Three years of consistent execution at four-month intervals produces nine to twelve duplexes — eighteen to twenty-four rental doors — without ever raising outside equity. At that scale, the portfolio generates $9,000–$12,000 per month in cash flow and holds $900,000–$1,200,000 in equity. That equity position unlocks a portfolio blanket mortgage or line of credit that can fund multiple simultaneous builds — compressing the cycle from one duplex every four months to two or three per year in parallel.</p>
+  <p>At the ten-duplex threshold, Ironwood's rental portfolio qualifies for institutional DSCR products with lower rates and higher LTVs, further improving the refinance math. The remodeling business continues generating operating capital, meaning the construction pipeline is never solely dependent on refi proceeds. The two businesses — remodeling and new construction — feed each other: remodeling builds the trade credit, subcontractor relationships, and supplier accounts that reduce construction costs; the rental portfolio provides the balance sheet that attracts better lender terms on future deals.</p>
+  <p>This is the compounding machine. Build it once. Run it forever.</p>
+
+</div>
+</div>
+</div>
+
+<!-- ════════════════ MODAL ════════════════ -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <h2 id="modal-title">Add Project</h2>
+    <div class="form-grid">
+      <div class="field full"><label>Project Name *</label><input type="text" id="f-name" placeholder="e.g. Duplex #1 — Lot A"/></div>
+      <div class="field full"><label>Address / Location</label><input type="text" id="f-address" placeholder="e.g. 123 Main St, Atlanta, GA"/></div>
+      <div class="field">
+        <label>Phase</label>
+        <select id="f-phase">
+          <option value="Planning">Planning</option>
+          <option value="Building">Building</option>
+          <option value="Seasoning">Seasoning / Leasing</option>
+          <option value="Refi">Refinancing</option>
+          <option value="Complete">Complete</option>
+        </select>
+      </div>
+      <div class="field"><label>Start Date</label><input type="date" id="f-start"/></div>
+      <div class="field"><label>Target CO Date</label><input type="date" id="f-co"/></div>
+      <div class="field"><label>Target Refi Date</label><input type="date" id="f-refi"/></div>
+
+      <div class="field full"><div class="section-divider">Financials</div></div>
+      <div class="field"><label>Land Cost ($)</label><input type="number" id="f-land" placeholder="42000"/></div>
+      <div class="field"><label>Build Budget ($)</label><input type="number" id="f-budget" placeholder="295000"/></div>
+      <div class="field"><label>Actual Spend To Date ($)</label><input type="number" id="f-spent" placeholder="0"/></div>
+      <div class="field"><label>ARV ($)</label><input type="number" id="f-arv" placeholder="420000"/></div>
+      <div class="field"><label>Refi LTV %</label><input type="number" id="f-ltv" placeholder="75"/></div>
+      <div class="field"><label>Hard Money Rate %</label><input type="number" id="f-hmrate" placeholder="9.5"/></div>
+      <div class="field"><label>DSCR Rate %</label><input type="number" id="f-dscrrate" placeholder="6.5"/></div>
+      <div class="field"><label>Monthly Rent (both units, $)</label><input type="number" id="f-rent" placeholder="2800"/></div>
+
+      <div class="field full"><div class="section-divider">Construction Draws</div></div>
+      <div class="field full"><label>Draw Schedule (one per line: "Label · $Amount · done/pending")</label>
+        <textarea id="f-draws" placeholder="Foundation · $45000 · pending&#10;Framing · $60000 · pending&#10;Mechanical Rough-In · $40000 · pending&#10;Drywall · $35000 · pending&#10;Finish Work · $75000 · pending&#10;Final / CO · $40000 · pending"></textarea>
+      </div>
+
+      <div class="field full"><div class="section-divider">Notes</div></div>
+      <div class="field full"><label>Lender / Notes</label><textarea id="f-notes" placeholder="e.g. Ground Floor (Ben Spinek) — deferred interest. Sewer tap $4,500 out of pocket."></textarea></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-gold" onclick="saveProject()">Save Project</button>
+    </div>
+  </div>
+</div>
+
+<footer>Ironwood Renovations · New Construction Pipeline · Internal Use Only · Atlanta Metro</footer>
+
+<script>
+const STORAGE_KEY = 'ironwood-construction-v1';
+let projects = [];
+let editingId = null;
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2); }
+function load() { try { projects = JSON.parse(localStorage.getItem(STORAGE_KEY)) || []; } catch(e) { projects = []; } }
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(projects)); }
+function esc(v) { return (v||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function fmt$(v) { if (!v && v!==0) return '—'; return '$' + Number(v).toLocaleString(); }
+function fmtDate(d) { if (!d) return '—'; const dt = new Date(d); return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+function daysLeft(d) { if (!d) return null; return Math.ceil((new Date(d)-new Date())/86400000); }
+
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function phaseColor(p) {
+  return {Planning:'#42a5f5',Building:'#f9a825',Seasoning:'#b8933e',Refi:'#4caf50',Complete:'#555'}[p] || '#888';
+}
+function phaseBadgeClass(p) {
+  return {Planning:'phase-planning',Building:'phase-building','Seasoning / Leasing':'phase-seasoning',Seasoning:'phase-seasoning',Refi:'phase-refi',Complete:'phase-complete'}[p] || 'phase-planning';
+}
+function phaseProgress(p) {
+  return {Planning:10,Building:40,Seasoning:65,'Seasoning / Leasing':65,Refi:85,Complete:100}[p] || 0;
+}
+
+function parseDraws(str) {
+  return (str||'').split('\n').map(l => {
+    const parts = l.split('·').map(s=>s.trim());
+    if (parts.length < 2) return null;
+    const amt = parseFloat((parts[1]||'').replace(/[^0-9.]/g,'')) || 0;
+    const done = (parts[2]||'').toLowerCase().includes('done');
+    return { label: parts[0], amount: amt, done };
+  }).filter(Boolean);
+}
+
+function drawsToString(draws) {
+  return (draws||[]).map(d => `${d.label} · $${d.amount} · ${d.done?'done':'pending'}`).join('\n');
+}
+
+function calcRefiProceeds(arv, ltv) {
+  return Math.round((arv||0) * ((ltv||75)/100));
+}
+function calcRecycled(arv, ltv, land, budget) {
+  return calcRefiProceeds(arv,ltv) - ((budget||0));
+}
+function calcMortgage(arv, ltv, rate) {
+  const p = calcRefiProceeds(arv,ltv);
+  const r = (rate||6.5)/100/12;
+  const n = 360;
+  if (!r) return 0;
+  return Math.round(p * r * Math.pow(1+r,n) / (Math.pow(1+r,n)-1));
+}
+function calcCashFlow(rent, mortgage) { return (rent||0) - (mortgage||0); }
+
+function renderCard(proj) {
+  const draws = parseDraws(proj.draws || '');
+  const totalDrawn = draws.filter(d=>d.done).reduce((s,d)=>s+d.amount,0);
+  const totalDraws = draws.reduce((s,d)=>s+d.amount,0);
+  const spentPct = proj.budget ? Math.min(100,Math.round(((proj.spent||0)/proj.budget)*100)) : 0;
+  const refiProceeds = calcRefiProceeds(proj.arv, proj.ltv||75);
+  const recycled = calcRecycled(proj.arv, proj.ltv||75, proj.land, proj.budget);
+  const mortgage = calcMortgage(proj.arv, proj.ltv||75, proj.dscrrate||6.5);
+  const cashflow = calcCashFlow(proj.rent||2800, mortgage);
+  const prog = phaseProgress(proj.phase);
+  const progColor = prog >= 100 ? 'var(--green)' : 'var(--gold)';
+
+  const daysToRefi = daysLeft(proj.refi);
+  const refiLabel = daysToRefi === null ? '—' : daysToRefi < 0 ? `<span style="color:var(--red)">${Math.abs(daysToRefi)}d overdue</span>` : daysToRefi <= 14 ? `<span style="color:var(--yellow)">${daysToRefi}d left</span>` : `${daysToRefi}d`;
+
+  const drawsHTML = draws.length ? `
+    <div class="draws-section">
+      <div class="draws-title">Construction Draws</div>
+      ${draws.map((d,i) => `
+        <div class="draw-row">
+          <div class="draw-check ${d.done?'done':''}" onclick="toggleDraw('${proj.id}',${i})">${d.done?'✓':''}</div>
+          <span class="draw-label" style="${d.done?'text-decoration:line-through;color:var(--muted)':''}">${esc(d.label)}</span>
+          <span class="draw-amount">${fmt$(d.amount)}</span>
+        </div>`).join('')}
+    </div>` : '';
+
+  return `<div class="project-card" id="card-${proj.id}">
+    <div class="card-phase-bar"><div class="fill" style="width:${prog}%;background:${progColor}"></div></div>
+    <div class="card-body">
+      <div class="card-top">
+        <div>
+          <div class="card-title">${esc(proj.name)}</div>
+          ${proj.address ? `<div class="card-address">📍 ${esc(proj.address)}</div>` : ''}
+        </div>
+        <span class="phase-badge ${phaseBadgeClass(proj.phase)}">${esc(proj.phase)}</span>
+      </div>
+
+      <div class="metrics-grid">
+        <div class="metric-box"><div class="metric-label">Budget</div><div class="metric-value">${fmt$(proj.budget)}</div></div>
+        <div class="metric-box"><div class="metric-label">Spent</div><div class="metric-value ${spentPct>=90?'red':spentPct>=70?'':'green'}">${fmt$(proj.spent||0)}</div></div>
+        <div class="metric-box"><div class="metric-label">ARV</div><div class="metric-value gold">${fmt$(proj.arv)}</div></div>
+        <div class="metric-box"><div class="metric-label">Refi Out</div><div class="metric-value">${fmt$(refiProceeds)}</div></div>
+        <div class="metric-box"><div class="metric-label">Recycled</div><div class="metric-value ${recycled>=0?'green':'red'}">${fmt$(recycled)}</div></div>
+        <div class="metric-box"><div class="metric-label">CF/mo</div><div class="metric-value ${cashflow>=0?'green':'red'}">${fmt$(cashflow)}</div></div>
+      </div>
+
+      ${proj.budget ? `<div class="timeline-bar">
+        <div class="timeline-label"><span>Budget Used</span><span>${spentPct}%</span></div>
+        <div class="tbar"><div class="tbar-fill ${spentPct>=90?'red':spentPct>=70?'warn':''}" style="width:${spentPct}%"></div></div>
+      </div>` : ''}
+
+      ${proj.start || proj.co || proj.refi ? `
+      <div style="font-size:12px;color:var(--muted);margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap;">
+        ${proj.start?`<span>🏗 Start: <strong style="color:var(--cream)">${fmtDate(proj.start)}</strong></span>`:''}
+        ${proj.co?`<span>🏠 CO: <strong style="color:var(--cream)">${fmtDate(proj.co)}</strong></span>`:''}
+        ${proj.refi?`<span>💵 Refi: <strong style="color:var(--cream)">${fmtDate(proj.refi)}</strong> (${refiLabel})</span>`:''}
+      </div>` : ''}
+
+      ${drawsHTML}
+      ${proj.notes ? `<div class="notes-box">${esc(proj.notes)}</div>` : ''}
+
+      <div class="card-actions">
+        <button class="btn btn-outline btn-sm" onclick="openModal('${proj.id}')">Edit</button>
+        <button class="btn btn-red btn-sm" onclick="deleteProject('${proj.id}')">Delete</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function filtered() {
+  const ph = document.getElementById('phase-filter').value;
+  return projects.filter(p => !ph || p.phase === ph || (ph === 'Seasoning' && p.phase === 'Seasoning / Leasing'));
+}
+
+function renderStats() {
+  const total = projects.length;
+  const building = projects.filter(p=>p.phase==='Building').length;
+  const totalDoors = projects.filter(p=>['Seasoning','Seasoning / Leasing','Refi','Complete'].includes(p.phase)).length * 2;
+  const totalCF = projects.filter(p=>p.phase==='Complete'||p.phase==='Refi').reduce((s,p)=>{
+    const m = calcMortgage(p.arv,p.ltv||75,p.dscrrate||6.5);
+    return s + calcCashFlow(p.rent||2800,m);
+  },0);
+  const totalEquity = projects.filter(p=>p.phase==='Complete'||p.phase==='Refi').reduce((s,p)=>{
+    return s + ((p.arv||0) - calcRefiProceeds(p.arv,p.ltv||75));
+  },0);
+  document.getElementById('stats-row').innerHTML = `
+    <div class="stat-pill"><strong>${total}</strong>Projects</div>
+    <div class="stat-pill"><strong style="color:var(--yellow)">${building}</strong>Under Construction</div>
+    <div class="stat-pill"><strong style="color:var(--green)">${totalDoors}</strong>Doors Held</div>
+    <div class="stat-pill"><strong style="color:var(--green)">${fmt$(totalCF)}/mo</strong>Portfolio Cash Flow</div>
+    <div class="stat-pill"><strong style="color:var(--gold)">${fmt$(totalEquity)}</strong>Portfolio Equity</div>
+  `;
+}
+
+function renderPipeline() {
+  renderStats();
+  const list = filtered();
+  const root = document.getElementById('pipeline-root');
+  if (!projects.length) {
+    root.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted)"><div style="font-size:40px;margin-bottom:12px">🏗</div><p>No projects yet. Click <strong>+ Add Project</strong> to start your first build.</p></div>`;
+    return;
+  }
+  if (!list.length) {
+    root.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--muted)">No projects match the selected filter.</div>`;
+    return;
+  }
+  root.innerHTML = list.map(renderCard).join('');
+}
+
+function toggleDraw(projId, drawIndex) {
+  const proj = projects.find(p=>p.id===projId);
+  if (!proj) return;
+  const draws = parseDraws(proj.draws||'');
+  draws[drawIndex].done = !draws[drawIndex].done;
+  proj.draws = drawsToString(draws);
+  save(); renderPipeline();
+}
+
+function openModal(id) {
+  editingId = id || null;
+  const p = id ? projects.find(x=>x.id===id) : null;
+  document.getElementById('modal-title').textContent = p ? 'Edit Project' : 'Add Project';
+  document.getElementById('f-name').value = p ? p.name : '';
+  document.getElementById('f-address').value = p ? (p.address||'') : '';
+  document.getElementById('f-phase').value = p ? (p.phase||'Planning') : 'Planning';
+  document.getElementById('f-start').value = p ? (p.start||'') : '';
+  document.getElementById('f-co').value = p ? (p.co||'') : '';
+  document.getElementById('f-refi').value = p ? (p.refi||'') : '';
+  document.getElementById('f-land').value = p ? (p.land||'') : '';
+  document.getElementById('f-budget').value = p ? (p.budget||'') : '';
+  document.getElementById('f-spent').value = p ? (p.spent||'') : '';
+  document.getElementById('f-arv').value = p ? (p.arv||'') : '';
+  document.getElementById('f-ltv').value = p ? (p.ltv||75) : 75;
+  document.getElementById('f-hmrate').value = p ? (p.hmrate||9.5) : 9.5;
+  document.getElementById('f-dscrrate').value = p ? (p.dscrrate||6.5) : 6.5;
+  document.getElementById('f-rent').value = p ? (p.rent||2800) : 2800;
+  document.getElementById('f-draws').value = p ? (p.draws||'') : 'Foundation · $45000 · pending\nFraming · $60000 · pending\nMechanical Rough-In · $40000 · pending\nDrywall · $35000 · pending\nFinish Work · $75000 · pending\nFinal / CO · $40000 · pending';
+  document.getElementById('f-notes').value = p ? (p.notes||'') : '';
+  document.getElementById('modal-overlay').classList.add('open');
+  setTimeout(()=>document.getElementById('f-name').focus(),50);
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  editingId = null;
+}
+
+function saveProject() {
+  const name = document.getElementById('f-name').value.trim();
+  if (!name) { alert('Project name is required.'); return; }
+  const data = {
+    name, address: document.getElementById('f-address').value.trim(),
+    phase: document.getElementById('f-phase').value,
+    start: document.getElementById('f-start').value,
+    co: document.getElementById('f-co').value,
+    refi: document.getElementById('f-refi').value,
+    land: parseFloat(document.getElementById('f-land').value)||0,
+    budget: parseFloat(document.getElementById('f-budget').value)||0,
+    spent: parseFloat(document.getElementById('f-spent').value)||0,
+    arv: parseFloat(document.getElementById('f-arv').value)||0,
+    ltv: parseFloat(document.getElementById('f-ltv').value)||75,
+    hmrate: parseFloat(document.getElementById('f-hmrate').value)||9.5,
+    dscrrate: parseFloat(document.getElementById('f-dscrrate').value)||6.5,
+    rent: parseFloat(document.getElementById('f-rent').value)||2800,
+    draws: document.getElementById('f-draws').value.trim(),
+    notes: document.getElementById('f-notes').value.trim(),
+  };
+  if (editingId) {
+    const idx = projects.findIndex(p=>p.id===editingId);
+    projects[idx] = {...projects[idx], ...data};
+  } else {
+    projects.push({id:uid(),...data});
+  }
+  save(); closeModal(); renderPipeline();
+}
+
+function deleteProject(id) {
+  const p = projects.find(x=>x.id===id);
+  if (!confirm(`Delete "${p.name}"?`)) return;
+  projects = projects.filter(x=>x.id!==id);
+  save(); renderPipeline();
+}
+
+function exportCSV() {
+  if (!projects.length) { alert('No projects to export.'); return; }
+  const cols = ['Name','Address','Phase','Start','CO Date','Refi Date','Land','Budget','Spent','ARV','LTV%','HM Rate%','DSCR Rate%','Monthly Rent','Notes'];
+  const rows = projects.map(p=>[
+    p.name,p.address||'',p.phase||'',p.start||'',p.co||'',p.refi||'',
+    p.land||0,p.budget||0,p.spent||0,p.arv||0,p.ltv||75,p.hmrate||9.5,p.dscrrate||6.5,p.rent||2800,
+    (p.notes||'').replace(/\n/g,' | ')
+  ].map(v=>`"${String(v).replace(/"/g,'""')}"`).join(','));
+  const csv=[cols.join(','),...rows].join('\n');
+  const a=document.createElement('a');
+  a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download='Ironwood_Construction_Pipeline.csv';
+  a.click();
+}
+
+document.getElementById('modal-overlay').addEventListener('click',e=>{if(e.target===document.getElementById('modal-overlay'))closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+load(); renderPipeline();
+</script>
+</body>
+</html>
