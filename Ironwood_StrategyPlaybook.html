@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ironwood Renovations — Strategy Playbook</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
+    --green: #4caf50; --red: #e53935; --yellow: #f9a825; --blue: #42a5f5;
+  }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  .header {
+    background: linear-gradient(160deg, #0a0a0a 0%, #141008 60%, #1a1408 100%);
+    border-bottom: 2px solid var(--gold); padding: 32px 32px 24px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  .logo-box { width: 48px; height: 48px; background: var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #0a0a0a; flex-shrink: 0; }
+  .header-text h1 { font-size: 22px; font-weight: 800; }
+  .header-text p { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
+
+  /* NAV SIDEBAR */
+  .layout { display: flex; min-height: calc(100vh - 96px); }
+  .sidebar {
+    width: 240px; flex-shrink: 0; background: var(--surface);
+    border-right: 1px solid var(--border); padding: 20px 0;
+    position: sticky; top: 0; height: calc(100vh - 96px); overflow-y: auto;
+  }
+  .sidebar-label { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; font-weight: 700; padding: 0 20px 8px; }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 11px 20px; cursor: pointer; font-size: 13px; font-weight: 500;
+    color: var(--muted); transition: color .15s, background .15s; border-left: 3px solid transparent;
+  }
+  .nav-item:hover { color: var(--cream); background: rgba(255,255,255,.03); }
+  .nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(184,147,62,.06); }
+  .nav-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
+  .nav-num { font-size: 10px; color: var(--muted); margin-left: auto; }
+
+  /* CONTENT */
+  .content { flex: 1; overflow-y: auto; }
+  .strategy-page { display: none; max-width: 860px; padding: 40px 40px 80px; }
+  .strategy-page.active { display: block; }
+
+  /* DOC STYLES */
+  .doc-eyebrow { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 8px; }
+  .doc-title { font-size: 28px; font-weight: 900; color: var(--cream); line-height: 1.2; margin-bottom: 6px; }
+  .doc-sub { font-size: 14px; color: var(--muted); margin-bottom: 32px; line-height: 1.6; }
+  .doc-divider { height: 1px; background: var(--border); margin: 32px 0; }
+
+  h3.sec { font-size: 17px; font-weight: 800; color: var(--gold); margin: 36px 0 12px; padding-bottom: 9px; border-bottom: 1px solid var(--border); }
+  h4.sub { font-size: 14px; font-weight: 700; color: var(--cream); margin: 22px 0 8px; }
+  p.body { font-size: 14px; line-height: 1.9; color: #ccc4b8; margin-bottom: 14px; }
+  ul.body { margin: 0 0 14px 20px; }
+  ul.body li { font-size: 14px; line-height: 1.9; color: #ccc4b8; margin-bottom: 3px; }
+  ul.body li strong { color: var(--cream); }
+
+  .callout { background: rgba(184,147,62,.07); border: 1px solid rgba(184,147,62,.2); border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
+  .callout-label { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+  .callout p.body { margin-bottom: 0; font-size: 13px; }
+
+  .callout-green { background: rgba(76,175,80,.06); border: 1px solid rgba(76,175,80,.2); border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
+  .callout-green .callout-label { color: var(--green); }
+
+  .risk-box { background: rgba(229,57,53,.05); border: 1px solid rgba(229,57,53,.2); border-radius: 8px; padding: 14px 18px; margin: 12px 0; }
+  .risk-title { font-size: 12px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+  .risk-box p.body { margin: 0; font-size: 13px; }
+
+  .data-table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 13px; }
+  .data-table th { background: var(--surface2); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+  .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--cream); vertical-align: top; line-height: 1.5; }
+  .data-table tr:last-child td { border-bottom: none; }
+  .data-table .hl td { background: rgba(184,147,62,.05); font-weight: 700; }
+  .data-table .gold { color: var(--gold); font-weight: 700; }
+  .data-table .green { color: var(--green); font-weight: 700; }
+  .data-table .sec-row td { background: rgba(184,147,62,.04); color: var(--gold); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+
+  .step-list { margin: 16px 0 24px; }
+  .step { display: flex; gap: 14px; margin-bottom: 16px; }
+  .step-num { background: var(--gold); color: #0a0a0a; font-weight: 900; font-size: 12px; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-body { flex: 1; }
+  .step-title { font-size: 14px; font-weight: 700; color: var(--cream); margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: #ccc4b8; line-height: 1.7; }
+
+  .phase-flow { display: flex; flex-wrap: wrap; gap: 0; margin: 20px 0 24px; }
+  .pf-step { background: var(--surface2); border: 1px solid var(--border); padding: 13px 15px; flex: 1; min-width: 120px; position: relative; }
+  .pf-step:not(:last-child)::after { content: '→'; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 14px; z-index: 1; }
+  .pf-step:first-child { border-radius: 8px 0 0 8px; }
+  .pf-step:last-child { border-radius: 0 8px 8px 0; }
+  .pf-num { font-size: 10px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  .pf-title { font-size: 12px; font-weight: 700; color: var(--cream); margin-bottom: 2px; }
+  .pf-time { font-size: 11px; color: var(--muted); }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
+  .info-card { background: var(--surface2); border-radius: 8px; padding: 16px 18px; }
+  .info-card h4.sub { margin-top: 0; }
+
+  .action-box { background: var(--surface2); border-radius: 8px; padding: 18px 20px; margin: 20px 0; }
+  .action-box-title { font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px; }
+
+  .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin: 2px; }
+  .tag-gold { background: rgba(184,147,62,.15); color: var(--gold); }
+  .tag-green { background: rgba(76,175,80,.15); color: var(--green); }
+  .tag-blue { background: rgba(66,165,245,.15); color: var(--blue); }
+
+  footer { text-align: center; padding: 24px; font-size: 11px; color: #444; border-top: 1px solid var(--border); }
+
+  @media (max-width: 700px) {
+    .sidebar { display: none; }
+    .strategy-page { padding: 24px 18px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-box">IW</div>
+  <div class="header-text">
+    <h1>Strategy Playbook</h1>
+    <p>Ironwood Renovations — 8 Core Business Strategies</p>
+  </div>
+</div>
+
+<div class="layout">
+
+<!-- ══ SIDEBAR ══ -->
+<div class="sidebar">
+  <div class="sidebar-label">Strategies</div>
+  <div class="nav-item active" onclick="show('s1',this)"><span class="nav-icon">🔨</span>Renovation Business<span class="nav-num">01</span></div>
+  <div class="nav-item" onclick="show('s2',this)"><span class="nav-icon">🏠</span>BRRRR — Existing<span class="nav-num">02</span></div>
+  <div class="nav-item" onclick="show('s3',this)"><span class="nav-icon">🏗</span>New Construction<span class="nav-num">03</span></div>
+  <div class="nav-item" onclick="show('s4',this)"><span class="nav-icon">📡</span>Wholesale & Sourcing<span class="nav-num">04</span></div>
+  <div class="nav-item" onclick="show('s5',this)"><span class="nav-icon">🏘</span>Rental Portfolio<span class="nav-num">05</span></div>
+  <div class="nav-item" onclick="show('s6',this)"><span class="nav-icon">🌴</span>Peach to Palms<span class="nav-num">06</span></div>
+  <div class="nav-item" onclick="show('s7',this)"><span class="nav-icon">💳</span>Business Credit<span class="nav-num">07</span></div>
+  <div class="nav-item" onclick="show('s8',this)"><span class="nav-icon">📈</span>Investor Capital<span class="nav-num">08</span></div>
+  <div class="nav-item" onclick="show('s9',this)"><span class="nav-icon">🏢</span>Subsidiary Launch<span class="nav-num">09</span></div>
+</div>
+
+<!-- ══ CONTENT ══ -->
+<div class="content">
+
+<!-- ════ 01 RENOVATION BUSINESS ════ -->
+<div id="s1" class="strategy-page active">
+  <div class="doc-eyebrow">Strategy 01</div>
+  <div class="doc-title">Renovation &amp; Remodel Business</div>
+  <div class="doc-sub">How Ironwood sources homeowner clients, prices jobs, manages execution, and converts every project into the next opportunity.</div>
+
+  <h3 class="sec">Overview</h3>
+  <p class="body">The renovation and remodeling business is Ironwood's primary cash flow engine in Phase 1. It serves two purposes simultaneously: generating operating capital to fund the BRRRR pipeline, and building the trade relationships, subcontractor network, supplier accounts, and reputation that reduce costs and increase margins on every subsequent project. Every completed renovation is a proof of execution — a before-and-after story that becomes a marketing asset, a referral source, and a demonstration of Ironwood's ability to deliver.</p>
+  <p class="body">Jeff Sarabia leads all field execution. Ty Jackson manages deal sourcing, client acquisition, pricing, and project oversight. Jordan Sarabia handles marketing, client communications, and brand. Together, the three roles cover the full project lifecycle from lead to completion without relying on outside management.</p>
+
+  <div class="callout">
+    <div class="callout-label">Core Thesis</div>
+    <p class="body">Every remodel job funds the next BRRRR deal. The renovation business is not the destination — it is the engine that builds the capital, credit, and credibility to acquire and hold real estate forever.</p>
+  </div>
+
+  <h3 class="sec">Lead Generation</h3>
+  <h4 class="sub">Primary Channels</h4>
+  <p class="body">Ironwood targets homeowners who need renovation work but do not have the time, knowledge, or contractor relationships to manage it themselves. The primary lead sources are social media content, Google Business Profile, yard signs on active job sites, and direct referrals from past clients and real estate agents.</p>
+  <ul class="body">
+    <li><strong>Social media (Instagram, Facebook, YouTube):</strong> Before-and-after content on every completed job. Jordan produces content and Ty manages paid promotion. Video walkthroughs outperform static photos — always capture video on every job site.</li>
+    <li><strong>Google Business Profile:</strong> Every completed job should generate a Google review request. A 4.8+ star rating with 20+ reviews is the single most effective local lead generator for residential contractors.</li>
+    <li><strong>Job site yard signs:</strong> Ironwood Renovations branded signs on every active job site. Neighbors see them daily. This is the lowest-cost lead source and consistently produces referral calls.</li>
+    <li><strong>Real estate agent referrals:</strong> Agents regularly need reliable contractors for their seller clients — pre-listing renovations, post-inspection repairs, and flip projects. Build relationships with 5–10 active agents in the Atlanta metro.</li>
+    <li><strong>Homeowner intake form:</strong> The Ironwood website and social media drive leads to the Homeowner Intake Form, which captures scope, budget, and timeline automatically. This pre-qualifies leads before Ty spends time on a site visit.</li>
+  </ul>
+
+  <h3 class="sec">Pricing and Estimating</h3>
+  <h4 class="sub">Two Client Types — Two Pricing Models</h4>
+  <p class="body">Ironwood serves two fundamentally different client types, and the pricing model must reflect that difference.</p>
+  <div class="two-col">
+    <div class="info-card">
+      <h4 class="sub">Homeowner Clients</h4>
+      <p class="body" style="font-size:13px;">All-inclusive fixed price. Materials, labor, markup, and profit are bundled into one client-facing number. No markup percentages are disclosed. The client sees a total project cost, a payment schedule, and a scope of work — nothing else. This protects Ironwood's margin and simplifies the client experience.</p>
+    </div>
+    <div class="info-card">
+      <h4 class="sub">BRRRR / Internal Projects</h4>
+      <p class="body" style="font-size:13px;">Cost-plus model. Materials are tracked at actual cost, labor is billed at agreed rates, and markup is applied transparently between Members. The Scope of Work Tool tracks client price vs. internal cost on every line item so margin is visible at all times.</p>
+    </div>
+  </div>
+  <h4 class="sub">Markup Structure</h4>
+  <p class="body">Material costs carry a 20% markup on homeowner jobs by default — this covers supplier relationships, material management, and the risk of material cost fluctuations. Labor is priced based on Jeff's Phase 1 ($50/hr) or Phase 2 (30% of gross profit) structure. The Remodel Estimator tool builds the profit waterfall automatically — Ty's 3% marketing fee, Jeff's labor, Anchor Pro's 5% management fee, and the 50/50 split — so every proposal shows exactly what each party earns before a job is accepted.</p>
+
+  <h3 class="sec">Project Execution</h3>
+  <div class="phase-flow">
+    <div class="pf-step"><div class="pf-num">Step 1</div><div class="pf-title">Lead Intake</div><div class="pf-time">Day 1</div></div>
+    <div class="pf-step"><div class="pf-num">Step 2</div><div class="pf-title">Site Visit</div><div class="pf-time">Day 2–3</div></div>
+    <div class="pf-step"><div class="pf-num">Step 3</div><div class="pf-title">Proposal</div><div class="pf-time">Day 4–5</div></div>
+    <div class="pf-step"><div class="pf-num">Step 4</div><div class="pf-title">Contract</div><div class="pf-time">Day 5–7</div></div>
+    <div class="pf-step"><div class="pf-num">Step 5</div><div class="pf-title">Build</div><div class="pf-time">Weeks 1–N</div></div>
+    <div class="pf-step"><div class="pf-num">Step 6</div><div class="pf-title">Final Walk</div><div class="pf-time">Last day</div></div>
+    <div class="pf-step"><div class="pf-num">Step 7</div><div class="pf-title">Review + Referral</div><div class="pf-time">+1 day</div></div>
+  </div>
+  <p class="body">Every project follows the same process. The Client Service Agreement is signed before any work begins. A deposit (typically 30–40% of the project total) is collected at signing. Draw payments are tied to completion milestones — never paid in advance of work completed. A final walkthrough with the client is mandatory before the balance is released. The day after completion, Jordan sends a review request and a referral ask — every satisfied client is a potential next job.</p>
+
+  <h3 class="sec">Converting Remodel Clients Into BRRRR Leads</h3>
+  <p class="body">Every homeowner Ironwood works with is a potential seller lead. Many renovation clients are aging homeowners, landlords with deferred maintenance, or people going through life transitions (divorce, relocation, estate). Ty presents Ironwood's ability to purchase the home as a natural extension of the renovation relationship — if the client ever wants to sell, Ironwood will make a fair cash offer. This costs nothing and has produced deals for other operators in similar markets. The Seller Lead Form captures interest without pressure.</p>
+
+  <h3 class="sec">Phase 2 — Scaling the Remodel Business</h3>
+  <p class="body">Once the remodeling business hits $25,000 per month in revenue for two consecutive months, Jeff transitions to 30% of gross profit per project instead of hourly pay. At this point, Ironwood begins hiring or subcontracting a second crew so Jeff can move from doing the work to managing multiple jobs simultaneously. The goal is to run two to three remodel projects concurrently while construction on the first BRRRR duplex is underway — two separate revenue streams running in parallel.</p>
+</div>
+
+<!-- ════ 02 BRRRR EXISTING ════ -->
+<div id="s2" class="strategy-page">
+  <div class="doc-eyebrow">Strategy 02</div>
+  <div class="doc-title">BRRRR — Existing Property Acquisitions</div>
+  <div class="doc-sub">Buying distressed properties, rehabbing with Jeff's crew, placing tenants, and refinancing to recycle capital into the next deal.</div>
+
+  <h3 class="sec">Overview</h3>
+  <p class="body">The BRRRR method — Buy, Rehab, Rent, Refinance, Repeat — applied to existing distressed properties is Ironwood's primary portfolio-building strategy alongside new construction. Where new construction builds equity through the build process, existing BRRRR creates equity by purchasing below market value and forcing appreciation through renovation. The two strategies complement each other: new construction is slower but produces higher-quality assets; existing BRRRR is faster to execute and allows for opportunistic deal-by-deal acquisitions.</p>
+
+  <div class="callout">
+    <div class="callout-label">The BRRRR Loop</div>
+    <p class="body">Buy distressed at 65–70% ARV → Rehab with Jeff's crew → Rent to qualified tenant → Refinance at ARV → Pull capital out → Repeat. Each cycle ideally returns all or most of the invested capital, leaving a cash-flowing asset in the portfolio with zero or minimal net capital deployed.</p>
+  </div>
+
+  <h3 class="sec">The MAO Formula</h3>
+  <p class="body">Maximum Allowable Offer (MAO) is the most important number in any BRRRR deal. Ironwood never pays more than 70% of ARV minus rehab costs. The MAO Calculator tool handles this automatically, but understanding the formula is non-negotiable.</p>
+  <div class="data-table-wrap">
+  <table class="data-table">
+    <thead><tr><th>Component</th><th>Formula</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td>After Repair Value (ARV)</td><td>Comparable sales within 0.5 mile, last 90 days, similar size/condition</td><td>$200,000</td></tr>
+      <tr><td>ARV Multiplier</td><td>70% — standard hard money and DSCR threshold</td><td>× 0.70 = $140,000</td></tr>
+      <tr><td>Less Rehab Cost</td><td>$125–$135/sqft for full rehab; adjust for scope</td><td>− $35,000</td></tr>
+      <tr class="hl"><td><strong>Maximum Allowable Offer</strong></td><td><strong>ARV × 70% − Rehab</strong></td><td class="gold"><strong>$105,000</strong></td></tr>
+      <tr><td>Target Purchase Price</td><td>MAO or below — never above</td><td>$95,000–$105,000</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 class="sec">Deal Analysis — What Makes a Good BRRRR</h3>
+  <ul class="body">
+    <li><strong>Purchase at or below MAO:</strong> No exceptions. A deal that requires paying above MAO is not a BRRRR deal — it is a gamble.</li>
+    <li><strong>Rehab cost predictability:</strong> Jeff walks every property before an offer is made. His estimate is the rehab budget. No surprises = no margin erosion.</li>
+    <li><strong>Rent coverage:</strong> Monthly rent must cover the DSCR mortgage payment at a 1.25 ratio minimum. At 6.5% on a $150,000 DSCR loan, the monthly payment is ~$950. Monthly rent must be $1,188 or above. Target $1,400+ per unit for comfortable coverage.</li>
+    <li><strong>Market rent validation:</strong> Jordan pulls comparable rental listings before any offer is submitted. Never assume — verify what the market will actually pay.</li>
+    <li><strong>Exit clarity:</strong> Before making an offer, Ty identifies the DSCR lender who will refinance this specific property type in this zip code. Not all DSCR lenders lend in all markets or on all property types.</li>
+  </ul>
+
+  <h3 class="sec">Rehab Execution</h3>
+  <p class="body">Jeff manages the rehab with Ironwood's subcontractor network. BRRRR rehabs are not luxury renovations — they are strategic value-adds. The goal is to bring the property to rentable condition at the lowest possible cost while maximizing the appraisal value. This means focusing on items that appraisers and tenants care about: kitchens, bathrooms, flooring, paint, and curb appeal. Every dollar spent on a BRRRR rehab must produce at least two dollars of ARV increase.</p>
+  <div class="two-col">
+    <div class="info-card">
+      <h4 class="sub">High ROI Items</h4>
+      <ul class="body" style="font-size:13px;">
+        <li>LVP flooring throughout</li>
+        <li>Kitchen cabinet repaint + hardware</li>
+        <li>Bathroom vanity + fixtures</li>
+        <li>Fresh interior paint</li>
+        <li>Landscaping / curb appeal</li>
+        <li>New light fixtures</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4 class="sub">Avoid Over-Improving</h4>
+      <ul class="body" style="font-size:13px;">
+        <li>Custom cabinetry (use stock)</li>
+        <li>High-end appliances (mid-grade only)</li>
+        <li>Tile showers in C-class neighborhoods</li>
+        <li>Additions or structural changes</li>
+        <li>Any upgrade the market won't appraise</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sec">The Refinance Exit</h3>
+  <p class="body">The refinance is where the BRRRR strategy either works or fails. Ironwood targets DSCR lenders — Lima One Capital, Kiavi, Visio Lending, CoreVest Finance — who lend based on the property's income, not Ironwood's personal tax returns. DSCR lenders typically require three to six months of seasoning, a signed lease agreement, and a property that meets their minimum condition standards. Ty manages the refinance process; the target is to pull out 75% of ARV, pay off the hard money or purchase loan, and recycle the proceeds into the next deal.</p>
+
+  <h3 class="sec">Tenant Placement</h3>
+  <p class="body">Jordan markets every rental unit and manages tenant screening. Ironwood's screening criteria: credit score 620 or above, income at least three times monthly rent, no evictions in the last five years, verifiable rental history. Government housing vouchers (Section 8) are accepted on all qualifying units — government-guaranteed rent reduces vacancy risk and qualifies units for Ironwood Affordable Housing LLC programs. All leases are signed through Ironwood Property Management LLC, never directly through Ironwood LLC.</p>
+</div>
+
+<!-- ════ 03 NEW CONSTRUCTION ════ -->
+<div id="s3" class="strategy-page">
+  <div class="doc-eyebrow">Strategy 03</div>
+  <div class="doc-title">New Construction BRRRR</div>
+  <div class="doc-sub">Building duplexes every four months, placing tenants, refinancing at ARV, and recycling capital into the next build — indefinitely.</div>
+
+  <h3 class="sec">Overview</h3>
+  <p class="body">New construction BRRRR is Ironwood's highest-equity, highest-control strategy. Rather than buying existing distressed properties and competing with other investors for deals, Ironwood builds new — controlling the product quality, the timeline, and the final value from the ground up. The four-month build cycle, combined with a DSCR cash-out refinance at completion, creates a self-funding loop: each duplex returns its construction capital through the refi, which funds the land for the next build.</p>
+
+  <div class="callout">
+    <div class="callout-label">Core Thesis</div>
+    <p class="body">Build a duplex every four months. Refi each one at ARV. Recycle the proceeds. Hold every door. By month 24, Ironwood holds six rental doors generating $3,150/month in cash flow — with $315,000 in equity — without ever raising outside capital.</p>
+  </div>
+
+  <h3 class="sec">The Build Cycle</h3>
+  <div class="phase-flow">
+    <div class="pf-step"><div class="pf-num">Phase 1</div><div class="pf-title">Land + Permits</div><div class="pf-time">Month 0–1</div></div>
+    <div class="pf-step"><div class="pf-num">Phase 2</div><div class="pf-title">Construction</div><div class="pf-time">Month 1–4</div></div>
+    <div class="pf-step"><div class="pf-num">Phase 3</div><div class="pf-title">CO + Leasing</div><div class="pf-time">Month 4–5</div></div>
+    <div class="pf-step"><div class="pf-num">Phase 4</div><div class="pf-title">Seasoning</div><div class="pf-time">Month 5–6</div></div>
+    <div class="pf-step"><div class="pf-num">Phase 5</div><div class="pf-title">Refi + Recycle</div><div class="pf-time">Month 6–7</div></div>
+  </div>
+
+  <h3 class="sec">Per-Duplex Numbers</h3>
+  <table class="data-table">
+    <thead><tr><th>Item</th><th>Amount</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>All-In Build Cost</td><td>$295,000 max</td><td>Land + construction + soft costs</td></tr>
+      <tr><td>ARV at Stabilization</td><td>$420,000</td><td>After tenants placed and seasoned</td></tr>
+      <tr><td>DSCR Refi at 75% LTV</td><td>$315,000</td><td>Pays off hard money</td></tr>
+      <tr class="hl"><td>Capital Recycled</td><td class="gold">~$20,000</td><td>Funds next land acquisition</td></tr>
+      <tr><td>Equity Retained</td><td>~$105,000</td><td>ARV minus loan balance</td></tr>
+      <tr><td>Monthly Rent (2 units)</td><td>$2,800</td><td>$1,400 per unit</td></tr>
+      <tr><td>DSCR Mortgage</td><td>~$1,750</td><td>6.5%, 30-year</td></tr>
+      <tr class="hl"><td>Monthly Cash Flow</td><td class="green">~$1,050</td><td>Per duplex, before maintenance</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sec">Preferred Lenders</h3>
+  <ul class="body">
+    <li><strong>Ground Floor — Ben Spinek (470-228-2326):</strong> 9.5% with deferred payments until refi. Preferred construction lender. Does not finance sewer tap — budget separately.</li>
+    <li><strong>Duke Allen &amp; Co — Joseph Castaneda (305-522-6126):</strong> 11–15%. Backup construction lender.</li>
+    <li><strong>DSCR Hold Lenders:</strong> Lima One Capital, Kiavi, Visio Lending, CoreVest Finance. Contact before first build to confirm their seasoning and documentation requirements.</li>
+  </ul>
+
+  <h3 class="sec">Prerequisites Before First Build</h3>
+  <div class="step-list">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">GC License</div><div class="step-desc">Jeff obtains Georgia Residential Contractor license or arrange a licensed GC relationship. Required for Fund the Flip and most permit applications.</div></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">DSCR Pre-Approval</div><div class="step-desc">Contact Lima One or Kiavi before breaking ground. Confirm seasoning requirements, DSCR ratio, and entity documentation needed.</div></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Hard Money Commitment</div><div class="step-desc">Get commitment letter from Ground Floor confirming 100% construction funding and land leverage terms.</div></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">Lot #2 Identified</div><div class="step-desc">Before breaking ground on Duplex #1, have Lot #2 under contract or optioned. Never start without knowing where the next build goes.</div></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><div class="step-title">Ironwood Property Management LLC Active</div><div class="step-desc">All tenant leases must be signed through Ironwood Property Management LLC — not Ironwood LLC directly.</div></div></div>
+  </div>
+</div>
+
+<!-- ════ 04 WHOLESALE & SOURCING ════ -->
+<div id="s4" class="strategy-page">
+  <div class="doc-eyebrow">Strategy 04</div>
+  <div class="doc-title">Wholesale &amp; Deal Sourcing</div>
+  <div class="doc-sub">How Ironwood finds off-market deals before other investors — and how to turn every lead into either a flip, a BRRRR acquisition, or an assignment fee.</div>
+
+  <h3 class="sec">Overview</h3>
+  <p class="body">The best deals are never on the MLS. Distressed sellers — people facing foreclosure, probate, divorce, inherited properties, major repairs they can not afford — often sell below market because they need speed and certainty, not the highest price. Ironwood's deal sourcing strategy is built around finding these sellers before anyone else does, through direct outreach, digital marketing, and community relationships.</p>
+  <p class="body">Every lead that comes in gets evaluated against two criteria: does it meet Ironwood's MAO for a BRRRR hold, or can it be assigned to another investor for a fee? Ironwood never lets a deal walk away just because it does not fit the current acquisition criteria — an assignment or wholesale fee of $5,000–$20,000 is pure profit with no rehab risk.</p>
+
+  <h3 class="sec">Lead Sources</h3>
+  <h4 class="sub">Digital — Inbound</h4>
+  <ul class="body">
+    <li><strong>Seller Lead Form (Ironwood website):</strong> The primary digital intake point. Motivated sellers fill out the form describing their property and situation. Ty reviews every submission within 24 hours.</li>
+    <li><strong>Google Ads + Facebook/Instagram Ads:</strong> Targeted to Atlanta metro ZIP codes with high distressed property concentrations. Ad copy focuses on "sell as-is, close in 14 days, no repairs needed."</li>
+    <li><strong>YouTube content:</strong> Educational content about selling to investors positions Ty as the trusted local expert. Sellers who watch three videos before calling are warmer and more motivated than cold ad leads.</li>
+  </ul>
+  <h4 class="sub">Direct Outreach</h4>
+  <ul class="body">
+    <li><strong>Driving for Dollars:</strong> Ty or a designated driver routes through target neighborhoods looking for visual distress signals — overgrown lawns, boarded windows, tarped roofs, code violation notices, deferred maintenance. Properties are logged in the CRM and direct mail is sent within 48 hours.</li>
+    <li><strong>Direct Mail:</strong> Targeted mailings to absentee owners, pre-foreclosure lists, probate leads, and tax-delinquent properties. Mail sequence: initial letter → follow-up postcard at 30 days → final letter at 60 days. Response rate is typically 1–3% but these are highly motivated sellers.</li>
+    <li><strong>Cold Outreach / SMS:</strong> Batch texting services (Launch Control, REISift) allow personalized texts to distressed property lists at scale. All responses route to Ty's CRM for follow-up.</li>
+  </ul>
+  <h4 class="sub">Relationship-Based</h4>
+  <ul class="body">
+    <li><strong>Real estate agents:</strong> Agents with expired listings, pocket listings, and seller clients who can not wait for traditional closing timelines. Build a relationship with 5–10 high-volume Atlanta agents.</li>
+    <li><strong>Probate attorneys and estate planners:</strong> Heirs who inherit properties often want to sell quickly without making repairs. A relationship with one or two probate attorneys produces consistent deal flow.</li>
+    <li><strong>Property managers:</strong> Landlords who are burned out or have problem tenants are motivated sellers. Property managers know which landlords are struggling.</li>
+    <li><strong>Wholesaler network:</strong> Other wholesalers bring deals to Ironwood in exchange for a co-wholesale fee. Ironwood reciprocates by sending deals that do not fit its criteria to trusted partners.</li>
+  </ul>
+
+  <h3 class="sec">The Three-Option Framework</h3>
+  <p class="body">Every lead that comes in gets evaluated against three options. Ironwood never has one answer — it has three, and it picks the one that maximizes return given the available capital and pipeline capacity.</p>
+  <table class="data-table">
+    <thead><tr><th>Option</th><th>When to Use</th><th>Expected Return</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Keep as BRRRR</strong></td><td>Meets MAO, strong rental market, fits portfolio strategy</td><td>$1,000–$1,500/mo cash flow + equity</td></tr>
+      <tr><td><strong>Fix and Flip</strong></td><td>High ARV market, fast absorption, strong margins over rehab cost</td><td>$25,000–$60,000 net profit</td></tr>
+      <tr><td><strong>Wholesale / Assign</strong></td><td>Does not meet MAO, capital is deployed, or deal needs speed</td><td>$5,000–$20,000 assignment fee</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sec">CRM and Follow-Up</h3>
+  <p class="body">Most motivated sellers do not sell the first time they are contacted. A seller who says no in January may be ready in April. Ironwood maintains a CRM (GoHighLevel) with every lead, their situation, and a follow-up sequence. Leads that are not ready now are nurtured with monthly touchpoints — a text, a call, a mailer — until they are ready to act. The pipeline value of consistent follow-up is greater than any single acquisition.</p>
+
+  <div class="callout-green">
+    <div class="callout-label">The Rule</div>
+    <p class="body">Every seller lead gets a response within 24 hours. Every follow-up is logged in the CRM. No lead dies without at least three attempts. Speed and consistency separate Ironwood from competitors who let leads go cold.</p>
+  </div>
+</div>
+
+<!-- ════ 05 RENTAL PORTFOLIO ════ -->
+<div id="s5" class="strategy-page">
+  <div class="doc-eyebrow">Strategy 05</div>
+  <div class="doc-title">Rental Portfolio Management</div>
+  <div class="doc-sub">How Ironwood holds, manages, and grows its long-term rental portfolio through Ironwood Property Management LLC.</div>
+
+  <h3 class="sec">Overview</h3>
+  <p class="body">Every property Ironwood acquires through BRRRR or new construction is held in the portfolio indefinitely. The portfolio is the asset base — the collateral for future leverage, the source of monthly cash flow, and the foundation of long-term wealth. Properties are sold only by unanimous consent of both Members when the financial case is compelling. The default posture is always hold.</p>
+  <p class="body">All rental operations are conducted through Ironwood Property Management LLC, a wholly-owned subsidiary of Ironwood LLC. This entity isolates liability, establishes a professional management brand, and creates the legal and operational structure to scale to unlimited units without adding complexity to the parent company.</p>
+
+  <div class="callout">
+    <div class="callout-label">Portfolio Philosophy</div>
+    <p class="body">We do not sell doors — we add them. Every unit is a monthly income stream, a line of credit waiting to be drawn, and an inflation hedge that appreciates while the tenant pays down the mortgage. The portfolio compounds. Selling breaks the chain.</p>
+  </div>
+
+  <h3 class="sec">Tenant Screening Standards</h3>
+  <table class="data-table">
+    <thead><tr><th>Criteria</th><th>Minimum Standard</th><th>Preferred</th></tr></thead>
+    <tbody>
+      <tr><td>Credit Score</td><td>620</td><td>680+</td></tr>
+      <tr><td>Income</td><td>3× monthly rent</td><td>4× monthly rent</td></tr>
+      <tr><td>Eviction History</td><td>None in last 5 years</td><td>None ever</td></tr>
+      <tr><td>Rental History</td><td>Verifiable, 1+ year</td><td>2+ years, positive references</td></tr>
+      <tr><td>Criminal Background</td><td>No violent or property crimes</td><td>Clean record</td></tr>
+      <tr><td>Employment</td><td>Employed or verifiable income source</td><td>Stable employment 1+ year</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sec">Lease Structure</h3>
+  <ul class="body">
+    <li><strong>Lease term:</strong> 12 months initial term, month-to-month thereafter with 60-day notice requirement.</li>
+    <li><strong>Rent increases:</strong> Annual increase of 3–5% at lease renewal, communicated 60 days before renewal date. Never skip annual increases — falling behind market rent is difficult to recover from without tenant turnover.</li>
+    <li><strong>Security deposit:</strong> One month's rent, held in a dedicated escrow account per Georgia landlord-tenant law.</li>
+    <li><strong>Late fees:</strong> Rent is due on the 1st, late after the 5th. Late fee: $75 flat plus $10/day. Applied consistently — no exceptions without documented hardship.</li>
+    <li><strong>Government vouchers (Section 8):</strong> Accepted on all qualifying units. Government-guaranteed rent eliminates default risk and qualifies properties for Ironwood Affordable Housing LLC programs.</li>
+  </ul>
+
+  <h3 class="sec">Maintenance and Turnover</h3>
+  <ul class="body">
+    <li><strong>Preventive maintenance:</strong> Annual HVAC service, semi-annual gutter cleaning, biannual exterior inspection. Ironwood Services LLC handles lawn and cleaning for all portfolio properties.</li>
+    <li><strong>24-hour maintenance response:</strong> Emergency repairs (water, HVAC, electrical) get same-day response. Non-emergency requests get 48-hour acknowledgment and 5-business-day resolution target.</li>
+    <li><strong>Unit turnover:</strong> When a unit turns, Ironwood Services LLC handles cleaning. Jeff's crew handles any rehab needed. Target: unit back on market within 10 business days of vacancy.</li>
+    <li><strong>Turnover budget:</strong> Set aside $1,500–$3,000 per door per year for maintenance and turnover. This comes out of cash flow before distributions.</li>
+  </ul>
+
+  <h3 class="sec">Portfolio Leverage Strategy</h3>
+  <p class="body">As the portfolio grows, the equity in each property becomes the raw material for acquiring more. Ironwood does not treat portfolio equity as net worth on paper — it treats it as deployable capital waiting to be activated. The approved leverage instruments are DSCR cash-out refinances, blanket mortgages covering multiple properties, portfolio lines of credit, and cross-collateralization agreements. No individual property is sold to fund a new acquisition — equity is extracted through refinancing, never disposition.</p>
+  <p class="body">At five doors, Ironwood begins conversations with portfolio lenders (CoreVest, Visio, Arbor) about blanket financing. At ten doors, the portfolio qualifies for institutional-grade terms that significantly reduce the cost of capital on all future acquisitions.</p>
+</div>
+
+<!-- ════ 06 PEACH TO PALMS ════ -->
+<div id="s6" class="strategy-page">
+  <div class="doc-eyebrow">Strategy 06</div>
+  <div class="doc-title">Peach to Palms — Vacation Rental Strategy</div>
+  <div class="doc-sub">How Ironwood operates short-term rentals under the Peach to Palms brand — acquisition, furnishing, platform strategy, and operations.</div>
+
+  <h3 class="sec">Overview</h3>
+  <p class="body">Peach to Palms LLC is a wholly-owned subsidiary of Ironwood LLC operating under the vacation rental brand "Peach to Palms." It represents the short-term rental (STR) arm of the Ironwood portfolio — properties designed and operated for nightly and weekly guests rather than long-term tenants. STR revenue per door is typically two to four times higher than long-term rental income on the same property, with the trade-off of higher operating costs and more active management. Peach to Palms is launched in Phase 3 — after the BRRRR portfolio is established and capital is available for STR-optimized acquisitions.</p>
+  <p class="body">All Peach to Palms revenue flows to Ironwood LLC as company income. Ty Jackson manages operations as a Member and operator — this is an Ironwood company activity, not personal income for Ty. The 25% gross vacation rental revenue fee and 3% platform host passthrough are Ironwood company expenses, not personal compensation.</p>
+
+  <div class="callout">
+    <div class="callout-label">Brand Position</div>
+    <p class="body">Peach to Palms is Atlanta-inspired hospitality — warm, design-forward, locally rooted. Every property tells a story. The brand targets business travelers, weekend getaway guests, and relocating families who want a home experience over a hotel. Jordan's design eye is the brand differentiator.</p>
+  </div>
+
+  <h3 class="sec">Property Acquisition Criteria</h3>
+  <ul class="body">
+    <li><strong>Location:</strong> Atlanta metro neighborhoods with high STR demand — Midtown, Old Fourth Ward, Grant Park, Inman Park, Buckhead, airport corridor. Check local STR regulations before acquisition — some Atlanta neighborhoods have restrictions.</li>
+    <li><strong>Property type:</strong> 2–4 bedroom homes or condos preferred. Duplexes can be run as two separate STR units or one unit STR and one unit long-term rental — hybrid income model.</li>
+    <li><strong>Revenue projection:</strong> Target 60%+ annual occupancy at $150–$250/night average daily rate (ADR). At 200 nights/year × $175 ADR = $35,000 gross revenue. After platform fees (3%), operating costs, and mortgage, target $15,000–$20,000 net per property annually.</li>
+    <li><strong>Conversion right:</strong> Every Peach to Palms property can be converted to a long-term rental at any time by Member agreement. No STR acquisition is a one-way door — every property has a clear long-term rental fallback.</li>
+  </ul>
+
+  <h3 class="sec">Setup and Furnishing</h3>
+  <p class="body">Jordan Sarabia designs every Peach to Palms property. The design is the product — guests choose Peach to Palms over a comparable listing because the space is beautiful, functional, and photographed well. Each property receives a full furniture and decor package ($8,000–$15,000 depending on size), professional photography, and a digital guidebook. Setup cost is a one-time capital expense recouped within the first six months of operation at target occupancy.</p>
+  <div class="two-col">
+    <div class="info-card">
+      <h4 class="sub">Setup Checklist</h4>
+      <ul class="body" style="font-size:13px;">
+        <li>Full furniture package (Jordan-designed)</li>
+        <li>Professional photography (every room)</li>
+        <li>Smart lock + keypad entry</li>
+        <li>High-speed WiFi (dedicated router)</li>
+        <li>Streaming (Netflix/Apple TV)</li>
+        <li>Starter supplies (toiletries, paper goods)</li>
+        <li>Digital welcome guide (local recs)</li>
+        <li>Ironwood/Peach to Palms branding elements</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h4 class="sub">Ongoing Operations</h4>
+      <ul class="body" style="font-size:13px;">
+        <li>Dynamic pricing via PriceLabs or Wheelhouse</li>
+        <li>Ironwood Services LLC handles every turnover clean</li>
+        <li>5-star guest communication (response &lt;1hr)</li>
+        <li>Minimum 3-night stay (reduces turnover cost)</li>
+        <li>Damage protection via Airbnb AirCover</li>
+        <li>STR insurance (Proper Insurance or Steadily)</li>
+        <li>Monthly revenue reporting to Ironwood LLC</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 class="sec">Platform Strategy</h3>
+  <ul class="body">
+    <li><strong>Primary:</strong> Airbnb — highest demand volume, best guest communication tools, AirCover damage protection.</li>
+    <li><strong>Secondary:</strong> VRBO — captures a different guest segment (families, longer stays). List on both simultaneously.</li>
+    <li><strong>Direct bookings:</strong> Once the Peach to Palms brand is established (Year 2+), build a direct booking website to eliminate platform fees on repeat and referred guests. Email list of past guests is a company asset.</li>
+  </ul>
+
+  <h3 class="sec">Revenue Model</h3>
+  <table class="data-table">
+    <thead><tr><th>Item</th><th>Amount</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>Annual Gross Revenue (200 nights × $175)</td><td>$35,000</td><td>Conservative estimate</td></tr>
+      <tr><td>Platform Fee (Airbnb ~3%)</td><td>−$1,050</td><td>Passthrough expense</td></tr>
+      <tr><td>Cleaning / Turnover (Ironwood Services)</td><td>−$4,000</td><td>~$100/turn × 40 turns</td></tr>
+      <tr><td>Supplies and Restocking</td><td>−$1,200</td><td>~$100/mo</td></tr>
+      <tr><td>Insurance (STR policy)</td><td>−$1,500</td><td>Proper Insurance estimate</td></tr>
+      <tr><td>DSCR Mortgage</td><td>−$12,000</td><td>~$1,000/mo on $150K loan</td></tr>
+      <tr class="hl"><td><strong>Net Annual Cash Flow</strong></td><td class="green"><strong>~$15,250</strong></td><td><strong>~$1,270/mo per property</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- ════ 07 BUSINESS CREDIT ════ -->
+<div id="s7" class="strategy-page">
+  <div class="doc-eyebrow">Strategy 07</div>
+  <div class="doc-title">Business Credit Building</div>
+  <div class="doc-sub">The step-by-step roadmap from DUNS number to $100,000+ in business credit lines — without a personal guarantee.</div>
+
+  <h3 class="sec">Overview</h3>
+  <p class="body">Business credit is Ironwood's financial infrastructure. Without it, every purchase is made with personal credit or cash — limiting growth to the speed of cash accumulation. With it, Ironwood can fund material purchases, equipment, and operating expenses on net 30–90 terms, preserving cash for acquisitions. Business credit that reports to D&amp;B, Experian Business, and Equifax Business becomes a tradeline history that unlocks larger credit lines, better terms with suppliers, and eventually bank financing without personal guarantees.</p>
+  <p class="body">The strategy is simple: open the right accounts in the right order, pay them consistently and early, and let the credit profile build itself over 12–18 months. There are no shortcuts — but there is a specific sequence that produces results faster than random account opening.</p>
+
+  <div class="callout">
+    <div class="callout-label">The Goal</div>
+    <p class="body">$100,000+ in business credit lines within 18 months of LLC formation — zero personal guarantee, all in the Ironwood LLC EIN. This becomes the operating capital layer that never requires a cash call from Members.</p>
+  </div>
+
+  <h3 class="sec">Foundation — Before Any Applications</h3>
+  <div class="step-list">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Get Your DUNS Number</div><div class="step-desc">Free at dnb.com. Takes 3–5 business days. Every vendor and lender uses this to pull your business credit profile. Do this before applying for anything.</div></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Consistent Business Information</div><div class="step-desc">Use the exact same legal name (Ironwood LLC), EIN, address, and phone number on every application. Inconsistency raises red flags. Never mix in personal SSN unless a personal guarantee is explicitly required.</div></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Dedicated Business Checking Account</div><div class="step-desc">All business income and expenses run through one account. Vendors and lenders will ask for bank reference information. This account is also the first signal of business legitimacy.</div></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">Business Phone Number and Website</div><div class="step-desc">Vendors verify that a business is real before extending credit. A professional website and a business phone number (not a personal cell) increase approval rates significantly.</div></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><div class="step-title">Monitor at Nav.com</div><div class="step-desc">Free business credit monitoring across D&amp;B, Experian Business, and Equifax Business. Check monthly. Dispute any errors immediately — a single incorrect entry can block approvals.</div></div></div>
+  </div>
+
+  <h3 class="sec">Phase 1 — Day 1 Accounts (Open Immediately)</h3>
+  <p class="body">These vendors approve new LLCs with no credit history. Open all five within the first week of business. Make small purchases ($50–$200) monthly and pay immediately — not by the due date, but immediately. Early payment signals are the fastest way to build a positive payment history.</p>
+  <table class="data-table">
+    <thead><tr><th>Vendor</th><th>What to Buy</th><th>Reports To</th><th>Contact</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Uline</strong></td><td>Cleaning supplies, bags, safety gear</td><td>D&amp;B</td><td>1-800-295-5510</td></tr>
+      <tr><td><strong>Quill</strong></td><td>Office supplies, printer paper</td><td>D&amp;B</td><td>1-800-982-3400</td></tr>
+      <tr><td><strong>Grainger</strong></td><td>Safety gear, tools, MRO supplies</td><td>D&amp;B + Experian</td><td>1-800-472-4643</td></tr>
+      <tr><td><strong>Fastenal</strong></td><td>Fasteners, tools, PPE</td><td>D&amp;B + Experian</td><td>1-877-508-4140</td></tr>
+      <tr><td><strong>Zoro Tools</strong></td><td>Tools, hardware (online)</td><td>D&amp;B</td><td>1-855-289-9676</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sec">Phase 2 — Month 1–2 (Core Business Accounts)</h3>
+  <p class="body">Once Phase 1 accounts are open and reporting, add the core renovation accounts. These have broader utility and higher credit limits than Phase 1 vendors.</p>
+  <table class="data-table">
+    <thead><tr><th>Vendor</th><th>Why</th><th>Reports To</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Sherwin-Williams</strong></td><td>15–40% paint discount; high utility on every job</td><td>D&amp;B + Experian</td></tr>
+      <tr><td><strong>Floor &amp; Decor Pro</strong></td><td>Atlanta HQ; tile, LVP, hardwood for every renovation</td><td>D&amp;B + Experian</td></tr>
+      <tr><td><strong>Home Depot Pro</strong></td><td>Universal utility; 30+ Atlanta locations</td><td>Experian</td></tr>
+      <tr><td><strong>Lowe's for Pros</strong></td><td>5% off everyday; pairs with HD Pro</td><td>D&amp;B + Experian</td></tr>
+      <tr><td><strong>SiteOne Landscape</strong></td><td>Landscaping for rentals and new construction</td><td>D&amp;B + Experian</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sec">Phase 3 — Month 3–6 (Trade Accounts)</h3>
+  <p class="body">After 3–6 months of positive payment history, apply for trade accounts that require established credit. These carry higher limits and cover the bulk of Ironwood's material spend.</p>
+  <ul class="body">
+    <li><strong>Ferguson</strong> — Plumbing, HVAC, fixtures. One account covers all three. Norcross: 770-441-2040.</li>
+    <li><strong>Graybar Electric</strong> — Wire, conduit, panels, lighting. Atlanta: 404-344-5700.</li>
+    <li><strong>Builders FirstSource</strong> — Lumber, trusses, engineered wood. Smyrna: 770-432-0400.</li>
+    <li><strong>Sunbelt or United Rentals</strong> — Equipment rental on net 30 terms.</li>
+  </ul>
+
+  <h3 class="sec">Phase 4 — Month 12–18 (Bank Credit)</h3>
+  <p class="body">With 12+ months of vendor tradeline history, Ironwood applies for business credit cards and bank lines of credit. Target: a $25,000–$50,000 business line of credit with the primary banking institution. At this stage, the business credit profile replaces the need for personal guarantees on most operating credit — Ironwood's track record speaks for itself.</p>
+
+  <div class="callout-green">
+    <div class="callout-label">The Compounding Effect</div>
+    <p class="body">Every on-time payment is a data point. Every data point raises the profile. A stronger profile opens larger lines. Larger lines reduce cash tied up in operations. Less cash in operations means more cash available for acquisitions. Business credit is a force multiplier — build it early, use it strategically, and it pays dividends for the life of the company.</p>
+  </div>
+</div>
+
+<!-- ════ 08 INVESTOR CAPITAL ════ -->
+<div id="s8" class="strategy-page">
+  <div class="doc-eyebrow">Strategy 08</div>
+  <div class="doc-title">Investor Capital Raise</div>
+  <div class="doc-sub">How Ironwood raises outside capital while keeping 100% operational control — through accredited investors and community crowdfunding.</div>
+
+  <h3 class="sec">Overview</h3>
+  <p class="body">As Ironwood's deal volume grows, the capital required to fund acquisitions and construction will exceed what the remodeling business and refi proceeds alone can supply. Ironwood's investor capital strategy solves this through two parallel tracks: a private placement for accredited investors on standard deals, and community crowdfunding for mission-driven projects. In both cases, Ironwood retains complete operational control. Investors come in through deal-specific Project LLCs — they never acquire any interest in Ironwood LLC itself.</p>
+
+  <div class="callout">
+    <div class="callout-label">The Non-Negotiable</div>
+    <p class="body">Investors never enter Ironwood LLC. Every raise is through a deal-specific Project LLC with Ironwood as the sole Managing Member. Investors are Non-Managing Members with no voting rights on operations. Ironwood controls every decision from acquisition through disposition.</p>
+  </div>
+
+  <h3 class="sec">Track 1 — Accredited Investors (Reg D 506(c))</h3>
+  <p class="body">Regulation D Rule 506(c) allows Ironwood to advertise investment opportunities publicly — on Instagram, YouTube, Facebook, and the website — as long as all investors are verified accredited. Accredited investors are individuals earning $200,000+ per year or with $1,000,000+ in net worth. Verification is required before accepting capital. A Private Placement Memorandum (PPM) prepared by a Georgia securities attorney is required before the first offering.</p>
+  <ul class="body">
+    <li><strong>Minimum investment:</strong> $5,000 per deal</li>
+    <li><strong>Preferred return:</strong> 8–10% annualized</li>
+    <li><strong>Profit split above pref:</strong> 70% investors / 30% Ironwood promote</li>
+    <li><strong>Ironwood management fee:</strong> 1–2% of capital raised or 5% of gross project revenue</li>
+    <li><strong>Investor voting rights:</strong> None on operations. Limited consent on sale below contributed capital.</li>
+    <li><strong>Best for:</strong> BRRRR acquisitions, flips, new construction projects with clear exit timelines</li>
+  </ul>
+
+  <h3 class="sec">Track 2 — Community Crowdfunding (Reg CF)</h3>
+  <p class="body">Regulation Crowdfunding allows Ironwood to raise up to $5,000,000 per year from the general public — not just accredited investors — through SEC-registered portals like Wefunder, Republic, or StartEngine. This track is reserved for community-focused projects: veteran housing, affordable housing, and neighborhood revitalization. Minimum investment as low as $100. The raise itself becomes content — every update, every milestone, every before-and-after is a social media post that builds the Ironwood brand while simultaneously funding the deal.</p>
+  <ul class="body">
+    <li><strong>Eligible projects:</strong> Ironwood Veteran Housing LLC, Ironwood Affordable Housing LLC, and neighborhood revitalization projects</li>
+    <li><strong>Platform:</strong> Wefunder, Republic, or StartEngine (SEC-registered)</li>
+    <li><strong>Minimum investment:</strong> $100</li>
+    <li><strong>Returns:</strong> Modest preferred return (4–6%) or revenue share — the community mission is part of the value</li>
+    <li><strong>Give-back option:</strong> By unanimous Member consent, Ironwood can donate its promote on community deals back to the project or a nonprofit partner</li>
+  </ul>
+
+  <h3 class="sec">Investor Waterfall</h3>
+  <table class="data-table">
+    <thead><tr><th>Step</th><th>Who Gets Paid</th><th>Amount</th></tr></thead>
+    <tbody>
+      <tr><td>1</td><td>Return of capital</td><td>100% of contributed capital back to investors first</td></tr>
+      <tr><td>2</td><td>Preferred return</td><td>8–10% annualized on contributed capital</td></tr>
+      <tr><td>3</td><td>Profit split</td><td>70% to investors · 30% Ironwood promote</td></tr>
+      <tr class="hl"><td>—</td><td>Ironwood promote flows to</td><td class="gold">Ironwood LLC → 50/50 to Anchor Pro and Landon Renovations</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sec">Rollout Timeline</h3>
+  <div class="step-list">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Now — Framework in Place</div><div class="step-desc">Article XVII of the Operating Agreement authorizes both tracks. No action needed — the legal foundation exists.</div></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Before First Raise — Attorney Review</div><div class="step-desc">Georgia securities attorney reviews and prepares PPM template and Project LLC operating agreement. Cost: $2,000–$5,000. Required before accepting any investor capital.</div></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">First Deal — One Investor, Reg D 506(b)</div><div class="step-desc">Start with one trusted person — friends, family, or someone who knows Ty or Jeff. Reg D 506(b) requires a pre-existing relationship. No PPM required for the first deal if structured correctly. Simple subscription agreement suffices.</div></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">After 2–3 Completed Deals — Launch Reg D 506(c)</div><div class="step-desc">With a track record, Ironwood can publicly advertise deals on social media. PPM in hand, Form D filed with SEC within 15 days of first sale. Start building an investor list through YouTube and Instagram content.</div></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><div class="step-title">Year 2+ — Community Crowdfunding</div><div class="step-desc">File Form C with SEC and register on Wefunder or Republic for first veteran or affordable housing project. The community crowdfunding raise becomes a major content campaign — document everything.</div></div></div>
+  </div>
+</div>
+
+<!-- ════ 09 SUBSIDIARY LAUNCH ════ -->
+<div id="s9" class="strategy-page">
+  <div class="doc-eyebrow">Strategy 09</div>
+  <div class="doc-title">Subsidiary Launch Playbook</div>
+  <div class="doc-sub">How Ironwood spins up each subsidiary LLC — the sequence, startup costs, and revenue targets for every business line.</div>
+
+  <h3 class="sec">Overview</h3>
+  <p class="body">Every Ironwood business line operates as its own subsidiary LLC, wholly owned by Ironwood LLC. This structure isolates liability between business lines, creates distinct brands for different markets, and allows each entity to build its own credit profile, contracts, and banking relationships. Ironwood LLC holds 100% membership interest in every subsidiary. Profits flow up to Ironwood LLC and distribute 50/50 through the standard waterfall.</p>
+  <p class="body">Subsidiaries are launched in a deliberate sequence — earliest ones require the least capital and provide immediate revenue that funds later, higher-capital launches. The sequence below reflects both the ease of launch and the revenue velocity of each line.</p>
+
+  <div class="callout">
+    <div class="callout-label">The Structure</div>
+    <p class="body">Ironwood LLC (parent, owned 50/50 by Anchor Pro Solutions and Landon Renovations) → holds 100% of each subsidiary. Every subsidiary is a separate LLC, a separate bank account, a separate tax ID, and a separate brand. Same team, same infrastructure, multiply income streams.</p>
+  </div>
+
+  <h3 class="sec">Launch Sequence</h3>
+  <table class="data-table">
+    <thead><tr><th>Subsidiary</th><th>Phase</th><th>Startup Cost</th><th>Revenue Model</th><th>Why This Order</th></tr></thead>
+    <tbody>
+      <tr class="sec-row"><td colspan="5">Phase 1 — Launch Now (Month 1–3)</td></tr>
+      <tr><td><strong>Ironwood Services LLC</strong><br/><span style="font-size:11px;color:var(--muted)">Post-Construction Cleaning</span></td><td>Month 1</td><td>$500–$2,000</td><td>$200–$500/clean · feeds from every renovation job</td><td>Zero startup cost. Every completed renovation needs a final clean. Immediate revenue from Day 1.</td></tr>
+      <tr><td><strong>Ironwood Services LLC</strong><br/><span style="font-size:11px;color:var(--muted)">Property Staging</span></td><td>Month 1–2</td><td>$2,000–$8,000</td><td>$500–$3,500/engagement</td><td>Every seller lead and completed renovation is a staging opportunity. Jordan's design skills are the product.</td></tr>
+      <tr><td><strong>Ironwood Services LLC</strong><br/><span style="font-size:11px;color:var(--muted)">Lawn Care</span></td><td>Month 2–4</td><td>$3,000–$8,000</td><td>$40–$120/visit · weekly recurring</td><td>Rental property maintenance creates a recurring base. Every BRRRR door becomes a weekly contract.</td></tr>
+      <tr class="sec-row"><td colspan="5">Phase 2 — Launch at First Rental (Month 6+)</td></tr>
+      <tr><td><strong>Ironwood Property Management LLC</strong></td><td>Month 6+</td><td>$500 (entity formation)</td><td>12.5% of gross monthly rent per unit managed</td><td>Form when first rental property is acquired. Must be active before first lease is signed.</td></tr>
+      <tr><td><strong>Ironwood Affordable Housing LLC</strong></td><td>Month 6+</td><td>$500 (entity formation)</td><td>Section 8 / government-guaranteed rent</td><td>Apply for Section 8 landlord approval on first BRRRR rental. Reduces vacancy risk from Day 1 of holding.</td></tr>
+      <tr class="sec-row"><td colspan="5">Phase 2–3 — Launch at Scale (Month 6–12)</td></tr>
+      <tr><td><strong>Ironwood Veteran Housing LLC</strong></td><td>Month 6–12</td><td>$500 (entity formation)</td><td>VA-adjacent vouchers + market rate on remaining units</td><td>Partner with VA-adjacent nonprofits. Layer on top of existing rental operations. Low barrier — same properties, different tenant preference and voucher source.</td></tr>
+      <tr><td><strong>Ironwood Services LLC</strong><br/><span style="font-size:11px;color:var(--muted)">Dumpster Rental</span></td><td>Month 6–9</td><td>$15,000–$25,000</td><td>$300–$500/dumpster drop · recurring from renovation pipeline</td><td>Higher startup cost — fund from remodeling profits or business credit. Every Ironwood job needs a dumpster.</td></tr>
+      <tr class="sec-row"><td colspan="5">Phase 3 — Launch Post-Portfolio (Month 12+)</td></tr>
+      <tr><td><strong>Peach to Palms LLC</strong></td><td>Month 12+</td><td>$8,000–$15,000/property</td><td>$1,270+/mo net per STR property</td><td>Launches after BRRRR portfolio is established and capital is available for STR-specific acquisition and furnishing.</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="sec">Each Subsidiary Launch Process</h3>
+  <div class="step-list">
+    <div class="step"><div class="step-num">1</div><div class="step-body"><div class="step-title">Form the LLC</div><div class="step-desc">File Articles of Organization with the Georgia Secretary of State ($100 filing fee). Obtain a separate EIN for the subsidiary — do not use Ironwood LLC's EIN. Takes 1–2 business days online.</div></div></div>
+    <div class="step"><div class="step-num">2</div><div class="step-body"><div class="step-title">Open a Dedicated Bank Account</div><div class="step-desc">Every subsidiary needs its own checking account. Use the same business bank as Ironwood LLC for simplified transfers. Never commingle subsidiary funds with Ironwood LLC funds.</div></div></div>
+    <div class="step"><div class="step-num">3</div><div class="step-body"><div class="step-title">Obtain Required Licenses</div><div class="step-desc">Most service subsidiaries require a Georgia business license, general liability insurance ($1M minimum), and depending on the service, a specific state license (contractor, property manager, pool tech). Confirm requirements before first job.</div></div></div>
+    <div class="step"><div class="step-num">4</div><div class="step-body"><div class="step-title">Build the Credit Profile</div><div class="step-desc">Each subsidiary LLC can build its own business credit profile independently. Open Uline, Quill, and Grainger accounts in the subsidiary's name and EIN within the first 30 days. The subsidiary's credit profile grows separately from Ironwood LLC's.</div></div></div>
+    <div class="step"><div class="step-num">5</div><div class="step-body"><div class="step-title">Set Up Profit Flow</div><div class="step-desc">Establish a quarterly profit distribution from the subsidiary's checking account to Ironwood LLC's account. Document every transfer as a "distribution of net profit to parent member." Keep clean records — the IRS looks at related-party transactions carefully.</div></div></div>
+  </div>
+
+  <h3 class="sec">Shared Infrastructure Across All Subsidiaries</h3>
+  <ul class="body">
+    <li><strong>Marketing:</strong> All subsidiaries are marketed under the Ironwood umbrella brand, with Jordan producing creative assets and Ty managing paid promotion. One marketing budget, multiple revenue streams.</li>
+    <li><strong>Bookkeeping:</strong> Single QuickBooks setup with separate entities. One bookkeeper tracks all subsidiaries. This keeps CPA costs manageable and gives a consolidated view of Ironwood's total financial position.</li>
+    <li><strong>Insurance:</strong> Where eligible, a commercial umbrella policy covers multiple subsidiaries under one premium. Consult with Ironwood's commercial insurance broker annually.</li>
+    <li><strong>Supplier accounts:</strong> Home Depot Pro, Lowe's for Pros, and other renovation accounts can often be extended to subsidiaries. The relationships built through Ironwood LLC's credit history benefit every related entity.</li>
+    <li><strong>Cross-referral:</strong> Every remodel job feeds Ironwood Services (cleaning, lawn, staging). Every rental feeds Property Management, Affordable Housing, and Peach to Palms. Every acquisition feeds the entire ecosystem. The subsidiaries are not separate businesses — they are one machine with multiple outputs.</li>
+  </ul>
+
+</div><!-- end s9 -->
+
+</div><!-- end content -->
+</div><!-- end layout -->
+
+<footer>Ironwood Renovations · Strategy Playbook · Internal Use Only · Atlanta Metro</footer>
+
+<script>
+function show(id, navEl) {
+  document.querySelectorAll('.strategy-page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  navEl.classList.add('active');
+  document.querySelector('.content').scrollTop = 0;
+}
+</script>
+</body>
+</html>
