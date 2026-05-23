@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Scope of Work Tool — Ironwood Renovations</title>
+<title>Scope of Work Tool — Ironwood Property Group</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
   body{font-family:Arial,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;}
@@ -291,7 +292,7 @@
 <!-- HEADER -->
 <div id="app-header">
   <div>
-    <div class="brand">Ironwood Renovations</div>
+    <div class="brand">Ironwood Property Group</div>
     <div class="title">Construction Budget &amp; Scope of Work</div>
   </div>
   <div class="hdr-btns">
@@ -442,7 +443,7 @@
 <div class="tab-panel" id="tab2">
   <div class="two-panels">
     <div class="card">
-      <div class="card-title">Ironwood Renovations Deposits — Ty</div>
+      <div class="card-title">Ironwood Property Group Deposits — Ty</div>
       <div class="table-wrap">
         <table class="ledger-table">
           <thead><tr>
@@ -462,7 +463,7 @@
       <button class="add-btn" onclick="addDepRow(1)">+ Add Deposit</button>
     </div>
     <div class="card">
-      <div class="card-title">Ironwood Renovations Deposits — Jeff</div>
+      <div class="card-title">Ironwood Property Group Deposits — Jeff</div>
       <div class="table-wrap">
         <table class="ledger-table">
           <thead><tr>
@@ -740,26 +741,26 @@ function defaultBudget(){
 }
 
 const DEFAULT_SOFT=[
-  {date:'',expense:'Earnest Money Deposit',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:1000,notes:'Refundable during due diligence'},
-  {date:'',expense:'Title Search',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:250,notes:''},
-  {date:'',expense:'Home Inspection',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:350,notes:'Pre-close walkthrough with Jeff'},
-  {date:'',expense:'Appraisal Fee',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:500,notes:'Required for refi'},
-  {date:'',expense:'Hard Money Origination Fee',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:0,notes:'Typically 1.5–2.5 points of loan'},
-  {date:'',expense:'Closing Costs — Buy Side',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:0,notes:'~3% of purchase price'},
-  {date:'',expense:'Building Permit',paidFrom:'Ironwood Renovations Checking',paidBy:'Jeff',amount:0,notes:'Pulled by Jeff Week 1 post-close'},
-  {date:'',expense:'HML Interest (monthly carry)',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:0,notes:'10–14%/yr while holding'},
-  {date:'',expense:'Property Insurance (rehab period)',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:0,notes:'Builder\'s risk policy'},
-  {date:'',expense:'Utilities during rehab',paidFrom:'Ironwood Renovations Checking',paidBy:'Jeff',amount:0,notes:'Electric, water'},
-  {date:'',expense:'Professional Photography',paidFrom:'Ironwood Renovations Checking',paidBy:'Jordan',amount:200,notes:'Same day as final walk'},
-  {date:'',expense:'Refi Closing Costs',paidFrom:'Ironwood Renovations Checking',paidBy:'Ty',amount:0,notes:'~2–3% of refi loan amount'},
+  {date:'',expense:'Earnest Money Deposit',paidFrom:'Ironwood Property Group Checking',paidBy:'Ty',amount:1000,notes:'Refundable during due diligence'},
+  {date:'',expense:'Title Search',paidFrom:'Ironwood Property Group Checking',paidBy:'Ty',amount:250,notes:''},
+  {date:'',expense:'Home Inspection',paidFrom:'Ironwood Property Group Checking',paidBy:'Ty',amount:350,notes:'Pre-close walkthrough with Jeff'},
+  {date:'',expense:'Appraisal Fee',paidFrom:'Ironwood Property Group Checking',paidBy:'Ty',amount:500,notes:'Required for refi'},
+  {date:'',expense:'Hard Money Origination Fee',paidFrom:'Ironwood Property Group Checking',paidBy:'Ty',amount:0,notes:'Typically 1.5–2.5 points of loan'},
+  {date:'',expense:'Closing Costs — Buy Side',paidFrom:'Ironwood Property Group Checking',paidBy:'Ty',amount:0,notes:'~3% of purchase price'},
+  {date:'',expense:'Building Permit',paidFrom:'Ironwood Property Group Checking',paidBy:'Jeff',amount:0,notes:'Pulled by Jeff Week 1 post-close'},
+  {date:'',expense:'HML Interest (monthly carry)',paidFrom:'Ironwood Property Group Checking',paidBy:'Ty',amount:0,notes:'10–14%/yr while holding'},
+  {date:'',expense:'Property Insurance (rehab period)',paidFrom:'Ironwood Property Group Checking',paidBy:'Ty',amount:0,notes:'Builder\'s risk policy'},
+  {date:'',expense:'Utilities during rehab',paidFrom:'Ironwood Property Group Checking',paidBy:'Jeff',amount:0,notes:'Electric, water'},
+  {date:'',expense:'Professional Photography',paidFrom:'Ironwood Property Group Checking',paidBy:'Jordan',amount:200,notes:'Same day as final walk'},
+  {date:'',expense:'Refi Closing Costs',paidFrom:'Ironwood Property Group Checking',paidBy:'Ty',amount:0,notes:'~2–3% of refi loan amount'},
 ];
 
 const DEFAULT_DEP1=[
-  {date:'',amount:30000,notes:'Ironwood Renovations initial capital contribution — formation'},
+  {date:'',amount:30000,notes:'Ironwood Property Group initial capital contribution — formation'},
 ];
 
 const DEFAULT_DEP2=[
-  {date:'',amount:0,notes:'Ironwood Renovations — sweat equity Deal #1 (document separately)'},
+  {date:'',amount:0,notes:'Ironwood Property Group — sweat equity Deal #1 (document separately)'},
 ];
 
 const DEFAULT_ACTIONS=[
@@ -767,7 +768,7 @@ const DEFAULT_ACTIONS=[
   {owner:'Ty',task:'Run MAO Calculator — confirm deal is ≤ 70% ARV',due:'',status:'New',notes:''},
   {owner:'Ty',task:'Secure hard money / DSCR loan commitment',due:'',status:'New',notes:''},
   {owner:'Ty',task:'Order title search',due:'',status:'New',notes:''},
-  {owner:'Ty',task:'Open Ironwood Renovations business checking for this deal',due:'',status:'New',notes:''},
+  {owner:'Ty',task:'Open Ironwood Property Group business checking for this deal',due:'',status:'New',notes:''},
   {owner:'Jeff',task:'Pre-close walkthrough — lock scope before closing',due:'',status:'New',notes:''},
   {owner:'Jeff',task:'Confirm rehab budget and timeline',due:'',status:'New',notes:''},
   {owner:'Jeff',task:'Pull building permit',due:'',status:'New',notes:'Week 1 post-close'},

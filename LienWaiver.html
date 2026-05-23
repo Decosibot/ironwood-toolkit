@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ironwood Renovations — Lien Waiver</title>
+<title>Ironwood Property Group — Lien Waiver</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,7 +28,7 @@
   /* ── TOOLBAR ── */
   .toolbar {
     background: var(--ink);
-    color: var(--cream);
+    color: var(--ink);
     padding: 10px 20px;
     display: flex;
     align-items: center;
@@ -37,11 +38,11 @@
     top: 0;
     z-index: 100;
   }
-  .toolbar-brand { font-family: 'Segoe UI', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--gold); }
+  .toolbar-brand { font-family: 'Segoe UI', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--bronze); }
   .toolbar-actions { display: flex; gap: 8px; }
   .btn { border: none; cursor: pointer; padding: 7px 16px; border-radius: 4px; font-family: 'Segoe UI', sans-serif; font-size: 12px; font-weight: 600; }
-  .btn-gold { background: var(--gold); color: var(--ink); }
-  .btn-outline { background: transparent; border: 1px solid #555; color: var(--cream); }
+  .btn-gold { background: var(--bronze); color: var(--ink); }
+  .btn-outline { background: transparent; border: 1px solid #555; color: var(--ink); }
   @media print { .toolbar { display: none !important; } }
 
   /* ── PAGE ── */
@@ -123,7 +124,7 @@
     transition: all .15s;
   }
   .variant-tab:last-child { border-right: none; }
-  .variant-tab.active { background: var(--ink); color: var(--cream); }
+  .variant-tab.active { background: var(--ink); color: var(--ink); }
   @media print { .variant-tabs { display: none; } }
 
   /* ── BODY TEXT ── */
@@ -154,7 +155,7 @@
     outline: none;
     vertical-align: bottom;
   }
-  .fill-line:focus { border-bottom-color: var(--gold); }
+  .fill-line:focus { border-bottom-color: var(--bronze); }
   .fill-block {
     margin-bottom: 12px;
   }
@@ -265,7 +266,7 @@
 <body>
 
 <div class="toolbar">
-  <span class="toolbar-brand">Ironwood Renovations — Lien Waiver</span>
+  <span class="toolbar-brand">Ironwood Property Group — Lien Waiver</span>
   <div class="toolbar-actions">
     <button class="btn btn-outline" onclick="window.print()">Print / Save PDF</button>
   </div>
@@ -275,7 +276,7 @@
 
   <!-- HEADER -->
   <div class="doc-header">
-    <div class="doc-brand">Ironwood Renovations</div>
+    <div class="doc-brand">Ironwood Property Group</div>
     <div class="doc-brand-sub">Licensed Contractor · Georgia</div>
     <div class="doc-type">Lien Waiver</div>
     <div class="doc-variant" id="variantLabel">Conditional Waiver Upon Final Payment</div>
@@ -330,7 +331,7 @@
       This waiver is conditioned upon receipt and clearance of payment. Signing this document does not extinguish any lien or right to claim unless and until payment clears.
     </div>
     <div class="legal-block">
-      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Renovations</strong>, "Claimant") has furnished labor, services, materials, and/or equipment for the improvement of the real property described above, under contract with the Owner or Owner's authorized agent.</p>
+      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Property Group</strong>, "Claimant") has furnished labor, services, materials, and/or equipment for the improvement of the real property described above, under contract with the Owner or Owner's authorized agent.</p>
 
       <p>Upon receipt by Claimant of a check from <span class="fill-line" id="cf_payor" style="width:200px;" contenteditable="true" oninput="syncField(this,'cf_payor_val')"></span> in the sum of <strong>$<span class="fill-line" id="cf_amount" style="width:100px;" contenteditable="true"></span></strong>, payable to Ironwood LLC, and when the check has been properly endorsed and has been paid by the bank upon which it is drawn, this document shall become effective to release any mechanic's lien, stop notice, or bond right the Claimant has on the above-described property for labor, services, equipment, or materials furnished through the date stated above.</p>
 
@@ -357,7 +358,7 @@
       Signing this document releases all lien and bond rights regardless of whether payment actually clears. Use only after payment has been confirmed received and cleared.
     </div>
     <div class="legal-block">
-      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Renovations</strong>, "Claimant") has furnished labor, services, materials, and/or equipment for the improvement of the real property described above.</p>
+      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Property Group</strong>, "Claimant") has furnished labor, services, materials, and/or equipment for the improvement of the real property described above.</p>
 
       <p>The Claimant hereby releases and waives any and all claims, demands, actions, and rights to a mechanic's lien, stop notice, or payment bond on the above property. This release covers all labor, services, equipment, and materials furnished on the above job through the date stated above. Claimant acknowledges receipt of the final payment in full and is fully satisfied.</p>
 
@@ -384,7 +385,7 @@
       This waiver covers only labor and materials furnished through the date stated above. Rights are preserved for work not yet billed or future work on this project.
     </div>
     <div class="legal-block">
-      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Renovations</strong>) has furnished labor, services, materials, and/or equipment for the improvement of the property above. Upon receipt and clearance of the progress payment identified below, this document releases all lien and bond rights on the described property for work completed through the date stated above only.</p>
+      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Property Group</strong>) has furnished labor, services, materials, and/or equipment for the improvement of the property above. Upon receipt and clearance of the progress payment identified below, this document releases all lien and bond rights on the described property for work completed through the date stated above only.</p>
 
       <p>Rights are reserved for all work performed after the through date stated above, and for any retention or disputed amounts not included in this payment.</p>
 
@@ -409,7 +410,7 @@
       Use only after the progress payment has been confirmed received and cleared. Covers work through the through date only; rights are reserved for future work.
     </div>
     <div class="legal-block">
-      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Renovations</strong>) acknowledges receipt and clearance of the progress payment described below, and releases all lien and bond rights on the above-described property for labor, services, equipment, and materials furnished through the stated date. Rights are reserved for all future work on this project not covered by this waiver.</p>
+      <p>The undersigned claimant (<strong>Ironwood LLC dba Ironwood Property Group</strong>) acknowledges receipt and clearance of the progress payment described below, and releases all lien and bond rights on the above-described property for labor, services, equipment, and materials furnished through the stated date. Rights are reserved for all future work on this project not covered by this waiver.</p>
 
       <div class="field-row" style="margin-top:14px;">
         <div class="fill-block">
@@ -429,7 +430,7 @@
     <h2>Execution</h2>
     <div class="sig-grid">
       <div>
-        <div class="sig-party-label">Ironwood LLC dba Ironwood Renovations — Claimant</div>
+        <div class="sig-party-label">Ironwood LLC dba Ironwood Property Group — Claimant</div>
         <div class="sig-line"></div>
         <div class="sig-sub">Authorized Signature</div>
         <div style="margin-top:10px;">
@@ -485,7 +486,7 @@
   </div>
 
   <div class="doc-footer">
-    Ironwood LLC dba Ironwood Renovations · Georgia<br/>
+    Ironwood LLC dba Ironwood Property Group · Georgia<br/>
     Lien waivers are legal documents — retain copies for all parties · Consult an attorney for complex lien situations<br/>
     Prepared under Georgia O.C.G.A. § 44-14-366
   </div>

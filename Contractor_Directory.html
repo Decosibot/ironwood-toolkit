@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ironwood Renovations — Contractor Directory</title>
+<title>Ironwood Property Group — Contractor Directory</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
-    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
+    --bg: #F4EFE6; --surface: #FBF8F2; --surface-2: #FFFFFF;
+    --hairline: #E3DBCC; --bronze: #9C7B4A; --cream: #F4EFE6; --muted: #888;
     --green: #4caf50; --red: #e53935; --yellow: #f9a825;
   }
-  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
   .header {
     background: linear-gradient(160deg, #0a0a0a 0%, #141008 50%, #1a1408 100%);
@@ -20,11 +21,11 @@
     display: flex; align-items: center; gap: 16px;
   }
   .logo-box {
-    width: 48px; height: 48px; background: var(--gold); border-radius: 8px;
+    width: 48px; height: 48px; background: var(--bronze); border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
     font-weight: 900; font-size: 18px; color: #0a0a0a; flex-shrink: 0;
   }
-  .header-text h1 { font-size: 22px; font-weight: 800; color: var(--cream); }
+  .header-text h1 { font-size: 22px; font-weight: 800; color: var(--ink); }
   .header-text p { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
 
   .toolbar {
@@ -32,24 +33,24 @@
     padding: 14px 24px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap;
   }
   .toolbar input[type="text"] {
-    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    background: var(--surface2); border: 1px solid var(--border); color: var(--ink);
     border-radius: 6px; padding: 8px 12px; font-size: 13px; width: 260px;
     outline: none;
   }
-  .toolbar input[type="text"]:focus { border-color: var(--gold); }
+  .toolbar input[type="text"]:focus { border-color: var(--bronze); }
   .toolbar select {
-    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    background: var(--surface2); border: 1px solid var(--border); color: var(--ink);
     border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none; cursor: pointer;
   }
-  .toolbar select:focus { border-color: var(--gold); }
+  .toolbar select:focus { border-color: var(--bronze); }
   .btn {
     padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600;
     cursor: pointer; border: none; transition: opacity .15s;
   }
   .btn:hover { opacity: .85; }
-  .btn-gold { background: var(--gold); color: #0a0a0a; }
-  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--cream); }
-  .btn-outline:hover { border-color: var(--gold); }
+  .btn-gold { background: var(--bronze); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--ink); }
+  .btn-outline:hover { border-color: var(--bronze); }
   .btn-sm { padding: 5px 10px; font-size: 11px; }
 
   .container { max-width: 1200px; margin: 0 auto; padding: 28px 24px 60px; }
@@ -61,11 +62,11 @@
     background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
     padding: 10px 18px; font-size: 12px; color: var(--muted);
   }
-  .stat-pill strong { color: var(--cream); font-size: 18px; display: block; margin-bottom: 2px; }
+  .stat-pill strong { color: var(--ink); font-size: 18px; display: block; margin-bottom: 2px; }
 
   .trade-section { margin-bottom: 32px; }
   .trade-label {
-    font-size: 10px; color: var(--gold); text-transform: uppercase;
+    font-size: 10px; color: var(--bronze); text-transform: uppercase;
     letter-spacing: 2px; font-weight: 700; margin-bottom: 12px;
     padding-bottom: 8px; border-bottom: 1px solid var(--border);
     display: flex; align-items: center; justify-content: space-between;
@@ -79,10 +80,10 @@
     padding: 16px 18px; position: relative; transition: border-color .2s;
   }
   .contractor-card:hover { border-color: #3a3a3a; }
-  .contractor-card.preferred { border-color: var(--gold); }
+  .contractor-card.preferred { border-color: var(--bronze); }
 
   .card-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 10px; }
-  .card-name { font-size: 15px; font-weight: 700; color: var(--cream); }
+  .card-name { font-size: 15px; font-weight: 700; color: var(--ink); }
   .card-company { font-size: 12px; color: var(--muted); margin-top: 2px; }
 
   .status-badge {
@@ -96,8 +97,8 @@
   .card-info { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 12px; margin-bottom: 12px; }
   .info-item { font-size: 12px; }
   .info-label { color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .06em; display: block; margin-bottom: 1px; }
-  .info-value { color: var(--cream); }
-  .info-value a { color: var(--gold); text-decoration: none; }
+  .info-value { color: var(--ink); }
+  .info-value a { color: var(--bronze); text-decoration: none; }
   .info-value a:hover { text-decoration: underline; }
 
   .card-notes {
@@ -129,23 +130,23 @@
     padding: 28px 28px 24px; width: 100%; max-width: 540px; max-height: 90vh;
     overflow-y: auto; position: relative;
   }
-  .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 20px; color: var(--cream); }
+  .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 20px; color: var(--ink); }
   .modal-close {
     position: absolute; top: 16px; right: 16px;
     background: none; border: none; color: var(--muted); font-size: 20px;
     cursor: pointer; line-height: 1;
   }
-  .modal-close:hover { color: var(--cream); }
+  .modal-close:hover { color: var(--ink); }
 
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .form-grid .full { grid-column: 1 / -1; }
   .field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
   .field input, .field select, .field textarea {
     width: 100%; background: var(--surface2); border: 1px solid var(--border);
-    color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 13px;
+    color: var(--ink); border-radius: 6px; padding: 8px 10px; font-size: 13px;
     font-family: inherit; outline: none;
   }
-  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--bronze); }
   .field textarea { resize: vertical; min-height: 70px; }
 
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
@@ -167,7 +168,7 @@
   <div class="logo-box">IW</div>
   <div class="header-text">
     <h1>Contractor Directory</h1>
-    <p>Ironwood Renovations — Internal Use Only</p>
+    <p>Ironwood Property Group — Internal Use Only</p>
   </div>
 </div>
 
@@ -269,7 +270,7 @@
   </div>
 </div>
 
-<footer>Ironwood Renovations · Contractor Directory · Internal Use Only · Atlanta Metro</footer>
+<footer>Ironwood Property Group · Contractor Directory · Internal Use Only · Atlanta Metro</footer>
 
 <script>
 const STORAGE_KEY = 'ironwood-contractors-v1';

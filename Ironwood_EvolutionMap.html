@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ironwood LLC — Company Evolution Map</title>
 <style>
@@ -29,7 +30,7 @@
 
   body {
     background: var(--bg);
-    color: var(--cream);
+    color: var(--ink);
     font-family: 'Segoe UI', system-ui, sans-serif;
     font-size: 14px;
     min-height: 100vh;
@@ -51,15 +52,15 @@
   .topbar-brand { display: flex; align-items: center; gap: 12px; }
   .topbar-logo {
     width: 36px; height: 36px;
-    background: var(--gold);
+    background: var(--bronze);
     border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
     font-weight: 900; font-size: 16px; color: #0a0a0a;
   }
-  .topbar-name { font-size: 15px; font-weight: 700; letter-spacing: .05em; color: var(--cream); }
+  .topbar-name { font-size: 15px; font-weight: 700; letter-spacing: .05em; color: var(--ink); }
   .topbar-sub  { font-size: 10px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
-  .btn-print { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 7px 18px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing: .04em; }
-  .btn-print:hover { background: var(--gold); color: var(--bg); }
+  .btn-print { background: transparent; border: 1px solid var(--gold); color: var(--bronze); padding: 7px 18px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing: .04em; }
+  .btn-print:hover { background: var(--bronze); color: var(--bg); }
 
   @media print {
     .topbar { display: none; }
@@ -77,7 +78,7 @@
     display: inline-block;
     background: var(--s2);
     border: 1px solid var(--border);
-    color: var(--gold);
+    color: var(--bronze);
     font-size: 10px;
     font-weight: 700;
     letter-spacing: .12em;
@@ -90,10 +91,10 @@
     font-size: 36px;
     font-weight: 900;
     letter-spacing: .04em;
-    color: var(--cream);
+    color: var(--ink);
     margin-bottom: 8px;
   }
-  .hero h1 span { color: var(--gold); }
+  .hero h1 span { color: var(--bronze); }
   .hero-sub {
     font-size: 13px;
     color: var(--muted);
@@ -150,11 +151,11 @@
   .phase-node:hover .phase-dot { transform: scale(1.08); }
   .phase-dot .phase-num { font-size: 10px; letter-spacing: .08em; text-transform: uppercase; opacity: .8; }
   .phase-dot .phase-icon { font-size: 22px; line-height: 1; }
-  .phase-label { font-size: 12px; font-weight: 700; text-align: center; letter-spacing: .03em; color: var(--cream); margin-bottom: 2px; }
+  .phase-label { font-size: 12px; font-weight: 700; text-align: center; letter-spacing: .03em; color: var(--ink); margin-bottom: 2px; }
   .phase-range { font-size: 10px; color: var(--muted); text-align: center; letter-spacing: .04em; }
 
   /* phase colors */
-  .p1 .phase-dot { background: #1a1500; border-color: var(--gold); color: var(--gold); box-shadow: 0 0 20px rgba(201,168,76,.25); }
+  .p1 .phase-dot { background: #1a1500; border-color: var(--bronze); color: var(--bronze); box-shadow: 0 0 20px rgba(201,168,76,.25); }
   .p2 .phase-dot { background: #0d1e2a; border-color: var(--blue);   color: var(--blue);  box-shadow: 0 0 20px rgba(74,158,218,.2); }
   .p3 .phase-dot { background: #0d1f16; border-color: var(--green);  color: var(--green); box-shadow: 0 0 20px rgba(76,175,125,.2); }
   .p4 .phase-dot { background: #1a0e28; border-color: var(--purple); color: var(--purple); box-shadow: 0 0 20px rgba(155,127,212,.2); }
@@ -205,13 +206,13 @@
     margin-bottom: 3px;
     opacity: .85;
   }
-  .gold-text   { color: var(--gold); }
+  .gold-text   { color: var(--bronze); }
   .blue-text   { color: var(--blue); }
   .green-text  { color: var(--green); }
   .purple-text { color: var(--purple); }
   .teal-text   { color: var(--teal); }
 
-  .pc-title { font-size: 18px; font-weight: 900; color: var(--cream); letter-spacing: .02em; }
+  .pc-title { font-size: 18px; font-weight: 900; color: var(--ink); letter-spacing: .02em; }
   .pc-trigger {
     font-size: 11px;
     color: var(--muted);
@@ -222,7 +223,7 @@
     text-align: right;
     white-space: nowrap;
   }
-  .pc-trigger strong { color: var(--cream); }
+  .pc-trigger strong { color: var(--ink); }
 
   .pc-body {
     padding: 22px 28px;
@@ -241,7 +242,7 @@
   .pc-list { list-style: none; padding: 0; }
   .pc-list li {
     font-size: 12px;
-    color: var(--cream);
+    color: var(--ink);
     line-height: 1.6;
     padding: 4px 0;
     display: flex;
@@ -250,7 +251,7 @@
   }
   .pc-list li::before { content: '›'; color: var(--muted); flex-shrink: 0; margin-top: 1px; }
 
-  .pc-list li.highlight::before { content: '★'; color: var(--gold); }
+  .pc-list li.highlight::before { content: '★'; color: var(--bronze); }
   .pc-list li.new::before { content: '+'; color: var(--green); font-weight: 900; }
 
   /* ── TY LICENSE BANNER ── */
@@ -266,13 +267,13 @@
   }
   .ty-bar-icon { font-size: 28px; flex-shrink: 0; }
   .ty-bar-text { font-size: 12px; color: var(--muted); line-height: 1.7; }
-  .ty-bar-text strong { color: var(--gold); font-size: 13px; display: block; margin-bottom: 2px; }
+  .ty-bar-text strong { color: var(--bronze); font-size: 13px; display: block; margin-bottom: 2px; }
 
   /* ── STRUCTURE DIAGRAM ── */
   .struct-section { margin-bottom: 56px; }
   .section-title {
     font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--gold); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
+    color: var(--bronze); margin-bottom: 20px; display: flex; align-items: center; gap: 10px;
   }
   .section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
@@ -293,11 +294,11 @@
     min-width: 140px;
     transition: border-color .15s;
   }
-  .struct-entity.active-now { border-color: var(--gold); }
+  .struct-entity.active-now { border-color: var(--bronze); }
   .struct-entity.future     { border-color: var(--border); opacity: .55; }
   .struct-entity.investor   { border-color: var(--purple); }
   .struct-entity .e-icon { font-size: 20px; margin-bottom: 4px; }
-  .struct-entity .e-name { font-size: 12px; font-weight: 700; color: var(--cream); }
+  .struct-entity .e-name { font-size: 12px; font-weight: 700; color: var(--ink); }
   .struct-entity .e-sub  { font-size: 10px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
   .struct-entity .e-tag  {
     display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .07em;
@@ -305,7 +306,7 @@
   }
   .tag-live    { background: #1a2e1a; color: var(--green); }
   .tag-future  { background: #1a1a2a; color: var(--muted); }
-  .tag-phase   { background: #1a1500; color: var(--gold); }
+  .tag-phase   { background: #1a1500; color: var(--bronze); }
 
   .struct-arrow { font-size: 20px; color: var(--muted); padding: 0 8px; flex-shrink: 0; }
   .struct-arrow.down-arrow { width: 100%; text-align: center; font-size: 18px; color: var(--muted); margin: 4px 0; }
@@ -326,12 +327,12 @@
     border-radius: 10px;
     padding: 16px 18px;
   }
-  .comp-card .cc-person { font-size: 11px; font-weight: 700; color: var(--cream); margin-bottom: 4px; letter-spacing: .03em; }
+  .comp-card .cc-person { font-size: 11px; font-weight: 700; color: var(--ink); margin-bottom: 4px; letter-spacing: .03em; }
   .comp-card .cc-role   { font-size: 10px; color: var(--muted); margin-bottom: 10px; }
   .comp-card .cc-item   { display: flex; justify-content: space-between; align-items: center; font-size: 11px; padding: 4px 0; border-bottom: 1px solid var(--border); }
   .comp-card .cc-item:last-child { border-bottom: none; }
   .comp-card .cc-item .ci-label { color: var(--muted); }
-  .comp-card .cc-item .ci-val   { color: var(--gold); font-weight: 700; }
+  .comp-card .cc-item .ci-val   { color: var(--bronze); font-weight: 700; }
   .comp-card .cc-item .ci-val.blue  { color: var(--blue); }
   .comp-card .cc-item .ci-val.green { color: var(--green); }
 
@@ -349,7 +350,7 @@
     padding: 16px 18px;
     text-align: center;
   }
-  .metric-card .mc-val { font-size: 22px; font-weight: 900; color: var(--gold); }
+  .metric-card .mc-val { font-size: 22px; font-weight: 900; color: var(--bronze); }
   .metric-card .mc-label { font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; margin-top: 4px; }
 
   /* ── FOOTER ── */
@@ -469,7 +470,7 @@
           <ul class="pc-list">
             <li class="highlight">Ty's license — buyer agent on every acquisition (2.5–3% commission)</li>
             <li>Social media + autoposting (Ty, 3% fee)</li>
-            <li>YouTube channel launch — Ironwood Renovations</li>
+            <li>YouTube channel launch — Ironwood Property Group</li>
             <li>Direct mail + Meta/Google ads (pre-waterfall ad spend)</li>
             <li>Jordan 3% — marketing ops &amp; admin</li>
           </ul>
@@ -561,7 +562,7 @@
             <li>YouTube channel driving inbound seller leads</li>
             <li>Brand recognition in target Georgia market(s)</li>
             <li>Client referral pipeline established</li>
-            <li>Ironwood Renovations as recognized local brand</li>
+            <li>Ironwood Property Group as recognized local brand</li>
           </ul>
         </div>
         <div>
@@ -685,7 +686,7 @@
         <div class="struct-arrow">→</div>
         <div class="struct-entity active-now">
           <div class="e-icon">🔨</div>
-          <div class="e-name">Ironwood Renovations</div>
+          <div class="e-name">Ironwood Property Group</div>
           <div class="e-sub">Fictitious name<br/>Consumer-facing brand</div>
           <div class="e-tag tag-live">Live Now</div>
         </div>
@@ -847,7 +848,7 @@
 </div>
 
 <div class="doc-footer">
-  Ironwood LLC dba Ironwood Holdings · Ironwood Renovations · Delaware LLC · Georgia Foreign Qualification<br/>
+  Ironwood LLC dba Ironwood Holdings · Ironwood Property Group · Delaware LLC · Georgia Foreign Qualification<br/>
   Anchor Pro Solutions (Ty Jackson, Managing Member) × Landon Renovations (Jeff &amp; Jordan Sarabia)<br/>
   Operating Agreement Sections 8.9–8.10 govern licensing and phase transitions · Confidential · May 2026
 </div>

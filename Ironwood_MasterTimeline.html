@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ironwood LLC — Master Timeline</title>
 <style>
@@ -11,7 +12,7 @@
   --s1:     #111;
   --s2:     #1a1a1a;
   --s3:     #222;
-  --border: #2a2a2a;
+  --hairline: #E3DBCC;
   --cream:  #f5f0e8;
   --muted:  #888;
   --dim:    #444;
@@ -25,30 +26,30 @@
   --yellow: #e0c44a;
 }
 html { scroll-behavior: smooth; }
-body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
 
 /* TOPBAR */
 .topbar { background: linear-gradient(135deg,#1a1a1a,#0a0a0a); border-bottom: 2px solid var(--gold); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 200; }
 .tb-brand { display: flex; align-items: center; gap: 12px; }
-.tb-logo { width: 36px; height: 36px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
-.tb-name { font-size: 15px; font-weight: 700; color: var(--cream); }
+.tb-logo { width: 36px; height: 36px; background: var(--bronze); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
+.tb-name { font-size: 15px; font-weight: 700; color: var(--ink); }
 .tb-sub  { font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; }
-.btn-print { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 7px 18px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; }
-.btn-print:hover { background: var(--gold); color: #0a0a0a; }
+.btn-print { background: transparent; border: 1px solid var(--gold); color: var(--bronze); padding: 7px 18px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; }
+.btn-print:hover { background: var(--bronze); color: #0a0a0a; }
 @media print { .topbar { display: none; } body { background: #fff; color: #0a0a0a; } }
 
 /* HERO */
 .hero { text-align: center; padding: 52px 24px 36px; }
-.hero-tag { display: inline-block; background: var(--s2); border: 1px solid var(--border); color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 5px 16px; border-radius: 20px; margin-bottom: 16px; }
-.hero h1 { font-size: 38px; font-weight: 900; color: var(--cream); margin-bottom: 8px; letter-spacing: .02em; }
-.hero h1 span { color: var(--gold); }
+.hero-tag { display: inline-block; background: var(--s2); border: 1px solid var(--border); color: var(--bronze); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 5px 16px; border-radius: 20px; margin-bottom: 16px; }
+.hero h1 { font-size: 38px; font-weight: 900; color: var(--ink); margin-bottom: 8px; letter-spacing: .02em; }
+.hero h1 span { color: var(--bronze); }
 .hero-sub { font-size: 13px; color: var(--muted); max-width: 600px; margin: 0 auto 12px; line-height: 1.7; }
 
 /* WRAP */
 .wrap { max-width: 1200px; margin: 0 auto; padding: 0 24px 80px; }
 
 /* SECTION TITLES */
-.sec-title { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 12px; margin: 48px 0 20px; }
+.sec-title { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--bronze); display: flex; align-items: center; gap: 12px; margin: 48px 0 20px; }
 .sec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
 /* ERA BAND */
@@ -62,7 +63,7 @@ body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', syst
 .era.e4 { background: #1a0e28; border-bottom: 3px solid var(--purple); }
 .era.e5 { background: #1a1208; border-bottom: 3px solid var(--orange); }
 .era.e6 { background: #0d1e1f; border-bottom: 3px solid var(--teal); }
-.era.e1 .era-label { color: var(--gold); }
+.era.e1 .era-label { color: var(--bronze); }
 .era.e2 .era-label { color: var(--blue); }
 .era.e3 .era-label { color: var(--green); }
 .era.e4 .era-label { color: var(--purple); }
@@ -79,7 +80,7 @@ body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', syst
 .swimlane:last-child .lane-cell { border-bottom: none; }
 
 .tl-chip { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 12px; white-space: nowrap; letter-spacing: .03em; }
-.tl-chip.gold   { background: #1a1500; color: var(--gold);   border: 1px solid var(--gold); }
+.tl-chip.gold   { background: #1a1500; color: var(--bronze);   border: 1px solid var(--gold); }
 .tl-chip.blue   { background: #0d1e2a; color: var(--blue);   border: 1px solid var(--blue); }
 .tl-chip.green  { background: #0d1f16; color: var(--green);  border: 1px solid var(--green); }
 .tl-chip.purple { background: #1a0e28; color: var(--purple); border: 1px solid var(--purple); }
@@ -110,12 +111,12 @@ body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', syst
 .init-card.cat-ty     { border-left: 3px solid var(--gold); }
 
 .ic-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
-.ic-name { font-size: 13px; font-weight: 700; color: var(--cream); line-height: 1.4; }
+.ic-name { font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.4; }
 .ic-body { font-size: 11px; color: var(--muted); line-height: 1.7; }
 .ic-meta { display: flex; flex-direction: column; gap: 5px; font-size: 11px; }
 .ic-meta-row { display: flex; gap: 6px; align-items: flex-start; }
 .ic-meta-label { color: var(--dim); min-width: 60px; flex-shrink: 0; font-size: 10px; text-transform: uppercase; letter-spacing: .05em; padding-top: 1px; }
-.ic-meta-val { color: var(--cream); }
+.ic-meta-val { color: var(--ink); }
 .ic-meta-val.go   { color: var(--green); }
 .ic-meta-val.warn { color: var(--yellow); }
 .ic-meta-val.hard { color: var(--red); }
@@ -134,7 +135,7 @@ body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', syst
 
 /* GIVING BACK */
 .give-banner { background: linear-gradient(135deg, #0d1f16, #0a0a0a); border: 1px solid #2a5a30; border-radius: 12px; padding: 28px 32px; margin-bottom: 48px; }
-.give-mission { font-size: 15px; line-height: 1.8; color: var(--cream); font-style: italic; margin-bottom: 20px; border-left: 3px solid var(--green); padding-left: 16px; }
+.give-mission { font-size: 15px; line-height: 1.8; color: var(--ink); font-style: italic; margin-bottom: 20px; border-left: 3px solid var(--green); padding-left: 16px; }
 .give-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
 @media(max-width:700px) { .give-grid { grid-template-columns: 1fr; } }
 .give-card { background: #0a1a0d; border: 1px solid #2a5a30; border-radius: 8px; padding: 14px 16px; }

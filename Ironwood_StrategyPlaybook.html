@@ -2,23 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ironwood Renovations — Strategy Playbook</title>
+<title>Ironwood Property Group — Strategy Playbook</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
-    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
+    --bg: #F4EFE6; --surface: #FBF8F2; --surface-2: #FFFFFF;
+    --hairline: #E3DBCC; --bronze: #9C7B4A; --cream: #F4EFE6; --muted: #888;
     --green: #4caf50; --red: #e53935; --yellow: #f9a825; --blue: #42a5f5;
   }
-  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
   .header {
     background: linear-gradient(160deg, #0a0a0a 0%, #141008 60%, #1a1408 100%);
     border-bottom: 2px solid var(--gold); padding: 32px 32px 24px;
     display: flex; align-items: center; gap: 16px;
   }
-  .logo-box { width: 48px; height: 48px; background: var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #0a0a0a; flex-shrink: 0; }
+  .logo-box { width: 48px; height: 48px; background: var(--bronze); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #0a0a0a; flex-shrink: 0; }
   .header-text h1 { font-size: 22px; font-weight: 800; }
   .header-text p { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
 
@@ -29,14 +30,14 @@
     border-right: 1px solid var(--border); padding: 20px 0;
     position: sticky; top: 0; height: calc(100vh - 96px); overflow-y: auto;
   }
-  .sidebar-label { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; font-weight: 700; padding: 0 20px 8px; }
+  .sidebar-label { font-size: 10px; color: var(--bronze); text-transform: uppercase; letter-spacing: .1em; font-weight: 700; padding: 0 20px 8px; }
   .nav-item {
     display: flex; align-items: center; gap: 10px;
     padding: 11px 20px; cursor: pointer; font-size: 13px; font-weight: 500;
     color: var(--muted); transition: color .15s, background .15s; border-left: 3px solid transparent;
   }
-  .nav-item:hover { color: var(--cream); background: rgba(255,255,255,.03); }
-  .nav-item.active { color: var(--gold); border-left-color: var(--gold); background: rgba(184,147,62,.06); }
+  .nav-item:hover { color: var(--ink); background: rgba(255,255,255,.03); }
+  .nav-item.active { color: var(--bronze); border-left-color: var(--bronze); background: rgba(184,147,62,.06); }
   .nav-icon { font-size: 16px; width: 20px; text-align: center; flex-shrink: 0; }
   .nav-num { font-size: 10px; color: var(--muted); margin-left: auto; }
 
@@ -46,20 +47,20 @@
   .strategy-page.active { display: block; }
 
   /* DOC STYLES */
-  .doc-eyebrow { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 8px; }
-  .doc-title { font-size: 28px; font-weight: 900; color: var(--cream); line-height: 1.2; margin-bottom: 6px; }
+  .doc-eyebrow { font-size: 11px; color: var(--bronze); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 8px; }
+  .doc-title { font-size: 28px; font-weight: 900; color: var(--ink); line-height: 1.2; margin-bottom: 6px; }
   .doc-sub { font-size: 14px; color: var(--muted); margin-bottom: 32px; line-height: 1.6; }
   .doc-divider { height: 1px; background: var(--border); margin: 32px 0; }
 
-  h3.sec { font-size: 17px; font-weight: 800; color: var(--gold); margin: 36px 0 12px; padding-bottom: 9px; border-bottom: 1px solid var(--border); }
-  h4.sub { font-size: 14px; font-weight: 700; color: var(--cream); margin: 22px 0 8px; }
+  h3.sec { font-size: 17px; font-weight: 800; color: var(--bronze); margin: 36px 0 12px; padding-bottom: 9px; border-bottom: 1px solid var(--border); }
+  h4.sub { font-size: 14px; font-weight: 700; color: var(--ink); margin: 22px 0 8px; }
   p.body { font-size: 14px; line-height: 1.9; color: #ccc4b8; margin-bottom: 14px; }
   ul.body { margin: 0 0 14px 20px; }
   ul.body li { font-size: 14px; line-height: 1.9; color: #ccc4b8; margin-bottom: 3px; }
-  ul.body li strong { color: var(--cream); }
+  ul.body li strong { color: var(--ink); }
 
   .callout { background: rgba(184,147,62,.07); border: 1px solid rgba(184,147,62,.2); border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
-  .callout-label { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+  .callout-label { font-size: 10px; font-weight: 700; color: var(--bronze); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
   .callout p.body { margin-bottom: 0; font-size: 13px; }
 
   .callout-green { background: rgba(76,175,80,.06); border: 1px solid rgba(76,175,80,.2); border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
@@ -71,27 +72,27 @@
 
   .data-table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 13px; }
   .data-table th { background: var(--surface2); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-  .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--cream); vertical-align: top; line-height: 1.5; }
+  .data-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--ink); vertical-align: top; line-height: 1.5; }
   .data-table tr:last-child td { border-bottom: none; }
   .data-table .hl td { background: rgba(184,147,62,.05); font-weight: 700; }
-  .data-table .gold { color: var(--gold); font-weight: 700; }
+  .data-table .gold { color: var(--bronze); font-weight: 700; }
   .data-table .green { color: var(--green); font-weight: 700; }
-  .data-table .sec-row td { background: rgba(184,147,62,.04); color: var(--gold); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+  .data-table .sec-row td { background: rgba(184,147,62,.04); color: var(--bronze); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 
   .step-list { margin: 16px 0 24px; }
   .step { display: flex; gap: 14px; margin-bottom: 16px; }
-  .step-num { background: var(--gold); color: #0a0a0a; font-weight: 900; font-size: 12px; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-num { background: var(--bronze); color: #0a0a0a; font-weight: 900; font-size: 12px; width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
   .step-body { flex: 1; }
-  .step-title { font-size: 14px; font-weight: 700; color: var(--cream); margin-bottom: 4px; }
+  .step-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
   .step-desc { font-size: 13px; color: #ccc4b8; line-height: 1.7; }
 
   .phase-flow { display: flex; flex-wrap: wrap; gap: 0; margin: 20px 0 24px; }
   .pf-step { background: var(--surface2); border: 1px solid var(--border); padding: 13px 15px; flex: 1; min-width: 120px; position: relative; }
-  .pf-step:not(:last-child)::after { content: '→'; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 14px; z-index: 1; }
+  .pf-step:not(:last-child)::after { content: '→'; position: absolute; right: -10px; top: 50%; transform: translateY(-50%); color: var(--bronze); font-size: 14px; z-index: 1; }
   .pf-step:first-child { border-radius: 8px 0 0 8px; }
   .pf-step:last-child { border-radius: 0 8px 8px 0; }
-  .pf-num { font-size: 10px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
-  .pf-title { font-size: 12px; font-weight: 700; color: var(--cream); margin-bottom: 2px; }
+  .pf-num { font-size: 10px; color: var(--bronze); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  .pf-title { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 2px; }
   .pf-time { font-size: 11px; color: var(--muted); }
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 16px 0; }
@@ -99,10 +100,10 @@
   .info-card h4.sub { margin-top: 0; }
 
   .action-box { background: var(--surface2); border-radius: 8px; padding: 18px 20px; margin: 20px 0; }
-  .action-box-title { font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px; }
+  .action-box-title { font-size: 11px; font-weight: 700; color: var(--bronze); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px; }
 
   .tag { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 8px; border-radius: 4px; margin: 2px; }
-  .tag-gold { background: rgba(184,147,62,.15); color: var(--gold); }
+  .tag-gold { background: rgba(184,147,62,.15); color: var(--bronze); }
   .tag-green { background: rgba(76,175,80,.15); color: var(--green); }
   .tag-blue { background: rgba(66,165,245,.15); color: var(--blue); }
 
@@ -120,7 +121,7 @@
   <div class="logo-box">IW</div>
   <div class="header-text">
     <h1>Strategy Playbook</h1>
-    <p>Ironwood Renovations — 10 Core Business Strategies</p>
+    <p>Ironwood Property Group — 10 Core Business Strategies</p>
   </div>
 </div>
 
@@ -165,7 +166,7 @@
   <ul class="body">
     <li><strong>Social media (Instagram, Facebook, YouTube):</strong> Before-and-after content on every completed job. Jordan produces content and Ty manages paid promotion. Video walkthroughs outperform static photos — always capture video on every job site.</li>
     <li><strong>Google Business Profile:</strong> Every completed job should generate a Google review request. A 4.8+ star rating with 20+ reviews is the single most effective local lead generator for residential contractors.</li>
-    <li><strong>Job site yard signs:</strong> Ironwood Renovations branded signs on every active job site. Neighbors see them daily. This is the lowest-cost lead source and consistently produces referral calls.</li>
+    <li><strong>Job site yard signs:</strong> Ironwood Property Group branded signs on every active job site. Neighbors see them daily. This is the lowest-cost lead source and consistently produces referral calls.</li>
     <li><strong>Real estate agent referrals:</strong> Agents regularly need reliable contractors for their seller clients — pre-listing renovations, post-inspection repairs, and flip projects. Build relationships with 5–10 active agents in the Atlanta metro.</li>
     <li><strong>Homeowner intake form:</strong> The Ironwood website and social media drive leads to the Homeowner Intake Form, which captures scope, budget, and timeline automatically. This pre-qualifies leads before Ty spends time on a site visit.</li>
   </ul>
@@ -865,7 +866,7 @@
 </div><!-- end content -->
 </div><!-- end layout -->
 
-<footer>Ironwood Renovations · Strategy Playbook · Internal Use Only · Atlanta Metro</footer>
+<footer>Ironwood Property Group · Strategy Playbook · Internal Use Only · Atlanta Metro</footer>
 
 <script>
 function show(id, navEl) {

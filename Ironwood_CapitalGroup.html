@@ -2,45 +2,46 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ironwood Capital Group — Platform Overview</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
-    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
+    --bg: #F4EFE6; --surface: #FBF8F2; --surface-2: #FFFFFF;
+    --hairline: #E3DBCC; --bronze: #9C7B4A; --cream: #F4EFE6; --muted: #888;
     --green: #4caf50; --red: #e53935; --yellow: #f9a825; --blue: #42a5f5;
   }
-  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
   .header {
     background: linear-gradient(160deg, #0a0a0a 0%, #141008 60%, #1a1408 100%);
     border-bottom: 2px solid var(--gold); padding: 40px 40px 32px;
   }
   .header-inner { max-width: 900px; margin: 0 auto; display: flex; align-items: center; gap: 20px; }
-  .logo-box { width: 56px; height: 56px; background: var(--gold); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; color: #0a0a0a; flex-shrink: 0; }
+  .logo-box { width: 56px; height: 56px; background: var(--bronze); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 20px; color: #0a0a0a; flex-shrink: 0; }
   .header-text h1 { font-size: 26px; font-weight: 900; }
   .header-text p { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 4px; }
   .header-badge { margin-left: auto; background: rgba(184,147,62,.12); border: 1px solid rgba(184,147,62,.3); border-radius: 6px; padding: 8px 16px; text-align: right; flex-shrink: 0; }
   .header-badge .badge-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
-  .header-badge .badge-val { font-size: 20px; font-weight: 900; color: var(--gold); }
+  .header-badge .badge-val { font-size: 20px; font-weight: 900; color: var(--bronze); }
 
   .container { max-width: 900px; margin: 0 auto; padding: 48px 40px 80px; }
 
-  .doc-eyebrow { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 8px; }
-  .doc-title { font-size: 32px; font-weight: 900; color: var(--cream); line-height: 1.2; margin-bottom: 8px; }
+  .doc-eyebrow { font-size: 11px; color: var(--bronze); text-transform: uppercase; letter-spacing: .12em; font-weight: 700; margin-bottom: 8px; }
+  .doc-title { font-size: 32px; font-weight: 900; color: var(--ink); line-height: 1.2; margin-bottom: 8px; }
   .doc-sub { font-size: 15px; color: var(--muted); line-height: 1.7; margin-bottom: 40px; max-width: 720px; }
   .doc-divider { height: 1px; background: var(--border); margin: 40px 0; }
 
-  h2.sec { font-size: 19px; font-weight: 800; color: var(--gold); margin: 44px 0 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-  h3.sub { font-size: 15px; font-weight: 700; color: var(--cream); margin: 24px 0 8px; }
+  h2.sec { font-size: 19px; font-weight: 800; color: var(--bronze); margin: 44px 0 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+  h3.sub { font-size: 15px; font-weight: 700; color: var(--ink); margin: 24px 0 8px; }
   p.body { font-size: 14px; line-height: 1.9; color: #ccc4b8; margin-bottom: 14px; }
   ul.body { margin: 0 0 16px 22px; }
   ul.body li { font-size: 14px; line-height: 1.9; color: #ccc4b8; margin-bottom: 4px; }
-  ul.body li strong { color: var(--cream); }
+  ul.body li strong { color: var(--ink); }
 
   .callout { background: rgba(184,147,62,.07); border: 1px solid rgba(184,147,62,.22); border-radius: 10px; padding: 20px 24px; margin: 24px 0; }
-  .callout-label { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
+  .callout-label { font-size: 10px; font-weight: 700; color: var(--bronze); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 10px; }
   .callout p.body { margin-bottom: 0; }
 
   .callout-green { background: rgba(76,175,80,.06); border: 1px solid rgba(76,175,80,.2); border-radius: 10px; padding: 20px 24px; margin: 24px 0; }
@@ -52,30 +53,30 @@
 
   .data-table { width: 100%; border-collapse: collapse; margin: 18px 0 28px; font-size: 13px; }
   .data-table th { background: var(--surface2); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; padding: 10px 14px; text-align: left; border-bottom: 1px solid var(--border); }
-  .data-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--cream); vertical-align: top; line-height: 1.6; }
+  .data-table td { padding: 11px 14px; border-bottom: 1px solid var(--border); color: var(--ink); vertical-align: top; line-height: 1.6; }
   .data-table tr:last-child td { border-bottom: none; }
   .data-table .hl td { background: rgba(184,147,62,.06); font-weight: 700; }
-  .data-table .gold { color: var(--gold); font-weight: 700; }
+  .data-table .gold { color: var(--bronze); font-weight: 700; }
   .data-table .green { color: var(--green); font-weight: 700; }
-  .data-table .sec-row td { background: rgba(184,147,62,.04); color: var(--gold); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
+  .data-table .sec-row td { background: rgba(184,147,62,.04); color: var(--bronze); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; }
 
   .step-list { margin: 18px 0 28px; }
   .step { display: flex; gap: 16px; margin-bottom: 18px; }
-  .step-num { background: var(--gold); color: #0a0a0a; font-weight: 900; font-size: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .step-num { background: var(--bronze); color: #0a0a0a; font-weight: 900; font-size: 12px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
   .step-body { flex: 1; }
-  .step-title { font-size: 14px; font-weight: 700; color: var(--cream); margin-bottom: 5px; }
+  .step-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 5px; }
   .step-desc { font-size: 13px; color: #ccc4b8; line-height: 1.7; }
 
   /* ORG CHART */
   .org-chart { margin: 28px 0; }
-  .org-gp { background: var(--gold); color: #0a0a0a; border-radius: 10px; padding: 18px 24px; text-align: center; font-weight: 900; font-size: 15px; margin-bottom: 0; }
+  .org-gp { background: var(--bronze); color: #0a0a0a; border-radius: 10px; padding: 18px 24px; text-align: center; font-weight: 900; font-size: 15px; margin-bottom: 0; }
   .org-gp-sub { font-size: 11px; font-weight: 600; margin-top: 3px; opacity: .7; }
-  .org-line { width: 2px; height: 28px; background: var(--gold); margin: 0 auto; opacity: .4; }
+  .org-line { width: 2px; height: 28px; background: var(--bronze); margin: 0 auto; opacity: .4; }
   .org-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 10px; margin-top: 0; }
   .org-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; border-top: 3px solid var(--gold); }
-  .org-card-title { font-size: 12px; font-weight: 700; color: var(--cream); margin-bottom: 4px; }
+  .org-card-title { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
   .org-card-role { font-size: 11px; color: var(--muted); line-height: 1.5; }
-  .org-card-income { font-size: 11px; color: var(--gold); margin-top: 6px; font-weight: 600; }
+  .org-card-income { font-size: 11px; color: var(--bronze); margin-top: 6px; font-weight: 600; }
 
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0; }
   .info-card { background: var(--surface2); border-radius: 10px; padding: 18px 20px; }
@@ -83,31 +84,31 @@
 
   .phase-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 20px 0 28px; }
   .phase-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; border-top: 3px solid var(--gold); }
-  .phase-num { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin-bottom: 6px; }
-  .phase-title { font-size: 13px; font-weight: 700; color: var(--cream); margin-bottom: 6px; }
-  .phase-aum { font-size: 16px; font-weight: 900; color: var(--gold); margin-bottom: 4px; }
+  .phase-num { font-size: 10px; color: var(--bronze); text-transform: uppercase; letter-spacing: .08em; font-weight: 700; margin-bottom: 6px; }
+  .phase-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+  .phase-aum { font-size: 16px; font-weight: 900; color: var(--bronze); margin-bottom: 4px; }
   .phase-time { font-size: 11px; color: var(--muted); }
 
   .waterfall { margin: 20px 0 28px; }
   .wf-row { display: flex; align-items: center; gap: 0; margin-bottom: 4px; }
-  .wf-label { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px 0 0 6px; padding: 10px 16px; font-size: 13px; font-weight: 600; color: var(--cream); width: 260px; flex-shrink: 0; }
+  .wf-label { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px 0 0 6px; padding: 10px 16px; font-size: 13px; font-weight: 600; color: var(--ink); width: 260px; flex-shrink: 0; }
   .wf-bar { height: 40px; display: flex; align-items: center; padding: 0 14px; font-size: 12px; font-weight: 700; border-radius: 0 6px 6px 0; flex: 1; }
   .wf-bar.return { background: rgba(66,165,245,.15); color: var(--blue); border: 1px solid rgba(66,165,245,.2); }
   .wf-bar.pref { background: rgba(76,175,80,.12); color: var(--green); border: 1px solid rgba(76,175,80,.2); }
   .wf-bar.lp { background: rgba(76,175,80,.2); color: var(--green); border: 1px solid rgba(76,175,80,.3); }
-  .wf-bar.gp { background: rgba(184,147,62,.2); color: var(--gold); border: 1px solid rgba(184,147,62,.3); }
+  .wf-bar.gp { background: rgba(184,147,62,.2); color: var(--bronze); border: 1px solid rgba(184,147,62,.3); }
 
   .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; margin: 20px 0; }
   .asset-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
   .asset-icon { font-size: 24px; margin-bottom: 8px; }
-  .asset-title { font-size: 13px; font-weight: 700; color: var(--cream); margin-bottom: 4px; }
-  .asset-cap { font-size: 12px; color: var(--gold); font-weight: 600; margin-bottom: 4px; }
+  .asset-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+  .asset-cap { font-size: 12px; color: var(--bronze); font-weight: 600; margin-bottom: 4px; }
   .asset-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
 
   .fee-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 20px 0; }
   .fee-card { background: var(--surface); border: 1px solid var(--gold); border-radius: 10px; padding: 20px 22px; text-align: center; }
-  .fee-pct { font-size: 36px; font-weight: 900; color: var(--gold); }
-  .fee-label { font-size: 13px; font-weight: 700; color: var(--cream); margin: 6px 0 4px; }
+  .fee-pct { font-size: 36px; font-weight: 900; color: var(--bronze); }
+  .fee-label { font-size: 13px; font-weight: 700; color: var(--ink); margin: 6px 0 4px; }
   .fee-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
 
   footer { text-align: center; padding: 28px; font-size: 11px; color: #444; border-top: 1px solid var(--border); margin-top: 40px; }
@@ -440,7 +441,7 @@
 
 </div><!-- end container -->
 
-<footer>Ironwood Capital Group · Ironwood Renovations LLC · Internal Use Only · Atlanta Metro</footer>
+<footer>Ironwood Capital Group · Ironwood Property Group LLC · Internal Use Only · Atlanta Metro</footer>
 
 </body>
 </html>

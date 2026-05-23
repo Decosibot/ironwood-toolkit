@@ -3,299 +3,367 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ironwood Renovations — Toolkit</title>
+<title>Ironwood Property Group — Toolkit</title>
+<link rel="stylesheet" href="iw-design.css"/>
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  :root {
-    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
-    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
-  }
-  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  /* Index-specific overrides */
+  .iw-header { position: static; }
 
-  .header {
-    background: linear-gradient(160deg, #0a0a0a 0%, #141008 50%, #1a1408 100%);
-    border-bottom: 2px solid var(--gold);
-    padding: 40px 32px 32px;
+  .hub-hero {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 64px 40px 56px;
     text-align: center;
+    position: relative;
+    overflow: hidden;
   }
-  .logo-box {
-    width: 56px; height: 56px; background: var(--gold); border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 20px; color: #0a0a0a;
-    margin: 0 auto 16px;
+  .hub-hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(156,123,74,.18), transparent 65%);
+    pointer-events: none;
   }
-  .header h1 { font-size: 28px; font-weight: 800; color: var(--cream); margin-bottom: 6px; }
-  .header p { font-size: 13px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
-
-  .container { max-width: 960px; margin: 0 auto; padding: 40px 24px 60px; }
-
-  .section-label {
-    font-size: 10px; color: var(--gold); text-transform: uppercase;
-    letter-spacing: 2px; font-weight: 700; margin: 32px 0 14px;
-    padding-bottom: 8px; border-bottom: 1px solid var(--border);
+  .hub-eyebrow {
+    font-size: 11px; color: var(--bronze); text-transform: uppercase;
+    letter-spacing: 0.18em; font-weight: 500; margin-bottom: 16px;
+    display: inline-flex; align-items: center; gap: 8px;
   }
+  .hub-eyebrow::before { content: ''; width: 5px; height: 5px; background: var(--bronze); border-radius: 50%; }
+  .hub-title {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 58px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    color: var(--bg);
+    line-height: 1.05;
+    margin-bottom: 12px;
+  }
+  .hub-title em { font-style: italic; color: var(--bronze-tint, #EFE6D4); }
+  .hub-sub {
+    font-size: 15px;
+    color: rgba(244,239,230,.65);
+    max-width: 480px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+  .hub-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 40px;
+    flex-wrap: wrap;
+  }
+  .hub-stat { text-align: center; }
+  .hub-stat-num {
+    font-family: var(--serif);
+    font-size: 32px;
+    color: var(--bronze-tint, #EFE6D4);
+    font-weight: 400;
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .hub-stat-label { font-size: 11px; color: rgba(244,239,230,.5); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
 
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
-
-  .card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-    padding: 18px 20px; text-decoration: none; color: var(--cream);
-    transition: border-color .2s, transform .15s;
+  /* nav cards for index */
+  .iw-nav-card-icon {
+    font-size: 20px;
+    margin-bottom: 12px;
     display: block;
   }
-  .card:hover { border-color: var(--gold); transform: translateY(-2px); }
-  .card-icon { font-size: 22px; margin-bottom: 10px; }
-  .card-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
-  .card-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
 
-  .website-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; }
-  .website-card {
-    background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
-    padding: 14px 16px; text-decoration: none; color: var(--cream);
-    transition: border-color .2s; display: block; text-align: center;
+  /* website page mini cards */
+  .site-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  .site-card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 16px;
+    text-decoration: none;
+    text-align: center;
+    transition: border-color .2s, transform .2s;
+    display: block;
   }
-  .website-card:hover { border-color: var(--gold); }
-  .website-card .wc-icon { font-size: 18px; margin-bottom: 6px; }
-  .website-card .wc-label { font-size: 12px; font-weight: 600; }
-
-  footer { text-align: center; padding: 24px; font-size: 11px; color: #444; border-top: 1px solid var(--border); }
+  .site-card:hover { border-color: var(--bronze); transform: translateY(-2px); }
+  .site-card-icon { font-size: 20px; margin-bottom: 8px; display: block; }
+  .site-card-label { font-size: 12.5px; font-weight: 500; color: var(--ink); }
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="logo-box">IW</div>
-  <h1>Ironwood Renovations</h1>
-  <p>Internal Toolkit &amp; Operations Hub</p>
+<!-- HEADER -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <div class="iw-logo-box">I</div>
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Internal Toolkit</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <span class="iw-badge">Atlanta Metro</span>
+  </div>
 </div>
 
-<div class="container">
-
-  <div class="section-label">Core Tools</div>
-  <div class="grid">
-    <a class="card" href="Ironwood_Estimator_Public.html">
-      <div class="card-icon">⚡</div>
-      <div class="card-title">Public Estimator (Client-Facing)</div>
-      <div class="card-desc">Ad-ready landing page — customer selects scope, gets instant estimate range, submits contact info to GHL, and books a site visit.</div>
-    </a>
-    <a class="card" href="Remodel_Estimator.html">
-      <div class="card-icon">🧮</div>
-      <div class="card-title">Remodel Job Estimator</div>
-      <div class="card-desc">Build client proposals with line items, markup, profit waterfall, and supplier notes.</div>
-    </a>
-    <a class="card" href="ScopeOfWork_Tool.html">
-      <div class="card-icon">📋</div>
-      <div class="card-title">Scope of Work Tool</div>
-      <div class="card-desc">Full construction budget tracker with client vs. internal view and build process tracking.</div>
-    </a>
-    <a class="card" href="MAO_Calculator.html">
-      <div class="card-icon">🏠</div>
-      <div class="card-title">MAO Calculator</div>
-      <div class="card-desc">Maximum allowable offer calculator with sqft rehab estimator and profit split.</div>
-    </a>
-    <a class="card" href="Ironwood_RenoEstimate.html">
-      <div class="card-icon">📝</div>
-      <div class="card-title">Client Renovation Request</div>
-      <div class="card-desc">Client-facing intake form — describe the project, system detects scope automatically.</div>
-    </a>
-    <a class="card" href="Ironwood_SellerLead.html">
-      <div class="card-icon">🤝</div>
-      <div class="card-title">Seller Lead Form</div>
-      <div class="card-desc">Motivated seller intake and lead capture form.</div>
-    </a>
-    <a class="card" href="Homeowner_Intake.html">
-      <div class="card-icon">📥</div>
-      <div class="card-title">Homeowner Intake</div>
-      <div class="card-desc">Full homeowner onboarding form for renovation clients.</div>
-    </a>
-    <a class="card" href="Contractor_Directory.html">
-      <div class="card-icon">👷</div>
-      <div class="card-title">Contractor Directory</div>
-      <div class="card-desc">Manage contractors by trade — contact info, rates, license, insurance, and notes.</div>
-    </a>
+<!-- HERO -->
+<div class="hub-hero">
+  <div class="hub-eyebrow">Operations Hub</div>
+  <div class="hub-title">The Ironwood<br/><em>Toolkit</em></div>
+  <div class="hub-sub">Every tool, document, and strategy for Ironwood Property Group — all in one place.</div>
+  <div class="hub-stats">
+    <div class="hub-stat"><span class="hub-stat-num">42</span><span class="hub-stat-label">Tools & Docs</span></div>
+    <div class="hub-stat"><span class="hub-stat-num">10</span><span class="hub-stat-label">Strategies</span></div>
+    <div class="hub-stat"><span class="hub-stat-num">$100M</span><span class="hub-stat-label">AUM Target</span></div>
   </div>
+</div>
 
-  <div class="section-label">Capital Management</div>
-  <div class="grid" style="margin-bottom:14px;">
-    <a class="card" href="Ironwood_CapitalGroup.html">
-      <div class="card-icon">🏦</div>
-      <div class="card-title">Ironwood Capital Group</div>
-      <div class="card-desc">Full capital management platform — fund structure, commercial RE targets, opportunity zones, lending fund, investor waterfall, and the path to $100M AUM.</div>
-    </a>
-  </div>
+<div class="iw-container">
 
-  <div class="section-label">Finance &amp; Deals</div>
-  <div class="grid" style="margin-bottom:14px;">
-    <a class="card" href="Vendor_Accounts_Tracker.html">
-      <div class="card-icon">💳</div>
-      <div class="card-title">Vendor Accounts Tracker</div>
-      <div class="card-desc">Track net 30/60/90 accounts — credit limits, balances, due dates, and bureau reporting.</div>
+  <!-- CORE TOOLS -->
+  <div class="iw-section-label">Core Tools</div>
+  <div class="iw-grid">
+    <a class="iw-nav-card" href="Ironwood_Estimator_Public.html">
+      <span class="iw-nav-card-icon">⚡</span>
+      <div class="iw-nav-card-eyebrow">Public · Ad-Ready</div>
+      <div class="iw-nav-card-title">Client Estimator</div>
+      <div class="iw-nav-card-desc">Instant estimate funnel for ads — customer scopes project, gets price range, submits to GHL, books site visit.</div>
     </a>
-  </div>
-  <div class="grid">
-    <a class="card" href="Profit_Waterfall.html">
-      <div class="card-icon">💧</div>
-      <div class="card-title">Profit Waterfall</div>
-      <div class="card-desc">Deal-by-deal profit distribution calculator for Ironwood partners.</div>
+    <a class="iw-nav-card" href="Remodel_Estimator.html">
+      <span class="iw-nav-card-icon">🧮</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Remodel Job Estimator</div>
+      <div class="iw-nav-card-desc">Build client proposals with line items, markup, profit waterfall, and supplier notes.</div>
     </a>
-    <a class="card" href="Monthly_PL.html">
-      <div class="card-icon">📊</div>
-      <div class="card-title">Monthly P&amp;L</div>
-      <div class="card-desc">Monthly profit and loss tracker across all active projects.</div>
+    <a class="iw-nav-card" href="ScopeOfWork_Tool.html">
+      <span class="iw-nav-card-icon">📋</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Scope of Work Tool</div>
+      <div class="iw-nav-card-desc">Full construction budget tracker with client vs. internal view and build process tracking.</div>
     </a>
-    <a class="card" href="Property_Pipeline.html">
-      <div class="card-icon">🔄</div>
-      <div class="card-title">Property Pipeline</div>
-      <div class="card-desc">Track deals from lead to close across the BRRRR pipeline.</div>
+    <a class="iw-nav-card" href="MAO_Calculator.html">
+      <span class="iw-nav-card-icon">🏠</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">MAO Calculator</div>
+      <div class="iw-nav-card-desc">Maximum allowable offer calculator with sqft rehab estimator and profit split.</div>
     </a>
-    <a class="card" href="Deal_Summary_Tearsheet.html">
-      <div class="card-icon">📄</div>
-      <div class="card-title">Deal Summary Tearsheet</div>
-      <div class="card-desc">One-page deal summary for lenders and partners.</div>
+    <a class="iw-nav-card" href="Ironwood_RenoEstimate.html">
+      <span class="iw-nav-card-icon">📝</span>
+      <div class="iw-nav-card-eyebrow">Client-Facing</div>
+      <div class="iw-nav-card-title">Renovation Request</div>
+      <div class="iw-nav-card-desc">Client intake form — describe the project, system detects scope automatically.</div>
     </a>
-    <a class="card" href="Investor_Deal_Summary.html">
-      <div class="card-icon">📈</div>
-      <div class="card-title">Investor Deal Summary</div>
-      <div class="card-desc">Investor-facing deal presentation and return summary.</div>
+    <a class="iw-nav-card" href="Ironwood_SellerLead.html">
+      <span class="iw-nav-card-icon">🤝</span>
+      <div class="iw-nav-card-eyebrow">Client-Facing</div>
+      <div class="iw-nav-card-title">Seller Lead Form</div>
+      <div class="iw-nav-card-desc">Motivated seller intake and lead capture form.</div>
     </a>
-    <a class="card" href="Ironwood_LenderPitchDeck.html">
-      <div class="card-icon">🏦</div>
-      <div class="card-title">Lender Pitch Deck</div>
-      <div class="card-desc">Hard money and private lender pitch presentation.</div>
+    <a class="iw-nav-card" href="Homeowner_Intake.html">
+      <span class="iw-nav-card-icon">📥</span>
+      <div class="iw-nav-card-eyebrow">Client-Facing</div>
+      <div class="iw-nav-card-title">Homeowner Intake</div>
+      <div class="iw-nav-card-desc">Full homeowner onboarding form for renovation clients.</div>
     </a>
-    <a class="card" href="Lender_Directory.html">
-      <div class="card-icon">📒</div>
-      <div class="card-title">Lender Directory</div>
-      <div class="card-desc">Track hard money lenders, brokers, and private lenders — rates, terms, requirements, and contacts.</div>
-    </a>
-    <a class="card" href="Rental_Dashboard.html">
-      <div class="card-icon">🏘️</div>
-      <div class="card-title">Rental Dashboard</div>
-      <div class="card-desc">Track rental units, rent rolls, and cash flow.</div>
-    </a>
-    <a class="card" href="BusinessCredit_Tracker.html">
-      <div class="card-icon">💳</div>
-      <div class="card-title">Business Credit Tracker</div>
-      <div class="card-desc">Monitor business credit accounts, limits, and utilization.</div>
-    </a>
-    <a class="card" href="OperationalCosts_Tracker.html">
-      <div class="card-icon">🧾</div>
-      <div class="card-title">Operational Costs Tracker</div>
-      <div class="card-desc">Track recurring overhead and operational expenses.</div>
+    <a class="iw-nav-card" href="Contractor_Directory.html">
+      <span class="iw-nav-card-icon">👷</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Contractor Directory</div>
+      <div class="iw-nav-card-desc">Manage contractors by trade — contact, rates, license, insurance, notes.</div>
     </a>
   </div>
 
-  <div class="section-label">Documents &amp; Agreements</div>
-  <div class="grid">
-    <a class="card" href="Ironwood_Operating_Agreement.html">
-      <div class="card-icon">⚖️</div>
-      <div class="card-title">Operating Agreement</div>
-      <div class="card-desc">Ironwood LLC operating agreement including S-Corp election provisions.</div>
+  <!-- CAPITAL MANAGEMENT -->
+  <div class="iw-section-label">Capital Management</div>
+  <div class="iw-grid">
+    <a class="iw-nav-card" href="Ironwood_CapitalGroup.html">
+      <span class="iw-nav-card-icon">🏦</span>
+      <div class="iw-nav-card-eyebrow">Platform Overview</div>
+      <div class="iw-nav-card-title">Ironwood Capital Group</div>
+      <div class="iw-nav-card-desc">Full capital management platform — fund structure, commercial RE, OZ fund, lending fund, and the path to $100M AUM.</div>
     </a>
-    <a class="card" href="ClientServiceAgreement.html">
-      <div class="card-icon">✍️</div>
-      <div class="card-title">Client Service Agreement</div>
-      <div class="card-desc">Standard renovation service contract for homeowner clients.</div>
-    </a>
-    <a class="card" href="ChangeOrder_Form.html">
-      <div class="card-icon">🔁</div>
-      <div class="card-title">Change Order Form</div>
-      <div class="card-desc">Document scope changes and additional cost approvals.</div>
-    </a>
-    <a class="card" href="InvoiceTemplate.html">
-      <div class="card-icon">🧾</div>
-      <div class="card-title">Invoice Template</div>
-      <div class="card-desc">Client invoice with line items, deposit tracking, and payment terms.</div>
-    </a>
-    <a class="card" href="LienWaiver.html">
-      <div class="card-icon">📜</div>
-      <div class="card-title">Lien Waiver</div>
-      <div class="card-desc">Conditional and unconditional lien waiver forms.</div>
-    </a>
-    <a class="card" href="ReferralAgreement.html">
-      <div class="card-icon">🔗</div>
-      <div class="card-title">Referral Agreement</div>
-      <div class="card-desc">Partner and agent referral fee agreement template.</div>
-    </a>
-    <a class="card" href="AnchorPro_Partnership_Proposal.html">
-      <div class="card-icon">🤝</div>
-      <div class="card-title">Partnership Proposal</div>
-      <div class="card-desc">Full Ironwood business structure and partnership proposal document.</div>
+    <a class="iw-nav-card" href="Ironwood_StrategyPlaybook.html">
+      <span class="iw-nav-card-icon">📚</span>
+      <div class="iw-nav-card-eyebrow">10 Strategies</div>
+      <div class="iw-nav-card-title">Strategy Playbook</div>
+      <div class="iw-nav-card-desc">All 10 Ironwood strategies — renovation, BRRRR, new construction, wholesale, rentals, Peach to Palms, business credit, capital raise, subsidiary launch, commercial RE.</div>
     </a>
   </div>
 
-  <div class="section-label">Operations</div>
-  <div class="grid" style="margin-bottom:14px;">
-    <a class="card" href="Ironwood_StrategyPlaybook.html">
-      <div class="card-icon">📚</div>
-      <div class="card-title">Strategy Playbook</div>
-      <div class="card-desc">All 10 Ironwood strategies — renovation, BRRRR, new construction, wholesale, rentals, Peach to Palms, business credit, capital raise, subsidiary launch, and commercial RE &amp; capital management.</div>
+  <!-- FINANCE & DEALS -->
+  <div class="iw-section-label">Finance &amp; Deals</div>
+  <div class="iw-grid">
+    <a class="iw-nav-card" href="Vendor_Accounts_Tracker.html">
+      <span class="iw-nav-card-icon">💳</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Vendor Accounts Tracker</div>
+      <div class="iw-nav-card-desc">Track net 30/60/90 accounts — credit limits, balances, due dates, bureau reporting.</div>
     </a>
-    <a class="card" href="NewConstruction_Pipeline.html">
-      <div class="card-icon">🏗</div>
-      <div class="card-title">New Construction Pipeline</div>
-      <div class="card-desc">Track every duplex build cycle — draws, budget, refi math, cash flow, and the full written strategy document.</div>
+    <a class="iw-nav-card" href="Lender_Directory.html">
+      <span class="iw-nav-card-icon">📒</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Lender Directory</div>
+      <div class="iw-nav-card-desc">Track hard money lenders, brokers, and private lenders — rates, terms, requirements, contacts.</div>
     </a>
-  </div>
-  <div class="grid">
-    <a class="card" href="Ironwood_Dashboard.html">
-      <div class="card-icon">🖥️</div>
-      <div class="card-title">Ironwood Dashboard</div>
-      <div class="card-desc">Main operations dashboard — deal status, KPIs, and quick links.</div>
+    <a class="iw-nav-card" href="Profit_Waterfall.html">
+      <span class="iw-nav-card-icon">💧</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Profit Waterfall</div>
+      <div class="iw-nav-card-desc">Deal-by-deal profit distribution calculator for Ironwood partners.</div>
     </a>
-    <a class="card" href="Ironwood_MasterTimeline.html">
-      <div class="card-icon">📅</div>
-      <div class="card-title">Master Timeline</div>
-      <div class="card-desc">Project milestone and phase timeline tracker.</div>
+    <a class="iw-nav-card" href="Monthly_PL.html">
+      <span class="iw-nav-card-icon">📊</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Monthly P&amp;L</div>
+      <div class="iw-nav-card-desc">Monthly profit and loss tracker across all active projects.</div>
     </a>
-    <a class="card" href="Ironwood_EvolutionMap.html">
-      <div class="card-icon">🗺️</div>
-      <div class="card-title">Evolution Map</div>
-      <div class="card-desc">Company growth roadmap and phase evolution plan.</div>
+    <a class="iw-nav-card" href="Property_Pipeline.html">
+      <span class="iw-nav-card-icon">🔄</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Property Pipeline</div>
+      <div class="iw-nav-card-desc">Track deals from lead to close across the BRRRR pipeline.</div>
     </a>
-    <a class="card" href="Tenant_Screener.html">
-      <div class="card-icon">🔍</div>
-      <div class="card-title">Tenant Screener</div>
-      <div class="card-desc">Tenant application scoring and screening checklist.</div>
+    <a class="iw-nav-card" href="Deal_Summary_Tearsheet.html">
+      <span class="iw-nav-card-icon">📄</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Deal Summary Tearsheet</div>
+      <div class="iw-nav-card-desc">One-page deal summary for lenders and partners.</div>
     </a>
-    <a class="card" href="Ironwood_HomeownerOnePager.html">
-      <div class="card-icon">📰</div>
-      <div class="card-title">Homeowner One-Pager</div>
-      <div class="card-desc">Client-facing one-page overview of Ironwood Renovations services.</div>
+    <a class="iw-nav-card" href="Investor_Deal_Summary.html">
+      <span class="iw-nav-card-icon">📈</span>
+      <div class="iw-nav-card-eyebrow">Investor-Facing</div>
+      <div class="iw-nav-card-title">Investor Deal Summary</div>
+      <div class="iw-nav-card-desc">Investor-facing deal presentation and return summary.</div>
+    </a>
+    <a class="iw-nav-card" href="Ironwood_LenderPitchDeck.html">
+      <span class="iw-nav-card-icon">🏦</span>
+      <div class="iw-nav-card-eyebrow">Lender-Facing</div>
+      <div class="iw-nav-card-title">Lender Pitch Deck</div>
+      <div class="iw-nav-card-desc">Hard money and private lender pitch presentation.</div>
+    </a>
+    <a class="iw-nav-card" href="Rental_Dashboard.html">
+      <span class="iw-nav-card-icon">🏘️</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Rental Dashboard</div>
+      <div class="iw-nav-card-desc">Track rental units, rent rolls, and cash flow.</div>
+    </a>
+    <a class="iw-nav-card" href="BusinessCredit_Tracker.html">
+      <span class="iw-nav-card-icon">💳</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Business Credit Tracker</div>
+      <div class="iw-nav-card-desc">Monitor business credit accounts, limits, and utilization.</div>
+    </a>
+    <a class="iw-nav-card" href="OperationalCosts_Tracker.html">
+      <span class="iw-nav-card-icon">🧾</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Operational Costs Tracker</div>
+      <div class="iw-nav-card-desc">Track recurring overhead and operational expenses.</div>
     </a>
   </div>
 
-  <div class="section-label">Website Pages</div>
-  <div class="website-grid">
-    <a class="website-card" href="Ironwood_Site_Home.html">
-      <div class="wc-icon">🏠</div>
-      <div class="wc-label">Home</div>
+  <!-- DOCUMENTS & AGREEMENTS -->
+  <div class="iw-section-label">Documents &amp; Agreements</div>
+  <div class="iw-grid">
+    <a class="iw-nav-card" href="Ironwood_Operating_Agreement.html">
+      <span class="iw-nav-card-icon">⚖️</span>
+      <div class="iw-nav-card-eyebrow">Legal</div>
+      <div class="iw-nav-card-title">Operating Agreement</div>
+      <div class="iw-nav-card-desc">Ironwood LLC operating agreement with S-Corp election provisions and investor framework.</div>
     </a>
-    <a class="website-card" href="Ironwood_Site_Renovate.html">
-      <div class="wc-icon">🔨</div>
-      <div class="wc-label">Renovations</div>
+    <a class="iw-nav-card" href="AnchorPro_Partnership_Proposal.html">
+      <span class="iw-nav-card-icon">🤝</span>
+      <div class="iw-nav-card-eyebrow">Partner-Facing</div>
+      <div class="iw-nav-card-title">Partnership Proposal</div>
+      <div class="iw-nav-card-desc">Full Ironwood business structure and partnership proposal document.</div>
     </a>
-    <a class="website-card" href="Ironwood_Site_Sell.html">
-      <div class="wc-icon">🏡</div>
-      <div class="wc-label">Sell Your Home</div>
+    <a class="iw-nav-card" href="ClientServiceAgreement.html">
+      <span class="iw-nav-card-icon">✍️</span>
+      <div class="iw-nav-card-eyebrow">Client-Facing</div>
+      <div class="iw-nav-card-title">Client Service Agreement</div>
+      <div class="iw-nav-card-desc">Standard renovation service contract for homeowner clients.</div>
     </a>
-    <a class="website-card" href="Ironwood_Site_Work.html">
-      <div class="wc-icon">📸</div>
-      <div class="wc-label">Our Work</div>
+    <a class="iw-nav-card" href="ChangeOrder_Form.html">
+      <span class="iw-nav-card-icon">🔁</span>
+      <div class="iw-nav-card-eyebrow">Client-Facing</div>
+      <div class="iw-nav-card-title">Change Order Form</div>
+      <div class="iw-nav-card-desc">Document scope changes and additional cost approvals.</div>
     </a>
-    <a class="website-card" href="Ironwood_Site_About.html">
-      <div class="wc-icon">👥</div>
-      <div class="wc-label">About</div>
+    <a class="iw-nav-card" href="InvoiceTemplate.html">
+      <span class="iw-nav-card-icon">🧾</span>
+      <div class="iw-nav-card-eyebrow">Client-Facing</div>
+      <div class="iw-nav-card-title">Invoice Template</div>
+      <div class="iw-nav-card-desc">Client invoice with line items, deposit tracking, and payment terms.</div>
     </a>
-    <a class="website-card" href="Ironwood_Site_Contact.html">
-      <div class="wc-icon">📞</div>
-      <div class="wc-label">Contact</div>
+    <a class="iw-nav-card" href="LienWaiver.html">
+      <span class="iw-nav-card-icon">📜</span>
+      <div class="iw-nav-card-eyebrow">Legal</div>
+      <div class="iw-nav-card-title">Lien Waiver</div>
+      <div class="iw-nav-card-desc">Conditional and unconditional lien waiver forms.</div>
     </a>
+    <a class="iw-nav-card" href="ReferralAgreement.html">
+      <span class="iw-nav-card-icon">🔗</span>
+      <div class="iw-nav-card-eyebrow">Partner-Facing</div>
+      <div class="iw-nav-card-title">Referral Agreement</div>
+      <div class="iw-nav-card-desc">Partner and agent referral fee agreement template.</div>
+    </a>
+  </div>
+
+  <!-- OPERATIONS -->
+  <div class="iw-section-label">Operations</div>
+  <div class="iw-grid">
+    <a class="iw-nav-card" href="NewConstruction_Pipeline.html">
+      <span class="iw-nav-card-icon">🏗</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">New Construction Pipeline</div>
+      <div class="iw-nav-card-desc">Track every duplex build cycle — draws, budget, refi math, cash flow, and the full written strategy.</div>
+    </a>
+    <a class="iw-nav-card" href="Ironwood_Dashboard.html">
+      <span class="iw-nav-card-icon">🖥️</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Ironwood Dashboard</div>
+      <div class="iw-nav-card-desc">Main operations dashboard — deal status, KPIs, and quick links.</div>
+    </a>
+    <a class="iw-nav-card" href="Ironwood_MasterTimeline.html">
+      <span class="iw-nav-card-icon">📅</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Master Timeline</div>
+      <div class="iw-nav-card-desc">Project milestone and phase timeline tracker.</div>
+    </a>
+    <a class="iw-nav-card" href="Ironwood_EvolutionMap.html">
+      <span class="iw-nav-card-icon">🗺️</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Evolution Map</div>
+      <div class="iw-nav-card-desc">Company growth roadmap and phase evolution plan.</div>
+    </a>
+    <a class="iw-nav-card" href="Tenant_Screener.html">
+      <span class="iw-nav-card-icon">🔍</span>
+      <div class="iw-nav-card-eyebrow">Internal</div>
+      <div class="iw-nav-card-title">Tenant Screener</div>
+      <div class="iw-nav-card-desc">Tenant application scoring and screening checklist.</div>
+    </a>
+    <a class="iw-nav-card" href="Ironwood_HomeownerOnePager.html">
+      <span class="iw-nav-card-icon">📰</span>
+      <div class="iw-nav-card-eyebrow">Client-Facing</div>
+      <div class="iw-nav-card-title">Homeowner One-Pager</div>
+      <div class="iw-nav-card-desc">Client-facing overview of Ironwood Property Group services.</div>
+    </a>
+  </div>
+
+  <!-- WEBSITE PAGES -->
+  <div class="iw-section-label">Website Pages</div>
+  <div class="site-grid">
+    <a class="site-card" href="Ironwood_Site_Home.html"><span class="site-card-icon">🏠</span><div class="site-card-label">Home</div></a>
+    <a class="site-card" href="Ironwood_Site_Renovate.html"><span class="site-card-icon">🔨</span><div class="site-card-label">Renovations</div></a>
+    <a class="site-card" href="Ironwood_Site_Sell.html"><span class="site-card-icon">🏡</span><div class="site-card-label">Sell Your Home</div></a>
+    <a class="site-card" href="Ironwood_Site_Work.html"><span class="site-card-icon">📸</span><div class="site-card-label">Our Work</div></a>
+    <a class="site-card" href="Ironwood_Site_About.html"><span class="site-card-icon">👥</span><div class="site-card-label">About</div></a>
+    <a class="site-card" href="Ironwood_Site_Contact.html"><span class="site-card-icon">📞</span><div class="site-card-label">Contact</div></a>
   </div>
 
 </div>
 
-<footer>Ironwood Renovations · Internal Use Only · Atlanta Metro</footer>
+<div class="iw-footer">
+  Ironwood Property Group · Internal Use Only · Atlanta Metro
+</div>
 
 </body>
 </html>

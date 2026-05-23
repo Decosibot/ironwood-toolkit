@@ -6,11 +6,11 @@
 <title>Property Pipeline Tracker — Anchor Pro Solutions</title>
 <style>
   :root {
-    --bg: #0a0a0a;
+    --bg: #F4EFE6;
     --bg2: #111111;
     --bg3: #1a1a1a;
     --bg4: #222222;
-    --cream: #f5f0e8;
+    --cream: #F4EFE6;
     --cream2: #e8e0cc;
     --gold: #c9a84c;
     --gold2: #e0bf6e;
@@ -23,7 +23,7 @@
     --teal2: #22c4b0;
     --text: #f5f0e8;
     --text2: #b0a898;
-    --border: #2a2a2a;
+    --hairline: #E3DBCC;
     --radius: 6px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -36,25 +36,25 @@
     padding: 0 20px; height: 56px; flex-shrink: 0; z-index: 100;
   }
   #logo {
-    width: 36px; height: 36px; background: var(--gold); border-radius: 50%;
+    width: 36px; height: 36px; background: var(--bronze); border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-weight: 900; font-size: 18px; color: var(--bg); flex-shrink: 0;
   }
   #title-block { flex: 1; }
-  #title-block h1 { font-size: 16px; font-weight: 700; color: var(--gold); line-height: 1.1; }
+  #title-block h1 { font-size: 16px; font-weight: 700; color: var(--bronze); line-height: 1.1; }
   #title-block p { font-size: 11px; color: var(--text2); letter-spacing: 0.5px; }
   .topbar-btn {
-    background: var(--bg3); border: 1px solid var(--border); color: var(--cream);
+    background: var(--bg3); border: 1px solid var(--border); color: var(--ink);
     padding: 6px 14px; border-radius: var(--radius); cursor: pointer; font-size: 12px;
     transition: border-color 0.15s, background 0.15s; white-space: nowrap;
   }
-  .topbar-btn:hover { border-color: var(--gold); background: var(--bg4); }
-  .topbar-btn.gold { background: var(--gold); color: var(--bg); border-color: var(--gold); font-weight: 700; }
+  .topbar-btn:hover { border-color: var(--bronze); background: var(--bg4); }
+  .topbar-btn.gold { background: var(--bronze); color: var(--bg); border-color: var(--bronze); font-weight: 700; }
   .topbar-btn.gold:hover { background: var(--gold2); }
   #view-toggle { display: flex; gap: 0; border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
   .view-btn { background: var(--bg3); border: none; color: var(--text2); padding: 6px 12px; cursor: pointer; font-size: 12px; transition: background 0.15s, color 0.15s; }
-  .view-btn.active { background: var(--gold); color: var(--bg); font-weight: 700; }
-  .view-btn:hover:not(.active) { background: var(--bg4); color: var(--cream); }
+  .view-btn.active { background: var(--bronze); color: var(--bg); font-weight: 700; }
+  .view-btn:hover:not(.active) { background: var(--bg4); color: var(--ink); }
 
   /* LAYOUT */
   #app { display: flex; flex-direction: column; height: 100vh; }
@@ -68,7 +68,7 @@
   }
   .stat { display: flex; flex-direction: column; gap: 2px; white-space: nowrap; }
   .stat-label { font-size: 10px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.8px; }
-  .stat-value { font-size: 18px; font-weight: 700; color: var(--gold); }
+  .stat-value { font-size: 18px; font-weight: 700; color: var(--bronze); }
   .stat-value.sm { font-size: 14px; }
   .stat-sep { width: 1px; height: 32px; background: var(--border); flex-shrink: 0; }
   .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 11px; font-weight: 700; }
@@ -91,7 +91,7 @@
     display: flex; align-items: center; justify-content: space-between;
     background: var(--bg3); border-radius: 8px 8px 0 0; flex-shrink: 0;
   }
-  .stage-name { font-size: 12px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stage-name { font-size: 12px; font-weight: 700; color: var(--bronze); text-transform: uppercase; letter-spacing: 0.5px; }
   .stage-count {
     background: var(--bg4); color: var(--text2); font-size: 11px; font-weight: 700;
     padding: 2px 8px; border-radius: 20px; min-width: 24px; text-align: center;
@@ -111,7 +111,7 @@
   .deal-card.on-track { border-left-color: var(--green); }
   .deal-card.warn { border-left-color: var(--yellow); }
   .deal-card.late { border-left-color: var(--red); }
-  .card-address { font-size: 12px; font-weight: 700; color: var(--cream); margin-bottom: 6px; line-height: 1.3; }
+  .card-address { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 6px; line-height: 1.3; }
   .card-row { display: flex; justify-content: space-between; font-size: 11px; color: var(--text2); margin-bottom: 3px; }
   .card-row span:last-child { color: var(--cream2); }
   .card-badge { margin-top: 6px; }
@@ -126,7 +126,7 @@
   #list-view { flex: 1; overflow: auto; padding: 16px 20px; display: none; }
   #list-view table { width: 100%; border-collapse: collapse; }
   #list-view th {
-    background: var(--bg3); color: var(--gold); font-size: 11px; text-transform: uppercase;
+    background: var(--bg3); color: var(--bronze); font-size: 11px; text-transform: uppercase;
     letter-spacing: 0.5px; padding: 10px 12px; text-align: left; border-bottom: 2px solid var(--gold3);
     cursor: pointer; white-space: nowrap; user-select: none;
   }
@@ -135,7 +135,7 @@
   #list-view th.sorted .sort-icon { opacity: 1; }
   #list-view td { padding: 9px 12px; border-bottom: 1px solid var(--border); font-size: 12px; color: var(--cream2); }
   #list-view tr:hover td { background: var(--bg3); cursor: pointer; }
-  #list-view tr:hover td:first-child { color: var(--gold); }
+  #list-view tr:hover td:first-child { color: var(--bronze); }
 
   /* MODAL */
   #modal-overlay {
@@ -155,12 +155,12 @@
     padding: 16px 20px; border-bottom: 1px solid var(--border);
     background: var(--bg3); flex-shrink: 0; position: sticky; top: 0; z-index: 1;
   }
-  #modal-header h2 { font-size: 15px; color: var(--gold); }
+  #modal-header h2 { font-size: 15px; color: var(--bronze); }
   #modal-close {
     background: none; border: none; color: var(--text2); font-size: 20px; cursor: pointer;
     line-height: 1; padding: 2px 6px; border-radius: var(--radius);
   }
-  #modal-close:hover { color: var(--cream); background: var(--bg4); }
+  #modal-close:hover { color: var(--ink); background: var(--bg4); }
   #modal-body { padding: 20px; flex: 1; }
   #modal-footer {
     padding: 14px 20px; border-top: 1px solid var(--border);
@@ -172,7 +172,7 @@
   .form-section { margin-bottom: 20px; }
   .form-section-title {
     font-size: 11px; text-transform: uppercase; letter-spacing: 1px;
-    color: var(--gold); border-bottom: 1px solid var(--gold3); padding-bottom: 6px; margin-bottom: 12px;
+    color: var(--bronze); border-bottom: 1px solid var(--gold3); padding-bottom: 6px; margin-bottom: 12px;
   }
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
   .form-grid.full { grid-template-columns: 1fr; }
@@ -181,15 +181,15 @@
   label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; }
   input, select, textarea {
     background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius);
-    color: var(--cream); padding: 7px 10px; font-size: 13px; font-family: inherit;
+    color: var(--ink); padding: 7px 10px; font-size: 13px; font-family: inherit;
     transition: border-color 0.15s; width: 100%;
   }
-  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--gold); }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--bronze); }
   textarea { resize: vertical; min-height: 70px; }
   select option { background: var(--bg3); }
   .readonly-field {
     background: var(--bg4); border: 1px solid var(--border); border-radius: var(--radius);
-    color: var(--gold); padding: 7px 10px; font-size: 13px; font-weight: 700;
+    color: var(--bronze); padding: 7px 10px; font-size: 13px; font-weight: 700;
   }
   .deal-score {
     display: inline-block; padding: 5px 16px; border-radius: 20px; font-size: 13px; font-weight: 800;
@@ -226,7 +226,7 @@
     background: var(--bg2); border: 1px solid var(--gold3); border-radius: 8px;
     padding: 24px; width: 480px;
   }
-  #import-box h3 { color: var(--gold); margin-bottom: 12px; }
+  #import-box h3 { color: var(--bronze); margin-bottom: 12px; }
   #import-box textarea { width: 100%; height: 200px; margin-bottom: 12px; font-size: 11px; font-family: monospace; }
   #import-box .btn-row { display: flex; gap: 10px; justify-content: flex-end; }
 
@@ -239,7 +239,7 @@
   /* TOAST */
   #toast {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px);
-    background: var(--gold); color: var(--bg); padding: 10px 24px; border-radius: 20px;
+    background: var(--bronze); color: var(--bg); padding: 10px 24px; border-radius: 20px;
     font-weight: 700; font-size: 13px; z-index: 500; transition: transform 0.25s ease;
     pointer-events: none;
   }
@@ -247,9 +247,9 @@
 
   .btn-danger { background: var(--bg3); border: 1px solid var(--red); color: var(--red); padding: 7px 16px; border-radius: var(--radius); cursor: pointer; font-size: 12px; }
   .btn-danger:hover { background: #3a1a1a; }
-  .btn-primary { background: var(--gold); border: none; color: var(--bg); padding: 7px 18px; border-radius: var(--radius); cursor: pointer; font-size: 13px; font-weight: 700; }
+  .btn-primary { background: var(--bronze); border: none; color: var(--bg); padding: 7px 18px; border-radius: var(--radius); cursor: pointer; font-size: 13px; font-weight: 700; }
   .btn-primary:hover { background: var(--gold2); }
-  .btn-secondary { background: var(--bg3); border: 1px solid var(--border); color: var(--cream); padding: 7px 16px; border-radius: var(--radius); cursor: pointer; font-size: 12px; }
+  .btn-secondary { background: var(--bg3); border: 1px solid var(--border); color: var(--ink); padding: 7px 16px; border-radius: var(--radius); cursor: pointer; font-size: 12px; }
   .btn-secondary:hover { background: var(--bg4); border-color: var(--gold3); }
 
   .empty-col { text-align: center; color: var(--text2); font-size: 11px; padding: 20px 0; opacity: 0.5; }
@@ -261,7 +261,7 @@
     display: inline-block; padding: 2px 7px; border-radius: 20px; font-size: 10px; font-weight: 800;
     letter-spacing: 0.5px; margin-left: 4px; vertical-align: middle;
   }
-  .market-badge.ga-mtn { background: #3a2a00; color: var(--gold); border: 1px solid var(--gold3); }
+  .market-badge.ga-mtn { background: #3a2a00; color: var(--bronze); border: 1px solid var(--gold3); }
   .market-badge.fl-coast { background: #00282e; color: var(--teal2); border: 1px solid var(--teal); }
 </style>
 </head>

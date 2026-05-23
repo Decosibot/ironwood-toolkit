@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Anchor Pro — Operational Costs Tracker</title>
 <style>
@@ -10,7 +11,7 @@
   :root {
     --bg:       #0a0a0a;
     --surface:  #141414;
-    --surface2: #1e1e1e;
+    --surface-2: #FFFFFF;
     --border:   #2a2a2a;
     --gold:     #c9a84c;
     --gold-dim: #a07c30;
@@ -23,7 +24,7 @@
 
   body {
     background: var(--bg);
-    color: var(--cream);
+    color: var(--ink);
     font-family: 'Segoe UI', system-ui, sans-serif;
     font-size: 14px;
     min-height: 100vh;
@@ -44,13 +45,13 @@
   .topbar-brand { display: flex; align-items: center; gap: 12px; }
   .topbar-logo {
     width: 36px; height: 36px;
-    background: var(--gold);
+    background: var(--bronze);
     border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
     font-weight: 900; font-size: 16px; color: #0a0a0a;
   }
-  .topbar-title { font-size: 16px; font-weight: 700; color: var(--cream); }
-  .topbar-sub   { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+  .topbar-title { font-size: 16px; font-weight: 700; color: var(--ink); }
+  .topbar-sub   { font-size: 11px; color: var(--bronze); letter-spacing: 1px; text-transform: uppercase; }
 
   .topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
 
@@ -61,8 +62,8 @@
     transition: opacity .15s;
   }
   .btn:hover { opacity: .85; }
-  .btn-gold   { background: var(--gold); color: #0a0a0a; }
-  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+  .btn-gold   { background: var(--bronze); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--bronze); }
   .btn-danger  { background: var(--danger); color: #fff; }
   .btn-sm { padding: 5px 10px; font-size: 11px; }
 
@@ -77,7 +78,7 @@
   }
   .period-bar label { color: var(--muted); font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: .5px; }
   .period-bar select, .period-bar input[type="text"] {
-    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    background: var(--surface2); border: 1px solid var(--border); color: var(--ink);
     border-radius: 6px; padding: 6px 10px; font-size: 13px;
   }
   .period-bar select:focus, .period-bar input:focus { outline: 1px solid var(--gold); }
@@ -91,10 +92,10 @@
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 10px; padding: 16px 18px;
   }
-  .summary-card.accent { border-color: var(--gold); }
+  .summary-card.accent { border-color: var(--bronze); }
   .summary-card .sc-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-  .summary-card .sc-value { font-size: 22px; font-weight: 700; color: var(--cream); }
-  .summary-card .sc-value.gold { color: var(--gold); }
+  .summary-card .sc-value { font-size: 22px; font-weight: 700; color: var(--ink); }
+  .summary-card .sc-value.gold { color: var(--bronze); }
   .summary-card .sc-value.danger { color: var(--danger); }
   .summary-card .sc-value.success { color: var(--success); }
   .summary-card .sc-sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
@@ -107,8 +108,8 @@
     background: var(--surface); border: 1px solid var(--border); color: var(--muted);
     transition: all .15s;
   }
-  .tab.active { background: var(--gold); color: #0a0a0a; border-color: var(--gold); }
-  .tab:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+  .tab.active { background: var(--bronze); color: #0a0a0a; border-color: var(--bronze); }
+  .tab:hover:not(.active) { border-color: var(--bronze); color: var(--bronze); }
 
   /* ── TABLE ── */
   .table-wrap {
@@ -119,7 +120,7 @@
     display: flex; align-items: center; justify-content: space-between;
     padding: 14px 18px; border-bottom: 1px solid var(--border);
   }
-  .table-header h3 { font-size: 14px; color: var(--gold); font-weight: 700; }
+  .table-header h3 { font-size: 14px; color: var(--bronze); font-weight: 700; }
 
   table { width: 100%; border-collapse: collapse; }
   thead th {
@@ -135,7 +136,7 @@
 
   /* editable cells */
   .editable {
-    background: transparent; border: none; color: var(--cream);
+    background: transparent; border: none; color: var(--ink);
     font-size: 13px; font-family: inherit; width: 100%;
     padding: 4px 6px; border-radius: 4px;
   }
@@ -178,14 +179,14 @@
   .add-row-form .field { display: flex; flex-direction: column; gap: 4px; }
   .add-row-form label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
   .add-row-form input, .add-row-form select {
-    background: var(--surface); border: 1px solid var(--border); color: var(--cream);
+    background: var(--surface); border: 1px solid var(--border); color: var(--ink);
     border-radius: 6px; padding: 6px 10px; font-size: 13px; min-width: 120px;
   }
   .add-row-form input:focus, .add-row-form select:focus { outline: 1px solid var(--gold); }
 
   /* ── BUDGET PROGRESS BAR ── */
   .progress-wrap { margin-bottom: 24px; }
-  .progress-wrap h3 { font-size: 13px; color: var(--gold); margin-bottom: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .progress-wrap h3 { font-size: 13px; color: var(--bronze); margin-bottom: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
   .progress-item { margin-bottom: 10px; }
   .progress-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 4px; }
   .progress-bar { height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
@@ -199,10 +200,10 @@
     background: var(--surface); border: 1px solid var(--border);
     border-radius: 10px; padding: 18px; margin-bottom: 20px;
   }
-  .notes-panel h3 { font-size: 13px; color: var(--gold); margin-bottom: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .notes-panel h3 { font-size: 13px; color: var(--bronze); margin-bottom: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
   .notes-panel textarea {
     width: 100%; min-height: 80px;
-    background: var(--surface2); border: 1px solid var(--border); color: var(--cream);
+    background: var(--surface2); border: 1px solid var(--border); color: var(--ink);
     border-radius: 6px; padding: 10px; font-size: 13px; font-family: inherit;
     resize: vertical;
   }

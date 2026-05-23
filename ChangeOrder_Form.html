@@ -6,13 +6,13 @@
 <title>Change Order Form — Landon Renovations</title>
 <style>
   :root {
-    --bg: #0a0a0a;
-    --cream: #f5f0e8;
+    --bg: #F4EFE6;
+    --cream: #F4EFE6;
     --gold: #c9a84c;
     --gold-dark: #a8893a;
     --gold-light: #e0c06a;
-    --surface: #141414;
-    --surface2: #1e1e1e;
+    --surface: #FBF8F2;
+    --surface-2: #FFFFFF;
     --surface3: #2a2a2a;
     --border: #2e2e2e;
     --text: #f5f0e8;
@@ -68,7 +68,7 @@
   #topbar-titles h1 {
     font-size: 15px;
     font-weight: 700;
-    color: var(--gold);
+    color: var(--bronze);
     letter-spacing: 0.5px;
     line-height: 1.1;
   }
@@ -92,10 +92,10 @@
     transition: border-color 0.15s, background 0.15s;
     white-space: nowrap;
   }
-  .tb-btn:hover { border-color: var(--gold); background: var(--surface3); }
+  .tb-btn:hover { border-color: var(--bronze); background: var(--surface3); }
   .tb-btn.gold {
-    background: var(--gold);
-    border-color: var(--gold);
+    background: var(--bronze);
+    border-color: var(--bronze);
     color: var(--bg);
     font-weight: 700;
   }
@@ -152,7 +152,7 @@
   }
   .field-group input:focus,
   .field-group select:focus,
-  .field-group textarea:focus { border-color: var(--gold); }
+  .field-group textarea:focus { border-color: var(--bronze); }
   .field-group textarea { resize: vertical; min-height: 70px; }
   .field-group select option { background: var(--surface2); }
 
@@ -161,7 +161,7 @@
   .section-label {
     font-size: 10px;
     font-weight: 700;
-    color: var(--gold);
+    color: var(--bronze);
     text-transform: uppercase;
     letter-spacing: 1px;
     padding: 4px 0 2px;
@@ -197,7 +197,7 @@
   .panel-header h3 {
     font-size: 12px;
     font-weight: 700;
-    color: var(--gold);
+    color: var(--bronze);
     text-transform: uppercase;
     letter-spacing: 0.8px;
   }
@@ -215,7 +215,7 @@
     transition: all 0.15s;
     white-space: nowrap;
   }
-  .quick-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .quick-btn:hover { border-color: var(--bronze); color: var(--bronze); }
 
   /* ── LINE ITEMS TABLE ── */
   .items-table-wrap { overflow-x: auto; }
@@ -257,7 +257,7 @@
     transition: border-color 0.15s;
   }
   table.items-table input:focus,
-  table.items-table select:focus { border-color: var(--gold); background: var(--surface2); }
+  table.items-table select:focus { border-color: var(--bronze); background: var(--surface2); }
   table.items-table td.col-desc { min-width: 200px; }
   table.items-table td.col-type { width: 100px; }
   table.items-table td.col-qty { width: 70px; }
@@ -292,7 +292,7 @@
     transition: color 0.15s, background 0.15s;
     text-align: center;
   }
-  .add-row-btn:hover { color: var(--gold); background: var(--surface2); }
+  .add-row-btn:hover { color: var(--bronze); background: var(--surface2); }
 
   /* ── TOTALS PANEL ── */
   .totals-grid {
@@ -318,15 +318,15 @@
   .totals-cell .val {
     font-size: 18px;
     font-weight: 700;
-    color: var(--cream);
+    color: var(--ink);
   }
   .totals-cell .val.green { color: var(--green); }
   .totals-cell .val.red { color: var(--red); }
-  .totals-cell .val.gold { color: var(--gold); }
+  .totals-cell .val.gold { color: var(--bronze); }
   .totals-cell input {
     background: var(--surface2);
     border: 1px solid var(--border);
-    color: var(--cream);
+    color: var(--ink);
     padding: 5px 8px;
     border-radius: var(--radius-sm);
     font-size: 16px;
@@ -335,7 +335,7 @@
     width: 100%;
     outline: none;
   }
-  .totals-cell input:focus { border-color: var(--gold); }
+  .totals-cell input:focus { border-color: var(--bronze); }
 
   /* ── HISTORY PANEL ── */
   #history-panel {
@@ -357,7 +357,7 @@
   #history-header h3 {
     font-size: 12px;
     font-weight: 700;
-    color: var(--gold);
+    color: var(--bronze);
     text-transform: uppercase;
     letter-spacing: 0.8px;
   }
@@ -379,11 +379,11 @@
     min-width: 160px;
     transition: border-color 0.15s;
   }
-  .history-item:hover { border-color: var(--gold); }
-  .history-item.active { border-color: var(--gold); background: rgba(201,168,76,0.08); }
-  .history-item .hi-co { font-size: 11px; font-weight: 700; color: var(--gold); }
+  .history-item:hover { border-color: var(--bronze); }
+  .history-item.active { border-color: var(--bronze); background: rgba(201,168,76,0.08); }
+  .history-item .hi-co { font-size: 11px; font-weight: 700; color: var(--bronze); }
   .history-item .hi-date { font-size: 11px; color: var(--text-muted); }
-  .history-item .hi-amount { font-size: 13px; font-weight: 700; color: var(--cream); }
+  .history-item .hi-amount { font-size: 13px; font-weight: 700; color: var(--ink); }
   .hi-status {
     display: inline-block;
     font-size: 9px;
@@ -424,7 +424,7 @@
   .print-header-left .doc-type {
     font-size: 28px;
     font-weight: 800;
-    color: var(--gold);
+    color: var(--bronze);
     letter-spacing: 3px;
     text-transform: uppercase;
   }
@@ -438,7 +438,7 @@
   .print-header-right .co-num {
     font-size: 22px;
     font-weight: 800;
-    color: var(--gold);
+    color: var(--bronze);
   }
   .print-header-right .co-date {
     font-size: 13px;
@@ -565,7 +565,7 @@
   .pf-row:last-child { border-bottom: none; }
   .pf-row .pf-label { color: #555; font-weight: 500; }
   .pf-row .pf-val { font-weight: 700; color: #1a1a1a; font-size: 14px; }
-  .pf-row.pf-highlight { background: var(--gold); }
+  .pf-row.pf-highlight { background: var(--bronze); }
   .pf-row.pf-highlight .pf-label { color: #1a1a1a; font-weight: 700; }
   .pf-row.pf-highlight .pf-val { font-size: 18px; color: #1a1a1a; }
   .pf-row .pf-val.pf-green { color: #1a7a3a; }
@@ -603,7 +603,7 @@
     letter-spacing: 0.3px;
     line-height: 1.5;
   }
-  .print-footer strong { color: var(--gold); }
+  .print-footer strong { color: var(--bronze); }
 
   /* ── STATUS ROW ── */
   .status-row { display: flex; gap: 8px; align-items: center; }
@@ -618,9 +618,9 @@
     font-family: inherit;
     outline: none;
   }
-  .status-select:focus { border-color: var(--gold); }
+  .status-select:focus { border-color: var(--bronze); }
   .save-btn {
-    background: var(--gold);
+    background: var(--bronze);
     border: 1px solid var(--gold);
     color: var(--bg);
     padding: 7px 14px;
@@ -645,7 +645,7 @@
     transition: all 0.15s;
     white-space: nowrap;
   }
-  .new-co-btn:hover { border-color: var(--gold); color: var(--gold); }
+  .new-co-btn:hover { border-color: var(--bronze); color: var(--bronze); }
 
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 5px; height: 5px; }

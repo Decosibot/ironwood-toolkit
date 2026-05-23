@@ -2,24 +2,25 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ironwood LLC — Remodel Job Estimator</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
-    --border: #2a2a2a; --gold: #c9a84c; --gold-dim: #a07c30;
-    --cream: #f5f0e8; --muted: #888; --danger: #c0392b;
+    --bg: #F4EFE6; --surface: #FBF8F2; --surface-2: #FFFFFF;
+    --hairline: #E3DBCC; --gold: #c9a84c; --gold-dim: #a07c30;
+    --cream: #F4EFE6; --muted: #888; --danger: #c0392b;
     --success: #27ae60; --warn: #e67e22;
   }
-  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
 
   /* ── TOPBAR ── */
   .topbar { background: linear-gradient(135deg,#1a1a1a,#0a0a0a); border-bottom: 1px solid var(--gold); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .topbar-brand { display: flex; align-items: center; gap: 12px; }
-  .topbar-logo { width: 36px; height: 36px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
-  .topbar-title { font-size: 16px; font-weight: 700; color: var(--cream); }
-  .topbar-sub { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
+  .topbar-logo { width: 36px; height: 36px; background: var(--bronze); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
+  .topbar-title { font-size: 16px; font-weight: 700; color: var(--ink); }
+  .topbar-sub { font-size: 11px; color: var(--bronze); letter-spacing: 1px; text-transform: uppercase; }
   .topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
   /* ── LAYOUT ── */
@@ -30,8 +31,8 @@
   /* ── BUTTONS ── */
   .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; letter-spacing: .5px; transition: opacity .15s; }
   .btn:hover { opacity: .85; }
-  .btn-gold { background: var(--gold); color: #0a0a0a; }
-  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+  .btn-gold { background: var(--bronze); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--bronze); }
   .btn-danger { background: var(--danger); color: #fff; }
   .btn-sm { padding: 5px 10px; font-size: 11px; }
   .btn-block { width: 100%; margin-top: 8px; padding: 10px; }
@@ -41,14 +42,14 @@
   .field-group label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; font-weight: 600; }
   .field-group input, .field-group select, .field-group textarea {
     width: 100%; background: var(--surface2); border: 1px solid var(--border);
-    color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit;
+    color: var(--ink); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit;
   }
   .field-group input:focus, .field-group select:focus, .field-group textarea:focus { outline: 1px solid var(--gold); }
   .field-row { display: flex; gap: 8px; }
   .field-row .field-group { flex: 1; }
 
   /* ── SECTION HEADERS ── */
-  .section-head { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .section-head { font-size: 11px; color: var(--bronze); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
 
   /* ── LINE ITEMS ── */
   .line-items-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
@@ -56,40 +57,40 @@
   .li-row { display: grid; grid-template-columns: 2fr 1fr 80px 80px 90px 180px 36px; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--border); align-items: center; transition: background .1s; }
   .li-row:last-child { border-bottom: none; }
   .li-row:hover { background: var(--surface2); }
-  .li-input { background: transparent; border: none; color: var(--cream); font-size: 13px; font-family: inherit; width: 100%; padding: 3px 4px; border-radius: 4px; }
+  .li-input { background: transparent; border: none; color: var(--ink); font-size: 13px; font-family: inherit; width: 100%; padding: 3px 4px; border-radius: 4px; }
   .li-input:focus { outline: 1px solid var(--gold); background: var(--surface2); }
   .li-input.num { text-align: right; }
-  .li-total { text-align: right; font-weight: 700; color: var(--gold); font-size: 13px; }
+  .li-total { text-align: right; font-weight: 700; color: var(--bronze); font-size: 13px; }
   .li-del { background: none; border: none; cursor: pointer; color: #444; font-size: 16px; padding: 2px 6px; border-radius: 4px; transition: color .15s; }
   .li-del:hover { color: var(--danger); }
 
   .add-line-row { display: flex; gap: 8px; padding: 10px 12px; background: var(--surface2); border-top: 1px solid var(--border); flex-wrap: wrap; align-items: flex-end; }
-  .add-line-row input, .add-line-row select { background: var(--surface); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
+  .add-line-row input, .add-line-row select { background: var(--surface); border: 1px solid var(--border); color: var(--ink); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
   .add-line-row input:focus, .add-line-row select:focus { outline: 1px solid var(--gold); }
   .add-line-row .mini-label { font-size: 10px; color: var(--muted); display: block; margin-bottom: 3px; text-transform: uppercase; }
 
   /* ── CATEGORY TABS ── */
   .cat-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
   .cat-tab { padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: 600; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); transition: all .15s; }
-  .cat-tab.active { background: var(--gold); color: #0a0a0a; border-color: var(--gold); }
-  .cat-tab:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
+  .cat-tab.active { background: var(--bronze); color: #0a0a0a; border-color: var(--bronze); }
+  .cat-tab:hover:not(.active) { border-color: var(--bronze); color: var(--bronze); }
 
   /* ── TOTALS PANEL ── */
   .totals-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 20px; }
-  .totals-panel h3 { font-size: 12px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 14px; }
+  .totals-panel h3 { font-size: 12px; color: var(--bronze); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 14px; }
   .totals-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
   .totals-row:last-child { border-bottom: none; }
   .totals-row.subtotal { color: var(--muted); }
-  .totals-row.total { font-weight: 700; font-size: 16px; color: var(--gold); border-top: 2px solid var(--gold); margin-top: 8px; padding-top: 10px; }
+  .totals-row.total { font-weight: 700; font-size: 16px; color: var(--bronze); border-top: 2px solid var(--gold); margin-top: 8px; padding-top: 10px; }
   .totals-row.split { color: var(--success); font-size: 12px; }
 
   /* ── MARKUP CONTROLS ── */
   .markup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
   .markup-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
   .markup-card label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 6px; }
-  .markup-card input { background: var(--surface); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 6px 8px; font-size: 14px; font-weight: 700; width: 70px; text-align: right; }
+  .markup-card input { background: var(--surface); border: 1px solid var(--border); color: var(--ink); border-radius: 6px; padding: 6px 8px; font-size: 14px; font-weight: 700; width: 70px; text-align: right; }
   .markup-card input:focus { outline: 1px solid var(--gold); }
-  .markup-card .pct-label { color: var(--gold); margin-left: 4px; font-size: 13px; }
+  .markup-card .pct-label { color: var(--bronze); margin-left: 4px; font-size: 13px; }
 
   /* ── PREVIEW / PROPOSAL ── */
   .preview-wrap { display: none; }
@@ -131,14 +132,14 @@
   .prop-info-block p { font-size: 13px; color: #333; line-height: 1.6; }
 
   .prop-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .prop-table thead th { background: #0a0a0a; color: #c9a84c; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  .prop-table thead th { background: var(--bg); color: #c9a84c; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
   .prop-table tbody tr { border-bottom: 1px solid #e8e0d0; }
   .prop-table tbody tr:last-child { border-bottom: none; }
   .prop-table tbody td { padding: 9px 12px; color: #333; }
   .prop-table tbody tr:nth-child(even) { background: #f9f7f2; }
   .prop-table .cat-row td { background: #f0ece3; font-weight: 700; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: .5px; padding: 6px 12px; }
   .prop-table .num { text-align: right; }
-  .prop-table .total-row td { background: #0a0a0a; color: #f5f0e8; font-weight: 700; padding: 10px 12px; }
+  .prop-table .total-row td { background: var(--bg); color: #f5f0e8; font-weight: 700; padding: 10px 12px; }
   .prop-table .total-row .num { color: #c9a84c; font-size: 15px; }
 
   .prop-totals { margin-top: 16px; }
@@ -154,7 +155,7 @@
   .sig-line-wrap .sl-line { border-bottom: 1px solid #999; margin-bottom: 4px; height: 36px; }
   .sig-line-wrap .sl-label { font-size: 11px; color: #888; }
 
-  .prop-footer { background: #0a0a0a; color: #666; font-size: 10px; padding: 12px 40px; display: flex; justify-content: space-between; }
+  .prop-footer { background: var(--bg); color: #666; font-size: 10px; padding: 12px 40px; display: flex; justify-content: space-between; }
   .prop-footer span { color: #c9a84c; }
 
   .empty-state { text-align: center; padding: 30px; color: var(--muted); font-size: 13px; }
@@ -167,7 +168,7 @@
     <div class="topbar-logo">IW</div>
     <div>
       <div class="topbar-title">Remodel Job Estimator</div>
-      <div class="topbar-sub">Ironwood Renovations</div>
+      <div class="topbar-sub">Ironwood Property Group</div>
     </div>
   </div>
   <div class="topbar-actions">
@@ -737,7 +738,7 @@ function buildProposal() {
 
   document.getElementById('proposalDoc').innerHTML = `
     <div class="prop-header">
-      <div class="co-name">Ironwood Renovations</div>
+      <div class="co-name">Ironwood Property Group</div>
       <h1>Project Estimate</h1>
       <div class="prop-sub">${esc(job.jobType)} · Prepared ${today}</div>
     </div>
@@ -839,7 +840,7 @@ function buildProposal() {
     </div>
 
     <div class="prop-footer">
-      <span>Ironwood Renovations</span>
+      <span>Ironwood Property Group</span>
       <span>Confidential Estimate · ${today}</span>
     </div>
   `;

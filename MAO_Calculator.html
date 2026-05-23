@@ -2,14 +2,15 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>MAO Calculator — Ironwood Renovations</title>
+  <title>MAO Calculator — Ironwood Property Group</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: 'Arial', sans-serif;
-      background: #0a0a0a;
+      background: var(--bg);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -76,7 +77,7 @@
     .type-btn {
       flex: 1;
       padding: 12px 16px;
-      background: #0a0a0a;
+      background: var(--bg);
       color: #b8b0a0;
       border: none;
       cursor: pointer;
@@ -124,7 +125,7 @@
     .input-row {
       display: flex;
       align-items: center;
-      background: #0a0a0a;
+      background: var(--bg);
       border: 1px solid #2a2a2a;
       border-radius: 8px;
       overflow: hidden;
@@ -260,7 +261,7 @@
     .mao-display {
       text-align: center;
       padding: 24px;
-      background: #0a0a0a;
+      background: var(--bg);
       border-radius: 10px;
       margin-bottom: 24px;
       border: 1px solid #2a2a2a;
@@ -298,7 +299,7 @@
     }
 
     .breakdown-item {
-      background: #0a0a0a;
+      background: var(--bg);
       border-radius: 8px;
       padding: 14px 16px;
       border: 1px solid #2a2a2a;
@@ -420,7 +421,7 @@
 <body>
 
 <div class="header">
-  <div class="brand">Ironwood Renovations</div>
+  <div class="brand">Ironwood Property Group</div>
   <h1>MAO Calculator</h1>
   <p>Maximum Allowable Offer — BRRRR Deal Analyzer</p>
 </div>
@@ -567,7 +568,7 @@
 
     <div class="input-group">
       <label>
-        Ironwood Renovations Management Fee %
+        Ironwood Property Group Management Fee %
         <span class="hint">% of total capital invested — typically 3–5%</span>
       </label>
       <div class="input-row">
@@ -633,11 +634,11 @@
         <div class="b-value" id="r-ratio">—</div>
       </div>
       <div class="breakdown-item" style="border-top:1px solid #2a2a2a; padding-top:12px;">
-        <div class="b-label">Ty — Ironwood Renovations (50%)</div>
+        <div class="b-label">Ty — Ironwood Property Group (50%)</div>
         <div class="b-value positive" id="r-anchor-share">—</div>
       </div>
       <div class="breakdown-item" style="border-top:1px solid #2a2a2a; padding-top:12px;">
-        <div class="b-label">Jeff — Ironwood Renovations (50%)</div>
+        <div class="b-label">Jeff — Ironwood Property Group (50%)</div>
         <div class="b-value positive" id="r-landon-share">—</div>
       </div>
     </div>
@@ -808,8 +809,8 @@
 <span class="ft-sep"></span>
 <span class="ft-label">Net Distributable Profit              </span><span class="ft-result">${fmt(netDist)}</span>
 <span class="ft-sep"></span>
-<span class="ft-label">Ty — Ironwood Renovations  (50%)           </span><span class="ft-result">${fmt(anchorShare)}</span>
-<span class="ft-label">Jeff — Ironwood Renovations    (50%)           </span><span class="ft-result">${fmt(landonShare)}</span>`;
+<span class="ft-label">Ty — Ironwood Property Group  (50%)           </span><span class="ft-result">${fmt(anchorShare)}</span>
+<span class="ft-label">Jeff — Ironwood Property Group    (50%)           </span><span class="ft-result">${fmt(landonShare)}</span>`;
 
     // Populate DOM
     document.getElementById('results').classList.add('visible');

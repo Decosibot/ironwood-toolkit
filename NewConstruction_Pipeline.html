@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ironwood Renovations — New Construction Pipeline</title>
+<title>Ironwood Property Group — New Construction Pipeline</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e; --surface3: #242424;
-    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
+    --bg: #F4EFE6; --surface: #FBF8F2; --surface-2: #FFFFFF; --surface3: #242424;
+    --hairline: #E3DBCC; --bronze: #9C7B4A; --cream: #F4EFE6; --muted: #888;
     --green: #4caf50; --red: #e53935; --yellow: #f9a825; --blue: #42a5f5;
   }
-  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
 
   /* ── HEADER ── */
   .header {
@@ -19,15 +20,15 @@
     border-bottom: 2px solid var(--gold); padding: 32px 32px 24px;
     display: flex; align-items: center; gap: 16px;
   }
-  .logo-box { width: 48px; height: 48px; background: var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #0a0a0a; flex-shrink: 0; }
+  .logo-box { width: 48px; height: 48px; background: var(--bronze); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #0a0a0a; flex-shrink: 0; }
   .header-text h1 { font-size: 22px; font-weight: 800; }
   .header-text p { font-size: 12px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; margin-top: 2px; }
 
   /* ── TABS ── */
   .tabs { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; gap: 0; padding: 0 24px; }
   .tab { padding: 14px 20px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--muted); border-bottom: 2px solid transparent; transition: color .15s, border-color .15s; white-space: nowrap; }
-  .tab:hover { color: var(--cream); }
-  .tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .tab:hover { color: var(--ink); }
+  .tab.active { color: var(--bronze); border-bottom-color: var(--bronze); }
 
   .tab-content { display: none; }
   .tab-content.active { display: block; }
@@ -36,9 +37,9 @@
   .container { max-width: 1300px; margin: 0 auto; padding: 28px 24px 60px; }
   .btn { padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: opacity .15s; }
   .btn:hover { opacity: .85; }
-  .btn-gold { background: var(--gold); color: #0a0a0a; }
-  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--cream); }
-  .btn-outline:hover { border-color: var(--gold); }
+  .btn-gold { background: var(--bronze); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--ink); }
+  .btn-outline:hover { border-color: var(--bronze); }
   .btn-sm { padding: 5px 10px; font-size: 11px; }
   .btn-red { background: transparent; border: 1px solid rgba(229,57,53,.3); color: var(--red); }
 
@@ -47,7 +48,7 @@
   .stat-pill strong { display: block; font-size: 20px; margin-bottom: 2px; }
 
   .toolbar { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin-bottom: 24px; }
-  .toolbar select { background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none; cursor: pointer; }
+  .toolbar select { background: var(--surface2); border: 1px solid var(--border); color: var(--ink); border-radius: 6px; padding: 8px 12px; font-size: 13px; outline: none; cursor: pointer; }
 
   /* ── PIPELINE CARDS ── */
   .pipeline-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 18px; }
@@ -66,7 +67,7 @@
   .phase-badge { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: .05em; white-space: nowrap; flex-shrink: 0; }
   .phase-planning  { background: rgba(66,165,245,.12); color: var(--blue); border: 1px solid rgba(66,165,245,.25); }
   .phase-building  { background: rgba(249,168,37,.12); color: var(--yellow); border: 1px solid rgba(249,168,37,.25); }
-  .phase-seasoning { background: rgba(184,147,62,.12); color: var(--gold); border: 1px solid rgba(184,147,62,.25); }
+  .phase-seasoning { background: rgba(184,147,62,.12); color: var(--bronze); border: 1px solid rgba(184,147,62,.25); }
   .phase-refi      { background: rgba(76,175,80,.12); color: var(--green); border: 1px solid rgba(76,175,80,.25); }
   .phase-complete  { background: rgba(136,136,136,.1); color: var(--muted); border: 1px solid var(--border); }
 
@@ -74,14 +75,14 @@
   .metric-box { background: var(--surface2); border-radius: 7px; padding: 9px 10px; text-align: center; }
   .metric-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 3px; }
   .metric-value { font-size: 14px; font-weight: 700; }
-  .metric-value.gold { color: var(--gold); }
+  .metric-value.gold { color: var(--bronze); }
   .metric-value.green { color: var(--green); }
   .metric-value.red { color: var(--red); }
 
   .timeline-bar { margin-bottom: 14px; }
   .timeline-label { font-size: 11px; color: var(--muted); margin-bottom: 6px; display: flex; justify-content: space-between; }
   .tbar { background: var(--surface2); border-radius: 4px; height: 8px; overflow: hidden; }
-  .tbar-fill { height: 100%; border-radius: 4px; background: var(--gold); transition: width .4s; }
+  .tbar-fill { height: 100%; border-radius: 4px; background: var(--bronze); transition: width .4s; }
   .tbar-fill.green { background: var(--green); }
   .tbar-fill.red { background: var(--red); }
 
@@ -90,8 +91,8 @@
   .draw-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; font-size: 12px; }
   .draw-check { width: 16px; height: 16px; border-radius: 4px; border: 1px solid var(--border); background: var(--surface2); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 10px; }
   .draw-check.done { background: var(--green); border-color: var(--green); color: #fff; }
-  .draw-label { flex: 1; color: var(--cream); }
-  .draw-amount { color: var(--gold); font-weight: 600; white-space: nowrap; }
+  .draw-label { flex: 1; color: var(--ink); }
+  .draw-amount { color: var(--bronze); font-weight: 600; white-space: nowrap; }
 
   .notes-box { background: var(--surface2); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; padding: 9px 12px; font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
 
@@ -99,51 +100,51 @@
 
   /* ── STRATEGY DOC ── */
   .strategy-doc { max-width: 860px; }
-  .strategy-doc h2 { font-size: 24px; font-weight: 900; color: var(--cream); margin-bottom: 6px; }
-  .strategy-doc .subtitle { font-size: 13px; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 32px; }
-  .strategy-doc h3 { font-size: 16px; font-weight: 800; color: var(--gold); margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-  .strategy-doc h4 { font-size: 14px; font-weight: 700; color: var(--cream); margin: 20px 0 8px; }
+  .strategy-doc h2 { font-size: 24px; font-weight: 900; color: var(--ink); margin-bottom: 6px; }
+  .strategy-doc .subtitle { font-size: 13px; color: var(--bronze); text-transform: uppercase; letter-spacing: .1em; margin-bottom: 32px; }
+  .strategy-doc h3 { font-size: 16px; font-weight: 800; color: var(--bronze); margin: 32px 0 12px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+  .strategy-doc h4 { font-size: 14px; font-weight: 700; color: var(--ink); margin: 20px 0 8px; }
   .strategy-doc p { font-size: 14px; line-height: 1.85; color: #d0c8bc; margin-bottom: 14px; }
   .strategy-doc ul { margin: 0 0 14px 20px; }
   .strategy-doc ul li { font-size: 14px; line-height: 1.85; color: #d0c8bc; margin-bottom: 4px; }
-  .strategy-doc ul li strong { color: var(--cream); }
+  .strategy-doc ul li strong { color: var(--ink); }
 
   .callout { background: rgba(184,147,62,.07); border: 1px solid rgba(184,147,62,.2); border-radius: 8px; padding: 16px 20px; margin: 20px 0; }
-  .callout-label { font-size: 10px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
+  .callout-label { font-size: 10px; font-weight: 700; color: var(--bronze); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 8px; }
   .callout p { margin-bottom: 0; font-size: 13px; }
 
   .numbers-table { width: 100%; border-collapse: collapse; margin: 16px 0 20px; font-size: 13px; }
   .numbers-table th { background: var(--surface2); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-  .numbers-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--cream); }
+  .numbers-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--ink); }
   .numbers-table tr:last-child td { border-bottom: none; }
   .numbers-table .highlight td { background: rgba(184,147,62,.06); font-weight: 700; }
-  .numbers-table .gold { color: var(--gold); font-weight: 700; }
+  .numbers-table .gold { color: var(--bronze); font-weight: 700; }
   .numbers-table .green { color: var(--green); font-weight: 700; }
 
   .cycle-flow { display: flex; flex-wrap: wrap; gap: 0; margin: 20px 0; }
   .cycle-step { background: var(--surface2); border: 1px solid var(--border); padding: 14px 16px; flex: 1; min-width: 140px; position: relative; }
-  .cycle-step:not(:last-child)::after { content: '→'; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); color: var(--gold); font-size: 16px; z-index: 1; }
+  .cycle-step:not(:last-child)::after { content: '→'; position: absolute; right: -12px; top: 50%; transform: translateY(-50%); color: var(--bronze); font-size: 16px; z-index: 1; }
   .cycle-step:first-child { border-radius: 8px 0 0 8px; }
   .cycle-step:last-child { border-radius: 0 8px 8px 0; }
-  .cycle-num { font-size: 10px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
-  .cycle-title { font-size: 13px; font-weight: 700; color: var(--cream); margin-bottom: 3px; }
+  .cycle-num { font-size: 10px; color: var(--bronze); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
+  .cycle-title { font-size: 13px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
   .cycle-time { font-size: 11px; color: var(--muted); }
 
   .year-table { width: 100%; border-collapse: collapse; margin: 16px 0 20px; font-size: 13px; }
   .year-table th { background: var(--surface2); color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .07em; padding: 9px 12px; text-align: left; border-bottom: 1px solid var(--border); }
-  .year-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--cream); vertical-align: top; }
+  .year-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); color: var(--ink); vertical-align: top; }
   .year-table tr:last-child td { border-bottom: none; }
-  .year-table .section-row td { background: rgba(184,147,62,.05); color: var(--gold); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
+  .year-table .section-row td { background: rgba(184,147,62,.05); color: var(--bronze); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; }
 
   .risk-box { background: rgba(229,57,53,.05); border: 1px solid rgba(229,57,53,.2); border-radius: 8px; padding: 16px 20px; margin: 16px 0; }
   .risk-box .risk-title { font-size: 12px; font-weight: 700; color: var(--red); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 8px; }
   .risk-box p { font-size: 13px; margin-bottom: 0; color: #d0c8bc; }
 
   .action-list { background: var(--surface2); border-radius: 8px; padding: 18px 20px; margin: 20px 0; }
-  .action-list .action-title { font-size: 12px; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
+  .action-list .action-title { font-size: 12px; font-weight: 700; color: var(--bronze); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 12px; }
   .action-item { display: flex; gap: 12px; margin-bottom: 10px; font-size: 13px; line-height: 1.5; }
-  .action-num { background: var(--gold); color: #0a0a0a; font-weight: 900; font-size: 11px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
-  .action-text { color: var(--cream); }
+  .action-num { background: var(--bronze); color: #0a0a0a; font-weight: 900; font-size: 11px; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .action-text { color: var(--ink); }
   .action-text span { color: var(--muted); font-size: 12px; }
 
   /* ── MODAL ── */
@@ -152,16 +153,16 @@
   .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px; width: 100%; max-width: 680px; max-height: 92vh; overflow-y: auto; position: relative; }
   .modal h2 { font-size: 17px; font-weight: 700; margin-bottom: 20px; }
   .modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: var(--muted); font-size: 22px; cursor: pointer; }
-  .modal-close:hover { color: var(--cream); }
+  .modal-close:hover { color: var(--ink); }
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .form-grid .full { grid-column: 1/-1; }
   .field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 5px; }
-  .field input, .field select, .field textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit; outline: none; }
-  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--gold); }
+  .field input, .field select, .field textarea { width: 100%; background: var(--surface2); border: 1px solid var(--border); color: var(--ink); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit; outline: none; }
+  .field input:focus, .field select:focus, .field textarea:focus { border-color: var(--bronze); }
   .field textarea { resize: vertical; min-height: 70px; }
   .modal-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 20px; }
 
-  .section-divider { font-size: 10px; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; font-weight: 700; padding: 6px 0 10px; margin-top: 6px; border-top: 1px solid var(--border); }
+  .section-divider { font-size: 10px; color: var(--bronze); text-transform: uppercase; letter-spacing: .1em; font-weight: 700; padding: 6px 0 10px; margin-top: 6px; border-top: 1px solid var(--border); }
 
   footer { text-align: center; padding: 24px; font-size: 11px; color: #444; border-top: 1px solid var(--border); }
 
@@ -178,7 +179,7 @@
   <div class="logo-box">IW</div>
   <div class="header-text">
     <h1>New Construction Pipeline</h1>
-    <p>Ironwood Renovations — Build · Rent · Refi · Repeat</p>
+    <p>Ironwood Property Group — Build · Rent · Refi · Repeat</p>
   </div>
 </div>
 
@@ -213,10 +214,10 @@
 <div class="strategy-doc">
 
   <h2>New Construction BRRRR Strategy</h2>
-  <div class="subtitle">Ironwood Renovations · Build · Rent · Refinance · Repeat · Every 4 Months</div>
+  <div class="subtitle">Ironwood Property Group · Build · Rent · Refinance · Repeat · Every 4 Months</div>
 
   <h3>Overview</h3>
-  <p>Ironwood Renovations' new construction strategy is built around one repeating cycle: build a duplex, place quality tenants, refinance at appraised value, pull capital back out, and use it to fund the next build. By targeting a four-month construction timeline and a DSCR cash-out refinance at completion, the company aims to recycle the same capital base across multiple builds — growing a rental portfolio without continuously raising new equity.</p>
+  <p>Ironwood Property Group' new construction strategy is built around one repeating cycle: build a duplex, place quality tenants, refinance at appraised value, pull capital back out, and use it to fund the next build. By targeting a four-month construction timeline and a DSCR cash-out refinance at completion, the company aims to recycle the same capital base across multiple builds — growing a rental portfolio without continuously raising new equity.</p>
   <p>Each completed duplex remains in the Ironwood portfolio as a long-term income-producing asset, managed through Ironwood Property Management LLC. The equity built into each property becomes the foundation for future leverage — lines of credit, blanket mortgages, and portfolio loans — as the portfolio scales.</p>
 
   <div class="callout">
@@ -416,7 +417,7 @@
   </div>
 </div>
 
-<footer>Ironwood Renovations · New Construction Pipeline · Internal Use Only · Atlanta Metro</footer>
+<footer>Ironwood Property Group · New Construction Pipeline · Internal Use Only · Atlanta Metro</footer>
 
 <script>
 const STORAGE_KEY = 'ironwood-construction-v1';

@@ -2,8 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ironwood Renovations — Invoice</title>
+<title>Ironwood Property Group — Invoice</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -27,7 +28,7 @@
   /* ── TOOLBAR ── */
   .toolbar {
     background: var(--ink);
-    color: var(--cream);
+    color: var(--ink);
     padding: 10px 20px;
     display: flex;
     align-items: center;
@@ -37,11 +38,11 @@
     top: 0;
     z-index: 100;
   }
-  .toolbar-brand { font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--gold); }
+  .toolbar-brand { font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--bronze); }
   .toolbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .btn { border: none; cursor: pointer; padding: 7px 16px; border-radius: 4px; font-size: 12px; font-weight: 600; }
-  .btn-gold { background: var(--gold); color: var(--ink); }
-  .btn-outline { background: transparent; border: 1px solid #555; color: var(--cream); }
+  .btn-gold { background: var(--bronze); color: var(--ink); }
+  .btn-outline { background: transparent; border: 1px solid #555; color: var(--ink); }
   .btn-green { background: #2e7d32; color: #fff; }
   @media print { .toolbar { display: none !important; } }
 
@@ -157,7 +158,7 @@
     grid-template-columns: 3fr 1fr 1fr 1fr;
     gap: 0;
     background: var(--ink);
-    color: var(--cream);
+    color: var(--ink);
     padding: 8px 12px;
     font-size: 10px;
     font-weight: 700;
@@ -229,7 +230,7 @@
   }
   .totals-row.due-today {
     background: var(--ink);
-    color: var(--cream);
+    color: var(--ink);
     padding: 10px 8px;
     margin-top: 8px;
     border-radius: 4px;
@@ -269,7 +270,7 @@
 <body>
 
 <div class="toolbar">
-  <span class="toolbar-brand">Ironwood Renovations — Invoice Builder</span>
+  <span class="toolbar-brand">Ironwood Property Group — Invoice Builder</span>
   <div class="toolbar-actions">
     <select id="invTypeSel" style="padding:6px 10px;border-radius:4px;border:1px solid #555;background:#1a1a1a;color:var(--cream);font-size:12px;" onchange="setInvType(this.value)">
       <option value="deposit">Deposit Invoice</option>
@@ -287,7 +288,7 @@
   <!-- HEADER -->
   <div class="inv-header">
     <div class="brand-block">
-      <div class="brand-name">Ironwood Renovations</div>
+      <div class="brand-name">Ironwood Property Group</div>
       <div class="brand-sub">Licensed Contractor · Georgia</div>
     </div>
     <div class="inv-badge">
@@ -342,7 +343,7 @@
   <div class="totals-section">
     <div class="totals-notes">
       <div style="font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px;">Notes / Message to Client</div>
-      <textarea id="invNotes" placeholder="e.g. Thank you for choosing Ironwood Renovations! Deposit secures your project start date."></textarea>
+      <textarea id="invNotes" placeholder="e.g. Thank you for choosing Ironwood Property Group! Deposit secures your project start date."></textarea>
     </div>
     <div class="totals-box">
       <div class="totals-row">
@@ -378,7 +379,7 @@
   </div>
 
   <div class="inv-footer">
-    Ironwood LLC dba Ironwood Renovations · Georgia<br/>
+    Ironwood LLC dba Ironwood Property Group · Georgia<br/>
     All work covered by written agreement and signed scope<br/>
     This invoice is valid for 30 days from invoice date
   </div>
