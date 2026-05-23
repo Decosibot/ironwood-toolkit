@@ -285,7 +285,7 @@ body { background: var(--bg); }
     <div class="nhv-results-layout">
       <div>
         <p class="nhv-neighborhood-label">Market snapshot for</p>
-        <h2 class="nhv-neighborhood-name" id="resultsTitle">—</h2>
+        <h2 class="nhv-neighborhood-name" id="resultsTitle" style="display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;">—</h2>
 
         <div class="stats-grid">
           <div class="stat-tile">
@@ -410,7 +410,12 @@ function runSearch() {
 
   const key = raw.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
   let data = NEIGHBORHOODS[raw] || NEIGHBORHOODS[key] || NEIGHBORHOODS._default;
+  // For unknown input, use what the user typed as the location name
   if (!data.name) data = { ...data, name: raw };
+  // If the user typed a bare zip but we resolved it, show city + zip together
+  const isZip = /^\d{5}$/.test(raw) && data.name && !data.name.includes(raw);
+  const displayName = isZip ? data.name + ' (' + raw + ')' : data.name;
+  data = { ...data, name: displayName };
   marketData = data;
 
   document.getElementById('resultsTitle').textContent = data.name;
@@ -431,6 +436,9 @@ function runSearch() {
       <div class="activity-price">${s.price}</div>
     </div>
   `).join('');
+
+  // Update the search input to show city + zip
+  document.getElementById('searchInput').value = data.name;
 
   document.getElementById('stepSearch').classList.remove('active');
   document.getElementById('stepResults').classList.add('active');
