@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Neighborhood Home Values — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+body { background: var(--bg); }
+
+/* Step flow */
+.nhv-step { display: none; }
+.nhv-step.active { display: block; }
+
+/* Search card */
+.search-card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  max-width: 520px;
+  margin: 0 auto;
+}
+.search-card h2 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+.search-card p {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-soft);
+  margin: 0 0 28px;
+  line-height: 1.6;
+}
+.search-row {
+  display: flex;
+  gap: 10px;
+}
+.search-row input {
+  flex: 1;
+}
+@media (max-width: 520px) {
+  .search-card { padding: 28px 20px; }
+  .search-row { flex-direction: column; }
+}
+
+/* Results layout */
+.nhv-results-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 28px;
+  align-items: start;
+}
+@media (max-width: 860px) { .nhv-results-layout { grid-template-columns: 1fr; } }
+
+/* Stats panel */
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.stat-tile {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  padding: 20px;
+}
+.stat-tile .stat-label {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.stat-tile .stat-value {
+  font-family: var(--serif);
+  font-size: 26px;
+  color: var(--ink);
+  line-height: 1;
+}
+.stat-tile .stat-delta {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--bronze);
+  margin-top: 4px;
+  font-weight: 500;
+}
+
+/* Activity list */
+.activity-card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.activity-card .activity-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--hairline);
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.activity-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 20px;
+  border-bottom: 1px solid var(--hairline);
+}
+.activity-row:last-child { border-bottom: none; }
+.activity-address {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+}
+.activity-bed {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--ink-soft);
+  white-space: nowrap;
+}
+.activity-price {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bronze-deep);
+  white-space: nowrap;
+}
+
+/* Lead capture sidebar */
+.lead-sidebar {
+  position: sticky;
+  top: 80px;
+}
+.lead-card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 16px;
+  padding: 28px;
+}
+.lead-card h3 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+.lead-card p {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 0 0 20px;
+}
+.lead-form-row { margin-bottom: 14px; }
+.disclaimer {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-top: 12px;
+}
+
+/* Confirmed state */
+.nhv-confirmed {
+  text-align: center;
+  padding: 40px 0;
+}
+.nhv-confirmed h3 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  margin: 16px 0 8px;
+}
+.nhv-confirmed p {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-soft);
+  max-width: 380px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.check-circle {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #e8f5e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+/* Back link */
+.nhv-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+  text-decoration: none;
+  margin-bottom: 32px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  padding: 0;
+}
+.nhv-back:hover { color: var(--bronze); }
+
+/* Neighborhood label */
+.nhv-neighborhood-label {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+.nhv-neighborhood-name {
+  font-family: var(--serif);
+  font-size: 28px;
+  color: var(--ink);
+  margin: 0 0 24px;
+}
+.nhv-data-note {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--ink-soft);
+  margin-top: 16px;
+  line-height: 1.5;
+}
+</style>
+</head>
+<body>
+
+<header class="iw-header">
+  <div class="iw-header-inner">
+    <a href="index.html" class="iw-logo">
+      <span class="iw-logo-box"><em>I</em></span>
+      <span class="iw-logo-text">Ironwood Property Group</span>
+    </a>
+    <a href="Ironwood_Site_Sell.html" class="iw-btn iw-btn-outline" style="font-size:13px;padding:8px 18px;">Sell With Us</a>
+  </div>
+</header>
+
+<section class="iw-page-hero">
+  <div class="iw-container-sm">
+    <span class="iw-eyebrow">Market Data</span>
+    <h1 class="iw-page-title">What Are Homes Selling For <em>Near You?</em></h1>
+    <p class="iw-page-sub">Enter your zip code or neighborhood to see recent sales, price trends, and days on market in your area.</p>
+  </div>
+</section>
+
+<div class="iw-container" style="padding-bottom:80px;">
+
+  <!-- Step 1: Search -->
+  <div class="nhv-step active" id="stepSearch">
+    <div class="search-card">
+      <h2>Find Your Neighborhood</h2>
+      <p>We track recent sales across metro Atlanta. Enter your zip code or neighborhood name to get started.</p>
+      <div class="search-row">
+        <input type="text" id="searchInput" class="iw-input" placeholder="Zip code or neighborhood (e.g. 30060, Smyrna)" maxlength="80"/>
+        <button class="iw-btn iw-btn-primary" onclick="runSearch()">Look Up</button>
+      </div>
+      <p id="searchError" style="color:#c0392b;font-family:var(--sans);font-size:13px;margin-top:12px;display:none;">Please enter a zip code or neighborhood name.</p>
+    </div>
+  </div>
+
+  <!-- Step 2: Results -->
+  <div class="nhv-step" id="stepResults">
+    <button class="nhv-back" onclick="goBack()">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 2L4 7l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Search again
+    </button>
+
+    <div class="nhv-results-layout">
+      <div>
+        <p class="nhv-neighborhood-label">Market snapshot for</p>
+        <h2 class="nhv-neighborhood-name" id="resultsTitle">—</h2>
+
+        <div class="stats-grid">
+          <div class="stat-tile">
+            <div class="stat-label">Median Sale Price</div>
+            <div class="stat-value" id="statMedian">—</div>
+            <div class="stat-delta" id="statMedianDelta">—</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-label">Price Per Sq Ft</div>
+            <div class="stat-value" id="statPpsf">—</div>
+            <div class="stat-delta" id="statPpsfDelta">—</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-label">Days on Market</div>
+            <div class="stat-value" id="statDom">—</div>
+            <div class="stat-delta" id="statDomDelta">—</div>
+          </div>
+          <div class="stat-tile">
+            <div class="stat-label">Homes Sold (90 days)</div>
+            <div class="stat-value" id="statSold">—</div>
+            <div class="stat-delta" id="statSoldDelta">—</div>
+          </div>
+        </div>
+
+        <div class="activity-card" id="activityCard">
+          <div class="activity-header">Recent Sales</div>
+          <div id="activityList"></div>
+        </div>
+
+        <p class="nhv-data-note">Data shown is representative of recent market activity and intended for general informational purposes. Contact us for a precise valuation of your specific property.</p>
+      </div>
+
+      <!-- Lead capture sidebar -->
+      <div class="lead-sidebar">
+        <div class="lead-card" id="leadCard">
+          <h3>What is <em>your</em> home worth?</h3>
+          <p>Get a personalized estimate from our team — free, fast, and no obligation to sell.</p>
+          <div class="lead-form-row">
+            <label class="iw-label" for="leadName">Your name</label>
+            <input type="text" id="leadName" class="iw-input" placeholder="Full name"/>
+          </div>
+          <div class="lead-form-row">
+            <label class="iw-label" for="leadPhone">Phone</label>
+            <input type="tel" id="leadPhone" class="iw-input" placeholder="(555) 000-0000"/>
+          </div>
+          <div class="lead-form-row">
+            <label class="iw-label" for="leadAddress">Your home address</label>
+            <input type="text" id="leadAddress" class="iw-input" placeholder="123 Main St, Atlanta, GA"/>
+          </div>
+          <div class="lead-form-row">
+            <label class="iw-label" for="leadTimeline">Thinking about selling?</label>
+            <select id="leadTimeline" class="iw-select">
+              <option value="">— Select timeline —</option>
+              <option value="asap">As soon as possible</option>
+              <option value="3months">Within 3 months</option>
+              <option value="6months">Within 6 months</option>
+              <option value="1year">Within a year</option>
+              <option value="just-curious">Just curious right now</option>
+            </select>
+          </div>
+          <button class="iw-btn iw-btn-primary" style="width:100%;margin-top:4px;" onclick="submitLead()">Get My Home Value</button>
+          <p class="disclaimer">No spam. No pressure. We'll follow up within one business day.</p>
+        </div>
+
+        <div class="nhv-confirmed" id="leadConfirmed" style="display:none;">
+          <div class="check-circle">
+            <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M6 13l5 5 9-9" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <h3>We'll be in touch soon</h3>
+          <p>One of our team members will reach out with a personalized estimate for your home — usually within one business day.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /iw-container -->
+
+<footer class="iw-footer">
+  <div class="iw-footer-inner">
+    <span>© 2025 Ironwood Property Group</span>
+    <span><a href="index.html">Back to Tools</a></span>
+  </div>
+</footer>
+
+<script>
+const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
+// Neighborhood data table (Atlanta metro)
+const NEIGHBORHOODS = {
+  // By zip
+  '30060': { name: 'Marietta, GA 30060', median: 385000, ppsf: 178, dom: 22, sold: 41, medianDelta: '+4.2%', ppsfDelta: '+3.8%', domDelta: '-3 days', soldDelta: '+7 homes', sales: [ { addr: '412 Whitlock Ave', beds: '3 bd / 2 ba', price: '$378,000' }, { addr: '819 Cherokee St', beds: '4 bd / 2.5 ba', price: '$412,500' }, { addr: '234 Powder Springs', beds: '3 bd / 1 ba', price: '$349,000' }, { addr: '101 Waterman St', beds: '5 bd / 3 ba', price: '$467,000' }, { addr: '658 Haynes St', beds: '3 bd / 2 ba', price: '$391,000' } ] },
+  '30067': { name: 'Marietta, GA 30067', median: 440000, ppsf: 204, dom: 18, sold: 36, medianDelta: '+5.1%', ppsfDelta: '+4.6%', domDelta: '-2 days', soldDelta: '+5 homes', sales: [ { addr: '2200 Powers Ferry Rd', beds: '4 bd / 3 ba', price: '$455,000' }, { addr: '3114 Paper Mill Rd', beds: '3 bd / 2 ba', price: '$418,000' }, { addr: '780 Terrell Mill Rd', beds: '5 bd / 4 ba', price: '$524,000' }, { addr: '915 Roswell Rd', beds: '3 bd / 2 ba', price: '$432,000' }, { addr: '102 Creekview Dr', beds: '4 bd / 2.5 ba', price: '$448,000' } ] },
+  '30068': { name: 'East Cobb, GA 30068', median: 518000, ppsf: 228, dom: 14, sold: 52, medianDelta: '+6.3%', ppsfDelta: '+5.9%', domDelta: '-4 days', soldDelta: '+11 homes', sales: [ { addr: '4401 Lower Roswell Rd', beds: '4 bd / 3 ba', price: '$532,000' }, { addr: '1822 Johnson Ferry Rd', beds: '5 bd / 4 ba', price: '$589,000' }, { addr: '318 Kinsley Dr', beds: '3 bd / 2 ba', price: '$481,000' }, { addr: '712 Murdock Rd', beds: '4 bd / 3 ba', price: '$514,000' }, { addr: '209 Sewell Mill', beds: '6 bd / 4 ba', price: '$648,000' } ] },
+  '30066': { name: 'Marietta, GA 30066', median: 362000, ppsf: 168, dom: 26, sold: 38, medianDelta: '+3.4%', ppsfDelta: '+2.9%', domDelta: '-1 day', soldDelta: '+4 homes', sales: [ { addr: '1510 Shallowford Rd', beds: '3 bd / 2 ba', price: '$354,000' }, { addr: '2204 Canton Hwy', beds: '4 bd / 2.5 ba', price: '$389,000' }, { addr: '908 Piedmont Rd', beds: '3 bd / 1 ba', price: '$332,000' }, { addr: '317 Sandy Plains', beds: '4 bd / 3 ba', price: '$412,000' }, { addr: '74 Meadowbrook Dr', beds: '3 bd / 2 ba', price: '$361,000' } ] },
+  '30101': { name: 'Acworth, GA 30101', median: 344000, ppsf: 158, dom: 29, sold: 34, medianDelta: '+3.1%', ppsfDelta: '+2.7%', domDelta: '+2 days', soldDelta: '+3 homes', sales: [ { addr: '4002 Mars Hill Rd', beds: '3 bd / 2 ba', price: '$335,000' }, { addr: '820 Cowan Rd', beds: '4 bd / 3 ba', price: '$368,000' }, { addr: '1205 Fords Rd', beds: '3 bd / 2 ba', price: '$344,000' }, { addr: '509 Lake Acworth Dr', beds: '4 bd / 2.5 ba', price: '$371,000' }, { addr: '213 Proctor Landing', beds: '3 bd / 2 ba', price: '$358,000' } ] },
+  '30126': { name: 'Mableton, GA 30126', median: 308000, ppsf: 144, dom: 32, sold: 29, medianDelta: '+2.8%', ppsfDelta: '+2.4%', domDelta: '-1 day', soldDelta: '+2 homes', sales: [ { addr: '4815 Austell Rd', beds: '3 bd / 2 ba', price: '$298,000' }, { addr: '1102 Floyd Rd', beds: '4 bd / 2 ba', price: '$328,000' }, { addr: '320 Mableton Pkwy', beds: '3 bd / 1 ba', price: '$289,000' }, { addr: '618 Veterans Memorial', beds: '4 bd / 3 ba', price: '$339,000' }, { addr: '25 Nickajack Rd', beds: '3 bd / 2 ba', price: '$314,000' } ] },
+  // By name (lowercase)
+  'smyrna': { name: 'Smyrna, GA', median: 424000, ppsf: 196, dom: 17, sold: 61, medianDelta: '+5.6%', ppsfDelta: '+5.1%', domDelta: '-5 days', soldDelta: '+12 homes', sales: [ { addr: '2905 Atlanta Rd SE', beds: '3 bd / 2 ba', price: '$409,000' }, { addr: '818 Church St SE', beds: '4 bd / 3 ba', price: '$448,000' }, { addr: '110 Concord Rd SE', beds: '3 bd / 2 ba', price: '$412,000' }, { addr: '405 Powder Springs', beds: '4 bd / 2.5 ba', price: '$438,000' }, { addr: '1714 Vinings Slope', beds: '5 bd / 4 ba', price: '$562,000' } ] },
+  'marietta': { name: 'Marietta, GA', median: 394000, ppsf: 182, dom: 21, sold: 148, medianDelta: '+4.8%', ppsfDelta: '+4.3%', domDelta: '-3 days', soldDelta: '+18 homes', sales: [ { addr: '246 Lawrence St NE', beds: '4 bd / 3 ba', price: '$418,000' }, { addr: '712 Whitlock Ave NW', beds: '3 bd / 2 ba', price: '$374,000' }, { addr: '1820 Sandtown Rd SW', beds: '3 bd / 2 ba', price: '$361,000' }, { addr: '404 Kennesaw Ave', beds: '5 bd / 3.5 ba', price: '$498,000' }, { addr: '88 Fairground St NE', beds: '3 bd / 1 ba', price: '$342,000' } ] },
+  'vinings': { name: 'Vinings, GA', median: 612000, ppsf: 278, dom: 12, sold: 24, medianDelta: '+7.2%', ppsfDelta: '+6.8%', domDelta: '-6 days', soldDelta: '+5 homes', sales: [ { addr: '4400 Paces Ferry Rd', beds: '4 bd / 4 ba', price: '$638,000' }, { addr: '2910 Vinings Ind Pkwy', beds: '5 bd / 4 ba', price: '$728,000' }, { addr: '816 Cumberland Blvd', beds: '3 bd / 3 ba', price: '$574,000' }, { addr: '1204 Vinings Vintage', beds: '4 bd / 3.5 ba', price: '$662,000' }, { addr: '308 Spring Creek Rd', beds: '3 bd / 2 ba', price: '$518,000' } ] },
+  'east cobb': { name: 'East Cobb, GA', median: 518000, ppsf: 228, dom: 14, sold: 52, medianDelta: '+6.3%', ppsfDelta: '+5.9%', domDelta: '-4 days', soldDelta: '+11 homes', sales: [ { addr: '4401 Lower Roswell Rd', beds: '4 bd / 3 ba', price: '$532,000' }, { addr: '1822 Johnson Ferry Rd', beds: '5 bd / 4 ba', price: '$589,000' }, { addr: '318 Kinsley Dr', beds: '3 bd / 2 ba', price: '$481,000' }, { addr: '712 Murdock Rd', beds: '4 bd / 3 ba', price: '$514,000' }, { addr: '209 Sewell Mill', beds: '6 bd / 4 ba', price: '$648,000' } ] },
+  'acworth': { name: 'Acworth, GA', median: 344000, ppsf: 158, dom: 29, sold: 34, medianDelta: '+3.1%', ppsfDelta: '+2.7%', domDelta: '+2 days', soldDelta: '+3 homes', sales: [ { addr: '4002 Mars Hill Rd', beds: '3 bd / 2 ba', price: '$335,000' }, { addr: '820 Cowan Rd', beds: '4 bd / 3 ba', price: '$368,000' }, { addr: '1205 Fords Rd', beds: '3 bd / 2 ba', price: '$344,000' }, { addr: '509 Lake Acworth Dr', beds: '4 bd / 2.5 ba', price: '$371,000' }, { addr: '213 Proctor Landing', beds: '3 bd / 2 ba', price: '$358,000' } ] },
+  'mableton': { name: 'Mableton, GA', median: 308000, ppsf: 144, dom: 32, sold: 29, medianDelta: '+2.8%', ppsfDelta: '+2.4%', domDelta: '-1 day', soldDelta: '+2 homes', sales: [ { addr: '4815 Austell Rd', beds: '3 bd / 2 ba', price: '$298,000' }, { addr: '1102 Floyd Rd', beds: '4 bd / 2 ba', price: '$328,000' }, { addr: '320 Mableton Pkwy', beds: '3 bd / 1 ba', price: '$289,000' }, { addr: '618 Veterans Memorial', beds: '4 bd / 3 ba', price: '$339,000' }, { addr: '25 Nickajack Rd', beds: '3 bd / 2 ba', price: '$314,000' } ] },
+  'kennesaw': { name: 'Kennesaw, GA', median: 358000, ppsf: 166, dom: 24, sold: 44, medianDelta: '+3.8%', ppsfDelta: '+3.4%', domDelta: '-2 days', soldDelta: '+6 homes', sales: [ { addr: '2715 Ben King Rd NW', beds: '3 bd / 2 ba', price: '$347,000' }, { addr: '812 Cherokee St NW', beds: '4 bd / 3 ba', price: '$382,000' }, { addr: '1906 Jiles Rd NW', beds: '3 bd / 2 ba', price: '$361,000' }, { addr: '504 George Busbee', beds: '4 bd / 2.5 ba', price: '$394,000' }, { addr: '108 Frey Lake Rd', beds: '5 bd / 3 ba', price: '$428,000' } ] },
+  // Default/fallback
+  '_default': { name: null, median: 381000, ppsf: 176, dom: 23, sold: 47, medianDelta: '+4.1%', ppsfDelta: '+3.7%', domDelta: '-2 days', soldDelta: '+6 homes', sales: [ { addr: '1204 Oak St', beds: '3 bd / 2 ba', price: '$372,000' }, { addr: '508 Maple Ave', beds: '4 bd / 3 ba', price: '$418,000' }, { addr: '33 Birch Ln', beds: '3 bd / 2 ba', price: '$361,000' }, { addr: '879 Elm Dr', beds: '4 bd / 2.5 ba', price: '$408,000' }, { addr: '212 Cedar Ct', beds: '3 bd / 1 ba', price: '$344,000' } ] }
+};
+
+let searchedQuery = '';
+let marketData = null;
+
+function fmt(n) { return '$' + n.toLocaleString(); }
+
+function runSearch() {
+  const raw = document.getElementById('searchInput').value.trim();
+  if (!raw) {
+    document.getElementById('searchError').style.display = 'block';
+    return;
+  }
+  document.getElementById('searchError').style.display = 'none';
+  searchedQuery = raw;
+
+  const key = raw.toLowerCase().replace(/[^a-z0-9 ]/g, '').trim();
+  let data = NEIGHBORHOODS[raw] || NEIGHBORHOODS[key] || NEIGHBORHOODS._default;
+  if (!data.name) data = { ...data, name: raw };
+  marketData = data;
+
+  document.getElementById('resultsTitle').textContent = data.name;
+  document.getElementById('statMedian').textContent = fmt(data.median);
+  document.getElementById('statMedianDelta').textContent = data.medianDelta + ' vs last year';
+  document.getElementById('statPpsf').textContent = '$' + data.ppsf;
+  document.getElementById('statPpsfDelta').textContent = data.ppsfDelta + ' vs last year';
+  document.getElementById('statDom').textContent = data.dom + ' days';
+  document.getElementById('statDomDelta').textContent = data.domDelta + ' vs last year';
+  document.getElementById('statSold').textContent = data.sold;
+  document.getElementById('statSoldDelta').textContent = data.soldDelta + ' vs prior period';
+
+  const list = document.getElementById('activityList');
+  list.innerHTML = data.sales.map(s => `
+    <div class="activity-row">
+      <div class="activity-address">${s.addr}</div>
+      <div class="activity-bed">${s.beds}</div>
+      <div class="activity-price">${s.price}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('stepSearch').classList.remove('active');
+  document.getElementById('stepResults').classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function goBack() {
+  document.getElementById('stepResults').classList.remove('active');
+  document.getElementById('stepSearch').classList.add('active');
+}
+
+function submitLead() {
+  const name = document.getElementById('leadName').value.trim();
+  const phone = document.getElementById('leadPhone').value.trim();
+  const address = document.getElementById('leadAddress').value.trim();
+  const timeline = document.getElementById('leadTimeline').value;
+
+  if (!name || !phone) {
+    alert('Please enter your name and phone number.');
+    return;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const payload = {
+    name, phone, address, timeline,
+    searchedNeighborhood: searchedQuery,
+    reportedMedianPrice: marketData ? marketData.median : null,
+    source: 'Neighborhood Home Values Tool',
+    utm_source: params.get('utm_source') || '',
+    utm_medium: params.get('utm_medium') || '',
+    utm_campaign: params.get('utm_campaign') || '',
+    utm_content: params.get('utm_content') || '',
+    utm_term: params.get('utm_term') || '',
+    submittedAt: new Date().toISOString()
+  };
+
+  fetch(GHL_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+
+  document.getElementById('leadCard').style.display = 'none';
+  document.getElementById('leadConfirmed').style.display = 'block';
+}
+
+// Allow Enter key on search
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') runSearch();
+});
+</script>
+</body>
+</html>

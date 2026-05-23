@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cash Offer vs. Listing Calculator — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+body { background: var(--bg); }
+
+/* Main layout */
+.calc-layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: 28px;
+  align-items: start;
+}
+@media (max-width: 860px) { .calc-layout { grid-template-columns: 1fr; } }
+
+/* Input panel */
+.input-panel {
+  position: sticky;
+  top: 80px;
+}
+@media (max-width: 860px) { .input-panel { position: static; } }
+
+.input-section {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 16px;
+}
+.input-section-title {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--bronze);
+  margin-bottom: 16px;
+}
+
+.field-row {
+  margin-bottom: 16px;
+}
+.field-row:last-child { margin-bottom: 0; }
+
+.field-inline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.field-label {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+  flex: 1;
+}
+.field-val {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bronze-deep);
+  min-width: 52px;
+  text-align: right;
+}
+
+/* Slider */
+.iw-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--hairline);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+.iw-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bronze);
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,.18);
+}
+.iw-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--bronze);
+  cursor: pointer;
+  border: none;
+}
+
+/* Condition buttons */
+.condition-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+.cond-btn {
+  padding: 8px 0;
+  font-family: var(--sans);
+  font-size: 12px;
+  font-weight: 500;
+  border: 1.5px solid var(--hairline);
+  border-radius: 8px;
+  background: var(--surface);
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all .15s;
+  text-align: center;
+}
+.cond-btn:hover { border-color: var(--bronze); color: var(--bronze); }
+.cond-btn.active {
+  background: var(--bronze);
+  border-color: var(--bronze);
+  color: #fff;
+}
+
+/* Results panel */
+.comparison-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+.comp-col {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+}
+.comp-col.winner {
+  border-color: var(--bronze);
+  box-shadow: 0 0 0 1px var(--bronze), 0 4px 20px rgba(156,123,74,.14);
+}
+.comp-badge {
+  display: inline-block;
+  font-family: var(--sans);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  background: var(--bronze);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.comp-label {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.comp-net {
+  font-family: var(--serif);
+  font-size: 30px;
+  color: var(--ink);
+  line-height: 1;
+}
+.comp-sub {
+  font-family: var(--sans);
+  font-size: 12px;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+
+/* Breakdown table */
+.breakdown-wrap {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.breakdown-row {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  padding: 11px 20px;
+  border-bottom: 1px solid var(--hairline);
+}
+.breakdown-row:last-child { border-bottom: none; }
+.breakdown-row.total {
+  background: var(--bg);
+  font-weight: 600;
+}
+.bd-item {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+}
+.bd-cash {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  text-align: right;
+  min-width: 90px;
+}
+.bd-listing {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink);
+  text-align: right;
+  min-width: 90px;
+}
+.bd-deduct { color: var(--ink-soft); }
+.breakdown-header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--hairline);
+  padding: 10px 20px;
+}
+.breakdown-header .breakdown-row {
+  padding: 0;
+  border: none;
+}
+.breakdown-header .bd-item,
+.breakdown-header .bd-cash,
+.breakdown-header .bd-listing {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+/* Speed/certainty callout */
+.factor-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.factor-tile {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.factor-title {
+  font-family: var(--sans);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.factor-pair {
+  display: flex;
+  justify-content: space-between;
+  font-family: var(--sans);
+  font-size: 13px;
+}
+.factor-cash { color: var(--bronze); font-weight: 500; }
+.factor-list { color: var(--ink-soft); }
+
+/* Lead card */
+.lead-card {
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  border-radius: 14px;
+  padding: 28px;
+}
+.lead-card h3 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 400;
+  color: var(--ink);
+  margin: 0 0 8px;
+}
+.lead-card p {
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin: 0 0 18px;
+}
+.lead-row { margin-bottom: 12px; }
+.disclaimer {
+  font-family: var(--sans);
+  font-size: 11px;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  margin-top: 10px;
+}
+
+/* Confirmed */
+.confirmed-wrap {
+  text-align: center;
+  padding: 32px 0;
+}
+.confirmed-wrap h3 {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 400;
+  color: var(--ink);
+  margin: 16px 0 8px;
+}
+.confirmed-wrap p {
+  font-family: var(--sans);
+  font-size: 14px;
+  color: var(--ink-soft);
+  max-width: 380px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+.check-circle {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: #e8f5e9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+</style>
+</head>
+<body>
+
+<header class="iw-header">
+  <div class="iw-header-inner">
+    <a href="index.html" class="iw-logo">
+      <span class="iw-logo-box"><em>I</em></span>
+      <span class="iw-logo-text">Ironwood Property Group</span>
+    </a>
+    <a href="Ironwood_Site_Sell.html" class="iw-btn iw-btn-bronze" style="font-size:13px;padding:8px 18px;">Talk to Our Team</a>
+  </div>
+</header>
+
+<section class="iw-page-hero">
+  <div class="iw-container-sm">
+    <span class="iw-eyebrow">Seller Tools</span>
+    <h1 class="iw-page-title">Cash Offer vs. <em>Listing</em> Calculator</h1>
+    <p class="iw-page-sub">See your estimated net proceeds side-by-side — what you'd walk away with selling as-is versus listing on the market.</p>
+  </div>
+</section>
+
+<div class="iw-container" style="padding-bottom:80px;">
+  <div class="calc-layout">
+
+    <!-- Input panel -->
+    <div class="input-panel">
+
+      <div class="input-section">
+        <div class="input-section-title">Your Home</div>
+
+        <div class="field-row">
+          <label class="iw-label" for="homeValue">Estimated home value</label>
+          <input type="text" id="homeValue" class="iw-input" value="$350,000" placeholder="$350,000" oninput="onValueInput(this)" onblur="onValueBlur(this)"/>
+        </div>
+
+        <div class="field-row">
+          <label class="iw-label">Home condition</label>
+          <div class="condition-row">
+            <button class="cond-btn" data-cond="distressed" onclick="setCond(this)">Distressed</button>
+            <button class="cond-btn" data-cond="fair" onclick="setCond(this)">Fair</button>
+            <button class="cond-btn active" data-cond="good" onclick="setCond(this)">Good</button>
+            <button class="cond-btn" data-cond="excellent" onclick="setCond(this)">Excellent</button>
+          </div>
+        </div>
+
+        <div class="field-row">
+          <div class="field-inline">
+            <span class="field-label">Mortgage balance</span>
+            <span class="field-val" id="mortgageVal">$0</span>
+          </div>
+          <input type="range" class="iw-slider" id="mortgageSlider" min="0" max="600000" step="5000" value="0" oninput="calc()"/>
+        </div>
+      </div>
+
+      <div class="input-section">
+        <div class="input-section-title">Listing Assumptions</div>
+
+        <div class="field-row">
+          <div class="field-inline">
+            <span class="field-label">Agent commission</span>
+            <span class="field-val" id="commissionVal">5.5%</span>
+          </div>
+          <input type="range" class="iw-slider" id="commissionSlider" min="3" max="7" step="0.25" value="5.5" oninput="calc()"/>
+        </div>
+
+        <div class="field-row">
+          <div class="field-inline">
+            <span class="field-label">Pre-listing repairs</span>
+            <span class="field-val" id="repairsVal">$8,000</span>
+          </div>
+          <input type="range" class="iw-slider" id="repairsSlider" min="0" max="60000" step="500" value="8000" oninput="calc()"/>
+        </div>
+
+        <div class="field-row">
+          <div class="field-inline">
+            <span class="field-label">Buyer concessions</span>
+            <span class="field-val" id="concessionsVal">$0</span>
+          </div>
+          <input type="range" class="iw-slider" id="concessionsSlider" min="0" max="20000" step="500" value="0" oninput="calc()"/>
+        </div>
+
+        <div class="field-row">
+          <div class="field-inline">
+            <span class="field-label">Carrying costs (months)</span>
+            <span class="field-val" id="carryingVal">3 mo</span>
+          </div>
+          <input type="range" class="iw-slider" id="carryingSlider" min="0" max="12" step="1" value="3" oninput="calc()"/>
+        </div>
+      </div>
+
+    </div><!-- /input-panel -->
+
+    <!-- Results panel -->
+    <div id="resultsPanel">
+
+      <div class="comparison-header" id="compHeader">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="factor-row">
+        <div class="factor-tile">
+          <div class="factor-title">Closing Timeline</div>
+          <div class="factor-pair">
+            <span class="factor-cash">Cash: 7–14 days</span>
+            <span class="factor-list">Listed: 60–90 days</span>
+          </div>
+        </div>
+        <div class="factor-tile">
+          <div class="factor-title">Sale Certainty</div>
+          <div class="factor-pair">
+            <span class="factor-cash">Cash: Near 100%</span>
+            <span class="factor-list">Listed: Varies</span>
+          </div>
+        </div>
+        <div class="factor-tile">
+          <div class="factor-title">Showings / Prep</div>
+          <div class="factor-pair">
+            <span class="factor-cash">Cash: None</span>
+            <span class="factor-list">Listed: Required</span>
+          </div>
+        </div>
+        <div class="factor-tile">
+          <div class="factor-title">Contingencies</div>
+          <div class="factor-pair">
+            <span class="factor-cash">Cash: None</span>
+            <span class="factor-list">Listed: Inspection, finance</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="breakdown-wrap">
+        <div class="breakdown-header">
+          <div class="breakdown-row">
+            <span class="bd-item">Cost Item</span>
+            <span class="bd-cash">Cash Offer</span>
+            <span class="bd-listing">Listed</span>
+          </div>
+        </div>
+        <div id="breakdownRows"></div>
+      </div>
+
+      <!-- Lead capture -->
+      <div class="lead-card" id="leadCard">
+        <h3>Get your <em>real</em> cash offer</h3>
+        <p>These numbers are estimates. Enter your info and we'll send you an actual cash offer — no obligation, no pressure.</p>
+        <div class="lead-row">
+          <label class="iw-label" for="leadName">Your name</label>
+          <input type="text" id="leadName" class="iw-input" placeholder="Full name"/>
+        </div>
+        <div class="lead-row">
+          <label class="iw-label" for="leadPhone">Phone</label>
+          <input type="tel" id="leadPhone" class="iw-input" placeholder="(555) 000-0000"/>
+        </div>
+        <div class="lead-row">
+          <label class="iw-label" for="leadAddress">Property address</label>
+          <input type="text" id="leadAddress" class="iw-input" placeholder="123 Main St, Atlanta, GA"/>
+        </div>
+        <div class="lead-row">
+          <label class="iw-label" for="leadGoal">What matters most to you?</label>
+          <select id="leadGoal" class="iw-select">
+            <option value="">— Select —</option>
+            <option value="max-price">Getting the highest price</option>
+            <option value="fast-close">Closing quickly</option>
+            <option value="no-hassle">Avoiding repairs and showings</option>
+            <option value="certainty">Deal certainty — no fall-throughs</option>
+            <option value="exploring">Still exploring my options</option>
+          </select>
+        </div>
+        <button class="iw-btn iw-btn-primary" style="width:100%;margin-top:4px;" onclick="submitLead()">Request My Cash Offer</button>
+        <p class="disclaimer">We'll follow up within one business day with a real number — no automated estimates.</p>
+      </div>
+
+      <div class="confirmed-wrap" id="leadConfirmed" style="display:none;">
+        <div class="check-circle">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 12l5 5L19 7" stroke="#2e7d32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <h3>Request received</h3>
+        <p>Our team will reach out within one business day with your personalized cash offer.</p>
+        <a href="Ironwood_Site_Sell.html" class="iw-btn iw-btn-outline" style="margin-top:20px;">Learn More About Selling With Us</a>
+      </div>
+
+    </div><!-- /resultsPanel -->
+  </div>
+</div>
+
+<footer class="iw-footer">
+  <div class="iw-footer-inner">
+    <span>© 2025 Ironwood Property Group</span>
+    <span><a href="index.html">Back to Tools</a></span>
+  </div>
+</footer>
+
+<script>
+const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
+// Condition → cash offer discount from market value
+const COND_DISCOUNT = { distressed: 0.30, fair: 0.18, good: 0.10, excellent: 0.05 };
+// Seller closing costs (title, transfer tax, attorney, misc)
+const SELLER_CLOSING_PCT = 0.015;
+// Monthly carrying cost as % of value (mortgage, taxes, insurance, utilities)
+const MONTHLY_CARRY_PCT = 0.008;
+
+let condition = 'good';
+
+function fmt(n) {
+  if (n === 0) return '$0';
+  return (n < 0 ? '-$' : '$') + Math.abs(Math.round(n)).toLocaleString();
+}
+function fmtPct(n) { return n.toFixed(2) + '%'; }
+
+function parseValue() {
+  const raw = document.getElementById('homeValue').value.replace(/[^0-9.]/g, '');
+  const v = parseFloat(raw) || 0;
+  return Math.max(0, v);
+}
+
+function onValueInput(el) { calc(); }
+function onValueBlur(el) {
+  const v = parseValue();
+  el.value = v > 0 ? '$' + v.toLocaleString() : '';
+  // Update mortgage slider max
+  document.getElementById('mortgageSlider').max = Math.max(v, 10000);
+  calc();
+}
+
+function setCond(btn) {
+  document.querySelectorAll('.cond-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  condition = btn.dataset.cond;
+  calc();
+}
+
+function calc() {
+  const homeValue = parseValue();
+  const mortgage = +document.getElementById('mortgageSlider').value;
+  const commissionPct = +document.getElementById('commissionSlider').value / 100;
+  const repairs = +document.getElementById('repairsSlider').value;
+  const concessions = +document.getElementById('concessionsSlider').value;
+  const carryMonths = +document.getElementById('carryingSlider').value;
+
+  // Update display values
+  document.getElementById('mortgageVal').textContent = fmt(mortgage);
+  document.getElementById('commissionVal').textContent = fmtPct(+document.getElementById('commissionSlider').value);
+  document.getElementById('repairsVal').textContent = fmt(repairs);
+  document.getElementById('concessionsVal').textContent = fmt(concessions);
+  document.getElementById('carryingVal').textContent = carryMonths + ' mo';
+
+  // — Cash offer path —
+  const cashDiscount = COND_DISCOUNT[condition] || 0.10;
+  const cashOffer = homeValue * (1 - cashDiscount);
+  const cashClosing = cashOffer * SELLER_CLOSING_PCT;
+  const cashNet = cashOffer - cashClosing - mortgage;
+
+  // — Listing path —
+  const listingPrice = homeValue;
+  const commission = listingPrice * commissionPct;
+  const listingClosing = listingPrice * SELLER_CLOSING_PCT;
+  const carrying = homeValue * MONTHLY_CARRY_PCT * carryMonths;
+  const listingNet = listingPrice - commission - repairs - concessions - listingClosing - carrying - mortgage;
+
+  // Winner
+  const cashWins = cashNet >= listingNet;
+
+  // Render comparison headers
+  document.getElementById('compHeader').innerHTML = `
+    <div class="comp-col${cashWins ? ' winner' : ''}">
+      ${cashWins ? '<div class="comp-badge">Higher Net</div>' : ''}
+      <div class="comp-label">Cash Offer (as-is)</div>
+      <div class="comp-net">${fmt(cashNet)}</div>
+      <div class="comp-sub">Estimated net proceeds</div>
+    </div>
+    <div class="comp-col${!cashWins ? ' winner' : ''}">
+      ${!cashWins ? '<div class="comp-badge">Higher Net</div>' : ''}
+      <div class="comp-label">Listing on Market</div>
+      <div class="comp-net">${fmt(listingNet)}</div>
+      <div class="comp-sub">Estimated net proceeds</div>
+    </div>
+  `;
+
+  // Render breakdown rows
+  const rows = [
+    ['Sale / Offer Price', cashOffer, listingPrice],
+    ['Pre-listing Repairs', 0, -repairs],
+    ['Agent Commission', 0, -commission],
+    ['Buyer Concessions', 0, -concessions],
+    ['Carrying Costs', 0, -carrying],
+    ['Seller Closing Costs', -cashClosing, -listingClosing],
+    ['Mortgage Payoff', -mortgage, -mortgage],
+  ];
+
+  document.getElementById('breakdownRows').innerHTML = rows.map(([label, cash, list]) => `
+    <div class="breakdown-row">
+      <span class="bd-item">${label}</span>
+      <span class="bd-cash ${cash < 0 ? 'bd-deduct' : ''}">${fmt(cash)}</span>
+      <span class="bd-listing ${list < 0 ? 'bd-deduct' : ''}">${fmt(list)}</span>
+    </div>
+  `).join('') + `
+    <div class="breakdown-row total">
+      <span class="bd-item">Estimated Net Proceeds</span>
+      <span class="bd-cash">${fmt(cashNet)}</span>
+      <span class="bd-listing">${fmt(listingNet)}</span>
+    </div>
+  `;
+}
+
+function submitLead() {
+  const name = document.getElementById('leadName').value.trim();
+  const phone = document.getElementById('leadPhone').value.trim();
+  const address = document.getElementById('leadAddress').value.trim();
+  const goal = document.getElementById('leadGoal').value;
+
+  if (!name || !phone) {
+    alert('Please enter your name and phone number.');
+    return;
+  }
+
+  const params = new URLSearchParams(window.location.search);
+  const payload = {
+    name, phone, address, goal,
+    homeValue: parseValue(),
+    condition,
+    source: 'Cash Offer vs Listing Calculator',
+    utm_source: params.get('utm_source') || '',
+    utm_medium: params.get('utm_medium') || '',
+    utm_campaign: params.get('utm_campaign') || '',
+    utm_content: params.get('utm_content') || '',
+    utm_term: params.get('utm_term') || '',
+    submittedAt: new Date().toISOString()
+  };
+
+  fetch(GHL_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  }).catch(() => {});
+
+  document.getElementById('leadCard').style.display = 'none';
+  document.getElementById('leadConfirmed').style.display = 'block';
+}
+
+// Init
+calc();
+</script>
+</body>
+</html>
