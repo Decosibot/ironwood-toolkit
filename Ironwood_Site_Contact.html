@@ -32,7 +32,7 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--white);
   color: var(--text);
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: var(--sans);
   min-height: 100vh;
 }
 
@@ -65,16 +65,17 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Arial', sans-serif;
-  font-size: 14px;
-  font-weight: 900;
-  color: var(--black);
-  letter-spacing: 1px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--surface);
+  border-radius: 4px;
 }
 
 /* LOGO PLACEHOLDER — replace .nav-logo-box with <img src="logo.svg"> when ready */
 .nav-logo-text {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
   font-weight: 900;
   letter-spacing: 3px;
@@ -99,7 +100,7 @@ nav {
 }
 
 .nav-links a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -119,7 +120,7 @@ nav {
 }
 
 .btn-nav-outline {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -137,7 +138,7 @@ nav {
 .btn-nav-outline:hover { background: rgba(184,147,62,0.08); }
 
 .btn-nav-fill {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -165,7 +166,7 @@ nav {
 .nav-toggle span {
   width: 22px;
   height: 2px;
-  background: var(--text);
+  background: var(--ink);
   border-radius: 1px;
   transition: all .2s;
 }
@@ -184,7 +185,7 @@ section { padding: 80px 40px; }
 }
 
 .section-eyebrow {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -219,7 +220,7 @@ section { padding: 80px 40px; }
 .page-header-inner { max-width: 1080px; margin: 0 auto; }
 
 .page-eyebrow {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -237,7 +238,7 @@ section { padding: 80px 40px; }
 }
 
 .page-sub {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 16px;
   color: var(--muted);
   line-height: 1.7;
@@ -278,7 +279,7 @@ section { padding: 80px 40px; }
 .info-card-body {}
 
 .info-card-label {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -288,7 +289,7 @@ section { padding: 80px 40px; }
 }
 
 .info-card-value {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
   color: var(--text);
   font-weight: 700;
@@ -296,7 +297,7 @@ section { padding: 80px 40px; }
 }
 
 .info-card-detail {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   color: var(--muted);
   line-height: 1.5;
@@ -311,7 +312,7 @@ section { padding: 80px 40px; }
 .info-card-value a:hover { color: var(--bronze); }
 
 .social-section-label {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -326,7 +327,7 @@ section { padding: 80px 40px; }
   display: flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
   color: var(--muted);
@@ -360,7 +361,7 @@ section { padding: 80px 40px; }
 }
 
 .form-sub {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   color: var(--muted);
   margin-bottom: 28px;
@@ -381,7 +382,7 @@ section { padding: 80px 40px; }
 .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
 
 .form-label {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -396,7 +397,7 @@ section { padding: 80px 40px; }
   border: 1px solid var(--border);
   border-radius: 2px;
   color: var(--text);
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   padding: 11px 14px;
   outline: none;
@@ -430,7 +431,7 @@ section { padding: 80px 40px; }
 
 .form-submit {
   width: 100%;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 1.5px;
@@ -486,7 +487,7 @@ section { padding: 80px 40px; }
 .path-icon { font-size: 30px; margin-bottom: 12px; }
 
 .path-label {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -504,7 +505,7 @@ section { padding: 80px 40px; }
 }
 
 .path-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   color: var(--muted);
   line-height: 1.65;
@@ -512,7 +513,7 @@ section { padding: 80px 40px; }
 }
 
 .path-cta {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
   color: var(--bronze);
@@ -558,7 +559,7 @@ section { padding: 80px 40px; }
 }
 
 .map-ph-sub {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   color: var(--muted);
   opacity: .5;
@@ -571,7 +572,7 @@ section { padding: 80px 40px; }
 }
 
 .coverage-tag {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
   color: var(--text-lt);
@@ -583,8 +584,8 @@ section { padding: 80px 40px; }
 
 /* ── FOOTER ── */
 footer {
-  background: var(--text);
-  border-top: 1px solid #2a2a2a;
+  background: var(--surface);
+  border-top: 1px solid var(--hairline);
   padding: 52px 40px 32px;
 }
 
@@ -606,7 +607,7 @@ footer {
 }
 
 .footer-brand-name {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 900;
   letter-spacing: 3px;
@@ -616,9 +617,9 @@ footer {
 }
 
 .footer-brand-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
-  color: #aaa;
+  color: var(--muted);
   line-height: 1.7;
   margin-bottom: 16px;
 }
@@ -628,8 +629,8 @@ footer {
 .social-btn {
   width: 32px;
   height: 32px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
   border-radius: 3px;
   display: flex;
   align-items: center;
@@ -641,13 +642,13 @@ footer {
 }
 
 .social-btn:hover {
-  border-color: var(--gold-dim);
-  background: rgba(184,147,62,0.15);
-  color: var(--bronze);
+  border-color: var(--bronze);
+  background: var(--bronze-wash);
+  color: var(--bronze-deep);
 }
 
 .footer-col-title {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -664,19 +665,19 @@ footer {
 }
 
 .footer-links a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
-  color: #aaa;
+  color: var(--muted);
   text-decoration: none;
   transition: color .15s;
 }
 
-.footer-links a:hover { color: var(--white); }
+.footer-links a:hover { color: var(--ink); }
 
 .footer-bottom {
   max-width: 1080px;
   margin: 0 auto;
-  border-top: 1px solid #2e2e2e;
+  border-top: 1px solid var(--hairline);
   padding-top: 20px;
   display: flex;
   justify-content: space-between;
@@ -686,22 +687,22 @@ footer {
 }
 
 .footer-copy {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
-  color: #666;
+  color: var(--muted);
   line-height: 1.7;
 }
 
 .footer-legal { display: flex; gap: 16px; }
 
 .footer-legal a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
-  color: #666;
+  color: var(--muted);
   text-decoration: none;
 }
 
-.footer-legal a:hover { color: #aaa; }
+.footer-legal a:hover { color: var(--ink); }
 
 @media (max-width: 600px) {
   nav { padding: 0 20px; }
@@ -720,8 +721,8 @@ footer {
 <nav>
   <a class="nav-logo" href="Ironwood_Site_Home.html">
     <!-- LOGO PLACEHOLDER: replace .nav-logo-box with <img src="logo.svg"> when ready -->
-    <div class="nav-logo-box">IW</div>
-    <div class="nav-logo-text">Ironwood <span>Atlanta, GA</span></div>
+    <div class="nav-logo-box" style="background:var(--bronze);color:var(--surface);font-family:var(--serif);font-style:italic;font-size:18px;font-weight:400;border-radius:4px;"><em>I</em></div>
+    <div style="font-family:var(--serif);font-size:17px;color:var(--ink);letter-spacing:-.01em;">Ironwood Property Group</div>
   </a>
 
   <ul class="nav-links">
@@ -765,7 +766,7 @@ footer {
         <div class="info-cards">
 
           <div class="info-card">
-            <div class="info-card-icon">📞</div>
+            <div class="info-card-icon"></div>
             <div class="info-card-body">
               <div class="info-card-label">Phone</div>
               <div class="info-card-value"><a href="tel:+14045550100">(404) 555-0100</a></div>
@@ -774,7 +775,7 @@ footer {
           </div>
 
           <div class="info-card">
-            <div class="info-card-icon">✉️</div>
+            <div class="info-card-icon"></div>
             <div class="info-card-body">
               <div class="info-card-label">Email</div>
               <div class="info-card-value"><a href="mailto:info@ironwoodrenovations.com">info@ironwoodrenovations.com</a></div>
@@ -783,7 +784,7 @@ footer {
           </div>
 
           <div class="info-card">
-            <div class="info-card-icon">📍</div>
+            <div class="info-card-icon"></div>
             <div class="info-card-body">
               <div class="info-card-label">Service Area</div>
               <div class="info-card-value">Atlanta Metro, GA</div>
@@ -792,7 +793,7 @@ footer {
           </div>
 
           <div class="info-card">
-            <div class="info-card-icon">🕐</div>
+            <div class="info-card-icon"></div>
             <div class="info-card-body">
               <div class="info-card-label">Business Hours</div>
               <div class="info-card-value">Mon – Fri &nbsp;8:00 am – 6:00 pm</div>
@@ -812,7 +813,7 @@ footer {
             <span>ig</span> Instagram
           </a>
           <a class="social-link" href="https://youtube.com/@IronwoodRenovations" target="_blank">
-            <span>▶</span> YouTube
+            <span></span> YouTube
           </a>
         </div>
       </div>
@@ -865,9 +866,9 @@ footer {
         </form>
 
         <div id="form-success" style="display:none; text-align:center; padding:24px 0;">
-          <div style="font-size:28px; margin-bottom:10px;">✓</div>
-          <div style="font-family:'Arial',sans-serif; font-size:14px; color:var(--green); font-weight:700; margin-bottom:6px;">Message Sent!</div>
-          <div style="font-family:'Arial',sans-serif; font-size:12px; color:var(--muted);">We'll follow up within one business day.</div>
+          <div style="font-size:28px; margin-bottom:10px;"></div>
+          <div style="font-family:var(--sans); font-size:14px; color:var(--ok); font-weight:600; margin-bottom:6px;">Message Sent!</div>
+          <div style="font-family:var(--sans); font-size:12px; color:var(--muted);">We'll follow up within one business day.</div>
         </div>
       </div>
 
@@ -880,7 +881,7 @@ footer {
   <div class="paths-layout">
 
     <a class="path-card" href="Ironwood_SellerLead.html">
-      <div class="path-icon">🏡</div>
+      <div class="path-icon"></div>
       <div class="path-label">Motivated Sellers</div>
       <div class="path-title">Need a Cash Offer?</div>
       <div class="path-desc">Skip the general contact form. Get directly to our seller intake and receive a no-obligation cash offer on your home within 24 hours.</div>
@@ -888,7 +889,7 @@ footer {
     </a>
 
     <a class="path-card" href="Ironwood_RenoEstimate.html">
-      <div class="path-icon">🔨</div>
+      <div class="path-icon"></div>
       <div class="path-label">Homeowners</div>
       <div class="path-title">Need a Renovation Estimate?</div>
       <div class="path-desc">Describe your project in plain English and get an instant ballpark estimate online — before anyone calls or visits your home.</div>
@@ -911,7 +912,7 @@ footer {
            width="100%" height="360" style="border:0; border-radius:4px;" allowfullscreen loading="lazy"></iframe>
     -->
     <div class="map-placeholder">
-      <div class="map-ph-icon">🗺️</div>
+      <div class="map-ph-icon"></div>
       <div class="map-ph-title">Serving Atlanta Metro &amp; Surrounding Areas</div>
       <div class="map-ph-sub">Google Maps embed goes here</div>
     </div>
@@ -946,7 +947,7 @@ footer {
       <div class="footer-social">
         <a class="social-btn" href="#" title="Facebook">f</a>
         <a class="social-btn" href="#" title="Instagram">ig</a>
-        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank">▶</a>
+        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank"></a>
       </div>
     </div>
 
@@ -1000,7 +1001,7 @@ footer {
       links.style.top = '64px';
       links.style.left = '0';
       links.style.right = '0';
-      links.style.background = 'rgba(255,255,255,0.99)';
+      links.style.background = '#FBF8F2';
       links.style.padding = '20px 24px';
       links.style.gap = '16px';
       links.style.borderBottom = '1px solid #e0d8cc';

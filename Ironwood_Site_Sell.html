@@ -32,7 +32,7 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--white);
   color: var(--text);
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: var(--sans);
   min-height: 100vh;
 }
 
@@ -65,16 +65,17 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Arial', sans-serif;
-  font-size: 14px;
-  font-weight: 900;
-  color: var(--black);
-  letter-spacing: 1px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--surface);
+  border-radius: 4px;
 }
 
 /* LOGO PLACEHOLDER — replace .nav-logo-box with <img src="logo.svg"> when ready */
 .nav-logo-text {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
   font-weight: 900;
   letter-spacing: 3px;
@@ -99,7 +100,7 @@ nav {
 }
 
 .nav-links a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -119,7 +120,7 @@ nav {
 }
 
 .btn-nav-outline {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -137,7 +138,7 @@ nav {
 .btn-nav-outline:hover { background: rgba(184,147,62,0.08); }
 
 .btn-nav-fill {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -165,7 +166,7 @@ nav {
 .nav-toggle span {
   width: 22px;
   height: 2px;
-  background: var(--text);
+  background: var(--ink);
   border-radius: 1px;
   transition: all .2s;
 }
@@ -184,7 +185,7 @@ section { padding: 80px 40px; }
 }
 
 .section-eyebrow {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -202,7 +203,7 @@ section { padding: 80px 40px; }
 }
 
 .section-sub {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
   color: var(--muted);
   line-height: 1.75;
@@ -272,7 +273,7 @@ section { padding: 80px 40px; }
 }
 
 .hero-eyebrow {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 4px;
@@ -296,7 +297,7 @@ section { padding: 80px 40px; }
 }
 
 .hero-sub {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 16px;
   color: var(--muted);
   line-height: 1.75;
@@ -316,7 +317,7 @@ section { padding: 80px 40px; }
   display: flex;
   align-items: center;
   gap: 7px;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   font-weight: 700;
   color: var(--text);
@@ -341,7 +342,7 @@ section { padding: 80px 40px; }
 
 .btn-primary {
   display: inline-block;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 1.5px;
@@ -358,7 +359,7 @@ section { padding: 80px 40px; }
 
 .btn-secondary {
   display: inline-block;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -407,7 +408,7 @@ section { padding: 80px 40px; }
 .who-icon { font-size: 28px; margin-bottom: 12px; }
 
 .who-title {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
   color: var(--text);
@@ -416,7 +417,7 @@ section { padding: 80px 40px; }
 }
 
 .who-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11.5px;
   color: var(--muted);
   line-height: 1.6;
@@ -447,7 +448,7 @@ section { padding: 80px 40px; }
 }
 
 .proc-num {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 48px;
   font-weight: 900;
   color: rgba(184,147,62,0.18);
@@ -457,7 +458,7 @@ section { padding: 80px 40px; }
 }
 
 .proc-title {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
   color: var(--text);
@@ -465,7 +466,7 @@ section { padding: 80px 40px; }
 }
 
 .proc-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   color: var(--muted);
   line-height: 1.6;
@@ -503,7 +504,7 @@ section { padding: 80px 40px; }
 }
 
 .why-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   color: var(--muted);
   line-height: 1.7;
@@ -539,7 +540,7 @@ section { padding: 80px 40px; }
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
 }
 
 .ba-placeholder.before {
@@ -567,7 +568,7 @@ section { padding: 80px 40px; }
 }
 
 .ba-label {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -585,7 +586,7 @@ section { padding: 80px 40px; }
 }
 
 .ba-project {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   font-weight: 700;
   color: var(--text);
@@ -593,7 +594,7 @@ section { padding: 80px 40px; }
 }
 
 .ba-detail {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   color: var(--muted);
 }
@@ -623,7 +624,7 @@ section { padding: 80px 40px; }
 }
 
 .testi-attr {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   color: var(--muted);
   letter-spacing: .5px;
@@ -645,7 +646,7 @@ section { padding: 80px 40px; }
 }
 
 .cta-band p {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 15px;
   color: rgba(10,10,10,0.65);
   margin-bottom: 32px;
@@ -653,7 +654,7 @@ section { padding: 80px 40px; }
 
 .btn-cta-dark {
   display: inline-block;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   font-weight: 900;
   letter-spacing: 1.5px;
@@ -670,8 +671,8 @@ section { padding: 80px 40px; }
 
 /* ── FOOTER ── */
 footer {
-  background: var(--text);
-  border-top: 1px solid #2a2a2a;
+  background: var(--surface);
+  border-top: 1px solid var(--hairline);
   padding: 52px 40px 32px;
 }
 
@@ -693,7 +694,7 @@ footer {
 }
 
 .footer-brand-name {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 900;
   letter-spacing: 3px;
@@ -703,9 +704,9 @@ footer {
 }
 
 .footer-brand-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
-  color: #aaa;
+  color: var(--muted);
   line-height: 1.7;
   margin-bottom: 16px;
 }
@@ -715,8 +716,8 @@ footer {
 .social-btn {
   width: 32px;
   height: 32px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
   border-radius: 3px;
   display: flex;
   align-items: center;
@@ -728,13 +729,13 @@ footer {
 }
 
 .social-btn:hover {
-  border-color: var(--gold-dim);
-  background: rgba(184,147,62,0.15);
-  color: var(--bronze);
+  border-color: var(--bronze);
+  background: var(--bronze-wash);
+  color: var(--bronze-deep);
 }
 
 .footer-col-title {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -751,19 +752,19 @@ footer {
 }
 
 .footer-links a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
-  color: #aaa;
+  color: var(--muted);
   text-decoration: none;
   transition: color .15s;
 }
 
-.footer-links a:hover { color: var(--white); }
+.footer-links a:hover { color: var(--ink); }
 
 .footer-bottom {
   max-width: 1080px;
   margin: 0 auto;
-  border-top: 1px solid #2e2e2e;
+  border-top: 1px solid var(--hairline);
   padding-top: 20px;
   display: flex;
   justify-content: space-between;
@@ -773,22 +774,22 @@ footer {
 }
 
 .footer-copy {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
-  color: #666;
+  color: var(--muted);
   line-height: 1.7;
 }
 
 .footer-legal { display: flex; gap: 16px; }
 
 .footer-legal a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
-  color: #666;
+  color: var(--muted);
   text-decoration: none;
 }
 
-.footer-legal a:hover { color: #aaa; }
+.footer-legal a:hover { color: var(--ink); }
 
 @media (max-width: 600px) {
   nav { padding: 0 20px; }
@@ -805,8 +806,8 @@ footer {
 <nav>
   <a class="nav-logo" href="Ironwood_Site_Home.html">
     <!-- LOGO PLACEHOLDER: replace .nav-logo-box with <img src="logo.svg"> when ready -->
-    <div class="nav-logo-box">IW</div>
-    <div class="nav-logo-text">Ironwood <span>Atlanta, GA</span></div>
+    <div class="nav-logo-box" style="background:var(--bronze);color:var(--surface);font-family:var(--serif);font-style:italic;font-size:18px;font-weight:400;border-radius:4px;"><em>I</em></div>
+    <div style="font-family:var(--serif);font-size:17px;color:var(--ink);letter-spacing:-.01em;">Ironwood Property Group</div>
   </a>
 
   <ul class="nav-links">
@@ -841,10 +842,10 @@ footer {
     <p class="hero-sub">We make fair cash offers on homes throughout the Atlanta metro. No repairs, no commissions, no stress — just a straightforward process on your timeline.</p>
 
     <div class="hero-chips">
-      <div class="hero-chip"><span class="chip-check">✓</span> No Repairs Needed</div>
-      <div class="hero-chip"><span class="chip-check">✓</span> No Commissions or Fees</div>
-      <div class="hero-chip"><span class="chip-check">✓</span> Close in as Little as 7 Days</div>
-      <div class="hero-chip"><span class="chip-check">✓</span> Cash Offer Within 24 Hours</div>
+      <div class="hero-chip"><span class="chip-check"></span> No Repairs Needed</div>
+      <div class="hero-chip"><span class="chip-check"></span> No Commissions or Fees</div>
+      <div class="hero-chip"><span class="chip-check"></span> Close in as Little as 7 Days</div>
+      <div class="hero-chip"><span class="chip-check"></span> Cash Offer Within 24 Hours</div>
     </div>
 
     <div class="hero-btn-wrap">
@@ -866,37 +867,37 @@ footer {
 
     <div class="who-grid">
       <div class="who-card">
-        <div class="who-icon">🏛️</div>
+        <div class="who-icon"></div>
         <div class="who-title">Inherited Property</div>
         <div class="who-desc">Inherited a home you don't want to manage or maintain? We handle probate-friendly purchases and make the process simple during a difficult time.</div>
       </div>
 
       <div class="who-card">
-        <div class="who-icon">📉</div>
+        <div class="who-icon"></div>
         <div class="who-title">Behind on Payments</div>
         <div class="who-desc">Facing foreclosure or falling behind on your mortgage? A fast cash sale can stop the clock and protect your credit before things escalate.</div>
       </div>
 
       <div class="who-card">
-        <div class="who-icon">⚖️</div>
+        <div class="who-icon"></div>
         <div class="who-title">Divorce / Life Change</div>
         <div class="who-desc">When life changes quickly, a shared property can complicate things. We buy fast so both parties can move on cleanly and without delay.</div>
       </div>
 
       <div class="who-card">
-        <div class="who-icon">✈️</div>
+        <div class="who-icon"></div>
         <div class="who-title">Relocating Quickly</div>
         <div class="who-desc">Job transfer or out-of-state move coming up fast? Don't deal with showings and months on the market — we close on your schedule.</div>
       </div>
 
       <div class="who-card">
-        <div class="who-icon">🔧</div>
+        <div class="who-icon"></div>
         <div class="who-title">Property Needs Major Repairs</div>
         <div class="who-desc">Foundation issues, roof damage, fire or water damage — we buy homes exactly as they are. You don't spend a dollar before closing.</div>
       </div>
 
       <div class="who-card">
-        <div class="who-icon">🔑</div>
+        <div class="who-icon"></div>
         <div class="who-title">Tired Landlord</div>
         <div class="who-desc">Done dealing with tenants, maintenance calls, and vacancies? We purchase rental properties with or without tenants in place.</div>
       </div>
@@ -954,19 +955,19 @@ footer {
 
     <div class="why-grid">
       <div class="why-card">
-        <div class="why-icon">💸</div>
+        <div class="why-icon"></div>
         <div class="why-title">No Fees or Commissions</div>
         <div class="why-desc">Traditional real estate agents take 5–6% of your sale price in commissions alone. With Ironwood, what we offer is what you receive. Zero deductions on our end. No listing fees, no closing cost negotiations that drag on for weeks.</div>
       </div>
 
       <div class="why-card">
-        <div class="why-icon">🏚️</div>
+        <div class="why-icon"></div>
         <div class="why-title">As-Is Purchase — No Repairs</div>
         <div class="why-desc">We buy your home exactly as it sits today. Roof issues, outdated kitchens, foundation concerns, deferred maintenance — it doesn't matter. You don't lift a finger or spend a single dollar preparing the property for sale.</div>
       </div>
 
       <div class="why-card">
-        <div class="why-icon">📅</div>
+        <div class="why-icon"></div>
         <div class="why-title">You Pick the Closing Date</div>
         <div class="why-desc">Our closing timeline is built around you, not us. We can move as fast as 7 days or give you the time you need to transition. Whether you need to arrange moving, settle affairs, or coordinate with family — we work on your schedule.</div>
       </div>
@@ -989,11 +990,11 @@ footer {
       <div class="ba-card">
         <div class="ba-images">
           <div class="ba-placeholder before">
-            <div class="ba-placeholder-icon">📷</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">Before</div>
           </div>
           <div class="ba-placeholder after">
-            <div class="ba-placeholder-icon">✨</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">After</div>
           </div>
         </div>
@@ -1011,11 +1012,11 @@ footer {
       <div class="ba-card">
         <div class="ba-images">
           <div class="ba-placeholder before">
-            <div class="ba-placeholder-icon">📷</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">Before</div>
           </div>
           <div class="ba-placeholder after">
-            <div class="ba-placeholder-icon">✨</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">After</div>
           </div>
         </div>
@@ -1033,11 +1034,11 @@ footer {
       <div class="ba-card">
         <div class="ba-images">
           <div class="ba-placeholder before">
-            <div class="ba-placeholder-icon">📷</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">Before</div>
           </div>
           <div class="ba-placeholder after">
-            <div class="ba-placeholder-icon">✨</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">After</div>
           </div>
         </div>
@@ -1058,7 +1059,7 @@ footer {
 <section class="testi-section">
   <div class="container">
     <div class="testi-single">
-      <div class="testi-stars">★★★★★</div>
+      <div class="testi-stars"></div>
       <p class="testi-text">"I needed to sell my dad's house after he passed, and I had no idea where to start. Ironwood made the whole thing easy — they explained the process, gave me a fair offer, and we closed in 9 days. I didn't have to fix a thing. I'd tell anyone in that situation to call them first."</p>
       <div class="testi-attr">— Marcus T. &nbsp;·&nbsp; Kennesaw, GA &nbsp;·&nbsp; Inherited Property Sale</div>
     </div>
@@ -1084,7 +1085,7 @@ footer {
       <div class="footer-social">
         <a class="social-btn" href="#" title="Facebook">f</a>
         <a class="social-btn" href="#" title="Instagram">ig</a>
-        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank">▶</a>
+        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank"></a>
       </div>
     </div>
 
@@ -1138,7 +1139,7 @@ footer {
       links.style.top = '64px';
       links.style.left = '0';
       links.style.right = '0';
-      links.style.background = 'rgba(255,255,255,0.99)';
+      links.style.background = '#FBF8F2';
       links.style.padding = '20px 24px';
       links.style.gap = '16px';
       links.style.borderBottom = '1px solid #e0d8cc';

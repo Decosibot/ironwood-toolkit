@@ -32,7 +32,7 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--white);
   color: var(--text);
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: var(--sans);
   min-height: 100vh;
 }
 
@@ -65,16 +65,17 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Arial', sans-serif;
-  font-size: 14px;
-  font-weight: 900;
-  color: var(--black);
-  letter-spacing: 1px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--surface);
+  border-radius: 4px;
 }
 
 /* LOGO PLACEHOLDER — replace .nav-logo-box with <img src="logo.svg"> when ready */
 .nav-logo-text {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
   font-weight: 900;
   letter-spacing: 3px;
@@ -99,7 +100,7 @@ nav {
 }
 
 .nav-links a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -119,7 +120,7 @@ nav {
 }
 
 .btn-nav-outline {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -137,7 +138,7 @@ nav {
 .btn-nav-outline:hover { background: rgba(184,147,62,0.08); }
 
 .btn-nav-fill {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -165,7 +166,7 @@ nav {
 .nav-toggle span {
   width: 22px;
   height: 2px;
-  background: var(--text);
+  background: var(--ink);
   border-radius: 1px;
   transition: all .2s;
 }
@@ -184,7 +185,7 @@ section { padding: 80px 40px; }
 }
 
 .section-eyebrow {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -202,7 +203,7 @@ section { padding: 80px 40px; }
 }
 
 .section-sub {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
   color: var(--muted);
   line-height: 1.75;
@@ -229,7 +230,7 @@ section { padding: 80px 40px; }
 }
 
 .page-eyebrow {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -247,7 +248,7 @@ section { padding: 80px 40px; }
 }
 
 .page-sub {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 16px;
   color: var(--muted);
   line-height: 1.7;
@@ -263,7 +264,7 @@ section { padding: 80px 40px; }
 }
 
 .filter-tab {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -329,7 +330,7 @@ section { padding: 80px 40px; }
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
 }
 
 .proj-ph.before {
@@ -357,7 +358,7 @@ section { padding: 80px 40px; }
 }
 
 .proj-ba-lbl {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -372,7 +373,7 @@ section { padding: 80px 40px; }
 .proj-info { padding: 14px 16px; border-top: 1px solid var(--border); }
 
 .proj-category {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -382,7 +383,7 @@ section { padding: 80px 40px; }
 }
 
 .proj-name {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
   color: var(--text);
@@ -390,14 +391,14 @@ section { padding: 80px 40px; }
 }
 
 .proj-location {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   color: var(--muted);
   margin-bottom: 6px;
 }
 
 .proj-scope {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   color: var(--muted);
   line-height: 1.5;
@@ -405,7 +406,7 @@ section { padding: 80px 40px; }
 }
 
 .proj-time {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   color: var(--gold-dim);
   font-weight: 700;
@@ -413,9 +414,9 @@ section { padding: 80px 40px; }
 
 /* ── STATS STRIP ── */
 .stats-section {
-  background: var(--text);
-  border-top: 1px solid #2a2a2a;
-  border-bottom: 1px solid #2a2a2a;
+  background: var(--ink);
+  border-top: 1px solid rgba(28,24,20,.3);
+  border-bottom: 1px solid rgba(28,24,20,.3);
   padding: 60px 40px;
 }
 
@@ -448,7 +449,7 @@ section { padding: 80px 40px; }
 }
 
 .stat-label {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   color: #aaa;
   letter-spacing: .5px;
@@ -470,7 +471,7 @@ section { padding: 80px 40px; }
 }
 
 .yt-strip p {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
   color: var(--muted);
   margin-bottom: 28px;
@@ -484,7 +485,7 @@ section { padding: 80px 40px; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -501,8 +502,8 @@ section { padding: 80px 40px; }
 
 /* ── FOOTER ── */
 footer {
-  background: var(--text);
-  border-top: 1px solid #2a2a2a;
+  background: var(--surface);
+  border-top: 1px solid var(--hairline);
   padding: 52px 40px 32px;
 }
 
@@ -524,7 +525,7 @@ footer {
 }
 
 .footer-brand-name {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 900;
   letter-spacing: 3px;
@@ -534,9 +535,9 @@ footer {
 }
 
 .footer-brand-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
-  color: #aaa;
+  color: var(--muted);
   line-height: 1.7;
   margin-bottom: 16px;
 }
@@ -546,8 +547,8 @@ footer {
 .social-btn {
   width: 32px;
   height: 32px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
   border-radius: 3px;
   display: flex;
   align-items: center;
@@ -559,13 +560,13 @@ footer {
 }
 
 .social-btn:hover {
-  border-color: var(--gold-dim);
-  background: rgba(184,147,62,0.15);
-  color: var(--bronze);
+  border-color: var(--bronze);
+  background: var(--bronze-wash);
+  color: var(--bronze-deep);
 }
 
 .footer-col-title {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -582,19 +583,19 @@ footer {
 }
 
 .footer-links a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
-  color: #aaa;
+  color: var(--muted);
   text-decoration: none;
   transition: color .15s;
 }
 
-.footer-links a:hover { color: var(--white); }
+.footer-links a:hover { color: var(--ink); }
 
 .footer-bottom {
   max-width: 1080px;
   margin: 0 auto;
-  border-top: 1px solid #2e2e2e;
+  border-top: 1px solid var(--hairline);
   padding-top: 20px;
   display: flex;
   justify-content: space-between;
@@ -604,22 +605,22 @@ footer {
 }
 
 .footer-copy {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
-  color: #666;
+  color: var(--muted);
   line-height: 1.7;
 }
 
 .footer-legal { display: flex; gap: 16px; }
 
 .footer-legal a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
-  color: #666;
+  color: var(--muted);
   text-decoration: none;
 }
 
-.footer-legal a:hover { color: #aaa; }
+.footer-legal a:hover { color: var(--ink); }
 
 @media (max-width: 600px) {
   nav { padding: 0 20px; }
@@ -637,8 +638,8 @@ footer {
 <nav>
   <a class="nav-logo" href="Ironwood_Site_Home.html">
     <!-- LOGO PLACEHOLDER: replace .nav-logo-box with <img src="logo.svg"> when ready -->
-    <div class="nav-logo-box">IW</div>
-    <div class="nav-logo-text">Ironwood <span>Atlanta, GA</span></div>
+    <div class="nav-logo-box" style="background:var(--bronze);color:var(--surface);font-family:var(--serif);font-style:italic;font-size:18px;font-weight:400;border-radius:4px;"><em>I</em></div>
+    <div style="font-family:var(--serif);font-size:17px;color:var(--ink);letter-spacing:-.01em;">Ironwood Property Group</div>
   </a>
 
   <ul class="nav-links">
@@ -688,11 +689,11 @@ footer {
       <div class="proj-card" data-category="kitchen">
         <div class="proj-images">
           <div class="proj-ph before">
-            <div class="proj-ph-icon">📷</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">Before</div>
           </div>
           <div class="proj-ph after">
-            <div class="proj-ph-icon">✨</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">After</div>
           </div>
         </div>
@@ -713,11 +714,11 @@ footer {
       <div class="proj-card" data-category="kitchen">
         <div class="proj-images">
           <div class="proj-ph before">
-            <div class="proj-ph-icon">📷</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">Before</div>
           </div>
           <div class="proj-ph after">
-            <div class="proj-ph-icon">✨</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">After</div>
           </div>
         </div>
@@ -738,11 +739,11 @@ footer {
       <div class="proj-card" data-category="kitchen">
         <div class="proj-images">
           <div class="proj-ph before">
-            <div class="proj-ph-icon">📷</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">Before</div>
           </div>
           <div class="proj-ph after">
-            <div class="proj-ph-icon">✨</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">After</div>
           </div>
         </div>
@@ -763,11 +764,11 @@ footer {
       <div class="proj-card" data-category="bathroom">
         <div class="proj-images">
           <div class="proj-ph before">
-            <div class="proj-ph-icon">📷</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">Before</div>
           </div>
           <div class="proj-ph after">
-            <div class="proj-ph-icon">✨</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">After</div>
           </div>
         </div>
@@ -788,11 +789,11 @@ footer {
       <div class="proj-card" data-category="bathroom">
         <div class="proj-images">
           <div class="proj-ph before">
-            <div class="proj-ph-icon">📷</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">Before</div>
           </div>
           <div class="proj-ph after">
-            <div class="proj-ph-icon">✨</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">After</div>
           </div>
         </div>
@@ -813,11 +814,11 @@ footer {
       <div class="proj-card" data-category="deck">
         <div class="proj-images">
           <div class="proj-ph before">
-            <div class="proj-ph-icon">📷</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">Before</div>
           </div>
           <div class="proj-ph after">
-            <div class="proj-ph-icon">✨</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">After</div>
           </div>
         </div>
@@ -838,11 +839,11 @@ footer {
       <div class="proj-card" data-category="deck">
         <div class="proj-images">
           <div class="proj-ph before">
-            <div class="proj-ph-icon">📷</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">Before</div>
           </div>
           <div class="proj-ph after">
-            <div class="proj-ph-icon">✨</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">After</div>
           </div>
         </div>
@@ -863,11 +864,11 @@ footer {
       <div class="proj-card" data-category="full-home">
         <div class="proj-images">
           <div class="proj-ph before">
-            <div class="proj-ph-icon">📷</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">Before</div>
           </div>
           <div class="proj-ph after">
-            <div class="proj-ph-icon">✨</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">After</div>
           </div>
         </div>
@@ -888,11 +889,11 @@ footer {
       <div class="proj-card" data-category="exterior">
         <div class="proj-images">
           <div class="proj-ph before">
-            <div class="proj-ph-icon">📷</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">Before</div>
           </div>
           <div class="proj-ph after">
-            <div class="proj-ph-icon">✨</div>
+            <div class="proj-ph-icon"></div>
             <div class="proj-ph-label">After</div>
           </div>
         </div>
@@ -925,7 +926,7 @@ footer {
       <div class="stat-label">Written Scope on Every Job</div>
     </div>
     <div class="stat-block">
-      <div class="stat-num">4.9★</div>
+      <div class="stat-num">4.9</div>
       <div class="stat-label">Average Client Rating</div>
     </div>
     <div class="stat-block">
@@ -940,7 +941,7 @@ footer {
   <div class="container">
     <h2>See the Full Builds on YouTube</h2>
     <p>Time-lapses, walkthroughs, and full before-and-after reveal videos for every major project — on the Ironwood channel.</p>
-    <a class="yt-subscribe-btn" href="https://youtube.com/@IronwoodRenovations" target="_blank">▶ Subscribe on YouTube</a>
+    <a class="yt-subscribe-btn" href="https://youtube.com/@IronwoodRenovations" target="_blank"> Subscribe on YouTube</a>
   </div>
 </div>
 
@@ -954,7 +955,7 @@ footer {
       <div class="footer-social">
         <a class="social-btn" href="#" title="Facebook">f</a>
         <a class="social-btn" href="#" title="Instagram">ig</a>
-        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank">▶</a>
+        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank"></a>
       </div>
     </div>
 
@@ -1008,7 +1009,7 @@ footer {
       links.style.top = '64px';
       links.style.left = '0';
       links.style.right = '0';
-      links.style.background = 'rgba(255,255,255,0.99)';
+      links.style.background = '#FBF8F2';
       links.style.padding = '20px 24px';
       links.style.gap = '16px';
       links.style.borderBottom = '1px solid #e0d8cc';

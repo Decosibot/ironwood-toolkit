@@ -32,7 +32,7 @@ html { scroll-behavior: smooth; }
 body {
   background: var(--white);
   color: var(--text);
-  font-family: 'Georgia', 'Times New Roman', serif;
+  font-family: var(--sans);
   min-height: 100vh;
 }
 
@@ -65,16 +65,17 @@ nav {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Arial', sans-serif;
-  font-size: 14px;
-  font-weight: 900;
-  color: var(--black);
-  letter-spacing: 1px;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--surface);
+  border-radius: 4px;
 }
 
 /* LOGO PLACEHOLDER — replace .nav-logo-box with <img> when logo is ready */
 .nav-logo-text {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
   font-weight: 900;
   letter-spacing: 3px;
@@ -99,7 +100,7 @@ nav {
 }
 
 .nav-links a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1.5px;
@@ -119,7 +120,7 @@ nav {
 }
 
 .btn-nav-outline {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -137,7 +138,7 @@ nav {
 .btn-nav-outline:hover { background: rgba(184,147,62,0.08); }
 
 .btn-nav-fill {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -166,7 +167,7 @@ nav {
 .nav-toggle span {
   width: 22px;
   height: 2px;
-  background: var(--text);
+  background: var(--ink);
   border-radius: 1px;
   transition: all .2s;
 }
@@ -225,7 +226,7 @@ nav {
 }
 
 .hero-eyebrow {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 4px;
@@ -249,7 +250,7 @@ nav {
 }
 
 .hero-sub {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 16px;
   color: var(--muted);
   line-height: 1.75;
@@ -286,7 +287,7 @@ nav {
 .path-icon { font-size: 26px; margin-bottom: 10px; }
 
 .path-label {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -303,7 +304,7 @@ nav {
 }
 
 .path-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11.5px;
   color: var(--muted);
   line-height: 1.55;
@@ -312,7 +313,7 @@ nav {
 .path-arrow {
   display: inline-block;
   margin-top: 10px;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   color: var(--bronze);
   font-weight: 700;
@@ -329,7 +330,7 @@ nav {
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   color: var(--muted);
 }
@@ -346,7 +347,7 @@ section {
 }
 
 .section-eyebrow {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 3px;
@@ -364,7 +365,7 @@ section {
 }
 
 .section-sub {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
   color: var(--muted);
   line-height: 1.75;
@@ -438,7 +439,7 @@ section {
 .aud-icon { font-size: 36px; margin-bottom: 18px; }
 
 .aud-label {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 2.5px;
@@ -456,7 +457,7 @@ section {
 }
 
 .aud-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   color: var(--muted);
   line-height: 1.75;
@@ -470,7 +471,7 @@ section {
 }
 
 .aud-steps li {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   color: var(--muted);
   padding: 5px 0;
@@ -490,7 +491,7 @@ section {
 
 .btn-aud {
   display: inline-block;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 900;
   letter-spacing: 1.5px;
@@ -537,7 +538,7 @@ section {
   align-items: center;
   justify-content: center;
   gap: 6px;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
 }
 
 .ba-placeholder.before {
@@ -568,7 +569,7 @@ section {
 }
 
 .ba-label {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 8px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -586,7 +587,7 @@ section {
 }
 
 .ba-project {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   font-weight: 700;
   color: var(--text);
@@ -594,7 +595,7 @@ section {
 }
 
 .ba-detail {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   color: var(--muted);
 }
@@ -652,7 +653,7 @@ section {
 }
 
 .yt-placeholder-text {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   color: var(--muted);
   letter-spacing: 1px;
@@ -671,7 +672,7 @@ section {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 1px;
@@ -705,7 +706,7 @@ section {
 }
 
 .proc-num {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 48px;
   font-weight: 900;
   color: rgba(184,147,62,0.18);
@@ -715,7 +716,7 @@ section {
 }
 
 .proc-title {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 700;
   color: var(--text);
@@ -723,7 +724,7 @@ section {
 }
 
 .proc-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
   color: var(--muted);
   line-height: 1.6;
@@ -759,7 +760,7 @@ section {
 .svc-icon { font-size: 22px; margin-bottom: 8px; }
 
 .svc-name {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 700;
   color: var(--text);
@@ -767,7 +768,7 @@ section {
 }
 
 .svc-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   color: var(--muted);
   line-height: 1.4;
@@ -812,7 +813,7 @@ section {
 }
 
 .testi-attr {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
   color: var(--muted);
   letter-spacing: .5px;
@@ -834,7 +835,7 @@ section {
 }
 
 .cta-band p {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 14px;
   color: rgba(10,10,10,0.65);
   margin-bottom: 28px;
@@ -848,7 +849,7 @@ section {
 }
 
 .btn-cta-dark {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 900;
   letter-spacing: 1.5px;
@@ -866,7 +867,7 @@ section {
 .btn-cta-dark:hover { background: #1a1a1a; }
 
 .btn-cta-outline {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
   font-weight: 900;
   letter-spacing: 1.5px;
@@ -885,8 +886,8 @@ section {
 
 /* ── FOOTER ── */
 footer {
-  background: var(--text);
-  border-top: 1px solid #2a2a2a;
+  background: var(--surface);
+  border-top: 1px solid var(--hairline);
   padding: 52px 40px 32px;
 }
 
@@ -908,7 +909,7 @@ footer {
 }
 
 .footer-brand-name {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 13px;
   font-weight: 900;
   letter-spacing: 3px;
@@ -918,9 +919,9 @@ footer {
 }
 
 .footer-brand-desc {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 11px;
-  color: #aaa;
+  color: var(--muted);
   line-height: 1.7;
   margin-bottom: 16px;
 }
@@ -933,8 +934,8 @@ footer {
 .social-btn {
   width: 32px;
   height: 32px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.15);
+  background: var(--surface-2);
+  border: 1px solid var(--hairline);
   border-radius: 3px;
   display: flex;
   align-items: center;
@@ -946,13 +947,13 @@ footer {
 }
 
 .social-btn:hover {
-  border-color: var(--gold-dim);
-  background: rgba(184,147,62,0.15);
-  color: var(--bronze);
+  border-color: var(--bronze);
+  background: var(--bronze-wash);
+  color: var(--bronze-deep);
 }
 
 .footer-col-title {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 9px;
   font-weight: 700;
   letter-spacing: 2px;
@@ -969,19 +970,19 @@ footer {
 }
 
 .footer-links a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 12px;
-  color: #aaa;
+  color: var(--muted);
   text-decoration: none;
   transition: color .15s;
 }
 
-.footer-links a:hover { color: var(--white); }
+.footer-links a:hover { color: var(--ink); }
 
 .footer-bottom {
   max-width: 1080px;
   margin: 0 auto;
-  border-top: 1px solid #2e2e2e;
+  border-top: 1px solid var(--hairline);
   padding-top: 20px;
   display: flex;
   justify-content: space-between;
@@ -991,9 +992,9 @@ footer {
 }
 
 .footer-copy {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
-  color: #666;
+  color: var(--muted);
   line-height: 1.7;
 }
 
@@ -1003,13 +1004,13 @@ footer {
 }
 
 .footer-legal a {
-  font-family: 'Arial', sans-serif;
+  font-family: var(--sans);
   font-size: 10px;
-  color: #666;
+  color: var(--muted);
   text-decoration: none;
 }
 
-.footer-legal a:hover { color: #aaa; }
+.footer-legal a:hover { color: var(--ink); }
 
 @media (max-width: 600px) {
   nav { padding: 0 20px; }
@@ -1027,8 +1028,8 @@ footer {
 <nav>
   <a class="nav-logo" href="Ironwood_Site_Home.html">
     <!-- LOGO PLACEHOLDER: replace .nav-logo-box with <img src="logo.svg"> when ready -->
-    <div class="nav-logo-box">IW</div>
-    <div class="nav-logo-text">Ironwood <span>Atlanta, GA</span></div>
+    <div class="nav-logo-box" style="background:var(--bronze);color:var(--surface);font-family:var(--serif);font-style:italic;font-size:18px;font-weight:400;border-radius:4px;"><em>I</em></div>
+    <div style="font-family:var(--serif);font-size:17px;color:var(--ink);letter-spacing:-.01em;">Ironwood Property Group</div>
   </a>
 
   <ul class="nav-links">
@@ -1063,14 +1064,14 @@ footer {
 
     <div class="hero-paths">
       <a class="path-card" href="Ironwood_SellerLead.html">
-        <div class="path-icon">🏡</div>
+        <div class="path-icon"></div>
         <div class="path-label">Sell Your Home</div>
         <div class="path-title">Get a Cash Offer Fast</div>
         <div class="path-desc">No repairs. No showings. No waiting. We make fair cash offers on homes in any condition.</div>
         <div class="path-arrow">Get My Offer →</div>
       </a>
       <a class="path-card" href="Ironwood_RenoEstimate.html">
-        <div class="path-icon">🔨</div>
+        <div class="path-icon"></div>
         <div class="path-label">Renovation Services</div>
         <div class="path-title">Get a Free Estimate</div>
         <div class="path-desc">Kitchen, bath, deck, full home — describe your project and get an instant ballpark range online.</div>
@@ -1093,7 +1094,7 @@ footer {
     <div class="audience-grid">
 
       <a class="audience-card" href="Ironwood_Site_Sell.html">
-        <div class="aud-icon">🏡</div>
+        <div class="aud-icon"></div>
         <div class="aud-label">Motivated Sellers</div>
         <div class="aud-title">Need to Sell<br/>Your Home?</div>
         <div class="aud-desc">Inherited a property, behind on payments, going through a life change — we buy homes in any condition, as-is, with no commissions or fees.</div>
@@ -1107,7 +1108,7 @@ footer {
       </a>
 
       <a class="audience-card" href="Ironwood_Site_Renovate.html">
-        <div class="aud-icon">🔨</div>
+        <div class="aud-icon"></div>
         <div class="aud-label">Homeowners</div>
         <div class="aud-title">Planning a<br/>Renovation?</div>
         <div class="aud-desc">Kitchen remodel, bathroom update, new deck, full home transformation — describe what you want and get an instant estimate before we ever visit your home.</div>
@@ -1139,11 +1140,11 @@ footer {
       <div class="ba-card">
         <div class="ba-images">
           <div class="ba-placeholder before">
-            <div class="ba-placeholder-icon">📷</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">Before</div>
           </div>
           <div class="ba-placeholder after">
-            <div class="ba-placeholder-icon">✨</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">After</div>
           </div>
         </div>
@@ -1160,11 +1161,11 @@ footer {
       <div class="ba-card">
         <div class="ba-images">
           <div class="ba-placeholder before">
-            <div class="ba-placeholder-icon">📷</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">Before</div>
           </div>
           <div class="ba-placeholder after">
-            <div class="ba-placeholder-icon">✨</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">After</div>
           </div>
         </div>
@@ -1181,11 +1182,11 @@ footer {
       <div class="ba-card">
         <div class="ba-images">
           <div class="ba-placeholder before">
-            <div class="ba-placeholder-icon">📷</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">Before</div>
           </div>
           <div class="ba-placeholder after">
-            <div class="ba-placeholder-icon">✨</div>
+            <div class="ba-placeholder-icon"></div>
             <div class="ba-placeholder-label">After</div>
           </div>
         </div>
@@ -1201,7 +1202,7 @@ footer {
     </div>
 
     <div style="text-align:center; margin-top:32px;">
-      <a class="btn-nav-fill" href="Ironwood_Site_Work.html" style="display:inline-block; padding:13px 32px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; font-family:'Arial',sans-serif; font-weight:900;">View All Projects →</a>
+      <a class="btn-nav-fill" href="Ironwood_Site_Work.html" style="display:inline-block; padding:13px 32px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; font-family:var(--sans); font-weight:600;">View All Projects →</a>
     </div>
   </div>
 </section>
@@ -1217,7 +1218,7 @@ footer {
         <p class="section-sub">Full renovation walkthroughs, before-and-after reveals, and behind-the-scenes of every major build — on our YouTube channel.</p>
         <!-- YOUTUBE LINK PLACEHOLDER — replace href with actual channel URL -->
         <a class="yt-subscribe-btn" href="https://youtube.com/@IronwoodRenovations" target="_blank">
-          ▶ Subscribe on YouTube
+           Subscribe on YouTube
         </a>
       </div>
 
@@ -1229,7 +1230,7 @@ footer {
                frameborder="0" allowfullscreen></iframe>
         -->
         <div class="yt-placeholder">
-          <div class="yt-play-btn">▶</div>
+          <div class="yt-play-btn"></div>
           <div class="yt-placeholder-text">
             Latest Project Video<br/>
             <span style="font-size:9px; opacity:.5;">YouTube embed goes here</span>
@@ -1285,21 +1286,21 @@ footer {
     </div>
 
     <div class="services-grid">
-      <div class="svc-card"><div class="svc-icon">🍳</div><div class="svc-name">Kitchens</div><div class="svc-desc">Full remodels, cabinet refacing, countertops</div></div>
-      <div class="svc-card"><div class="svc-icon">🛁</div><div class="svc-name">Bathrooms</div><div class="svc-desc">Tile, showers, vanities, full gut renovations</div></div>
-      <div class="svc-card"><div class="svc-icon">🏠</div><div class="svc-name">Full Home Remodels</div><div class="svc-desc">Whole-house transformations start to finish</div></div>
+      <div class="svc-card"><div class="svc-icon"></div><div class="svc-name">Kitchens</div><div class="svc-desc">Full remodels, cabinet refacing, countertops</div></div>
+      <div class="svc-card"><div class="svc-icon"></div><div class="svc-name">Bathrooms</div><div class="svc-desc">Tile, showers, vanities, full gut renovations</div></div>
+      <div class="svc-card"><div class="svc-icon"></div><div class="svc-name">Full Home Remodels</div><div class="svc-desc">Whole-house transformations start to finish</div></div>
       <div class="svc-card"><div class="svc-icon">🪵</div><div class="svc-name">Flooring</div><div class="svc-desc">Hardwood, LVP, tile, carpet — all types</div></div>
-      <div class="svc-card"><div class="svc-icon">🎨</div><div class="svc-name">Painting</div><div class="svc-desc">Interior and exterior, prep and finish</div></div>
-      <div class="svc-card"><div class="svc-icon">🏗️</div><div class="svc-name">Additions</div><div class="svc-desc">Room additions, garage conversions</div></div>
+      <div class="svc-card"><div class="svc-icon"></div><div class="svc-name">Painting</div><div class="svc-desc">Interior and exterior, prep and finish</div></div>
+      <div class="svc-card"><div class="svc-icon"></div><div class="svc-name">Additions</div><div class="svc-desc">Room additions, garage conversions</div></div>
       <div class="svc-card"><div class="svc-icon">🪟</div><div class="svc-name">Windows &amp; Doors</div><div class="svc-desc">Replacements, exterior doors, trim</div></div>
-      <div class="svc-card"><div class="svc-icon">🌿</div><div class="svc-name">Decks &amp; Pergolas</div><div class="svc-desc">New builds, composite &amp; wood, shade structures</div></div>
-      <div class="svc-card"><div class="svc-icon">🏚️</div><div class="svc-name">Sheds &amp; Outbuildings</div><div class="svc-desc">Storage sheds, workshops, detached structures</div></div>
-      <div class="svc-card"><div class="svc-icon">🌲</div><div class="svc-name">Land Clearing</div><div class="svc-desc">Tree removal, brush clearing, grading, site prep</div></div>
-      <div class="svc-card"><div class="svc-icon">🚜</div><div class="svc-name">Equipment Rentals</div><div class="svc-desc">Excavators, skid steers, trenchers, trailers &amp; more</div></div>
+      <div class="svc-card"><div class="svc-icon"></div><div class="svc-name">Decks &amp; Pergolas</div><div class="svc-desc">New builds, composite &amp; wood, shade structures</div></div>
+      <div class="svc-card"><div class="svc-icon"></div><div class="svc-name">Sheds &amp; Outbuildings</div><div class="svc-desc">Storage sheds, workshops, detached structures</div></div>
+      <div class="svc-card"><div class="svc-icon"></div><div class="svc-name">Land Clearing</div><div class="svc-desc">Tree removal, brush clearing, grading, site prep</div></div>
+      <div class="svc-card"><div class="svc-icon"></div><div class="svc-name">Equipment Rentals</div><div class="svc-desc">Excavators, skid steers, trenchers, trailers &amp; more</div></div>
     </div>
 
     <div class="services-cta">
-      <a class="btn-nav-fill" href="Ironwood_RenoEstimate.html" style="display:inline-block; padding:13px 32px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; font-family:'Arial',sans-serif; font-weight:900;">Get a Free Estimate →</a>
+      <a class="btn-nav-fill" href="Ironwood_RenoEstimate.html" style="display:inline-block; padding:13px 32px; font-size:11px; letter-spacing:1.5px; text-transform:uppercase; font-family:var(--sans); font-weight:600;">Get a Free Estimate →</a>
     </div>
   </div>
 </section>
@@ -1315,17 +1316,17 @@ footer {
 
     <div class="testimonials-grid">
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
+        <div class="testi-stars"></div>
         <p class="testi-text">"The estimate form gave me a real number before anyone even called me — that's the kind of transparency I was looking for. The kitchen came out better than I imagined."</p>
         <div class="testi-attr">— Priya S. &nbsp;·&nbsp; Marietta, GA &nbsp;·&nbsp; Kitchen Remodel</div>
       </div>
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
+        <div class="testi-stars"></div>
         <p class="testi-text">"I needed to sell quickly after my father passed. Ironwood was respectful, fair, and had us closed in 9 days. No stress, no games. I'd recommend them to anyone in that situation."</p>
         <div class="testi-attr">— Marcus T. &nbsp;·&nbsp; Kennesaw, GA &nbsp;·&nbsp; Seller</div>
       </div>
       <div class="testi-card">
-        <div class="testi-stars">★★★★★</div>
+        <div class="testi-stars"></div>
         <p class="testi-text">"Our deck turned out incredible. They showed up on time every day, communicated throughout, and the finished product is something we're proud to show off."</p>
         <div class="testi-attr">— Dana &amp; Kevin R. &nbsp;·&nbsp; Smyrna, GA &nbsp;·&nbsp; Deck Build</div>
       </div>
@@ -1355,7 +1356,7 @@ footer {
       <div class="footer-social">
         <a class="social-btn" href="#" title="Facebook">f</a>
         <a class="social-btn" href="#" title="Instagram">ig</a>
-        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank">▶</a>
+        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank"></a>
       </div>
     </div>
 
@@ -1411,7 +1412,7 @@ footer {
       links.style.top = '64px';
       links.style.left = '0';
       links.style.right = '0';
-      links.style.background = 'rgba(255,255,255,0.99)';
+      links.style.background = '#FBF8F2';
       links.style.padding = '20px 24px';
       links.style.gap = '16px';
       links.style.borderBottom = '1px solid #e0d8cc';
