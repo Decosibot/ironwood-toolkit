@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Free Renovation Estimate — Ironwood Property Group</title>
+<meta name="description" content="Get an instant renovation estimate from Ironwood Property Group. Atlanta's trusted renovation team. Fill out our quick estimator and book a free site visit."/>
+
+<!-- UTM tracking via URL params — passed to GHL on submit -->
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --gold: #b8933e; --cream: #f5f0e8; --muted: #888;
+    --green: #4caf50; --red: #e53935;
+    --gold-light: rgba(184,147,62,.12); --gold-border: rgba(184,147,62,.3);
+  }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(160deg, #0a0a0a 0%, #141008 60%, #1a1408 100%);
+    border-bottom: 2px solid var(--gold);
+    padding: 24px 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .logo-area { display: flex; align-items: center; gap: 14px; }
+  .logo-box { width: 44px; height: 44px; background: var(--gold); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; flex-shrink: 0; }
+  .logo-text h1 { font-size: 18px; font-weight: 800; }
+  .logo-text p { font-size: 11px; color: var(--muted); letter-spacing: .5px; }
+  .header-phone { font-size: 13px; color: var(--gold); font-weight: 700; text-decoration: none; }
+  .header-phone:hover { text-decoration: underline; }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(160deg, #0f0f0f 0%, #141008 100%);
+    padding: 56px 24px 48px; text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-badge { display: inline-block; background: var(--gold-light); border: 1px solid var(--gold-border); color: var(--gold); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; padding: 6px 14px; border-radius: 20px; margin-bottom: 18px; }
+  .hero h2 { font-size: clamp(26px, 5vw, 42px); font-weight: 900; line-height: 1.15; margin-bottom: 14px; }
+  .hero h2 span { color: var(--gold); }
+  .hero p { font-size: 16px; color: var(--muted); max-width: 520px; margin: 0 auto 28px; line-height: 1.7; }
+  .trust-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+  .trust-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #ccc4b8; }
+  .trust-dot { width: 7px; height: 7px; background: var(--gold); border-radius: 50%; flex-shrink: 0; }
+
+  /* ── MAIN CONTAINER ── */
+  .container { max-width: 760px; margin: 0 auto; padding: 48px 24px 80px; }
+
+  /* ── STEP INDICATOR ── */
+  .steps { display: flex; align-items: center; justify-content: center; margin-bottom: 40px; gap: 0; }
+  .step-dot { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .step-circle { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--border); background: var(--surface); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--muted); transition: all .3s; }
+  .step-circle.active { border-color: var(--gold); background: var(--gold); color: #0a0a0a; }
+  .step-circle.done { border-color: var(--green); background: var(--green); color: #fff; }
+  .step-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; white-space: nowrap; }
+  .step-label.active { color: var(--gold); }
+  .step-line { flex: 1; height: 2px; background: var(--border); max-width: 80px; margin: 0 4px; margin-bottom: 20px; transition: background .3s; }
+  .step-line.done { background: var(--green); }
+
+  /* ── CARD ── */
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 28px 32px; margin-bottom: 20px; }
+  .card-title { font-size: 17px; font-weight: 800; color: var(--cream); margin-bottom: 6px; }
+  .card-sub { font-size: 13px; color: var(--muted); margin-bottom: 24px; line-height: 1.5; }
+
+  /* ── FORM ELEMENTS ── */
+  label.field-label { display: block; font-size: 12px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 8px; margin-top: 18px; }
+  label.field-label:first-child { margin-top: 0; }
+  input[type=text], input[type=email], input[type=tel], input[type=number], select, textarea {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--cream); font-size: 14px; padding: 12px 14px; outline: none;
+    transition: border-color .2s; font-family: inherit;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--gold); }
+  select option { background: #1e1e1e; }
+  textarea { resize: vertical; min-height: 80px; }
+
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+  /* ── PROJECT TYPE GRID ── */
+  .project-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(145px, 1fr)); gap: 10px; margin-top: 4px; }
+  .project-btn {
+    background: var(--surface2); border: 2px solid var(--border); border-radius: 10px;
+    padding: 14px 12px; cursor: pointer; text-align: center; transition: all .2s;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+  }
+  .project-btn:hover { border-color: var(--gold); background: var(--gold-light); }
+  .project-btn.selected { border-color: var(--gold); background: var(--gold-light); }
+  .project-btn .pb-icon { font-size: 24px; }
+  .project-btn .pb-label { font-size: 12px; font-weight: 700; color: var(--cream); line-height: 1.3; }
+  .project-btn .pb-range { font-size: 11px; color: var(--gold); margin-top: 2px; }
+
+  /* ── ROOM CHECKLIST ── */
+  .room-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 8px; margin-top: 4px; }
+  .room-btn {
+    background: var(--surface2); border: 2px solid var(--border); border-radius: 8px;
+    padding: 10px 12px; cursor: pointer; text-align: center; transition: all .2s;
+    font-size: 12px; font-weight: 600; color: var(--muted); display: flex; align-items: center; gap: 8px;
+  }
+  .room-btn:hover { border-color: rgba(184,147,62,.4); color: var(--cream); }
+  .room-btn.selected { border-color: var(--gold); background: var(--gold-light); color: var(--cream); }
+  .room-icon { font-size: 16px; }
+
+  /* ── ESTIMATE RESULT ── */
+  .estimate-box {
+    background: linear-gradient(135deg, rgba(184,147,62,.1) 0%, rgba(184,147,62,.04) 100%);
+    border: 2px solid var(--gold); border-radius: 12px; padding: 28px 32px; margin: 24px 0;
+    text-align: center;
+  }
+  .est-label { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: .1em; font-weight: 700; margin-bottom: 10px; }
+  .est-range { font-size: clamp(28px, 6vw, 44px); font-weight: 900; color: var(--gold); margin-bottom: 6px; }
+  .est-sub { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .est-breakdown { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 20px; }
+  .est-item { background: var(--surface); border-radius: 8px; padding: 12px; }
+  .est-item-label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 4px; }
+  .est-item-val { font-size: 15px; font-weight: 800; color: var(--cream); }
+
+  /* ── BUTTONS ── */
+  .btn-primary {
+    width: 100%; background: var(--gold); color: #0a0a0a; border: none; border-radius: 10px;
+    padding: 16px 24px; font-size: 15px; font-weight: 800; cursor: pointer;
+    transition: opacity .2s, transform .1s; margin-top: 8px; letter-spacing: .02em;
+  }
+  .btn-primary:hover { opacity: .9; transform: translateY(-1px); }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+  .btn-secondary {
+    width: 100%; background: transparent; color: var(--gold); border: 2px solid var(--gold); border-radius: 10px;
+    padding: 14px 24px; font-size: 14px; font-weight: 700; cursor: pointer;
+    transition: all .2s; margin-top: 8px;
+  }
+  .btn-secondary:hover { background: var(--gold-light); }
+
+  /* ── CONFIRMATION ── */
+  .confirm-box { text-align: center; padding: 20px 0; }
+  .confirm-icon { font-size: 56px; margin-bottom: 16px; }
+  .confirm-title { font-size: 24px; font-weight: 900; color: var(--cream); margin-bottom: 10px; }
+  .confirm-sub { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 480px; margin: 0 auto 28px; }
+  .confirm-summary { background: var(--surface2); border-radius: 10px; padding: 18px 22px; text-align: left; margin-bottom: 24px; }
+  .cs-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .cs-row:last-child { border-bottom: none; }
+  .cs-label { color: var(--muted); }
+  .cs-val { font-weight: 700; color: var(--cream); }
+  .cs-val.gold { color: var(--gold); }
+
+  .booking-card { background: var(--surface); border: 1px solid var(--gold-border); border-radius: 12px; padding: 24px 28px; margin-top: 24px; }
+  .booking-title { font-size: 16px; font-weight: 800; color: var(--cream); margin-bottom: 6px; }
+  .booking-sub { font-size: 13px; color: var(--muted); margin-bottom: 18px; line-height: 1.5; }
+  .calendly-btn {
+    display: block; width: 100%; background: var(--gold); color: #0a0a0a;
+    text-decoration: none; border-radius: 10px; padding: 16px 24px;
+    font-size: 15px; font-weight: 800; text-align: center;
+    transition: opacity .2s, transform .1s;
+  }
+  .calendly-btn:hover { opacity: .9; transform: translateY(-1px); }
+
+  /* ── SOCIAL PROOF ── */
+  .proof-row { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 32px; }
+  .proof-card { flex: 1; min-width: 200px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+  .proof-stars { color: var(--gold); font-size: 14px; margin-bottom: 6px; }
+  .proof-text { font-size: 13px; color: #ccc4b8; line-height: 1.6; margin-bottom: 8px; font-style: italic; }
+  .proof-name { font-size: 12px; color: var(--muted); font-weight: 600; }
+
+  /* ── UTIL ── */
+  .hidden { display: none !important; }
+  .error-msg { font-size: 12px; color: var(--red); margin-top: 6px; }
+  .required { color: var(--red); margin-left: 2px; }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-bottom: 36px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--gold); border-radius: 2px; transition: width .4s ease; }
+
+  footer { text-align: center; padding: 24px; font-size: 11px; color: #555; border-top: 1px solid var(--border); }
+  footer a { color: var(--muted); text-decoration: none; }
+
+  @media (max-width: 600px) {
+    .header { padding: 16px 18px; }
+    .hero { padding: 36px 18px 32px; }
+    .container { padding: 32px 16px 60px; }
+    .card { padding: 20px 18px; }
+    .two-col { grid-template-columns: 1fr; }
+    .est-breakdown { grid-template-columns: 1fr 1fr; }
+    .header-phone { display: none; }
+    .estimate-box { padding: 20px 18px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo-area">
+    <div class="logo-box">IPG</div>
+    <div class="logo-text">
+      <h1>Ironwood Property Group</h1>
+      <p>Atlanta Metro Renovations</p>
+    </div>
+  </div>
+  <a class="header-phone" href="tel:+1XXXXXXXXXX">📞 Call Us</a>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Free Instant Estimate</div>
+  <h2>How Much Will Your<br/><span>Renovation Cost?</span></h2>
+  <p>Answer a few quick questions and get an instant estimate range — no signup required, no sales pressure.</p>
+  <div class="trust-row">
+    <div class="trust-item"><div class="trust-dot"></div>Atlanta Metro Specialists</div>
+    <div class="trust-item"><div class="trust-dot"></div>Licensed &amp; Insured</div>
+    <div class="trust-item"><div class="trust-dot"></div>Free Site Visit</div>
+    <div class="trust-item"><div class="trust-dot"></div>No Obligation</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="container">
+
+  <!-- STEP INDICATOR -->
+  <div class="steps">
+    <div class="step-dot">
+      <div class="step-circle active" id="sc1">1</div>
+      <div class="step-label active" id="sl1">Project</div>
+    </div>
+    <div class="step-line" id="line1"></div>
+    <div class="step-dot">
+      <div class="step-circle" id="sc2">2</div>
+      <div class="step-label" id="sl2">Scope</div>
+    </div>
+    <div class="step-line" id="line2"></div>
+    <div class="step-dot">
+      <div class="step-circle" id="sc3">3</div>
+      <div class="step-label" id="sl3">Details</div>
+    </div>
+    <div class="step-line" id="line3"></div>
+    <div class="step-dot">
+      <div class="step-circle" id="sc4">4</div>
+      <div class="step-label" id="sl4">Your Estimate</div>
+    </div>
+  </div>
+
+  <!-- PROGRESS BAR -->
+  <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:25%"></div></div>
+
+  <!-- ══ STEP 1 — PROJECT TYPE ══ -->
+  <div id="step1">
+    <div class="card">
+      <div class="card-title">What type of project is this?</div>
+      <div class="card-sub">Select the option that best describes your renovation. You can describe specifics in the next step.</div>
+      <div class="project-grid">
+        <div class="project-btn" onclick="selectProject(this,'full_rehab')">
+          <div class="pb-icon">🏠</div>
+          <div class="pb-label">Full Home Rehab</div>
+          <div class="pb-range">Whole house</div>
+        </div>
+        <div class="project-btn" onclick="selectProject(this,'kitchen')">
+          <div class="pb-icon">🍳</div>
+          <div class="pb-label">Kitchen Remodel</div>
+          <div class="pb-range">Cabinets, counters, fixtures</div>
+        </div>
+        <div class="project-btn" onclick="selectProject(this,'bathroom')">
+          <div class="pb-icon">🚿</div>
+          <div class="pb-label">Bathroom Remodel</div>
+          <div class="pb-range">1 or more baths</div>
+        </div>
+        <div class="project-btn" onclick="selectProject(this,'addition')">
+          <div class="pb-icon">🏗</div>
+          <div class="pb-label">Addition / New Space</div>
+          <div class="pb-range">Expand square footage</div>
+        </div>
+        <div class="project-btn" onclick="selectProject(this,'flooring')">
+          <div class="pb-icon">🪵</div>
+          <div class="pb-label">Flooring</div>
+          <div class="pb-range">Whole home or rooms</div>
+        </div>
+        <div class="project-btn" onclick="selectProject(this,'paint')">
+          <div class="pb-icon">🎨</div>
+          <div class="pb-label">Interior Paint</div>
+          <div class="pb-range">Walls, trim, ceilings</div>
+        </div>
+        <div class="project-btn" onclick="selectProject(this,'exterior')">
+          <div class="pb-icon">🏡</div>
+          <div class="pb-label">Exterior / Curb Appeal</div>
+          <div class="pb-range">Siding, paint, landscaping</div>
+        </div>
+        <div class="project-btn" onclick="selectProject(this,'multi')">
+          <div class="pb-icon">🔨</div>
+          <div class="pb-label">Multiple Areas</div>
+          <div class="pb-range">Several rooms or systems</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn-primary" id="step1Next" onclick="goStep(2)" disabled>Continue →</button>
+  </div>
+
+  <!-- ══ STEP 2 — SCOPE ══ -->
+  <div id="step2" class="hidden">
+    <div class="card">
+      <div class="card-title">Tell us about the scope</div>
+      <div class="card-sub">Select everything that applies to your project. This helps us give you the most accurate estimate range.</div>
+
+      <label class="field-label">Which rooms or areas are involved?</label>
+      <div class="room-grid" id="roomGrid">
+        <div class="room-btn" onclick="toggleRoom(this,'Living Room')"><span class="room-icon">🛋</span>Living Room</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Kitchen')"><span class="room-icon">🍳</span>Kitchen</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Primary Bath')"><span class="room-icon">🚿</span>Primary Bath</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Guest Bath')"><span class="room-icon">🪥</span>Guest Bath</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Primary Bedroom')"><span class="room-icon">🛏</span>Primary Bedroom</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Bedrooms (2+)')"><span class="room-icon">🛏</span>Bedrooms (2+)</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Dining Room')"><span class="room-icon">🍽</span>Dining Room</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Laundry Room')"><span class="room-icon">🫧</span>Laundry Room</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Basement')"><span class="room-icon">⬇</span>Basement</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Garage')"><span class="room-icon">🚗</span>Garage</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Exterior')"><span class="room-icon">🏡</span>Exterior</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Whole Home')"><span class="room-icon">🏠</span>Whole Home</div>
+      </div>
+
+      <label class="field-label" style="margin-top:22px;">What work is needed? (select all that apply)</label>
+      <div class="room-grid" id="workGrid">
+        <div class="room-btn" onclick="toggleRoom(this,'Flooring')"><span class="room-icon">🪵</span>Flooring</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Paint')"><span class="room-icon">🎨</span>Paint</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Cabinets')"><span class="room-icon">🗄</span>Cabinets</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Countertops')"><span class="room-icon">⬛</span>Countertops</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Plumbing')"><span class="room-icon">🔧</span>Plumbing</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Electrical')"><span class="room-icon">⚡</span>Electrical</div>
+        <div class="room-btn" onclick="toggleRoom(this,'HVAC')"><span class="room-icon">🌬</span>HVAC</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Drywall / Ceilings')"><span class="room-icon">🧱</span>Drywall</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Windows / Doors')"><span class="room-icon">🪟</span>Windows / Doors</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Tile / Backsplash')"><span class="room-icon">🔲</span>Tile</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Roofing')"><span class="room-icon">🏗</span>Roofing</div>
+        <div class="room-btn" onclick="toggleRoom(this,'Landscaping')"><span class="room-icon">🌿</span>Landscaping</div>
+      </div>
+
+      <label class="field-label" style="margin-top:22px;">Approximate square footage of the project area<span class="required">*</span></label>
+      <input type="number" id="sqft" placeholder="e.g. 1200" min="100" max="10000" oninput="calcEstimate()"/>
+
+      <label class="field-label">Project condition</label>
+      <select id="condition" onchange="calcEstimate()">
+        <option value="">Select condition...</option>
+        <option value="good">Good — mostly cosmetic updates</option>
+        <option value="fair">Fair — some systems need work</option>
+        <option value="poor">Poor — significant repairs needed</option>
+        <option value="gut">Full gut — down to the studs</option>
+      </select>
+    </div>
+    <button class="btn-primary" id="step2Next" onclick="goStep(3)" disabled>See My Estimate →</button>
+    <button class="btn-secondary" onclick="goStep(1)">← Back</button>
+  </div>
+
+  <!-- ══ STEP 3 — CONTACT INFO ══ -->
+  <div id="step3" class="hidden">
+    <!-- Live estimate preview -->
+    <div class="estimate-box">
+      <div class="est-label">Your Estimated Project Range</div>
+      <div class="est-range" id="estRange">Calculating...</div>
+      <div class="est-sub">Based on your project scope. Final pricing confirmed after free site visit.</div>
+      <div class="est-breakdown">
+        <div class="est-item">
+          <div class="est-item-label">Project Type</div>
+          <div class="est-item-val" id="estType">—</div>
+        </div>
+        <div class="est-item">
+          <div class="est-item-label">Sq Ft</div>
+          <div class="est-item-val" id="estSqft">—</div>
+        </div>
+        <div class="est-item">
+          <div class="est-item-label">Scope</div>
+          <div class="est-item-val" id="estScope">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Where do we send your full quote?</div>
+      <div class="card-sub">We'll send a detailed breakdown to your inbox and have our team reach out to schedule your free site visit.</div>
+
+      <div class="two-col">
+        <div>
+          <label class="field-label">First Name<span class="required">*</span></label>
+          <input type="text" id="firstName" placeholder="First name" oninput="validateStep3()"/>
+        </div>
+        <div>
+          <label class="field-label">Last Name<span class="required">*</span></label>
+          <input type="text" id="lastName" placeholder="Last name" oninput="validateStep3()"/>
+        </div>
+      </div>
+
+      <label class="field-label">Phone Number<span class="required">*</span></label>
+      <input type="tel" id="phone" placeholder="(404) 000-0000" oninput="formatPhone(this); validateStep3()"/>
+
+      <label class="field-label">Email Address<span class="required">*</span></label>
+      <input type="email" id="email" placeholder="you@email.com" oninput="validateStep3()"/>
+
+      <label class="field-label">Property Address</label>
+      <input type="text" id="address" placeholder="Street address, Atlanta, GA"/>
+
+      <label class="field-label">Timeline</label>
+      <select id="timeline">
+        <option value="">When are you looking to start?</option>
+        <option value="asap">As soon as possible</option>
+        <option value="1month">Within 1 month</option>
+        <option value="3months">Within 3 months</option>
+        <option value="6months">Within 6 months</option>
+        <option value="planning">Just planning ahead</option>
+      </select>
+
+      <label class="field-label">Anything else we should know?</label>
+      <textarea id="notes" placeholder="Special requests, concerns, or additional details about your project..."></textarea>
+
+      <div id="submitError" class="error-msg hidden">Please fill in all required fields before submitting.</div>
+    </div>
+
+    <button class="btn-primary" id="step3Submit" onclick="submitForm()" disabled>Get My Full Quote &amp; Book a Visit →</button>
+    <button class="btn-secondary" onclick="goStep(2)">← Back</button>
+  </div>
+
+  <!-- ══ STEP 4 — CONFIRMATION ══ -->
+  <div id="step4" class="hidden">
+    <div class="card">
+      <div class="confirm-box">
+        <div class="confirm-icon">✅</div>
+        <div class="confirm-title">You're All Set!</div>
+        <div class="confirm-sub">Your estimate request has been received. Our team will contact you within <strong style="color:var(--cream)">2 business hours</strong> to discuss your project and confirm pricing.</div>
+
+        <div class="confirm-summary" id="confirmSummary"></div>
+
+        <div class="booking-card">
+          <div class="booking-title">📅 Book Your Free Site Visit</div>
+          <div class="booking-sub">Skip the wait — pick a time that works for you and we'll come out to your property, assess the project in person, and give you a firm quote on the spot. No obligation.</div>
+          <!-- Replace YOUR_CALENDLY_LINK with your actual Calendly or GHL calendar URL -->
+          <a class="calendly-btn" href="YOUR_CALENDLY_OR_GHL_CALENDAR_LINK" target="_blank">Book a Free Site Visit →</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Social proof -->
+    <div class="proof-row">
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-text">"Ironwood transformed our outdated kitchen in under 3 weeks. Professional, on budget, and the quality exceeded our expectations."</div>
+        <div class="proof-name">— M. Johnson, East Point, GA</div>
+      </div>
+      <div class="proof-card">
+        <div class="proof-stars">★★★★★</div>
+        <div class="proof-text">"They gave us a realistic estimate upfront and hit the number. No surprise charges, no excuses. Would recommend to anyone in Atlanta."</div>
+        <div class="proof-name">— D. Williams, College Park, GA</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end container -->
+
+<footer>
+  © 2026 Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a>
+</footer>
+
+<script>
+// ══════════════════════════════════════════
+// CONFIG — update these before going live
+// ══════════════════════════════════════════
+const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL'; // paste your GHL webhook URL here
+const CALENDLY_URL    = 'YOUR_CALENDLY_OR_GHL_CALENDAR_LINK'; // paste calendar link here
+const PHONE_NUMBER    = '+1XXXXXXXXXX'; // your business phone
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+let state = {
+  projectType: '',
+  projectLabel: '',
+  rooms: [],
+  workTypes: [],
+  sqft: 0,
+  condition: '',
+  lowEst: 0,
+  highEst: 0,
+  utmSource: '',
+  utmMedium: '',
+  utmCampaign: '',
+  utmContent: '',
+  utmTerm: ''
+};
+
+// ── Read UTM params from URL on page load ──
+(function readUTM() {
+  const p = new URLSearchParams(window.location.search);
+  state.utmSource   = p.get('utm_source')   || '';
+  state.utmMedium   = p.get('utm_medium')   || '';
+  state.utmCampaign = p.get('utm_campaign') || '';
+  state.utmContent  = p.get('utm_content')  || '';
+  state.utmTerm     = p.get('utm_term')     || '';
+  // Update phone link if present in URL (for ad tracking)
+  const phone = p.get('phone') || PHONE_NUMBER;
+  document.querySelector('.header-phone').href = 'tel:' + phone;
+})();
+
+// ══════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════
+function goStep(n) {
+  [1,2,3,4].forEach(i => document.getElementById('step'+i).classList.add('hidden'));
+  document.getElementById('step'+n).classList.remove('hidden');
+
+  // Step indicators
+  [1,2,3,4].forEach(i => {
+    const circ = document.getElementById('sc'+i);
+    const lbl  = document.getElementById('sl'+i);
+    circ.classList.remove('active','done');
+    lbl.classList.remove('active');
+    if (i < n)  { circ.classList.add('done'); circ.textContent = '✓'; }
+    if (i === n){ circ.classList.add('active'); circ.textContent = i; lbl.classList.add('active'); }
+    if (i > n)  { circ.textContent = i; }
+  });
+  [1,2,3].forEach(i => {
+    const line = document.getElementById('line'+i);
+    line.classList.toggle('done', i < n);
+  });
+
+  // Progress bar
+  const pct = {1:25, 2:50, 3:75, 4:100};
+  document.getElementById('progressFill').style.width = pct[n] + '%';
+
+  window.scrollTo({top: 0, behavior: 'smooth'});
+
+  if (n === 3) { updateEstimateDisplay(); }
+}
+
+// ══════════════════════════════════════════
+// STEP 1 — PROJECT TYPE
+// ══════════════════════════════════════════
+function selectProject(el, type) {
+  document.querySelectorAll('.project-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  state.projectType  = type;
+  state.projectLabel = el.querySelector('.pb-label').textContent;
+  document.getElementById('step1Next').disabled = false;
+}
+
+// ══════════════════════════════════════════
+// STEP 2 — ROOMS + WORK TYPES
+// ══════════════════════════════════════════
+function toggleRoom(el, val) {
+  const grid = el.closest('.room-grid');
+  const isRoom = grid.id === 'roomGrid';
+  el.classList.toggle('selected');
+  const arr = isRoom ? state.rooms : state.workTypes;
+  const idx = arr.indexOf(val);
+  if (idx === -1) arr.push(val); else arr.splice(idx,1);
+  validateStep2();
+  calcEstimate();
+}
+
+function validateStep2() {
+  const sqft = parseFloat(document.getElementById('sqft').value) || 0;
+  const cond = document.getElementById('condition').value;
+  document.getElementById('step2Next').disabled = !(sqft > 0 && cond);
+}
+
+// ══════════════════════════════════════════
+// ESTIMATE CALCULATION
+// Base: $165/sqft — adjusted by condition + scope multipliers
+// Customer sees a range (low–high), never Ironwood's cost breakdown
+// ══════════════════════════════════════════
+function calcEstimate() {
+  validateStep2();
+  const sqft = parseFloat(document.getElementById('sqft').value) || 0;
+  const cond = document.getElementById('condition').value;
+  if (!sqft || !cond) return;
+
+  const BASE = 165; // $/sqft
+
+  // Condition multipliers (low, high)
+  const condMult = {
+    good: [0.35, 0.55],
+    fair: [0.55, 0.80],
+    poor: [0.80, 1.10],
+    gut:  [1.05, 1.35]
+  }[cond] || [0.65, 0.95];
+
+  // Project type adders (flat $ or multiplier bumps)
+  const typeAdder = {
+    full_rehab: [1.05, 1.15],
+    kitchen:    [0.90, 1.10],
+    bathroom:   [0.85, 1.00],
+    addition:   [1.10, 1.30],
+    flooring:   [0.25, 0.40],
+    paint:      [0.15, 0.25],
+    exterior:   [0.30, 0.50],
+    multi:      [0.90, 1.10]
+  }[state.projectType] || [0.80, 1.00];
+
+  // Work type adders — each selected work type adds a small % to range
+  const workAdder = state.workTypes.length * 0.03;
+
+  const low  = Math.round(sqft * BASE * condMult[0] * typeAdder[0] * (1 + workAdder) / 500) * 500;
+  const high = Math.round(sqft * BASE * condMult[1] * typeAdder[1] * (1 + workAdder) / 500) * 500;
+
+  state.sqft    = sqft;
+  state.condition = cond;
+  state.lowEst  = Math.max(low, 2500);
+  state.highEst = Math.max(high, 5000);
+}
+
+function updateEstimateDisplay() {
+  calcEstimate();
+  const fmt = n => '$' + n.toLocaleString();
+  document.getElementById('estRange').textContent = fmt(state.lowEst) + ' – ' + fmt(state.highEst);
+  document.getElementById('estType').textContent  = state.projectLabel || '—';
+  document.getElementById('estSqft').textContent  = state.sqft ? state.sqft.toLocaleString() + ' sqft' : '—';
+  const workCount = state.workTypes.length;
+  document.getElementById('estScope').textContent = workCount ? workCount + ' trade' + (workCount>1?'s':'') : (state.rooms.length ? state.rooms.length + ' rooms' : '—');
+}
+
+// ══════════════════════════════════════════
+// STEP 3 — CONTACT VALIDATION
+// ══════════════════════════════════════════
+function validateStep3() {
+  const fn = document.getElementById('firstName').value.trim();
+  const ln = document.getElementById('lastName').value.trim();
+  const ph = document.getElementById('phone').value.replace(/\D/g,'');
+  const em = document.getElementById('email').value.trim();
+  const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
+  document.getElementById('step3Submit').disabled = !(fn && ln && ph.length >= 10 && emailOk);
+}
+
+function formatPhone(el) {
+  let v = el.value.replace(/\D/g,'').slice(0,10);
+  if (v.length >= 7) v = '(' + v.slice(0,3) + ') ' + v.slice(3,6) + '-' + v.slice(6);
+  else if (v.length >= 4) v = '(' + v.slice(0,3) + ') ' + v.slice(3);
+  el.value = v;
+}
+
+// ══════════════════════════════════════════
+// SUBMIT — fires GHL webhook + shows confirm
+// ══════════════════════════════════════════
+async function submitForm() {
+  const btn = document.getElementById('step3Submit');
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+
+  const payload = {
+    // Contact info
+    firstName:    document.getElementById('firstName').value.trim(),
+    lastName:     document.getElementById('lastName').value.trim(),
+    phone:        document.getElementById('phone').value.trim(),
+    email:        document.getElementById('email').value.trim(),
+    address:      document.getElementById('address').value.trim(),
+    timeline:     document.getElementById('timeline').value,
+    notes:        document.getElementById('notes').value.trim(),
+
+    // Estimate data
+    projectType:  state.projectType,
+    projectLabel: state.projectLabel,
+    sqft:         state.sqft,
+    condition:    state.condition,
+    rooms:        state.rooms.join(', '),
+    workTypes:    state.workTypes.join(', '),
+    estimateLow:  state.lowEst,
+    estimateHigh: state.highEst,
+    estimateRange: '$' + state.lowEst.toLocaleString() + ' – $' + state.highEst.toLocaleString(),
+
+    // UTM / ad tracking
+    utmSource:   state.utmSource,
+    utmMedium:   state.utmMedium,
+    utmCampaign: state.utmCampaign,
+    utmContent:  state.utmContent,
+    utmTerm:     state.utmTerm,
+    leadSource:  state.utmSource || 'direct',
+    pageUrl:     window.location.href,
+    submittedAt: new Date().toISOString()
+  };
+
+  // Fire GHL webhook
+  try {
+    await fetch(GHL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {
+    // Silently continue — never block user on webhook failure
+    console.warn('Webhook error:', e);
+  }
+
+  // Build confirmation summary
+  const fmt = n => '$' + n.toLocaleString();
+  document.getElementById('confirmSummary').innerHTML = `
+    <div class="cs-row"><span class="cs-label">Name</span><span class="cs-val">${payload.firstName} ${payload.lastName}</span></div>
+    <div class="cs-row"><span class="cs-label">Phone</span><span class="cs-val">${payload.phone}</span></div>
+    <div class="cs-row"><span class="cs-label">Email</span><span class="cs-val">${payload.email}</span></div>
+    <div class="cs-row"><span class="cs-label">Project</span><span class="cs-val">${payload.projectLabel}</span></div>
+    <div class="cs-row"><span class="cs-label">Square Footage</span><span class="cs-val">${payload.sqft.toLocaleString()} sqft</span></div>
+    <div class="cs-row"><span class="cs-label">Estimate Range</span><span class="cs-val gold">${payload.estimateRange}</span></div>
+  `;
+
+  // Update Calendly link with contact name pre-fill if supported
+  document.querySelector('.calendly-btn').href = CALENDLY_URL
+    + (CALENDLY_URL.includes('?') ? '&' : '?')
+    + 'name=' + encodeURIComponent(payload.firstName + ' ' + payload.lastName)
+    + '&email=' + encodeURIComponent(payload.email)
+    + '&a1=' + encodeURIComponent(payload.address);
+
+  goStep(4);
+}
+</script>
+
+</body>
+</html>
