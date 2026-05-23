@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rental Application — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css">
+<style>
+  .ra-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0 16px 80px;
+  }
+
+  /* Hero card */
+  .ra-hero {
+    background: var(--surface-2);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    padding: 32px 36px 28px;
+    margin: 32px 0 28px;
+    box-shadow: 0 2px 12px rgba(28,24,20,0.06);
+  }
+  .ra-hero-eyebrow {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+  }
+  .ra-hero-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 2rem;
+    color: var(--ink);
+    font-weight: 400;
+    margin-bottom: 4px;
+  }
+  .ra-hero-sub {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .ra-property-row {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+  }
+  .ra-property-field {
+    flex: 2;
+    min-width: 200px;
+  }
+  .ra-rent-field {
+    flex: 1;
+    min-width: 120px;
+  }
+
+  /* Section dividers */
+  .ra-section {
+    background: var(--surface-2);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .ra-section-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.15rem;
+    color: var(--bronze-deep);
+    font-weight: 400;
+    margin-bottom: 4px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .ra-section-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--bronze-tint);
+    color: var(--bronze-deep);
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: 'Geist', system-ui, sans-serif;
+    flex-shrink: 0;
+  }
+
+  .ra-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .ra-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .ra-row-1 {
+    margin-bottom: 14px;
+  }
+  @media (max-width: 580px) {
+    .ra-row, .ra-row-3 { grid-template-columns: 1fr; }
+    .ra-hero { padding: 20px; }
+    .ra-section { padding: 20px; }
+  }
+
+  /* Yes/No question rows */
+  .bg-question {
+    margin-bottom: 18px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .bg-question:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+  .bg-q-label {
+    font-size: 0.88rem;
+    color: var(--ink);
+    margin-bottom: 10px;
+    font-weight: 500;
+  }
+  .bg-toggle-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+  .bg-toggle-btn {
+    padding: 6px 20px;
+    border: 2px solid var(--hairline-2);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.12s, background 0.12s, color 0.12s;
+  }
+  .bg-toggle-btn.active-yes {
+    border-color: var(--err);
+    background: #fdf0ef;
+    color: var(--err);
+  }
+  .bg-toggle-btn.active-no {
+    border-color: var(--ok);
+    background: #f0f7ef;
+    color: var(--ok);
+  }
+  .bg-explain {
+    display: none;
+  }
+  .bg-explain.visible {
+    display: block;
+  }
+
+  /* Pets toggle */
+  .pets-toggle-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .pet-btn {
+    padding: 8px 22px;
+    border: 2px solid var(--hairline-2);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.12s, background 0.12s;
+  }
+  .pet-btn.active {
+    border-color: var(--bronze);
+    background: var(--bronze-tint);
+    color: var(--bronze-deep);
+  }
+  #petsDetail { display: none; }
+  #petsDetail.visible { display: grid; }
+
+  /* Signature canvas */
+  .sig-container {
+    border: 2px solid var(--hairline-2);
+    border-radius: 8px;
+    background: var(--surface-2);
+    overflow: hidden;
+    position: relative;
+    margin-top: 6px;
+  }
+  #sigCanvas {
+    display: block;
+    width: 100%;
+    height: 140px;
+    cursor: crosshair;
+    touch-action: none;
+  }
+  .sig-toolbar {
+    display: flex;
+    justify-content: flex-end;
+    padding: 6px 10px;
+    background: var(--surface);
+    border-top: 1px solid var(--hairline);
+  }
+  .sig-clear-btn {
+    font-size: 0.72rem;
+    color: var(--muted);
+    background: none;
+    border: 1px solid var(--hairline-2);
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+  }
+  .sig-clear-btn:hover { color: var(--err); border-color: var(--err); }
+
+  /* Certification */
+  .cert-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: var(--bronze-tint);
+    border: 1px solid var(--bronze);
+    border-radius: 8px;
+    padding: 16px 18px;
+    margin-bottom: 20px;
+  }
+  .cert-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--bronze);
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+  .cert-row label {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    cursor: pointer;
+  }
+
+  /* Form error */
+  #raError {
+    background: #fdf0ef;
+    border: 1px solid var(--err);
+    color: var(--err);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  /* Confirmation */
+  .ra-confirm {
+    background: var(--surface-2);
+    border: 1px solid var(--ok);
+    border-radius: 12px;
+    padding: 48px 36px;
+    text-align: center;
+    display: none;
+    margin-top: 24px;
+  }
+  .ra-confirm-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--ok);
+    color: #fff;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .ra-confirm-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.7rem;
+    color: var(--ink);
+    font-weight: 400;
+    margin-bottom: 12px;
+  }
+  .ra-confirm-sub {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    max-width: 440px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+</style>
+</head>
+<body>
+
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <div class="iw-logo-box">I</div>
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<div class="ra-wrap">
+
+  <!-- Hero -->
+  <div class="ra-hero">
+    <div class="ra-hero-eyebrow">Ironwood Property Group · Property Management</div>
+    <div class="ra-hero-title">Rental Application</div>
+    <div class="ra-hero-sub">Please complete all required fields. Your information is kept confidential.</div>
+
+    <div class="ra-property-row">
+      <div class="ra-property-field">
+        <label class="iw-label" for="propertyAddress">Property Address</label>
+        <input class="iw-input" type="text" id="propertyAddress" placeholder="123 Main St, Atlanta, GA 30301">
+      </div>
+      <div class="ra-rent-field">
+        <label class="iw-label" for="monthlyRent">Monthly Rent</label>
+        <input class="iw-input" type="text" id="monthlyRent" placeholder="$0">
+      </div>
+    </div>
+
+    <div class="iw-callout" style="margin-top: 16px; margin-bottom: 0;">
+      <strong>$50 application fee</strong> — collected at time of showing.
+    </div>
+  </div>
+
+  <!-- Main Form -->
+  <form id="raForm" onsubmit="return false;">
+
+    <!-- Section 1: Personal Info -->
+    <div class="ra-section">
+      <div class="ra-section-title"><span class="ra-section-num">1</span> Personal Information</div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="firstName">First Name <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="text" id="firstName" required autocomplete="given-name">
+        </div>
+        <div>
+          <label class="iw-label" for="lastName">Last Name <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="text" id="lastName" required autocomplete="family-name">
+        </div>
+      </div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="dob">Date of Birth <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="date" id="dob" required>
+        </div>
+        <div>
+          <label class="iw-label" for="ssn4">Last 4 of SSN <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="text" id="ssn4" maxlength="4" pattern="\d{4}" placeholder="####" required>
+          <div style="font-size:0.7rem; color:var(--muted); margin-top:4px;">Used for credit/background check authorization</div>
+        </div>
+      </div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="phone">Phone <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="tel" id="phone" required autocomplete="tel">
+        </div>
+        <div>
+          <label class="iw-label" for="email">Email <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="email" id="email" required autocomplete="email">
+        </div>
+      </div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="dlNumber">Driver's License Number</label>
+          <input class="iw-input" type="text" id="dlNumber" placeholder="Optional">
+        </div>
+        <div>
+          <label class="iw-label" for="dlState">DL State</label>
+          <select class="iw-select" id="dlState">
+            <option value="">— Select State —</option>
+            <option>AL</option><option>AK</option><option>AZ</option><option>AR</option><option selected>GA</option>
+            <option>FL</option><option>IL</option><option>IN</option><option>KY</option><option>LA</option>
+            <option>MS</option><option>NC</option><option>SC</option><option>TN</option><option>TX</option>
+            <option>VA</option><option>WV</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Current Residence -->
+    <div class="ra-section">
+      <div class="ra-section-title"><span class="ra-section-num">2</span> Current Residence</div>
+      <div class="ra-row-1">
+        <label class="iw-label" for="currAddr">Current Address <span style="color:var(--err)">*</span></label>
+        <input class="iw-input" type="text" id="currAddr" required placeholder="Street address">
+      </div>
+      <div class="ra-row-3">
+        <div>
+          <label class="iw-label" for="currCity">City <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="text" id="currCity" required>
+        </div>
+        <div>
+          <label class="iw-label" for="currState">State <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="text" id="currState" required maxlength="2" placeholder="GA">
+        </div>
+        <div>
+          <label class="iw-label" for="currZip">ZIP <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="text" id="currZip" required maxlength="10" placeholder="30301">
+        </div>
+      </div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="currDuration">How long at current address <span style="color:var(--err)">*</span></label>
+          <select class="iw-select" id="currDuration" required>
+            <option value="">— Select —</option>
+            <option>Less than 6 months</option>
+            <option>6–12 months</option>
+            <option>1–2 years</option>
+            <option>2–5 years</option>
+            <option>5+ years</option>
+          </select>
+        </div>
+        <div>
+          <label class="iw-label" for="currRent">Monthly Rent / Mortgage <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="number" id="currRent" required placeholder="$" min="0">
+        </div>
+      </div>
+      <div class="ra-row-1">
+        <label class="iw-label" for="reasonLeaving">Reason for Leaving <span style="color:var(--err)">*</span></label>
+        <select class="iw-select" id="reasonLeaving" required>
+          <option value="">— Select —</option>
+          <option>Moving closer to work</option>
+          <option>More space needed</option>
+          <option>Less space needed</option>
+          <option>Rent increase</option>
+          <option>End of lease</option>
+          <option>Buying a home</option>
+          <option>Job relocation</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="currLandlordName">Current Landlord Name</label>
+          <input class="iw-input" type="text" id="currLandlordName" placeholder="For reference check">
+        </div>
+        <div>
+          <label class="iw-label" for="currLandlordPhone">Landlord Phone</label>
+          <input class="iw-input" type="tel" id="currLandlordPhone">
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Employment & Income -->
+    <div class="ra-section">
+      <div class="ra-section-title"><span class="ra-section-num">3</span> Employment &amp; Income</div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="employStatus">Employment Status <span style="color:var(--err)">*</span></label>
+          <select class="iw-select" id="employStatus" required>
+            <option value="">— Select —</option>
+            <option>Employed Full-Time</option>
+            <option>Employed Part-Time</option>
+            <option>Self-Employed</option>
+            <option>Retired</option>
+            <option>Student</option>
+            <option>Unemployed</option>
+          </select>
+        </div>
+        <div>
+          <label class="iw-label" for="jobTitle">Job Title</label>
+          <input class="iw-input" type="text" id="jobTitle">
+        </div>
+      </div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="employerName">Employer Name</label>
+          <input class="iw-input" type="text" id="employerName">
+        </div>
+        <div>
+          <label class="iw-label" for="employerAddress">Employer Address</label>
+          <input class="iw-input" type="text" id="employerAddress">
+        </div>
+      </div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="monthlyIncome">Monthly Gross Income <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="number" id="monthlyIncome" required placeholder="$" min="0" oninput="calcTotalIncome()">
+        </div>
+        <div>
+          <label class="iw-label" for="jobDuration">How long at current job</label>
+          <select class="iw-select" id="jobDuration">
+            <option value="">— Select —</option>
+            <option>Less than 6 months</option>
+            <option>6–12 months</option>
+            <option>1–2 years</option>
+            <option>2–5 years</option>
+            <option>5+ years</option>
+          </select>
+        </div>
+      </div>
+      <div class="ra-row-1">
+        <label class="iw-label" for="addlIncome">Additional Income Sources (optional)</label>
+        <textarea class="iw-textarea" id="addlIncome" rows="2" placeholder="Describe any additional income (side work, alimony, rental income, etc.)…" oninput="calcTotalIncome()"></textarea>
+      </div>
+      <div class="ra-row-1">
+        <label class="iw-label" for="totalIncome">Total Monthly Income <span style="color:var(--err)">*</span></label>
+        <input class="iw-input" type="number" id="totalIncome" required placeholder="Auto-calculated or enter manually" min="0">
+      </div>
+    </div>
+
+    <!-- Section 4: Rental History -->
+    <div class="ra-section">
+      <div class="ra-section-title"><span class="ra-section-num">4</span> Rental History (Previous)</div>
+      <div class="ra-row-1">
+        <label class="iw-label" for="prevAddr">Previous Address <span style="font-weight:400; color:var(--muted);">(if different, within last 2 years)</span></label>
+        <input class="iw-input" type="text" id="prevAddr" placeholder="Street address, City, State, ZIP">
+      </div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="prevLandlordName">Previous Landlord Name</label>
+          <input class="iw-input" type="text" id="prevLandlordName">
+        </div>
+        <div>
+          <label class="iw-label" for="prevLandlordPhone">Previous Landlord Phone</label>
+          <input class="iw-input" type="tel" id="prevLandlordPhone">
+        </div>
+      </div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="prevRent">Monthly Rent Paid</label>
+          <input class="iw-input" type="number" id="prevRent" placeholder="$" min="0">
+        </div>
+        <div>
+          <label class="iw-label" for="prevReasonLeaving">Reason for Leaving</label>
+          <input class="iw-input" type="text" id="prevReasonLeaving">
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 5: Occupants -->
+    <div class="ra-section">
+      <div class="ra-section-title"><span class="ra-section-num">5</span> Occupants</div>
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="numOccupants">Total Occupants <span style="color:var(--err)">*</span></label>
+          <select class="iw-select" id="numOccupants" required>
+            <option value="">— Select —</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5+</option>
+          </select>
+        </div>
+        <div></div>
+      </div>
+      <div class="ra-row-1">
+        <label class="iw-label" for="occupantNames">Names &amp; Ages of All Occupants</label>
+        <textarea class="iw-textarea" id="occupantNames" rows="3" placeholder="e.g. Jane Smith (32), Michael Smith (34), Emma Smith (8)…"></textarea>
+      </div>
+
+      <label class="iw-label" style="margin-bottom:8px; display:block;">Pets?</label>
+      <div class="pets-toggle-row">
+        <button type="button" class="pet-btn" id="petsNo" onclick="setPets(false)">No Pets</button>
+        <button type="button" class="pet-btn" id="petsYes" onclick="setPets(true)">Yes, I have pets</button>
+      </div>
+      <div id="petsDetail" class="ra-row-3">
+        <div>
+          <label class="iw-label" for="petType">Pet Type</label>
+          <input class="iw-input" type="text" id="petType" placeholder="Dog, Cat, etc.">
+        </div>
+        <div>
+          <label class="iw-label" for="petBreed">Breed</label>
+          <input class="iw-input" type="text" id="petBreed">
+        </div>
+        <div>
+          <label class="iw-label" for="petWeight">Weight (lbs)</label>
+          <input class="iw-input" type="number" id="petWeight" min="0" placeholder="lbs">
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 6: Background Questions -->
+    <div class="ra-section">
+      <div class="ra-section-title"><span class="ra-section-num">6</span> Background Questions</div>
+
+      <div class="bg-question" id="bq_eviction">
+        <div class="bg-q-label">Have you ever been evicted?</div>
+        <div class="bg-toggle-row">
+          <button type="button" class="bg-toggle-btn" data-q="eviction" data-val="Yes" onclick="setBgQ(this)">Yes</button>
+          <button type="button" class="bg-toggle-btn" data-q="eviction" data-val="No" onclick="setBgQ(this)">No</button>
+        </div>
+        <div class="bg-explain" id="bq_eviction_explain">
+          <label class="iw-label">Please explain:</label>
+          <textarea class="iw-textarea" id="evictionExplain" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="bg-question" id="bq_brokelease">
+        <div class="bg-q-label">Have you ever broken a lease?</div>
+        <div class="bg-toggle-row">
+          <button type="button" class="bg-toggle-btn" data-q="brokelease" data-val="Yes" onclick="setBgQ(this)">Yes</button>
+          <button type="button" class="bg-toggle-btn" data-q="brokelease" data-val="No" onclick="setBgQ(this)">No</button>
+        </div>
+        <div class="bg-explain" id="bq_brokelease_explain">
+          <label class="iw-label">Please explain:</label>
+          <textarea class="iw-textarea" id="brokeleaseExplain" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="bg-question" id="bq_bankruptcy">
+        <div class="bg-q-label">Have you ever filed for bankruptcy?</div>
+        <div class="bg-toggle-row">
+          <button type="button" class="bg-toggle-btn" data-q="bankruptcy" data-val="Yes" onclick="setBgQ(this)">Yes</button>
+          <button type="button" class="bg-toggle-btn" data-q="bankruptcy" data-val="No" onclick="setBgQ(this)">No</button>
+        </div>
+        <div class="bg-explain" id="bq_bankruptcy_explain">
+          <label class="iw-label">Please explain:</label>
+          <textarea class="iw-textarea" id="bankruptcyExplain" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="bg-question" id="bq_felony">
+        <div class="bg-q-label">Have you ever been convicted of a felony?</div>
+        <div class="bg-toggle-row">
+          <button type="button" class="bg-toggle-btn" data-q="felony" data-val="Yes" onclick="setBgQ(this)">Yes</button>
+          <button type="button" class="bg-toggle-btn" data-q="felony" data-val="No" onclick="setBgQ(this)">No</button>
+        </div>
+        <div class="bg-explain" id="bq_felony_explain">
+          <label class="iw-label">Please explain:</label>
+          <textarea class="iw-textarea" id="felonyExplain" rows="2"></textarea>
+        </div>
+      </div>
+
+      <div class="bg-question" id="bq_smoke">
+        <div class="bg-q-label">Do you smoke?</div>
+        <div class="bg-toggle-row">
+          <button type="button" class="bg-toggle-btn" data-q="smoke" data-val="Yes" onclick="setBgQ(this)">Yes</button>
+          <button type="button" class="bg-toggle-btn" data-q="smoke" data-val="No" onclick="setBgQ(this)">No</button>
+        </div>
+        <div class="bg-explain" id="bq_smoke_explain">
+          <label class="iw-label">Please explain:</label>
+          <textarea class="iw-textarea" id="smokeExplain" rows="2"></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 7: References -->
+    <div class="ra-section">
+      <div class="ra-section-title"><span class="ra-section-num">7</span> Personal References</div>
+      <div style="margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--hairline);">
+        <div style="font-size:0.8rem; font-weight:600; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.06em;">Reference 1</div>
+        <div class="ra-row-3">
+          <div>
+            <label class="iw-label" for="ref1Name">Name</label>
+            <input class="iw-input" type="text" id="ref1Name">
+          </div>
+          <div>
+            <label class="iw-label" for="ref1Rel">Relationship</label>
+            <input class="iw-input" type="text" id="ref1Rel" placeholder="Friend, Coworker, etc.">
+          </div>
+          <div>
+            <label class="iw-label" for="ref1Phone">Phone</label>
+            <input class="iw-input" type="tel" id="ref1Phone">
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.8rem; font-weight:600; color:var(--muted); margin-bottom:12px; text-transform:uppercase; letter-spacing:0.06em;">Reference 2</div>
+        <div class="ra-row-3">
+          <div>
+            <label class="iw-label" for="ref2Name">Name</label>
+            <input class="iw-input" type="text" id="ref2Name">
+          </div>
+          <div>
+            <label class="iw-label" for="ref2Rel">Relationship</label>
+            <input class="iw-input" type="text" id="ref2Rel" placeholder="Friend, Coworker, etc.">
+          </div>
+          <div>
+            <label class="iw-label" for="ref2Phone">Phone</label>
+            <input class="iw-input" type="tel" id="ref2Phone">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 8: Authorization & Signature -->
+    <div class="ra-section">
+      <div class="ra-section-title"><span class="ra-section-num">8</span> Authorization &amp; Signature</div>
+
+      <div class="cert-row">
+        <input type="checkbox" id="certCheck" required>
+        <label for="certCheck">
+          I certify that all information provided in this application is true and accurate to the best of my knowledge. I authorize Ironwood Property Group to verify all information provided and to conduct a credit and background check.
+        </label>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label class="iw-label">Signature <span style="color:var(--err)">*</span></label>
+        <div class="sig-container">
+          <canvas id="sigCanvas"></canvas>
+          <div class="sig-toolbar">
+            <button type="button" class="sig-clear-btn" onclick="clearSig()">Clear Signature</button>
+          </div>
+        </div>
+        <div style="font-size:0.7rem; color:var(--muted); margin-top:4px;">Draw your signature above using mouse or finger</div>
+      </div>
+
+      <div class="ra-row">
+        <div>
+          <label class="iw-label" for="printName">Print Name <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="text" id="printName" required autocomplete="name">
+        </div>
+        <div>
+          <label class="iw-label" for="signDate">Date</label>
+          <input class="iw-input" type="text" id="signDate" readonly>
+        </div>
+      </div>
+
+      <div id="raError"></div>
+
+      <button type="button" class="iw-btn-primary" id="submitRaBtn" onclick="submitApplication()" style="width:100%; margin-top:8px;">
+        Submit Application
+      </button>
+    </div>
+
+  </form>
+
+  <!-- Confirmation -->
+  <div class="ra-confirm" id="raConfirm">
+    <div class="ra-confirm-icon">✓</div>
+    <div class="ra-confirm-title">Application Received</div>
+    <div class="ra-confirm-sub">
+      Thank you for applying. We'll review your application and contact you within <strong>2 business days</strong>. If you have questions in the meantime, please reach out to us directly.
+    </div>
+    <div style="margin-top: 24px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
+      <a class="iw-btn-primary" href="tel:+1-800-000-0000">Call Us</a>
+      <a class="iw-btn-primary" href="mailto:info@ironwoodpropertygroup.com" style="background:var(--surface-2); color:var(--bronze); border:1.5px solid var(--bronze);">Email Us</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="iw-footer">
+  Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a>
+</div>
+
+<script>
+  const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
+  // ── UTM ──────────────────────────────────────────────────────────────────
+  function getUTM() {
+    const p = new URLSearchParams(window.location.search);
+    return {
+      utm_source:   p.get('utm_source')   || '',
+      utm_medium:   p.get('utm_medium')   || '',
+      utm_campaign: p.get('utm_campaign') || '',
+      utm_content:  p.get('utm_content')  || '',
+      utm_term:     p.get('utm_term')     || ''
+    };
+  }
+
+  // ── URL PARAMS ───────────────────────────────────────────────────────────
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('address')) document.getElementById('propertyAddress').value = params.get('address');
+  if (params.get('rent'))    document.getElementById('monthlyRent').value = '$' + params.get('rent');
+
+  // ── DATE ─────────────────────────────────────────────────────────────────
+  const today = new Date();
+  document.getElementById('signDate').value = today.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  // ── INCOME CALC ───────────────────────────────────────────────────────────
+  function calcTotalIncome() {
+    const base = parseFloat(document.getElementById('monthlyIncome').value) || 0;
+    // Just set from base if addl is non-numeric; user can override
+    if (base > 0) document.getElementById('totalIncome').value = base;
+  }
+
+  // ── PETS ─────────────────────────────────────────────────────────────────
+  let hasPets = null;
+  function setPets(val) {
+    hasPets = val;
+    document.getElementById('petsYes').classList.toggle('active', val);
+    document.getElementById('petsNo').classList.toggle('active', !val);
+    const detail = document.getElementById('petsDetail');
+    detail.classList.toggle('visible', val);
+  }
+
+  // ── BACKGROUND QUESTIONS ─────────────────────────────────────────────────
+  const bgAnswers = {};
+  function setBgQ(btn) {
+    const q   = btn.dataset.q;
+    const val = btn.dataset.val;
+    bgAnswers[q] = val;
+    // Update button styles in same row
+    btn.closest('.bg-toggle-row').querySelectorAll('.bg-toggle-btn').forEach(b => {
+      b.classList.remove('active-yes', 'active-no');
+    });
+    btn.classList.add(val === 'Yes' ? 'active-yes' : 'active-no');
+    // Show explanation if Yes
+    const explainEl = document.getElementById('bq_' + q + '_explain');
+    if (explainEl) explainEl.classList.toggle('visible', val === 'Yes');
+  }
+
+  // ── SIGNATURE CANVAS ─────────────────────────────────────────────────────
+  const canvas  = document.getElementById('sigCanvas');
+  const ctx     = canvas.getContext('2d');
+  let drawing   = false;
+  let sigHasData = false;
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr  = window.devicePixelRatio || 1;
+    canvas.width  = rect.width  * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr);
+    ctx.strokeStyle = '#1C1814';
+    ctx.lineWidth   = 2;
+    ctx.lineCap     = 'round';
+    ctx.lineJoin    = 'round';
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+
+  function getPos(e) {
+    const rect = canvas.getBoundingClientRect();
+    if (e.touches) {
+      return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
+    }
+    return { x: e.clientX - rect.left, y: e.clientY - rect.top };
+  }
+
+  canvas.addEventListener('mousedown', e => { drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+  canvas.addEventListener('mousemove', e => { if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); sigHasData = true; });
+  canvas.addEventListener('mouseup',   () => { drawing = false; });
+  canvas.addEventListener('mouseleave',() => { drawing = false; });
+
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); drawing = true; const p = getPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); }, { passive: false });
+  canvas.addEventListener('touchmove',  e => { e.preventDefault(); if (!drawing) return; const p = getPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); sigHasData = true; }, { passive: false });
+  canvas.addEventListener('touchend',   () => { drawing = false; });
+
+  function clearSig() {
+    const dpr = window.devicePixelRatio || 1;
+    ctx.clearRect(0, 0, canvas.width / dpr, canvas.height / dpr);
+    sigHasData = false;
+  }
+
+  // ── SUBMIT ───────────────────────────────────────────────────────────────
+  async function submitApplication() {
+    const errEl = document.getElementById('raError');
+    errEl.style.display = 'none';
+
+    // Basic required checks
+    const requiredIds = ['firstName','lastName','dob','ssn4','phone','email','currAddr','currCity','currState','currZip','currDuration','currRent','reasonLeaving','employStatus','monthlyIncome','totalIncome','numOccupants','printName'];
+    for (const id of requiredIds) {
+      const el = document.getElementById(id);
+      if (!el || !el.value.trim()) {
+        errEl.textContent = 'Please complete all required fields (marked with *).';
+        errEl.style.display = 'block';
+        el && el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+    }
+    if (!document.getElementById('certCheck').checked) {
+      errEl.textContent = 'You must certify the accuracy of your application before submitting.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (!sigHasData) {
+      errEl.textContent = 'Please provide your signature before submitting.';
+      errEl.style.display = 'block';
+      document.getElementById('sigCanvas').scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const btn = document.getElementById('submitRaBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    // Capture signature as base64
+    const sigData = canvas.toDataURL('image/png');
+
+    const payload = {
+      propertyAddress:     document.getElementById('propertyAddress').value.trim(),
+      monthlyRent:         document.getElementById('monthlyRent').value.trim(),
+      // Section 1
+      firstName:           document.getElementById('firstName').value.trim(),
+      lastName:            document.getElementById('lastName').value.trim(),
+      dateOfBirth:         document.getElementById('dob').value,
+      ssn4:                document.getElementById('ssn4').value.trim(),
+      phone:               document.getElementById('phone').value.trim(),
+      email:               document.getElementById('email').value.trim(),
+      dlNumber:            document.getElementById('dlNumber').value.trim(),
+      dlState:             document.getElementById('dlState').value,
+      // Section 2
+      currentAddress:      document.getElementById('currAddr').value.trim(),
+      currentCity:         document.getElementById('currCity').value.trim(),
+      currentState:        document.getElementById('currState').value.trim(),
+      currentZip:          document.getElementById('currZip').value.trim(),
+      timeAtCurrentAddr:   document.getElementById('currDuration').value,
+      currentMonthlyRent:  document.getElementById('currRent').value,
+      reasonForLeaving:    document.getElementById('reasonLeaving').value,
+      currentLandlordName: document.getElementById('currLandlordName').value.trim(),
+      currentLandlordPhone:document.getElementById('currLandlordPhone').value.trim(),
+      // Section 3
+      employmentStatus:    document.getElementById('employStatus').value,
+      employerName:        document.getElementById('employerName').value.trim(),
+      employerAddress:     document.getElementById('employerAddress').value.trim(),
+      jobTitle:            document.getElementById('jobTitle').value.trim(),
+      monthlyGrossIncome:  document.getElementById('monthlyIncome').value,
+      jobDuration:         document.getElementById('jobDuration').value,
+      additionalIncomeSources: document.getElementById('addlIncome').value.trim(),
+      totalMonthlyIncome:  document.getElementById('totalIncome').value,
+      // Section 4
+      previousAddress:     document.getElementById('prevAddr').value.trim(),
+      prevLandlordName:    document.getElementById('prevLandlordName').value.trim(),
+      prevLandlordPhone:   document.getElementById('prevLandlordPhone').value.trim(),
+      previousRent:        document.getElementById('prevRent').value,
+      prevReasonLeaving:   document.getElementById('prevReasonLeaving').value.trim(),
+      // Section 5
+      numOccupants:        document.getElementById('numOccupants').value,
+      occupantNames:       document.getElementById('occupantNames').value.trim(),
+      hasPets:             hasPets,
+      petType:             document.getElementById('petType').value.trim(),
+      petBreed:            document.getElementById('petBreed').value.trim(),
+      petWeight:           document.getElementById('petWeight').value,
+      // Section 6
+      evicted:             bgAnswers.eviction   || '',
+      evictedExplain:      document.getElementById('evictionExplain').value.trim(),
+      brokeLease:          bgAnswers.brokelease  || '',
+      brokeLeaseExplain:   document.getElementById('brokeleaseExplain').value.trim(),
+      bankruptcy:          bgAnswers.bankruptcy  || '',
+      bankruptcyExplain:   document.getElementById('bankruptcyExplain').value.trim(),
+      felonyConviction:    bgAnswers.felony      || '',
+      felonyExplain:       document.getElementById('felonyExplain').value.trim(),
+      smokes:              bgAnswers.smoke       || '',
+      smokeExplain:        document.getElementById('smokeExplain').value.trim(),
+      // Section 7
+      ref1Name:            document.getElementById('ref1Name').value.trim(),
+      ref1Relationship:    document.getElementById('ref1Rel').value.trim(),
+      ref1Phone:           document.getElementById('ref1Phone').value.trim(),
+      ref2Name:            document.getElementById('ref2Name').value.trim(),
+      ref2Relationship:    document.getElementById('ref2Rel').value.trim(),
+      ref2Phone:           document.getElementById('ref2Phone').value.trim(),
+      // Section 8
+      printName:           document.getElementById('printName').value.trim(),
+      signatureBase64:     sigData,
+      signatureDate:       document.getElementById('signDate').value,
+      submittedAt:         new Date().toISOString(),
+      ...getUTM()
+    };
+
+    try {
+      await fetch(GHL_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {
+      console.warn('Webhook error (non-blocking):', e);
+    }
+
+    document.getElementById('raForm').style.display = 'none';
+    document.querySelector('.ra-hero').style.display = 'none';
+    const conf = document.getElementById('raConfirm');
+    conf.style.display = 'block';
+    conf.scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

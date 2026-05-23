@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Rent vs. Sell Calculator — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+/* ── Page-specific styles ── */
+
+body { background: var(--bg); }
+
+/* Layout */
+.rvs-layout {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .rvs-layout { grid-template-columns: 1fr; }
+}
+
+/* Input panel */
+.rvs-inputs {
+  position: sticky;
+  top: 80px;
+}
+@media (max-width: 900px) {
+  .rvs-inputs { position: static; }
+}
+
+.rvs-input-section {
+  margin-bottom: 0;
+}
+
+.rvs-input-group {
+  margin-bottom: 16px;
+}
+
+.rvs-input-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+.rvs-input-label {
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  color: var(--ink-soft);
+  flex: 1;
+  line-height: 1.3;
+}
+.rvs-input-val {
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--bronze-deep);
+  min-width: 64px;
+  text-align: right;
+}
+.rvs-number-input {
+  width: 100%;
+  background: var(--surface);
+  border: 1.5px solid var(--hairline);
+  border-radius: 8px;
+  padding: 9px 12px;
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  color: var(--ink);
+  outline: none;
+  transition: border-color .15s;
+}
+.rvs-number-input:focus { border-color: var(--bronze); }
+.rvs-slider {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--hairline);
+  outline: none;
+  cursor: pointer;
+}
+.rvs-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bronze);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.18);
+}
+.rvs-slider::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--bronze);
+  cursor: pointer;
+  border: 2px solid #fff;
+  box-shadow: 0 1px 4px rgba(0,0,0,.18);
+}
+.rvs-divider-sm {
+  height: 1px;
+  background: var(--hairline);
+  margin: 18px 0;
+}
+
+/* Reno row */
+.reno-row {
+  display: none;
+  animation: fadeIn .2s ease;
+}
+.reno-row.visible { display: block; }
+@keyframes fadeIn { from { opacity:0; transform: translateY(-4px); } to { opacity:1; transform: none; } }
+
+/* Results panel */
+.rvs-results {}
+
+/* Winner badge */
+.winner-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 40px;
+  background: var(--bronze);
+  color: #fff;
+  font-family: 'Geist', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+.winner-badge-placeholder {
+  height: 27px;
+  display: block;
+}
+
+/* Result cards */
+.rvs-card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+@media (max-width: 560px) { .rvs-card-grid { grid-template-columns: 1fr; } }
+
+.rvs-result-card {
+  border: 2px solid var(--hairline);
+  border-radius: 16px;
+  padding: 24px;
+  background: var(--surface);
+  position: relative;
+  transition: border-color .25s, box-shadow .25s;
+}
+.rvs-result-card.winner {
+  border-color: var(--bronze);
+  box-shadow: 0 4px 24px rgba(156,123,74,.13);
+  background: var(--surface-2);
+}
+.rvs-result-card.loser {
+  opacity: .85;
+}
+.rvs-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  min-height: 48px;
+}
+.rvs-card-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  color: var(--ink);
+}
+.rvs-card-subtitle {
+  font-family: 'Geist', sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+/* Result metrics */
+.rvs-metric {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+.rvs-metric:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.rvs-metric-label {
+  font-family: 'Geist', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.rvs-metric-val {
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px;
+  color: var(--ink);
+  line-height: 1.1;
+}
+.rvs-metric-val.positive { color: #2d7a54; }
+.rvs-metric-val.negative { color: #c94a3a; }
+.rvs-metric-note {
+  font-family: 'Geist', sans-serif;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
+/* Cash flow pill */
+.cf-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 40px;
+  font-family: 'Geist', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+}
+.cf-pill.positive { background: #E6F6EE; color: #2d7a54; }
+.cf-pill.negative { background: #FFE8E6; color: #c94a3a; }
+
+/* Breakdown accordion */
+.rvs-breakdown {
+  background: var(--bronze-wash);
+  border: 1px solid var(--hairline);
+  border-radius: 10px;
+  padding: 16px;
+  margin-top: 16px;
+}
+.rvs-breakdown-title {
+  font-family: 'Geist', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+.rvs-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  color: var(--ink-soft);
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--hairline);
+}
+.rvs-breakdown-row:last-child { border-bottom: none; font-weight: 600; color: var(--ink); }
+.rvs-breakdown-row span:last-child { font-variant-numeric: tabular-nums; }
+
+/* Callout */
+.rvs-callout {
+  background: var(--bronze-tint);
+  border: 1.5px solid var(--bronze);
+  border-radius: 16px;
+  padding: 28px 32px;
+  text-align: center;
+  margin-bottom: 24px;
+}
+.rvs-callout-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 24px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.rvs-callout-body {
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+.rvs-cta-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Lead capture */
+.rvs-lead {
+  border-top: 1px solid var(--hairline);
+  padding-top: 28px;
+  margin-top: 8px;
+}
+.rvs-lead-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.rvs-lead-sub {
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+.rvs-lead-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+@media (max-width: 600px) { .rvs-lead-form { grid-template-columns: 1fr; } }
+
+.rvs-radio-group {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+.rvs-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.rvs-radio-label input { accent-color: var(--bronze); }
+
+/* Year label */
+.years-label {
+  font-family: 'Geist', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--bronze-deep);
+}
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <div class="iw-logo-box">I</div>
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="iw-page-hero">
+  <div class="iw-container-sm">
+    <div class="iw-eyebrow">Interactive Calculator · Updates Live</div>
+    <h1 class="iw-page-title">Rent vs. Sell</h1>
+    <p class="iw-page-sub">Enter your home details and see a clear financial comparison — updated instantly as you adjust the sliders.</p>
+  </div>
+</div>
+
+<!-- Main content -->
+<div class="iw-container" style="padding-bottom: 80px;">
+  <div class="rvs-layout">
+
+    <!-- ── LEFT: Inputs ── -->
+    <div class="rvs-inputs">
+      <div class="iw-card rvs-input-section">
+        <div class="iw-section-label" style="margin-bottom:18px;">Your Numbers</div>
+
+        <!-- Home value -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Current Home Value</div>
+          </div>
+          <input class="rvs-number-input" type="number" id="homeValue" value="280000" min="50000" max="5000000" step="1000" oninput="calc()"/>
+        </div>
+
+        <!-- Mortgage -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Remaining Mortgage Balance</div>
+          </div>
+          <input class="rvs-number-input" type="number" id="mortgage" value="180000" min="0" max="5000000" step="1000" oninput="calc()"/>
+        </div>
+
+        <!-- Monthly payment -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Monthly Mortgage Payment</div>
+          </div>
+          <input class="rvs-number-input" type="number" id="monthlyPayment" value="1400" min="0" max="20000" step="50" oninput="calc()"/>
+        </div>
+
+        <!-- Interest rate -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Current Interest Rate</div>
+          </div>
+          <input class="rvs-number-input" type="number" id="interestRate" value="7.0" min="0" max="20" step="0.1" oninput="calc()"/>
+        </div>
+
+        <!-- Monthly rent -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Estimated Monthly Rent</div>
+          </div>
+          <input class="rvs-number-input" type="number" id="monthlyRent" value="1800" min="0" max="20000" step="50" oninput="calc()"/>
+        </div>
+
+        <div class="rvs-divider-sm"></div>
+
+        <!-- Vacancy rate -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Vacancy Rate</div>
+            <div class="rvs-input-val" id="vacancyVal">8%</div>
+          </div>
+          <input class="rvs-slider" type="range" id="vacancy" min="0" max="20" value="8" step="1"
+            oninput="document.getElementById('vacancyVal').textContent=this.value+'%'; calc()"/>
+        </div>
+
+        <!-- Maintenance -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Annual Maintenance (% of value)</div>
+            <div class="rvs-input-val" id="maintVal">2%</div>
+          </div>
+          <input class="rvs-slider" type="range" id="maintenance" min="1" max="5" value="2" step="0.5"
+            oninput="document.getElementById('maintVal').textContent=this.value+'%'; calc()"/>
+        </div>
+
+        <!-- Mgmt fee -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Property Management Fee</div>
+            <div class="rvs-input-val" id="mgmtVal">10%</div>
+          </div>
+          <input class="rvs-slider" type="range" id="mgmt" min="0" max="12" value="10" step="1"
+            oninput="document.getElementById('mgmtVal').textContent=this.value+'%'; calc()"/>
+        </div>
+
+        <!-- Appreciation -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Annual Appreciation Rate</div>
+            <div class="rvs-input-val" id="appreciationVal">3%</div>
+          </div>
+          <input class="rvs-slider" type="range" id="appreciation" min="1" max="6" value="3" step="0.5"
+            oninput="document.getElementById('appreciationVal').textContent=this.value+'%'; calc()"/>
+        </div>
+
+        <!-- Selling costs -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Selling Costs (commission + closing)</div>
+            <div class="rvs-input-val" id="sellingCostVal">7%</div>
+          </div>
+          <input class="rvs-slider" type="range" id="sellingCost" min="4" max="10" value="7" step="0.5"
+            oninput="document.getElementById('sellingCostVal').textContent=this.value+'%'; calc()"/>
+        </div>
+
+        <!-- Years -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Years to Analyze</div>
+            <div class="rvs-input-val years-label" id="yearsVal">10</div>
+          </div>
+          <input class="rvs-slider" type="range" id="years" min="5" max="30" value="10" step="1"
+            oninput="document.getElementById('yearsVal').textContent=this.value; calc()"/>
+        </div>
+
+        <div class="rvs-divider-sm"></div>
+
+        <!-- Property condition -->
+        <div class="rvs-input-group">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Property Condition</div>
+          </div>
+          <select class="iw-select" id="condition" onchange="onConditionChange()">
+            <option value="move-in">Move-in Ready</option>
+            <option value="minor">Needs Minor Updates</option>
+            <option value="major">Needs Major Renovation</option>
+          </select>
+        </div>
+
+        <!-- Renovation cost (conditional) -->
+        <div class="rvs-input-group reno-row" id="renoRow">
+          <div class="rvs-input-row">
+            <div class="rvs-input-label">Estimated Renovation Cost</div>
+          </div>
+          <input class="rvs-number-input" type="number" id="renoCost" value="25000" min="0" step="1000" oninput="calc()"/>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ── RIGHT: Results ── -->
+    <div class="rvs-results">
+
+      <!-- Result cards -->
+      <div class="rvs-card-grid">
+        <!-- RENT card -->
+        <div class="rvs-result-card" id="rent-card">
+          <div class="rvs-card-header">
+            <div>
+              <div class="rvs-card-title">Rent It</div>
+              <div class="rvs-card-subtitle">Keep &amp; lease the property</div>
+            </div>
+            <div id="rent-badge"><span class="winner-badge-placeholder"></span></div>
+          </div>
+
+          <div class="rvs-metric">
+            <div class="rvs-metric-label">Monthly Cash Flow</div>
+            <div class="rvs-metric-val" id="rent-cashflow">—</div>
+            <div class="rvs-metric-note" id="rent-cashflow-note"></div>
+          </div>
+
+          <div class="rvs-metric">
+            <div class="rvs-metric-label">Annual Net Operating Income</div>
+            <div class="rvs-metric-val" id="rent-noi">—</div>
+          </div>
+
+          <div class="rvs-metric">
+            <div class="rvs-metric-label" id="rent-equity-label">10-Year Net Equity</div>
+            <div class="rvs-metric-val" id="rent-equity">—</div>
+            <div class="rvs-metric-note" id="rent-equity-note"></div>
+          </div>
+
+          <div class="rvs-metric">
+            <div class="rvs-metric-label" id="rent-return-label">Total Return</div>
+            <div class="rvs-metric-val" id="rent-return">—</div>
+            <div class="rvs-metric-note">Equity growth + cumulative cash flow</div>
+          </div>
+
+          <div class="rvs-breakdown">
+            <div class="rvs-breakdown-title">Annual Breakdown</div>
+            <div class="rvs-breakdown-row"><span>Gross Rent</span><span id="bd-gross-rent">—</span></div>
+            <div class="rvs-breakdown-row"><span>Vacancy Loss</span><span id="bd-vacancy">—</span></div>
+            <div class="rvs-breakdown-row"><span>Maintenance</span><span id="bd-maint">—</span></div>
+            <div class="rvs-breakdown-row"><span>Mgmt Fees</span><span id="bd-mgmt">—</span></div>
+            <div class="rvs-breakdown-row"><span>Mortgage Payments</span><span id="bd-mortgage">—</span></div>
+            <div class="rvs-breakdown-row"><span>Net Annual Cash Flow</span><span id="bd-net">—</span></div>
+          </div>
+        </div>
+
+        <!-- SELL card -->
+        <div class="rvs-result-card" id="sell-card">
+          <div class="rvs-card-header">
+            <div>
+              <div class="rvs-card-title">Sell It</div>
+              <div class="rvs-card-subtitle">List and move on</div>
+            </div>
+            <div id="sell-badge"><span class="winner-badge-placeholder"></span></div>
+          </div>
+
+          <div class="rvs-metric">
+            <div class="rvs-metric-label">Net Proceeds at Closing</div>
+            <div class="rvs-metric-val" id="sell-proceeds">—</div>
+            <div class="rvs-metric-note" id="sell-proceeds-note"></div>
+          </div>
+
+          <div class="rvs-metric">
+            <div class="rvs-metric-label">If Invested at 7% (S&amp;P avg)</div>
+            <div class="rvs-metric-val" id="sell-invested">—</div>
+            <div class="rvs-metric-note" id="sell-invested-label">Future value after <span id="sell-years-label">10</span> years</div>
+          </div>
+
+          <div class="rvs-metric">
+            <div class="rvs-metric-label" id="sell-return-label">Total Return</div>
+            <div class="rvs-metric-val" id="sell-return">—</div>
+            <div class="rvs-metric-note">Future value of invested proceeds</div>
+          </div>
+
+          <div class="rvs-breakdown">
+            <div class="rvs-breakdown-title">Proceeds Breakdown</div>
+            <div class="rvs-breakdown-row"><span>Home Value</span><span id="bd-home-val">—</span></div>
+            <div class="rvs-breakdown-row" id="bd-reno-row" style="display:none;"><span>Renovation Cost</span><span id="bd-reno">—</span></div>
+            <div class="rvs-breakdown-row"><span>Selling Costs</span><span id="bd-selling">—</span></div>
+            <div class="rvs-breakdown-row"><span>Mortgage Payoff</span><span id="bd-payoff">—</span></div>
+            <div class="rvs-breakdown-row"><span>Net Proceeds</span><span id="bd-net-proceeds">—</span></div>
+          </div>
+
+          <div class="rvs-breakdown" style="margin-top:10px; background: var(--surface-2); border-color: var(--hairline);">
+            <div class="rvs-breakdown-title">Lost Rental Income (Opportunity)</div>
+            <div class="rvs-breakdown-row"><span>Gross Rent Foregone</span><span id="bd-lost-rent">—</span></div>
+            <div class="rvs-breakdown-row"><span>After Vacancy &amp; Costs</span><span id="bd-lost-noi">—</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Callout -->
+      <div class="rvs-callout">
+        <div class="iw-eyebrow" style="text-align:center; margin-bottom:8px;">Either way, Ironwood can help</div>
+        <div class="rvs-callout-title" id="callout-headline">We're here to maximize your outcome.</div>
+        <div class="rvs-callout-body" id="callout-body">Whether you decide to rent or sell, our team handles renovations, listing prep, property management connections, and cash offers — all under one roof.</div>
+        <div class="rvs-cta-row">
+          <a href="Ironwood_Estimator_Public.html" class="iw-btn iw-btn-outline">Get a Renovation Quote</a>
+          <a href="IPG_HomeValuation.html" class="iw-btn iw-btn-bronze">Get a Cash Offer</a>
+        </div>
+      </div>
+
+      <!-- Lead capture -->
+      <div class="iw-card rvs-lead">
+        <div class="rvs-lead-title">Talk to Our Team</div>
+        <div class="rvs-lead-sub">Want a personalized recommendation? Our advisors can walk you through both scenarios and help you make the best financial decision for your situation.</div>
+
+        <div class="rvs-lead-form">
+          <div>
+            <label class="iw-label" style="margin-bottom:6px; display:block;">Name</label>
+            <input class="iw-input" type="text" id="lead-name" placeholder="Your name" autocomplete="name"/>
+          </div>
+          <div>
+            <label class="iw-label" style="margin-bottom:6px; display:block;">Phone</label>
+            <input class="iw-input" type="tel" id="lead-phone" placeholder="(404) 555-0100" autocomplete="tel"/>
+          </div>
+          <div>
+            <label class="iw-label" style="margin-bottom:6px; display:block;">Email</label>
+            <input class="iw-input" type="email" id="lead-email" placeholder="you@email.com" autocomplete="email"/>
+          </div>
+        </div>
+
+        <div class="iw-label" style="margin-bottom:10px;">Which path interests you?</div>
+        <div class="rvs-radio-group">
+          <label class="rvs-radio-label">
+            <input type="radio" name="path" value="Rent" id="path-rent"/>
+            Rent It Out
+          </label>
+          <label class="rvs-radio-label">
+            <input type="radio" name="path" value="Sell" id="path-sell" checked/>
+            Sell &amp; Move On
+          </label>
+          <label class="rvs-radio-label">
+            <input type="radio" name="path" value="Not Sure" id="path-notsure"/>
+            Not Sure Yet
+          </label>
+        </div>
+
+        <button class="iw-btn iw-btn-bronze" id="lead-submit-btn" onclick="submitLead()">Talk to Our Team →</button>
+        <div id="lead-success" style="display:none; margin-top:12px; padding:14px 18px; background:var(--bronze-tint); border:1.5px solid var(--bronze); border-radius:10px; font-family:'Geist',sans-serif; font-size:14px; color:var(--bronze-deep);">
+          Thanks! One of our advisors will reach out shortly.
+        </div>
+      </div>
+
+    </div><!-- end rvs-results -->
+  </div>
+</div>
+
+<!-- Footer -->
+<div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+
+<script>
+// ── GHL Webhook ──
+const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
+// ── UTM params ──
+function getUTM() {
+  const p = new URLSearchParams(window.location.search);
+  return {
+    utm_source:   p.get('utm_source')   || '',
+    utm_medium:   p.get('utm_medium')   || '',
+    utm_campaign: p.get('utm_campaign') || '',
+    utm_content:  p.get('utm_content')  || '',
+    utm_term:     p.get('utm_term')     || ''
+  };
+}
+
+// ── Helpers ──
+function fmt(n, prefix='$') {
+  if (isNaN(n)) return '—';
+  const abs = Math.abs(Math.round(n));
+  const str = prefix + abs.toLocaleString('en-US');
+  return n < 0 ? '−' + str : str;
+}
+function fmtSigned(n) {
+  if (isNaN(n)) return '—';
+  const prefix = n >= 0 ? '+$' : '−$';
+  return prefix + Math.abs(Math.round(n)).toLocaleString('en-US');
+}
+function pct(n) { return (n*100).toFixed(1) + '%'; }
+
+function getVal(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function getSlider(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+// ── Condition change ──
+function onConditionChange() {
+  const cond = document.getElementById('condition').value;
+  const row = document.getElementById('renoRow');
+  if (cond === 'move-in') {
+    row.classList.remove('visible');
+    document.getElementById('renoCost').value = '0';
+  } else if (cond === 'minor') {
+    row.classList.add('visible');
+    document.getElementById('renoCost').value = '25000';
+  } else {
+    row.classList.add('visible');
+    document.getElementById('renoCost').value = '65000';
+  }
+  calc();
+}
+
+// ── Estimate principal paydown (simplified amortization) ──
+function estimatePrincipalPaydown(balance, rate, monthlyPayment, years) {
+  if (rate <= 0 || monthlyPayment <= 0) return 0;
+  const monthlyRate = (rate / 100) / 12;
+  let bal = balance;
+  let totalPrincipal = 0;
+  for (let m = 0; m < years * 12; m++) {
+    const interest = bal * monthlyRate;
+    const principal = Math.max(0, monthlyPayment - interest);
+    totalPrincipal += principal;
+    bal = Math.max(0, bal - principal);
+    if (bal <= 0) break;
+  }
+  return totalPrincipal;
+}
+
+// ── Main calculation ──
+function calc() {
+  const homeValue     = getVal('homeValue');
+  const mortgageBal   = getVal('mortgage');
+  const monthlyPmt    = getVal('monthlyPayment');
+  const intRate       = getVal('interestRate');
+  const monthlyRent   = getVal('monthlyRent');
+  const vacancyPct    = getSlider('vacancy') / 100;
+  const maintPct      = getSlider('maintenance') / 100;
+  const mgmtPct       = getSlider('mgmt') / 100;
+  const appreciationPct = getSlider('appreciation') / 100;
+  const sellingCostPct  = getSlider('sellingCost') / 100;
+  const years           = getSlider('years');
+  const cond            = document.getElementById('condition').value;
+  const renoCost        = cond === 'move-in' ? 0 : getVal('renoCost');
+
+  // ── RENT SCENARIO ──
+  const annualGrossRent   = monthlyRent * 12;
+  const vacancyLoss       = annualGrossRent * vacancyPct;
+  const effectiveGross    = annualGrossRent - vacancyLoss;
+  const annualMaint       = homeValue * maintPct;
+  const annualMgmt        = effectiveGross * mgmtPct;
+  const annualNOI         = effectiveGross - annualMaint - annualMgmt;
+  const annualMortgage    = monthlyPmt * 12;
+  const annualCashFlow    = annualNOI - annualMortgage;
+  const monthlyCashFlow   = annualCashFlow / 12;
+
+  // equity over years
+  const appreciationGain  = homeValue * appreciationPct * years;
+  const principalPaydown  = estimatePrincipalPaydown(mortgageBal, intRate, monthlyPmt, years);
+  const currentEquity     = homeValue - mortgageBal;
+  const rentFinalEquity   = currentEquity + appreciationGain + principalPaydown;
+  const cumulativeCashFlow = annualCashFlow * years;
+  const rentTotalReturn   = rentFinalEquity + cumulativeCashFlow;
+
+  // ── SELL SCENARIO ──
+  const sellingCostAmt    = homeValue * sellingCostPct;
+  const netProceeds       = Math.max(0, homeValue - mortgageBal - sellingCostAmt - renoCost);
+  // future value of proceeds invested at 7%
+  const fv = netProceeds * Math.pow(1.07, years);
+  const sellTotalReturn   = fv;
+
+  // opportunity cost (rent)
+  const grossRentForgone  = annualGrossRent * years;
+  const noiForegone       = annualNOI * years;
+
+  // ── Determine winner ──
+  const recommendation = rentTotalReturn > sellTotalReturn ? 'Rent' : (sellTotalReturn > rentTotalReturn ? 'Sell' : 'Close');
+
+  // ── Update DOM ──
+  // Rent card
+  const cfEl = document.getElementById('rent-cashflow');
+  cfEl.textContent = fmt(monthlyCashFlow) + '/mo';
+  cfEl.className = 'rvs-metric-val ' + (monthlyCashFlow >= 0 ? 'positive' : 'negative');
+  document.getElementById('rent-cashflow-note').innerHTML =
+    `<span class="cf-pill ${monthlyCashFlow >= 0 ? 'positive' : 'negative'}">${monthlyCashFlow >= 0 ? '▲' : '▼'} ${monthlyCashFlow >= 0 ? 'Positive' : 'Negative'} cash flow</span>`;
+
+  document.getElementById('rent-noi').textContent = fmt(annualNOI) + '/yr';
+  document.getElementById('rent-equity-label').textContent = years + '-Year Net Equity';
+  document.getElementById('rent-equity').textContent = fmt(rentFinalEquity);
+  document.getElementById('rent-equity-note').textContent =
+    `Appreciation ${fmt(appreciationGain)} + paydown ${fmt(principalPaydown)}`;
+  document.getElementById('rent-return-label').textContent = years + '-Year Total Return';
+  document.getElementById('rent-return').textContent = fmt(rentTotalReturn);
+
+  // Rent breakdown
+  document.getElementById('bd-gross-rent').textContent = fmt(annualGrossRent);
+  document.getElementById('bd-vacancy').textContent    = '−' + fmt(vacancyLoss).replace('$','$');
+  document.getElementById('bd-maint').textContent      = '−' + fmt(annualMaint).replace('$','$');
+  document.getElementById('bd-mgmt').textContent       = '−' + fmt(annualMgmt).replace('$','$');
+  document.getElementById('bd-mortgage').textContent   = '−' + fmt(annualMortgage).replace('$','$');
+  const netEl = document.getElementById('bd-net');
+  netEl.textContent = (annualCashFlow >= 0 ? '' : '−') + '$' + Math.abs(Math.round(annualCashFlow)).toLocaleString();
+  netEl.style.color = annualCashFlow >= 0 ? '#2d7a54' : '#c94a3a';
+
+  // Sell card
+  document.getElementById('sell-proceeds').textContent = fmt(netProceeds);
+  document.getElementById('sell-proceeds-note').textContent =
+    'After ' + Math.round(sellingCostPct*100) + '% costs' + (renoCost > 0 ? ' + ' + fmt(renoCost) + ' reno' : '') + ' + mortgage payoff';
+  document.getElementById('sell-invested').textContent = fmt(fv);
+  document.getElementById('sell-years-label').textContent = years;
+  document.getElementById('sell-return-label').textContent = years + '-Year Total Return';
+  document.getElementById('sell-return').textContent = fmt(sellTotalReturn);
+
+  // Sell breakdown
+  document.getElementById('bd-home-val').textContent     = fmt(homeValue);
+  document.getElementById('bd-reno').textContent         = '−$' + Math.round(renoCost).toLocaleString();
+  document.getElementById('bd-reno-row').style.display   = renoCost > 0 ? '' : 'none';
+  document.getElementById('bd-selling').textContent      = '−$' + Math.round(sellingCostAmt).toLocaleString();
+  document.getElementById('bd-payoff').textContent       = '−$' + Math.round(mortgageBal).toLocaleString();
+  document.getElementById('bd-net-proceeds').textContent = fmt(netProceeds);
+  document.getElementById('bd-lost-rent').textContent    = fmt(grossRentForgone);
+  document.getElementById('bd-lost-noi').textContent     = fmt(noiForegone);
+
+  // Winner styling
+  const rentCard = document.getElementById('rent-card');
+  const sellCard = document.getElementById('sell-card');
+  const rentBadge = document.getElementById('rent-badge');
+  const sellBadge = document.getElementById('sell-badge');
+
+  rentCard.classList.remove('winner','loser');
+  sellCard.classList.remove('winner','loser');
+  rentBadge.innerHTML = '<span class="winner-badge-placeholder"></span>';
+  sellBadge.innerHTML = '<span class="winner-badge-placeholder"></span>';
+
+  if (recommendation === 'Rent') {
+    rentCard.classList.add('winner');
+    sellCard.classList.add('loser');
+    rentBadge.innerHTML = '<span class="winner-badge">★ Better For You</span>';
+  } else if (recommendation === 'Sell') {
+    sellCard.classList.add('winner');
+    rentCard.classList.add('loser');
+    sellBadge.innerHTML = '<span class="winner-badge">★ Better For You</span>';
+  } else {
+    rentCard.classList.add('winner');
+    sellCard.classList.add('winner');
+    rentBadge.innerHTML = '<span class="winner-badge" style="background:var(--muted);">Roughly Equal</span>';
+  }
+
+  // Callout headline
+  const diff = Math.abs(rentTotalReturn - sellTotalReturn);
+  let headline, body;
+  if (recommendation === 'Rent') {
+    headline = `Renting puts ${fmt(diff)} more in your pocket over ${years} years.`;
+    body = 'Your property generates solid long-term equity. Ironwood can help you prep for renters, handle renovations, and maximize your rental income.';
+    document.getElementById('path-rent').checked = true;
+  } else if (recommendation === 'Sell') {
+    headline = `Selling puts ${fmt(diff)} more in your pocket over ${years} years.`;
+    body = 'Selling now and investing the proceeds outperforms holding the rental. Ironwood can help you sell fast — with or without renovation — and put the most money in your hands.';
+    document.getElementById('path-sell').checked = true;
+  } else {
+    headline = 'Both paths are financially comparable.';
+    body = 'The numbers are close — so the right choice comes down to your lifestyle, flexibility, and goals. Talk to our team for a personalized recommendation.';
+  }
+  document.getElementById('callout-headline').textContent = headline;
+  document.getElementById('callout-body').textContent = body;
+
+  // Store for lead submit
+  window._calcResults = {
+    recommendation,
+    rent10yrReturn: rentTotalReturn,
+    sell10yrReturn: sellTotalReturn,
+    rentMonthlyCashFlow: monthlyCashFlow,
+    netProceedsAtClosing: netProceeds,
+    // inputs
+    homeValue, mortgageBal, monthlyPmt, intRate, monthlyRent,
+    vacancyPct: getSlider('vacancy'),
+    maintPct:   getSlider('maintenance'),
+    mgmtPct:    getSlider('mgmt'),
+    appreciationPct: getSlider('appreciation'),
+    sellingCostPct:  getSlider('sellingCost'),
+    years,
+    condition: cond,
+    renoCost
+  };
+}
+
+// ── Lead submit ──
+async function submitLead() {
+  const btn = document.getElementById('lead-submit-btn');
+  const name  = document.getElementById('lead-name').value.trim();
+  const phone = document.getElementById('lead-phone').value.trim();
+  const email = document.getElementById('lead-email').value.trim();
+
+  if (!name || !phone || !email) {
+    alert('Please fill in your name, phone, and email.');
+    return;
+  }
+
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  const pathSelected = document.querySelector('input[name="path"]:checked');
+  const utm = getUTM();
+  const r = window._calcResults || {};
+
+  const payload = {
+    leadName:     name,
+    leadPhone:    phone,
+    leadEmail:    email,
+    pathInterest: pathSelected ? pathSelected.value : 'Not Sure',
+    ...r,
+    ...utm,
+    submittedAt: new Date().toISOString(),
+    pageUrl:     window.location.href,
+    formType:    'RentVsSell'
+  };
+
+  try {
+    await fetch(GHL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {
+    console.warn('Webhook error:', e);
+  }
+
+  btn.style.display = 'none';
+  document.getElementById('lead-success').style.display = 'block';
+}
+
+// ── Init ──
+calc();
+</script>
+</body>
+</html>

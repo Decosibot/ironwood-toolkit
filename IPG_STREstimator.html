@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Short-Term Rental Revenue Estimator — Peach to Palms</title>
+  <link rel="stylesheet" href="iw-design.css" />
+  <style>
+    /* ── Page-specific styles ── */
+    .str-hero {
+      background: var(--ink);
+      color: #fff;
+      padding: 64px 24px 56px;
+      text-align: center;
+    }
+    .str-hero-eyebrow {
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--bronze);
+      margin-bottom: 16px;
+    }
+    .str-hero-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 400;
+      line-height: 1.15;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+    .str-hero-sub {
+      font-family: 'Geist', sans-serif;
+      font-size: 16px;
+      color: rgba(255,255,255,.65);
+      max-width: 600px;
+      margin: 0 auto;
+      line-height: 1.65;
+    }
+
+    .str-body {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* inputs card */
+    .str-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 28px;
+    }
+    .str-card-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 20px;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 580px) {
+      .form-grid-2 { grid-template-columns: 1fr; }
+      .str-card { padding: 20px; }
+    }
+    .form-full { grid-column: 1 / -1; }
+
+    .field-label {
+      display: block;
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .field-input,
+    .field-select {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--surface-2);
+      border: 1px solid var(--hairline-2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .15s;
+      appearance: none;
+      -webkit-appearance: none;
+    }
+    .field-input:focus,
+    .field-select:focus {
+      border-color: var(--bronze);
+      box-shadow: 0 0 0 3px var(--bronze-wash);
+    }
+    .field-select {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A6F60' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+
+    /* chips */
+    .chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 100px;
+      border: 1.5px solid var(--hairline-2);
+      background: var(--surface-2);
+      font-family: 'Geist', sans-serif;
+      font-size: 13px;
+      color: var(--ink-soft);
+      cursor: pointer;
+      user-select: none;
+      transition: border-color .12s, background .12s, color .12s;
+    }
+    .chip.selected {
+      border-color: var(--bronze);
+      background: var(--bronze-tint);
+      color: var(--bronze-deep);
+      font-weight: 500;
+    }
+    .chip .chip-check {
+      font-size: 11px;
+      display: none;
+    }
+    .chip.selected .chip-check {
+      display: inline;
+    }
+
+    /* toggle */
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .toggle-switch {
+      position: relative;
+      width: 44px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-track {
+      position: absolute;
+      inset: 0;
+      background: var(--hairline-2);
+      border-radius: 100px;
+      cursor: pointer;
+      transition: background .2s;
+    }
+    .toggle-track::after {
+      content: '';
+      position: absolute;
+      left: 3px;
+      top: 3px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #fff;
+      transition: transform .2s;
+      box-shadow: 0 1px 3px rgba(0,0,0,.25);
+    }
+    .toggle-switch input:checked + .toggle-track {
+      background: var(--bronze);
+    }
+    .toggle-switch input:checked + .toggle-track::after {
+      transform: translateX(20px);
+    }
+    .toggle-label {
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+    }
+
+    #currentRentRow {
+      display: none;
+      margin-top: 16px;
+    }
+
+    /* CTA button */
+    .btn-estimate {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 15px 24px;
+      background: var(--bronze);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Geist', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+      margin-top: 24px;
+    }
+    .btn-estimate:hover { background: var(--bronze-deep); }
+    .btn-estimate:active { transform: scale(.98); }
+
+    /* results */
+    #resultsSection { display: none; }
+
+    .result-hero {
+      background: var(--ink);
+      border-radius: 12px;
+      padding: 36px 32px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    .result-hero-label {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--bronze);
+      margin-bottom: 8px;
+    }
+    .result-hero-value {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(40px, 8vw, 64px);
+      font-weight: 400;
+      line-height: 1;
+      color: #fff;
+    }
+    .result-hero-sub {
+      font-family: 'Geist', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,.5);
+      margin-top: 6px;
+    }
+
+    .result-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 500px) { .result-grid { grid-template-columns: 1fr; } }
+
+    .result-tile {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .result-tile-label {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .result-tile-value {
+      font-family: 'Instrument Serif', serif;
+      font-size: 26px;
+      color: var(--ink);
+    }
+    .result-tile-note {
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 4px;
+    }
+
+    .comparison-box {
+      display: none;
+      background: var(--bronze-tint);
+      border: 1px solid var(--bronze);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+    }
+    .comparison-box-title {
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--bronze-deep);
+      margin-bottom: 10px;
+    }
+    .comparison-row {
+      display: flex;
+      justify-content: space-between;
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: var(--ink-soft);
+      margin-bottom: 6px;
+    }
+    .comparison-row strong { color: var(--ink); }
+    .comparison-row.diff strong { color: var(--ok); font-size: 16px; }
+
+    .breakeven-bar-wrap {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .breakeven-label {
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--muted);
+      margin-bottom: 10px;
+    }
+    .breakeven-track {
+      background: var(--hairline);
+      border-radius: 100px;
+      height: 8px;
+      overflow: hidden;
+      margin-bottom: 8px;
+    }
+    .breakeven-fill {
+      height: 100%;
+      background: var(--bronze);
+      border-radius: 100px;
+      transition: width .6s ease;
+    }
+    .breakeven-note {
+      font-family: 'Geist', sans-serif;
+      font-size: 13px;
+      color: var(--ink-soft);
+    }
+
+    /* lead capture */
+    .lead-banner {
+      background: var(--bronze-tint);
+      border: 1px solid var(--bronze);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .lead-banner-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .lead-banner-sub {
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: var(--ink-soft);
+    }
+
+    .btn-submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 15px 24px;
+      background: var(--bronze);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Geist', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s;
+      margin-top: 24px;
+    }
+    .btn-submit:hover { background: var(--bronze-deep); }
+    .btn-submit:disabled { background: var(--muted); cursor: not-allowed; }
+
+    .success-card {
+      display: none;
+      text-align: center;
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 48px 32px;
+    }
+    .success-icon {
+      width: 56px;
+      height: 56px;
+      background: #EBF3EB;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin: 0 auto 16px;
+    }
+    .success-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 26px;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .success-sub {
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.6;
+    }
+
+    .field-group { margin-bottom: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="iw-header">
+    <a class="iw-logo-area" href="index.html">
+      <div class="iw-logo-box">I</div>
+      <div>
+        <div class="iw-logo-text">Ironwood Property Group</div>
+        <div class="iw-logo-sub">Atlanta Metro</div>
+      </div>
+    </a>
+    <div class="iw-header-right">
+      <a class="iw-back-btn" href="index.html">← Toolkit</a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <div class="str-hero">
+    <div class="str-hero-eyebrow">Peach to Palms · Short-Term Rentals</div>
+    <h1 class="str-hero-title">What could your home earn on Airbnb?</h1>
+    <p class="str-hero-sub">Enter your property details and see a projected annual revenue estimate. Peach to Palms handles everything — furnishing, listing, guests, and management.</p>
+  </div>
+
+  <div class="str-body">
+
+    <!-- ── INPUTS CARD ── -->
+    <div class="str-card">
+      <div class="str-card-title">Your Property Details</div>
+
+      <div class="form-grid-2">
+
+        <div class="form-full field-group">
+          <label class="field-label" for="propAddress">Property Address</label>
+          <input class="field-input" type="text" id="propAddress" placeholder="123 Peachtree St, Atlanta, GA" />
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="bedrooms">Bedrooms</label>
+          <select class="field-select" id="bedrooms">
+            <option value="">Select...</option>
+            <option value="studio">Studio</option>
+            <option value="1">1 Bedroom</option>
+            <option value="2">2 Bedrooms</option>
+            <option value="3">3 Bedrooms</option>
+            <option value="4">4 Bedrooms</option>
+            <option value="5plus">5+ Bedrooms</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="bathrooms">Bathrooms</label>
+          <select class="field-select" id="bathrooms">
+            <option value="">Select...</option>
+            <option value="1">1</option>
+            <option value="1.5">1.5</option>
+            <option value="2">2</option>
+            <option value="2.5">2.5</option>
+            <option value="3">3</option>
+            <option value="3plus">3+</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="propType">Property Type</label>
+          <select class="field-select" id="propType">
+            <option value="">Select...</option>
+            <option value="sfh">Single Family Home</option>
+            <option value="townhome">Townhome</option>
+            <option value="condo">Condo</option>
+            <option value="apartment">Apartment</option>
+            <option value="unique">Unique / Other</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="neighborhood">Neighborhood / Area</label>
+          <select class="field-select" id="neighborhood">
+            <option value="">Select...</option>
+            <option value="buckhead">Buckhead</option>
+            <option value="midtown">Midtown</option>
+            <option value="o4w">Old Fourth Ward</option>
+            <option value="eastatlanta">East Atlanta</option>
+            <option value="college_park">College Park</option>
+            <option value="airport">Airport Area</option>
+            <option value="decatur">Decatur</option>
+            <option value="sandy_springs">Sandy Springs</option>
+            <option value="marietta">Marietta</option>
+            <option value="alpharetta">Alpharetta</option>
+            <option value="other">Other Atlanta Suburb</option>
+          </select>
+        </div>
+
+        <div class="field-group">
+          <label class="field-label" for="sqft">Est. Square Footage <span style="font-weight:400;text-transform:none;letter-spacing:0">(optional)</span></label>
+          <input class="field-input" type="number" id="sqft" placeholder="e.g. 1800" min="100" max="20000" />
+        </div>
+
+        <div class="form-full field-group">
+          <label class="field-label">Key Amenities (select all that apply)</label>
+          <div class="chip-grid" id="amenityChips">
+            <div class="chip" data-amenity="pool"><span class="chip-check">✓</span> Pool</div>
+            <div class="chip" data-amenity="hottub"><span class="chip-check">✓</span> Hot Tub</div>
+            <div class="chip" data-amenity="gameroom"><span class="chip-check">✓</span> Game Room</div>
+            <div class="chip" data-amenity="theater"><span class="chip-check">✓</span> Home Theater</div>
+            <div class="chip" data-amenity="firepit"><span class="chip-check">✓</span> Fire Pit</div>
+            <div class="chip" data-amenity="ev"><span class="chip-check">✓</span> EV Charging</div>
+            <div class="chip" data-amenity="yard"><span class="chip-check">✓</span> Large Yard</div>
+            <div class="chip" data-amenity="parking"><span class="chip-check">✓</span> Driveway Parking</div>
+            <div class="chip" data-amenity="nearairport"><span class="chip-check">✓</span> Near Airport</div>
+            <div class="chip" data-amenity="walkable"><span class="chip-check">✓</span> Walkable to Restaurants</div>
+            <div class="chip" data-amenity="petfriendly"><span class="chip-check">✓</span> Pet Friendly</div>
+            <div class="chip" data-amenity="gym"><span class="chip-check">✓</span> Gym</div>
+          </div>
+        </div>
+
+        <div class="form-full field-group">
+          <div class="toggle-row">
+            <label class="toggle-switch">
+              <input type="checkbox" id="isRented" />
+              <div class="toggle-track"></div>
+            </label>
+            <span class="toggle-label">This property is currently rented long-term</span>
+          </div>
+          <div id="currentRentRow">
+            <label class="field-label" style="margin-top:14px;" for="currentRent">Current Monthly Rent</label>
+            <input class="field-input" type="number" id="currentRent" placeholder="e.g. 2400" min="0" style="max-width:260px;" />
+          </div>
+        </div>
+
+      </div>
+
+      <button class="btn-estimate" id="btnEstimate" onclick="runEstimate()">
+        Calculate My STR Revenue →
+      </button>
+    </div>
+
+    <!-- ── RESULTS ── -->
+    <div id="resultsSection">
+
+      <div class="result-hero">
+        <div class="result-hero-label">Projected Annual Gross Revenue</div>
+        <div class="result-hero-value" id="resGrossAnnual">—</div>
+        <div class="result-hero-sub" id="resGrossRange">—</div>
+      </div>
+
+      <div class="result-grid">
+        <div class="result-tile">
+          <div class="result-tile-label">Monthly Net to You</div>
+          <div class="result-tile-value" id="resMonthlyNet">—</div>
+          <div class="result-tile-note">After 20% mgmt + ~3% platform fees</div>
+        </div>
+        <div class="result-tile">
+          <div class="result-tile-label">Projected Nightly Rate</div>
+          <div class="result-tile-value" id="resNightly">—</div>
+          <div class="result-tile-note">Based on market data &amp; amenities</div>
+        </div>
+        <div class="result-tile">
+          <div class="result-tile-label">Est. Setup Cost (one-time)</div>
+          <div class="result-tile-value" id="resSetup">—</div>
+          <div class="result-tile-note">Furnishing, staging &amp; listing</div>
+        </div>
+        <div class="result-tile">
+          <div class="result-tile-label">Months to Break Even</div>
+          <div class="result-tile-value" id="resBreakeven">—</div>
+          <div class="result-tile-note">Setup cost ÷ monthly net</div>
+        </div>
+      </div>
+
+      <div class="comparison-box" id="comparisonBox">
+        <div class="comparison-box-title">Long-Term vs. Short-Term Comparison</div>
+        <div class="comparison-row"><span>Current long-term rent</span><strong id="compLTR">—</strong></div>
+        <div class="comparison-row"><span>STR monthly net</span><strong id="compSTR">—</strong></div>
+        <div class="comparison-row diff"><span>Monthly difference</span><strong id="compDiff">—</strong></div>
+      </div>
+
+      <div class="breakeven-bar-wrap">
+        <div class="breakeven-label">Break-Even Progress (first 12 months)</div>
+        <div class="breakeven-track">
+          <div class="breakeven-fill" id="breakevenFill" style="width:0%"></div>
+        </div>
+        <div class="breakeven-note" id="breakevenNote">—</div>
+      </div>
+
+      <!-- Lead Capture -->
+      <div class="lead-banner">
+        <div class="lead-banner-title">Peach to Palms handles everything. You collect the income.</div>
+        <div class="lead-banner-sub">Furnishing · Listing · Guest communication · Cleaning coordination · Monthly payout</div>
+      </div>
+
+      <div class="str-card" id="leadCard">
+        <div class="str-card-title">Get Your Free STR Assessment</div>
+        <div class="form-grid-2">
+          <div class="field-group">
+            <label class="field-label" for="leadName">Your Name *</label>
+            <input class="field-input" type="text" id="leadName" placeholder="Jane Smith" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="leadPhone">Phone *</label>
+            <input class="field-input" type="tel" id="leadPhone" placeholder="(404) 555-0000" />
+          </div>
+          <div class="form-full field-group">
+            <label class="field-label" for="leadEmail">Email *</label>
+            <input class="field-input" type="email" id="leadEmail" placeholder="you@example.com" />
+          </div>
+          <div class="form-full field-group">
+            <label class="field-label" for="leadNotes">Tell us about your property (optional)</label>
+            <textarea class="field-input" id="leadNotes" rows="3" placeholder="Anything else we should know about the property, its condition, or your goals..." style="resize:vertical;"></textarea>
+          </div>
+          <div class="form-full field-group">
+            <label class="field-label" for="availability">Is your property currently available?</label>
+            <select class="field-select" id="availability">
+              <option value="available_now">Available Now</option>
+              <option value="1_3_months">Available in 1–3 months</option>
+              <option value="3_6_months">Available in 3–6 months</option>
+              <option value="exploring">Just Exploring</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-submit" id="btnSubmit" onclick="submitLead()">
+          Get My Free STR Assessment →
+        </button>
+        <div id="leadError" style="display:none;margin-top:12px;font-family:'Geist',sans-serif;font-size:13px;color:var(--err);"></div>
+      </div>
+
+      <div class="success-card" id="successCard">
+        <div class="success-icon">✓</div>
+        <div class="success-title">Assessment Request Received</div>
+        <div class="success-sub">A Peach to Palms specialist will reach out within 24 hours to walk through your property's STR potential in detail.<br><br><strong>Peach to Palms · An Ironwood Property Group Company</strong></div>
+      </div>
+
+    </div><!-- /resultsSection -->
+
+  </div><!-- /str-body -->
+
+  <div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+
+  <script>
+    const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
+    // ── UTM ──
+    function getUTM() {
+      const p = new URLSearchParams(window.location.search);
+      return {
+        utm_source:   p.get('utm_source')   || '',
+        utm_medium:   p.get('utm_medium')   || '',
+        utm_campaign: p.get('utm_campaign') || '',
+        utm_content:  p.get('utm_content')  || '',
+        utm_term:     p.get('utm_term')     || ''
+      };
+    }
+
+    // ── Chip toggle ──
+    document.querySelectorAll('.chip').forEach(chip => {
+      chip.addEventListener('click', () => chip.classList.toggle('selected'));
+    });
+
+    // ── Toggle rent row ──
+    document.getElementById('isRented').addEventListener('change', function() {
+      document.getElementById('currentRentRow').style.display = this.checked ? 'block' : 'none';
+    });
+
+    // ── Currency helper ──
+    function fmt(n) {
+      return '$' + Math.round(n).toLocaleString();
+    }
+    function fmtRange(n, pct) {
+      const lo = Math.round(n * (1 - pct));
+      const hi = Math.round(n * (1 + pct));
+      return '$' + lo.toLocaleString() + ' – $' + hi.toLocaleString();
+    }
+
+    // ── Base rates by bedroom ──
+    const BASE_RATES = {
+      studio: 95, '1': 125, '2': 165, '3': 210, '4': 280, '5plus': 380
+    };
+
+    // ── Area multipliers ──
+    const AREA_MULT = {
+      buckhead: 1.25, midtown: 1.25, o4w: 1.25,
+      eastatlanta: 1.10, decatur: 1.10,
+      airport: 1.05, college_park: 1.05,
+      sandy_springs: 1.0, marietta: 1.0, alpharetta: 1.0,
+      other: 0.95
+    };
+
+    // ── Amenity bonuses ──
+    const AMENITY_BONUS = {
+      pool: 35, hottub: 25, gameroom: 20, theater: 25, firepit: 15,
+      ev: 10, yard: 10, nearairport: 15, petfriendly: 20
+    };
+
+    // ── Setup cost by bedrooms ──
+    function setupCost(beds) {
+      const map = { studio: 8000, '1': 8000, '2': 9500, '3': 11000, '4': 13000, '5plus': 15000 };
+      return map[beds] || 10000;
+    }
+
+    let lastCalc = {};
+
+    function runEstimate() {
+      const beds = document.getElementById('bedrooms').value;
+      const area = document.getElementById('neighborhood').value;
+
+      if (!beds || !area) {
+        alert('Please select bedrooms and neighborhood to calculate.');
+        return;
+      }
+
+      const baseRate = BASE_RATES[beds] || 125;
+      const areaMult = AREA_MULT[area] || 1.0;
+
+      let amenityBonus = 0;
+      document.querySelectorAll('.chip.selected').forEach(chip => {
+        const key = chip.dataset.amenity;
+        amenityBonus += AMENITY_BONUS[key] || 0;
+      });
+
+      const nightlyRate = Math.round((baseRate * areaMult) + amenityBonus);
+      const occupancyRate = 0.68;
+      const occupancyNights = Math.round(365 * occupancyRate);
+      const grossAnnual = nightlyRate * occupancyNights;
+      const mgmtFee = grossAnnual * 0.20;
+      const platformFee = grossAnnual * 0.03;
+      const netAnnual = grossAnnual - mgmtFee - platformFee;
+      const monthlyNet = netAnnual / 12;
+      const setup = setupCost(beds);
+      const breakeven = Math.ceil(setup / monthlyNet);
+
+      lastCalc = { nightlyRate, occupancyNights, grossAnnual, mgmtFee, platformFee, netAnnual, monthlyNet, setup, breakeven };
+
+      // populate results
+      document.getElementById('resGrossAnnual').textContent = fmt(grossAnnual);
+      document.getElementById('resGrossRange').textContent = 'Projected range: ' + fmtRange(grossAnnual, 0.15) + ' per year';
+      document.getElementById('resMonthlyNet').textContent = fmt(monthlyNet) + '/mo';
+      document.getElementById('resNightly').textContent = fmt(nightlyRate) + '/night';
+      document.getElementById('resSetup').textContent = fmtRange(setup * 0.85, 0) + ' – ' + fmt(setup * 1.15);
+      document.getElementById('resBreakeven').textContent = breakeven + ' months';
+
+      // comparison
+      const isRented = document.getElementById('isRented').checked;
+      const currentRent = parseFloat(document.getElementById('currentRent').value) || 0;
+      const compBox = document.getElementById('comparisonBox');
+      if (isRented && currentRent > 0) {
+        const diff = monthlyNet - currentRent;
+        document.getElementById('compLTR').textContent = fmt(currentRent) + '/mo';
+        document.getElementById('compSTR').textContent = fmt(monthlyNet) + '/mo';
+        const diffEl = document.getElementById('compDiff');
+        diffEl.textContent = (diff >= 0 ? '+' : '') + fmt(diff) + '/mo';
+        diffEl.style.color = diff >= 0 ? 'var(--ok)' : 'var(--err)';
+        compBox.style.display = 'block';
+      } else {
+        compBox.style.display = 'none';
+      }
+
+      // breakeven bar
+      const pct = Math.min((monthlyNet * 12) / setup * 100, 100);
+      document.getElementById('breakevenFill').style.width = pct + '%';
+      document.getElementById('breakevenNote').textContent =
+        'Setup cost ' + fmt(setup) + ' · Monthly net ' + fmt(monthlyNet) + ' · Break even in ' + breakeven + ' months';
+
+      document.getElementById('resultsSection').style.display = 'block';
+      setTimeout(() => document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+    }
+
+    function validateLead() {
+      const name  = document.getElementById('leadName').value.trim();
+      const phone = document.getElementById('leadPhone').value.trim();
+      const email = document.getElementById('leadEmail').value.trim();
+      if (!name)  return 'Please enter your name.';
+      if (!phone) return 'Please enter your phone number.';
+      if (!email || !/\S+@\S+\.\S+/.test(email)) return 'Please enter a valid email.';
+      return null;
+    }
+
+    async function submitLead() {
+      const err = validateLead();
+      const errEl = document.getElementById('leadError');
+      if (err) { errEl.textContent = err; errEl.style.display = 'block'; return; }
+      errEl.style.display = 'none';
+
+      const btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      const selectedAmenities = [...document.querySelectorAll('.chip.selected')].map(c => c.dataset.amenity).join(', ');
+
+      const payload = {
+        // property details
+        propertyAddress:  document.getElementById('propAddress').value.trim(),
+        bedrooms:         document.getElementById('bedrooms').value,
+        bathrooms:        document.getElementById('bathrooms').value,
+        propertyType:     document.getElementById('propType').value,
+        neighborhood:     document.getElementById('neighborhood').value,
+        amenities:        selectedAmenities,
+        sqft:             document.getElementById('sqft').value,
+        isCurrentlyRented: document.getElementById('isRented').checked,
+        currentRent:      document.getElementById('currentRent').value || '',
+        // projections
+        projectedNightlyRate: lastCalc.nightlyRate,
+        grossAnnualRevenue:   Math.round(lastCalc.grossAnnual),
+        netAnnualRevenue:     Math.round(lastCalc.netAnnual),
+        monthlyNet:           Math.round(lastCalc.monthlyNet),
+        setupCost:            lastCalc.setup,
+        breakevenMonths:      lastCalc.breakeven,
+        // lead
+        name:         document.getElementById('leadName').value.trim(),
+        phone:        document.getElementById('leadPhone').value.trim(),
+        email:        document.getElementById('leadEmail').value.trim(),
+        notes:        document.getElementById('leadNotes').value.trim(),
+        availability: document.getElementById('availability').value,
+        submittedAt:  new Date().toISOString(),
+        ...getUTM()
+      };
+
+      try {
+        await fetch(GHL_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch(e) { console.warn('Webhook failed', e); }
+
+      document.getElementById('leadCard').style.display = 'none';
+      document.getElementById('successCard').style.display = 'block';
+      document.getElementById('successCard').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+
+</body>
+</html>

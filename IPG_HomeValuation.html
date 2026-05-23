@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Free Home Valuation — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+/* ── Page-specific styles ── */
+
+body { background: var(--bg); }
+
+/* Progress bar */
+.val-progress {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  margin: 32px auto 40px;
+  max-width: 520px;
+}
+.val-step-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  position: relative;
+}
+.val-step-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 16px;
+  left: 50%;
+  width: 100%;
+  height: 2px;
+  background: var(--hairline);
+  z-index: 0;
+}
+.val-step-item.done:not(:last-child)::after,
+.val-step-item.active:not(:last-child)::after {
+  background: var(--bronze);
+}
+.val-step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--hairline);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-family: 'Geist', sans-serif;
+  font-weight: 600;
+  color: var(--muted);
+  position: relative;
+  z-index: 1;
+  transition: all .2s;
+}
+.val-step-item.done .val-step-dot {
+  background: var(--bronze);
+  border-color: var(--bronze);
+  color: #fff;
+}
+.val-step-item.active .val-step-dot {
+  background: var(--bronze-deep);
+  border-color: var(--bronze-deep);
+  color: #fff;
+  box-shadow: 0 0 0 4px var(--bronze-tint);
+}
+.val-step-label {
+  font-size: 11px;
+  font-family: 'Geist', sans-serif;
+  color: var(--muted);
+  margin-top: 6px;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.val-step-item.active .val-step-label { color: var(--bronze-deep); }
+
+/* Steps */
+.val-step { display: none; }
+.val-step.active { display: block; }
+
+/* Section subheading */
+.val-section-head {
+  font-family: 'Geist', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 14px;
+  margin-top: 28px;
+}
+.val-section-head:first-child { margin-top: 0; }
+
+/* Form grid */
+.val-grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+@media (max-width: 560px) { .val-grid-2 { grid-template-columns: 1fr; } }
+
+.val-field { display: flex; flex-direction: column; gap: 6px; }
+.val-field-full { grid-column: 1 / -1; }
+
+/* Condition cards */
+.cond-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-bottom: 4px;
+}
+@media (max-width: 640px) { .cond-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 380px) { .cond-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.cond-card {
+  border: 2px solid var(--hairline);
+  border-radius: 10px;
+  padding: 14px 8px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--surface);
+  transition: all .18s;
+  user-select: none;
+}
+.cond-card:hover { border-color: var(--bronze); background: var(--bronze-wash); }
+.cond-card.selected { border-color: var(--bronze); background: var(--bronze-tint); }
+.cond-card-icon { font-size: 22px; margin-bottom: 6px; }
+.cond-card-label {
+  font-size: 11px;
+  font-family: 'Geist', sans-serif;
+  font-weight: 600;
+  color: var(--ink-soft);
+  line-height: 1.2;
+}
+.cond-excellent { --cond-bg: #F0F9F4; }
+.cond-good { --cond-bg: #F4F9F0; }
+.cond-fair { --cond-bg: #FFFBF0; }
+.cond-needs { --cond-bg: #FFF8F0; }
+.cond-major { --cond-bg: #FFF4F0; }
+.cond-card.selected.cond-excellent { background: #E6F6EE; border-color: #3a9c6d; }
+.cond-card.selected.cond-good { background: #EEF7E6; border-color: #5a9c3a; }
+.cond-card.selected.cond-fair { background: #FFF7D6; border-color: #c9a43a; }
+.cond-card.selected.cond-needs { background: #FFF0E0; border-color: #c97a3a; }
+.cond-card.selected.cond-major { background: #FFE8E6; border-color: #c94a3a; }
+
+/* Chip selects */
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.chip {
+  padding: 7px 14px;
+  border-radius: 40px;
+  border: 1.5px solid var(--hairline);
+  background: var(--surface);
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  transition: all .15s;
+  user-select: none;
+  white-space: nowrap;
+}
+.chip:hover { border-color: var(--bronze); color: var(--bronze-deep); }
+.chip.selected {
+  background: var(--bronze-tint);
+  border-color: var(--bronze);
+  color: var(--bronze-deep);
+  font-weight: 600;
+}
+
+/* Estimate box */
+.estimate-box {
+  background: var(--bronze-tint);
+  border: 1.5px solid var(--bronze);
+  border-radius: 14px;
+  padding: 28px 32px;
+  text-align: center;
+  margin-bottom: 28px;
+}
+.estimate-label {
+  font-family: 'Geist', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--bronze-deep);
+  margin-bottom: 8px;
+}
+.estimate-range {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  color: var(--ink);
+  line-height: 1.1;
+  margin-bottom: 6px;
+}
+.estimate-address {
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+}
+.estimate-note {
+  font-family: 'Geist', sans-serif;
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 10px;
+  line-height: 1.5;
+}
+
+/* Cash offer checkbox */
+.val-checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px;
+  background: var(--bronze-wash);
+  border: 1.5px solid var(--bronze);
+  border-radius: 10px;
+  margin-bottom: 20px;
+  cursor: pointer;
+}
+.val-checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: var(--bronze);
+  flex-shrink: 0;
+  margin-top: 1px;
+  cursor: pointer;
+}
+.val-checkbox-text {
+  font-family: 'Geist', sans-serif;
+  font-size: 14px;
+  color: var(--ink-soft);
+  line-height: 1.4;
+}
+.val-checkbox-text strong { color: var(--bronze-deep); }
+
+/* Navigation buttons */
+.val-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid var(--hairline);
+}
+.val-nav-right { display: flex; gap: 10px; margin-left: auto; }
+
+/* Confirmation step */
+.conf-heading {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 38px;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 10px;
+  line-height: 1.15;
+}
+.conf-subhead {
+  text-align: center;
+  font-family: 'Geist', sans-serif;
+  font-size: 15px;
+  color: var(--muted);
+  margin-bottom: 32px;
+}
+.conf-estimate-row {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  margin-bottom: 32px;
+}
+.conf-stat {
+  text-align: center;
+}
+.conf-stat-label {
+  font-family: 'Geist', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 4px;
+}
+.conf-stat-val {
+  font-family: 'Instrument Serif', serif;
+  font-size: 26px;
+  color: var(--ink);
+}
+.conf-cta-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+@media (max-width: 520px) { .conf-cta-grid { grid-template-columns: 1fr; } }
+.conf-cta-card {
+  background: var(--surface);
+  border: 1.5px solid var(--hairline);
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+}
+.conf-cta-icon { font-size: 28px; margin-bottom: 12px; }
+.conf-cta-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 20px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+.conf-cta-desc {
+  font-family: 'Geist', sans-serif;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+
+/* Required asterisk */
+.req { color: var(--bronze); }
+
+/* Error */
+.field-error {
+  font-family: 'Geist', sans-serif;
+  font-size: 12px;
+  color: #c94a3a;
+  margin-top: 2px;
+  display: none;
+}
+.has-error .iw-input,
+.has-error .iw-select { border-color: #c94a3a; }
+.has-error .field-error { display: block; }
+</style>
+</head>
+<body>
+
+<!-- Header -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <div class="iw-logo-box">I</div>
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<!-- Hero -->
+<div class="iw-page-hero">
+  <div class="iw-container-sm">
+    <div class="iw-eyebrow">Free · No Obligation · 60 Seconds</div>
+    <h1 class="iw-page-title">What Is Your Home Worth?</h1>
+    <p class="iw-page-sub">Answer a few quick questions and get an instant estimated value range for your Atlanta-area home — backed by real comp data.</p>
+  </div>
+</div>
+
+<!-- Main form area -->
+<div class="iw-container-sm" style="padding-bottom: 80px;">
+
+  <!-- Progress -->
+  <div class="val-progress">
+    <div class="val-step-item active" id="prog-1">
+      <div class="val-step-dot">1</div>
+      <div class="val-step-label">Property</div>
+    </div>
+    <div class="val-step-item" id="prog-2">
+      <div class="val-step-dot">2</div>
+      <div class="val-step-label">Condition</div>
+    </div>
+    <div class="val-step-item" id="prog-3">
+      <div class="val-step-dot">3</div>
+      <div class="val-step-label">Contact</div>
+    </div>
+    <div class="val-step-item" id="prog-4">
+      <div class="val-step-dot">✓</div>
+      <div class="val-step-label">Done</div>
+    </div>
+  </div>
+
+  <!-- ── STEP 1: Property Info ── -->
+  <div class="iw-card val-step active" id="step-1">
+    <div class="iw-section-label">Step 1 of 3 — Property Details</div>
+
+    <div class="val-field" style="margin-bottom:14px;">
+      <label class="iw-label">Property Address <span class="req">*</span></label>
+      <input class="iw-input" id="address" type="text" placeholder="123 Maple Street" autocomplete="street-address"/>
+      <span class="field-error">Please enter your property address.</span>
+    </div>
+
+    <div class="val-grid-2">
+      <div class="val-field val-field-full">
+        <label class="iw-label">City / State <span class="req">*</span></label>
+        <input class="iw-input" id="city" type="text" value="Atlanta, GA"/>
+      </div>
+
+      <div class="val-field">
+        <label class="iw-label">Bedrooms</label>
+        <select class="iw-select" id="bedrooms">
+          <option value="1">1 Bedroom</option>
+          <option value="2">2 Bedrooms</option>
+          <option value="3" selected>3 Bedrooms</option>
+          <option value="4">4 Bedrooms</option>
+          <option value="5">5+ Bedrooms</option>
+        </select>
+      </div>
+
+      <div class="val-field">
+        <label class="iw-label">Bathrooms</label>
+        <select class="iw-select" id="bathrooms">
+          <option value="1">1 Bath</option>
+          <option value="1.5">1.5 Baths</option>
+          <option value="2" selected>2 Baths</option>
+          <option value="2.5">2.5 Baths</option>
+          <option value="3">3 Baths</option>
+          <option value="3+">3+ Baths</option>
+        </select>
+      </div>
+
+      <div class="val-field">
+        <label class="iw-label">Square Footage</label>
+        <input class="iw-input" id="sqft" type="number" placeholder="1,800" min="200" max="20000"/>
+      </div>
+
+      <div class="val-field">
+        <label class="iw-label">Year Built</label>
+        <input class="iw-input" id="yearBuilt" type="number" placeholder="1998" min="1880" max="2025"/>
+      </div>
+
+      <div class="val-field">
+        <label class="iw-label">Property Type</label>
+        <select class="iw-select" id="propertyType">
+          <option value="Single Family" selected>Single Family</option>
+          <option value="Townhome">Townhome</option>
+          <option value="Condo">Condo</option>
+          <option value="Multi-Family">Multi-Family</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+
+      <div class="val-field">
+        <label class="iw-label">Garage</label>
+        <select class="iw-select" id="garage">
+          <option value="None">None</option>
+          <option value="1 Car">1 Car</option>
+          <option value="2 Car" selected>2 Car</option>
+          <option value="3+ Car">3+ Car</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="val-nav">
+      <div></div>
+      <div class="val-nav-right">
+        <button class="iw-btn iw-btn-primary" onclick="goToStep(2)">Next: Condition →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 2: Condition & Situation ── -->
+  <div class="iw-card val-step" id="step-2">
+    <div class="iw-section-label">Step 2 of 3 — Condition &amp; Situation</div>
+
+    <div class="val-section-head">Overall Condition</div>
+    <div class="cond-grid">
+      <div class="cond-card cond-excellent" data-cond="Excellent" onclick="selectCondition(this)">
+        <div class="cond-card-icon">✨</div>
+        <div class="cond-card-label">Excellent</div>
+      </div>
+      <div class="cond-card cond-good selected" data-cond="Good" onclick="selectCondition(this)">
+        <div class="cond-card-icon">👍</div>
+        <div class="cond-card-label">Good</div>
+      </div>
+      <div class="cond-card cond-fair" data-cond="Fair" onclick="selectCondition(this)">
+        <div class="cond-card-icon">🔧</div>
+        <div class="cond-card-label">Fair</div>
+      </div>
+      <div class="cond-card cond-needs" data-cond="Needs Work" onclick="selectCondition(this)">
+        <div class="cond-card-icon">🪚</div>
+        <div class="cond-card-label">Needs Work</div>
+      </div>
+      <div class="cond-card cond-major" data-cond="Major Repairs" onclick="selectCondition(this)">
+        <div class="cond-card-icon">🏚️</div>
+        <div class="cond-card-label">Major Repairs</div>
+      </div>
+    </div>
+
+    <div class="val-section-head" style="margin-top:28px;">Recent Updates (Last 5 Years) — Select all that apply</div>
+    <div class="chip-group" id="updates-chips">
+      <div class="chip" data-val="New Roof" onclick="toggleChip(this,'updates')">New Roof</div>
+      <div class="chip" data-val="HVAC" onclick="toggleChip(this,'updates')">HVAC</div>
+      <div class="chip" data-val="Kitchen Remodel" onclick="toggleChip(this,'updates')">Kitchen Remodel</div>
+      <div class="chip" data-val="Bath Remodel" onclick="toggleChip(this,'updates')">Bath Remodel</div>
+      <div class="chip" data-val="New Flooring" onclick="toggleChip(this,'updates')">New Flooring</div>
+      <div class="chip" data-val="Fresh Paint" onclick="toggleChip(this,'updates')">Fresh Paint</div>
+      <div class="chip" data-val="Windows" onclick="toggleChip(this,'updates')">Windows</div>
+      <div class="chip" data-val="None" onclick="toggleChip(this,'updates-none')">None</div>
+    </div>
+
+    <div class="val-section-head" style="margin-top:28px;">Why Are You Considering Selling?</div>
+    <div class="chip-group" id="reason-chips">
+      <div class="chip" data-val="Downsizing" onclick="selectChip(this,'reason')">Downsizing</div>
+      <div class="chip" data-val="Upsizing" onclick="selectChip(this,'reason')">Upsizing</div>
+      <div class="chip" data-val="Relocation" onclick="selectChip(this,'reason')">Relocation</div>
+      <div class="chip" data-val="Financial" onclick="selectChip(this,'reason')">Financial</div>
+      <div class="chip" data-val="Divorce" onclick="selectChip(this,'reason')">Divorce</div>
+      <div class="chip" data-val="Estate" onclick="selectChip(this,'reason')">Estate</div>
+      <div class="chip" data-val="Investment" onclick="selectChip(this,'reason')">Investment</div>
+      <div class="chip selected" data-val="Just Curious" onclick="selectChip(this,'reason')">Just Curious</div>
+    </div>
+
+    <div class="val-section-head" style="margin-top:28px;">Timeline</div>
+    <div class="chip-group" id="timeline-chips">
+      <div class="chip" data-val="ASAP" onclick="selectChip(this,'timeline')">ASAP</div>
+      <div class="chip" data-val="1-3 Months" onclick="selectChip(this,'timeline')">1–3 Months</div>
+      <div class="chip" data-val="3-6 Months" onclick="selectChip(this,'timeline')">3–6 Months</div>
+      <div class="chip" data-val="6-12 Months" onclick="selectChip(this,'timeline')">6–12 Months</div>
+      <div class="chip selected" data-val="Just Exploring" onclick="selectChip(this,'timeline')">Just Exploring</div>
+    </div>
+
+    <div class="val-nav">
+      <button class="iw-btn iw-btn-outline" onclick="goToStep(1)">← Back</button>
+      <div class="val-nav-right">
+        <button class="iw-btn iw-btn-primary" onclick="goToStep(3)">Next: Get My Estimate →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 3: Contact + Estimate ── -->
+  <div class="val-step" id="step-3">
+
+    <!-- Estimate display card -->
+    <div class="estimate-box" id="estimate-display">
+      <div class="estimate-label">Your Estimated Value Range</div>
+      <div class="estimate-range" id="estimate-range-text">—</div>
+      <div class="estimate-address" id="estimate-address-text"></div>
+      <div class="estimate-note">Based on Atlanta metro comps · <strong>$185/sqft</strong> baseline adjusted for condition &amp; updates · Final value determined by licensed agent</div>
+    </div>
+
+    <div class="iw-card">
+      <div class="iw-section-label">Step 3 of 3 — Get Your Free Report</div>
+
+      <div class="val-grid-2">
+        <div class="val-field" id="field-firstName">
+          <label class="iw-label">First Name <span class="req">*</span></label>
+          <input class="iw-input" id="firstName" type="text" placeholder="Jordan" autocomplete="given-name"/>
+          <span class="field-error">Required.</span>
+        </div>
+        <div class="val-field" id="field-lastName">
+          <label class="iw-label">Last Name <span class="req">*</span></label>
+          <input class="iw-input" id="lastName" type="text" placeholder="Smith" autocomplete="family-name"/>
+          <span class="field-error">Required.</span>
+        </div>
+        <div class="val-field" id="field-phone">
+          <label class="iw-label">Phone <span class="req">*</span></label>
+          <input class="iw-input" id="phone" type="tel" placeholder="(404) 555-0100" autocomplete="tel"/>
+          <span class="field-error">Please enter a valid phone number.</span>
+        </div>
+        <div class="val-field" id="field-email">
+          <label class="iw-label">Email <span class="req">*</span></label>
+          <input class="iw-input" id="email" type="email" placeholder="you@email.com" autocomplete="email"/>
+          <span class="field-error">Please enter a valid email.</span>
+        </div>
+        <div class="val-field val-field-full">
+          <label class="iw-label">Best Time to Call</label>
+          <select class="iw-select" id="callTime">
+            <option value="Anytime" selected>Anytime</option>
+            <option value="Morning">Morning (8am–12pm)</option>
+            <option value="Afternoon">Afternoon (12pm–5pm)</option>
+            <option value="Evening">Evening (5pm–8pm)</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;">
+        <label class="val-checkbox-row" for="cashOffer">
+          <input type="checkbox" id="cashOffer" checked/>
+          <div class="val-checkbox-text">
+            <strong>I'm also interested in a cash offer from Ironwood</strong><br/>
+            Skip the listing process — we buy homes as-is, no repairs needed.
+          </div>
+        </label>
+      </div>
+
+      <div class="val-nav">
+        <button class="iw-btn iw-btn-outline" onclick="goToStep(2)">← Back</button>
+        <div class="val-nav-right">
+          <button class="iw-btn iw-btn-bronze iw-btn-full" id="submit-btn" onclick="submitForm()" style="min-width:220px;">Get My Free Valuation Report</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── STEP 4: Confirmation ── -->
+  <div class="val-step" id="step-4">
+    <div style="text-align:center; padding: 12px 0 8px;">
+      <div style="font-size:52px; margin-bottom:16px;">🏡</div>
+    </div>
+    <h2 class="conf-heading">Your valuation is on the way.</h2>
+    <p class="conf-subhead" id="conf-subhead">We'll send your personalized report to your email shortly.</p>
+
+    <div class="conf-estimate-row" id="conf-estimate-row">
+      <!-- populated by JS -->
+    </div>
+
+    <div class="iw-divider"></div>
+
+    <div style="text-align:center; margin-bottom: 20px;">
+      <div class="iw-eyebrow">What's next?</div>
+    </div>
+
+    <div class="conf-cta-grid">
+      <div class="conf-cta-card">
+        <div class="conf-cta-icon">💰</div>
+        <div class="conf-cta-title">Want a Cash Offer?</div>
+        <div class="conf-cta-desc">Skip the listing process. We buy homes as-is — no repairs, no showings, no hassle.</div>
+        <a href="tel:+1XXXXXXXXXX" class="iw-btn iw-btn-bronze iw-btn-full">Request a Cash Offer</a>
+      </div>
+      <div class="conf-cta-card">
+        <div class="conf-cta-icon">🔨</div>
+        <div class="conf-cta-title">Need Renovations First?</div>
+        <div class="conf-cta-desc">We can renovate and list your home for maximum value with our full-service team.</div>
+        <a href="tel:+1XXXXXXXXXX" class="iw-btn iw-btn-outline iw-btn-full">Talk to Our Team</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+
+<script>
+// ── GHL Webhook ──
+const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
+// ── UTM params ──
+function getUTM() {
+  const p = new URLSearchParams(window.location.search);
+  return {
+    utm_source:   p.get('utm_source')   || '',
+    utm_medium:   p.get('utm_medium')   || '',
+    utm_campaign: p.get('utm_campaign') || '',
+    utm_content:  p.get('utm_content')  || '',
+    utm_term:     p.get('utm_term')     || ''
+  };
+}
+
+// ── State ──
+let selectedCondition = 'Good';
+let selectedReason    = 'Just Curious';
+let selectedTimeline  = 'Just Exploring';
+let selectedUpdates   = [];
+
+// ── Condition selection ──
+function selectCondition(el) {
+  document.querySelectorAll('.cond-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedCondition = el.dataset.cond;
+}
+
+// ── Chip helpers ──
+function selectChip(el, group) {
+  const parent = el.closest('.chip-group');
+  parent.querySelectorAll('.chip').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  if (group === 'reason') selectedReason = el.dataset.val;
+  if (group === 'timeline') selectedTimeline = el.dataset.val;
+}
+
+function toggleChip(el, mode) {
+  if (mode === 'updates-none') {
+    // clicking "None" clears everything else
+    document.querySelectorAll('#updates-chips .chip').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedUpdates = [];
+    return;
+  }
+  // Clicking an update chip deselects "None"
+  document.querySelectorAll('#updates-chips .chip').forEach(c => {
+    if (c.dataset.val === 'None') c.classList.remove('selected');
+  });
+  el.classList.toggle('selected');
+  const val = el.dataset.val;
+  if (el.classList.contains('selected')) {
+    if (!selectedUpdates.includes(val)) selectedUpdates.push(val);
+  } else {
+    selectedUpdates = selectedUpdates.filter(v => v !== val);
+  }
+}
+
+// ── Estimate calculation ──
+const COND_MULT = {
+  'Excellent': 1.15,
+  'Good':      1.05,
+  'Fair':      0.95,
+  'Needs Work': 0.82,
+  'Major Repairs': 0.68
+};
+const UPDATE_VALUES = {
+  'New Roof': 8000,
+  'HVAC': 6000,
+  'Kitchen Remodel': 15000,
+  'Bath Remodel': 8000,
+  'New Flooring': 5000,
+  'Fresh Paint': 3000,
+  'Windows': 7000
+};
+
+function calcEstimate() {
+  const sqft = parseFloat(document.getElementById('sqft').value) || 0;
+  const cond = selectedCondition;
+  const mult = COND_MULT[cond] || 1.0;
+  let base = sqft * 185 * mult;
+  let updatesBonus = 0;
+  selectedUpdates.forEach(u => { updatesBonus += (UPDATE_VALUES[u] || 0); });
+  base += updatesBonus;
+  const low  = Math.round(base * 0.92 / 1000) * 1000;
+  const high = Math.round(base * 1.08 / 1000) * 1000;
+  const mid  = Math.round(base / 1000) * 1000;
+  return { low, high, mid };
+}
+
+function fmt(n) {
+  return '$' + n.toLocaleString('en-US');
+}
+
+function updateEstimateDisplay() {
+  const { low, high, mid } = calcEstimate();
+  const addr = (document.getElementById('address').value || 'Your Home').trim();
+  const city = (document.getElementById('city').value || '').trim();
+  const sqft = document.getElementById('sqft').value;
+
+  if (!sqft || parseFloat(sqft) <= 0) {
+    document.getElementById('estimate-range-text').textContent = 'Enter sq. footage to see estimate';
+    document.getElementById('estimate-address-text').textContent = addr;
+    return;
+  }
+  document.getElementById('estimate-range-text').textContent = fmt(low) + ' – ' + fmt(high);
+  document.getElementById('estimate-address-text').textContent = addr + (city ? ', ' + city : '');
+}
+
+// ── Step navigation ──
+function goToStep(n) {
+  if (n === 2) {
+    // validate step 1
+    const addr = document.getElementById('address').value.trim();
+    const addrField = document.getElementById('address').closest('.val-field');
+    if (!addr) {
+      addrField.classList.add('has-error');
+      document.getElementById('address').focus();
+      return;
+    }
+    addrField.classList.remove('has-error');
+  }
+  if (n === 3) {
+    updateEstimateDisplay();
+  }
+
+  for (let i = 1; i <= 4; i++) {
+    const s = document.getElementById('step-' + i);
+    const p = document.getElementById('prog-' + i);
+    if (s) s.classList.toggle('active', i === n);
+    if (p) {
+      p.classList.remove('active', 'done');
+      if (i < n) p.classList.add('done');
+      if (i === n) p.classList.add('active');
+    }
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Form validation ──
+function validateStep3() {
+  let ok = true;
+  const fields = [
+    { id: 'firstName', wrapId: 'field-firstName', test: v => v.trim().length > 0 },
+    { id: 'lastName',  wrapId: 'field-lastName',  test: v => v.trim().length > 0 },
+    { id: 'phone',     wrapId: 'field-phone',      test: v => v.replace(/\D/g,'').length >= 10 },
+    { id: 'email',     wrapId: 'field-email',      test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) }
+  ];
+  fields.forEach(f => {
+    const el = document.getElementById(f.id);
+    const wrap = document.getElementById(f.wrapId);
+    if (!f.test(el.value)) {
+      wrap.classList.add('has-error');
+      ok = false;
+    } else {
+      wrap.classList.remove('has-error');
+    }
+  });
+  return ok;
+}
+
+// ── Submit ──
+async function submitForm() {
+  if (!validateStep3()) return;
+
+  const btn = document.getElementById('submit-btn');
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+
+  const { low, high, mid } = calcEstimate();
+  const utm = getUTM();
+
+  const payload = {
+    // Property
+    address:       document.getElementById('address').value.trim(),
+    city:          document.getElementById('city').value.trim(),
+    bedrooms:      document.getElementById('bedrooms').value,
+    bathrooms:     document.getElementById('bathrooms').value,
+    sqft:          document.getElementById('sqft').value,
+    yearBuilt:     document.getElementById('yearBuilt').value,
+    propertyType:  document.getElementById('propertyType').value,
+    garage:        document.getElementById('garage').value,
+    // Condition
+    conditionRating:   selectedCondition,
+    recentUpdates:     selectedUpdates.join(', ') || 'None',
+    sellingReason:     selectedReason,
+    timeline:          selectedTimeline,
+    // Estimate
+    estimatedValueLow:  low,
+    estimatedValueHigh: high,
+    estimatedValue:     mid,
+    // Contact
+    firstName:     document.getElementById('firstName').value.trim(),
+    lastName:      document.getElementById('lastName').value.trim(),
+    phone:         document.getElementById('phone').value.trim(),
+    email:         document.getElementById('email').value.trim(),
+    bestTimeToCall: document.getElementById('callTime').value,
+    cashOfferInterested: document.getElementById('cashOffer').checked,
+    // Meta
+    ...utm,
+    submittedAt: new Date().toISOString(),
+    pageUrl:     window.location.href,
+    formType:    'HomeValuation'
+  };
+
+  try {
+    await fetch(GHL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+  } catch(e) {
+    console.warn('Webhook error:', e);
+  }
+
+  // Populate confirmation
+  const confRow = document.getElementById('conf-estimate-row');
+  confRow.innerHTML = `
+    <div class="conf-stat">
+      <div class="conf-stat-label">Property</div>
+      <div class="conf-stat-val" style="font-size:16px; font-family:'Geist',sans-serif; color:var(--ink-soft);">${payload.address}, ${payload.city}</div>
+    </div>
+  `;
+  const confRow2 = document.createElement('div');
+  confRow2.className = 'conf-estimate-row';
+  confRow2.style.marginTop = '12px';
+  confRow2.innerHTML = `
+    <div class="conf-stat">
+      <div class="conf-stat-label">Estimated Range</div>
+      <div class="conf-stat-val">${fmt(low)} – ${fmt(high)}</div>
+    </div>
+    <div class="conf-stat">
+      <div class="conf-stat-label">Midpoint Estimate</div>
+      <div class="conf-stat-val">${fmt(mid)}</div>
+    </div>
+  `;
+  confRow.after(confRow2);
+
+  document.getElementById('conf-subhead').textContent =
+    `Hi ${payload.firstName} — your personalized report is on its way to ${payload.email}.`;
+
+  goToStep(4);
+}
+
+// ── Address field clears error on type ──
+document.getElementById('address').addEventListener('input', function() {
+  this.closest('.val-field').classList.remove('has-error');
+});
+</script>
+</body>
+</html>

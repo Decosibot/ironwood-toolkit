@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Change Order Request — Ironwood Property Group</title>
+  <link rel="stylesheet" href="iw-design.css" />
+  <style>
+    /* ── Page-specific styles ── */
+    .co-body {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 40px 24px 80px;
+    }
+
+    /* page heading */
+    .co-page-heading {
+      margin-bottom: 28px;
+    }
+    .co-page-eyebrow {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: var(--bronze);
+      margin-bottom: 6px;
+    }
+    .co-page-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: clamp(26px, 4vw, 36px);
+      color: var(--ink);
+      line-height: 1.15;
+    }
+    .co-page-sub {
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 8px;
+      line-height: 1.55;
+    }
+
+    /* main card */
+    .co-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+
+    /* document header strip */
+    .co-doc-header {
+      background: var(--ink);
+      padding: 24px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 520px) { .co-doc-header { padding: 18px 20px; } }
+    .co-doc-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 20px;
+      color: #fff;
+    }
+    .co-doc-meta {
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      color: rgba(255,255,255,.5);
+      margin-top: 2px;
+    }
+    .co-doc-badge {
+      background: var(--bronze);
+      color: #fff;
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 100px;
+      flex-shrink: 0;
+    }
+
+    /* form sections */
+    .co-section {
+      padding: 28px 32px;
+      border-bottom: 1px solid var(--hairline);
+    }
+    @media (max-width: 520px) { .co-section { padding: 20px; } }
+    .co-section:last-child { border-bottom: none; }
+
+    .co-section-title {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--hairline);
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 540px) { .form-grid-2 { grid-template-columns: 1fr; } }
+    .form-full { grid-column: 1 / -1; }
+
+    .field-label {
+      display: block;
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .field-label .req {
+      color: var(--bronze);
+      margin-left: 2px;
+    }
+    .field-input,
+    .field-select,
+    .field-textarea {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--surface-2);
+      border: 1px solid var(--hairline-2);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .field-input:focus,
+    .field-select:focus,
+    .field-textarea:focus {
+      border-color: var(--bronze);
+      box-shadow: 0 0 0 3px rgba(156,123,74,.10);
+    }
+    .field-select {
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%237A6F60' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+      cursor: pointer;
+    }
+    .field-textarea {
+      resize: vertical;
+      min-height: 100px;
+      line-height: 1.55;
+    }
+    .field-hint {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    /* cost impact */
+    .cost-input-wrap {
+      position: relative;
+    }
+    .cost-prefix {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: var(--muted);
+      pointer-events: none;
+    }
+    .cost-input-wrap .field-input {
+      padding-left: 26px;
+    }
+
+    /* ── Signature section ── */
+    .sig-ack-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--bronze-wash);
+      border: 1px solid var(--bronze);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .sig-ack-row input[type=checkbox] {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      accent-color: var(--bronze);
+      cursor: pointer;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .sig-ack-text {
+      font-family: 'Geist', sans-serif;
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+
+    /* canvas signature pad */
+    .sig-pad-wrap {
+      border: 1.5px solid var(--hairline-2);
+      border-radius: 8px;
+      background: var(--surface-2);
+      overflow: hidden;
+      position: relative;
+    }
+    .sig-pad-wrap:focus-within { border-color: var(--bronze); }
+    #sigCanvas {
+      display: block;
+      width: 100%;
+      height: 140px;
+      cursor: crosshair;
+      touch-action: none;
+    }
+    .sig-pad-label {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Geist', sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+      pointer-events: none;
+      transition: opacity .2s;
+    }
+    .sig-clear-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      background: none;
+      border: 1px solid var(--hairline-2);
+      border-radius: 6px;
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      cursor: pointer;
+      margin-top: 8px;
+      transition: border-color .12s, color .12s;
+    }
+    .sig-clear-btn:hover { border-color: var(--err); color: var(--err); }
+
+    /* submit button */
+    .btn-submit {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 15px 24px;
+      background: var(--bronze);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Geist', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s;
+      margin-top: 4px;
+    }
+    .btn-submit:hover { background: var(--bronze-deep); }
+    .btn-submit:disabled { background: var(--muted); cursor: not-allowed; }
+
+    .error-msg {
+      font-family: 'Geist', sans-serif;
+      font-size: 13px;
+      color: var(--err);
+      margin-top: 12px;
+      display: none;
+    }
+
+    /* confirmation */
+    .success-card {
+      display: none;
+      text-align: center;
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 14px;
+      padding: 56px 32px;
+    }
+    .success-icon {
+      width: 60px;
+      height: 60px;
+      background: #EBF3EB;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 26px;
+      margin: 0 auto 18px;
+    }
+    .success-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 28px;
+      color: var(--ink);
+      margin-bottom: 10px;
+    }
+    .success-sub {
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.65;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+    .success-code {
+      display: inline-block;
+      background: var(--bronze-tint);
+      border: 1px solid var(--bronze);
+      border-radius: 6px;
+      padding: 4px 12px;
+      font-family: 'Geist', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--bronze-deep);
+      letter-spacing: .06em;
+      margin: 12px auto 0;
+    }
+
+    /* field group spacing */
+    .field-group { margin: 0; }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="iw-header">
+    <a class="iw-logo-area" href="index.html">
+      <div class="iw-logo-box">I</div>
+      <div>
+        <div class="iw-logo-text">Ironwood Property Group</div>
+        <div class="iw-logo-sub">Atlanta Metro</div>
+      </div>
+    </a>
+    <div class="iw-header-right">
+      <a class="iw-back-btn" href="IPG_ProjectStatus.html">← Project Status</a>
+    </div>
+  </div>
+
+  <div class="co-body">
+
+    <div class="co-page-heading">
+      <div class="co-page-eyebrow">Ironwood Property Group</div>
+      <div class="co-page-title">Change Order Request</div>
+      <div class="co-page-sub">Use this form to request a change to your active renovation contract. Your project manager will review and respond within 24 hours.</div>
+    </div>
+
+    <!-- Main form card -->
+    <div class="co-card" id="coCard">
+
+      <!-- Document header strip -->
+      <div class="co-doc-header">
+        <div>
+          <div class="co-doc-title">Change Order Request</div>
+          <div class="co-doc-meta" id="docMeta">Ironwood Property Group · Atlanta Metro</div>
+        </div>
+        <div class="co-doc-badge">Pending</div>
+      </div>
+
+      <!-- Section 1: Project Info -->
+      <div class="co-section">
+        <div class="co-section-title">Project Information</div>
+        <div class="form-grid-2">
+          <div class="field-group">
+            <label class="field-label" for="projectCode">Project Code <span class="req">*</span></label>
+            <input class="field-input" type="text" id="projectCode" placeholder="IPG-0000" autocapitalize="characters" autocorrect="off" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="coDate">Date</label>
+            <input class="field-input" type="text" id="coDate" readonly />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="clientName">Client Name <span class="req">*</span></label>
+            <input class="field-input" type="text" id="clientName" placeholder="Your full name" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="propAddress">Property Address <span class="req">*</span></label>
+            <input class="field-input" type="text" id="propAddress" placeholder="123 Main St, Atlanta, GA" />
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Change Details -->
+      <div class="co-section">
+        <div class="co-section-title">Change Details</div>
+        <div class="form-grid-2">
+          <div class="field-group">
+            <label class="field-label" for="changeType">Change Order Type <span class="req">*</span></label>
+            <select class="field-select" id="changeType">
+              <option value="">Select type...</option>
+              <option value="addition">Addition to Scope</option>
+              <option value="removal">Removal from Scope</option>
+              <option value="material_upgrade">Material Upgrade</option>
+              <option value="material_sub">Material Substitution</option>
+              <option value="schedule">Schedule Change</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="changeReason">Reason for Change <span class="req">*</span></label>
+            <select class="field-select" id="changeReason">
+              <option value="">Select reason...</option>
+              <option value="client_request">Client Request</option>
+              <option value="unforeseen">Unforeseen Condition</option>
+              <option value="design_change">Design Change</option>
+              <option value="material_unavailable">Material Unavailable</option>
+              <option value="code_requirement">Code Requirement</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-full field-group">
+            <label class="field-label" for="changeDescription">Description of Change <span class="req">*</span></label>
+            <textarea class="field-textarea" id="changeDescription" rows="4" placeholder="Describe exactly what is being changed, added, or removed from the original scope of work..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Impact -->
+      <div class="co-section">
+        <div class="co-section-title">Cost &amp; Schedule Impact</div>
+        <div class="form-grid-2">
+          <div class="field-group">
+            <label class="field-label" for="costImpact">Estimated Cost Impact</label>
+            <div class="cost-input-wrap">
+              <span class="cost-prefix">$</span>
+              <input class="field-input" type="number" id="costImpact" placeholder="0" step="100" />
+            </div>
+            <div class="field-hint">Positive = additional cost · Negative = credit to client</div>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="scheduleImpact">Estimated Schedule Impact</label>
+            <select class="field-select" id="scheduleImpact">
+              <option value="none">No Impact</option>
+              <option value="1_3_days">+1–3 Days</option>
+              <option value="1_week">+1 Week</option>
+              <option value="2_weeks">+2 Weeks</option>
+              <option value="3plus_weeks">+3+ Weeks</option>
+            </select>
+          </div>
+          <div class="form-full field-group">
+            <label class="field-label" for="otherImpact">Impact on Other Work? (optional)</label>
+            <textarea class="field-textarea" id="otherImpact" rows="3" placeholder="Will this change affect any other scheduled work, trades, or milestones?"></textarea>
+          </div>
+          <div class="form-full field-group">
+            <label class="field-label" for="supportingNotes">Supporting Notes (optional)</label>
+            <textarea class="field-textarea" id="supportingNotes" rows="3" placeholder="Any additional context, references, or documentation notes..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Client Signature -->
+      <div class="co-section">
+        <div class="co-section-title">Client Acknowledgment &amp; Signature</div>
+
+        <div class="sig-ack-row">
+          <input type="checkbox" id="ackCheckbox" />
+          <div class="sig-ack-text">
+            I understand this change order will adjust the contract price and/or schedule as described above. I authorize Ironwood Property Group to proceed with this change upon mutual execution of this document.
+          </div>
+        </div>
+
+        <div class="form-grid-2" style="margin-bottom:16px;">
+          <div class="field-group">
+            <label class="field-label" for="printName">Print Name <span class="req">*</span></label>
+            <input class="field-input" type="text" id="printName" placeholder="Your full name" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="sigDate">Date</label>
+            <input class="field-input" type="text" id="sigDate" readonly />
+          </div>
+        </div>
+
+        <label class="field-label">Signature <span class="req">*</span></label>
+        <div class="field-hint" style="margin-bottom:8px;">Draw your signature below using your mouse or finger.</div>
+        <div class="sig-pad-wrap">
+          <canvas id="sigCanvas"></canvas>
+          <div class="sig-pad-label" id="sigPlaceholder">Sign here</div>
+        </div>
+        <button class="sig-clear-btn" type="button" onclick="clearSig()">✕ Clear Signature</button>
+      </div>
+
+      <!-- Submit -->
+      <div class="co-section">
+        <button class="btn-submit" id="btnSubmit" onclick="submitChangeOrder()">
+          Submit Change Order →
+        </button>
+        <div class="error-msg" id="coError"></div>
+      </div>
+
+    </div><!-- /co-card -->
+
+    <!-- Success card -->
+    <div class="success-card" id="successCard">
+      <div class="success-icon">✓</div>
+      <div class="success-title">Change Order Submitted</div>
+      <div class="success-sub">
+        Your project manager will review this request and contact you within 24 hours to confirm the updated scope, cost, and schedule.
+        <br><br>
+        <strong>Ironwood Property Group · Atlanta Metro</strong>
+      </div>
+      <div class="success-code" id="successCode">—</div>
+    </div>
+
+  </div><!-- /co-body -->
+
+  <div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+
+  <script>
+    const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
+    // ── UTM ──
+    function getUTM() {
+      const p = new URLSearchParams(window.location.search);
+      return {
+        utm_source:   p.get('utm_source')   || '',
+        utm_medium:   p.get('utm_medium')   || '',
+        utm_campaign: p.get('utm_campaign') || '',
+        utm_content:  p.get('utm_content')  || '',
+        utm_term:     p.get('utm_term')     || ''
+      };
+    }
+
+    // ── Pre-fill from URL params ──
+    (function() {
+      const p = new URLSearchParams(window.location.search);
+      if (p.get('project')) document.getElementById('projectCode').value = p.get('project').toUpperCase();
+      if (p.get('client'))  document.getElementById('clientName').value  = p.get('client');
+      if (p.get('address')) document.getElementById('propAddress').value = p.get('address');
+
+      if (p.get('project') || p.get('client')) {
+        const code = p.get('project') || '';
+        const client = p.get('client') || '';
+        document.getElementById('docMeta').textContent =
+          (code ? code + ' · ' : '') + (client ? client + ' · ' : '') + 'Ironwood Property Group';
+      }
+    })();
+
+    // ── Auto-fill dates ──
+    function todayStr() {
+      const d = new Date();
+      return d.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    }
+    document.getElementById('coDate').value  = todayStr();
+    document.getElementById('sigDate').value = todayStr();
+
+    // ── Signature Pad ──
+    const canvas = document.getElementById('sigCanvas');
+    const ctx    = canvas.getContext('2d');
+    let drawing  = false;
+    let hasSig   = false;
+
+    function resizeCanvas() {
+      const rect = canvas.getBoundingClientRect();
+      const dpr  = window.devicePixelRatio || 1;
+      // save current drawing as image
+      const imgData = hasSig ? canvas.toDataURL() : null;
+      canvas.width  = rect.width  * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+      ctx.strokeStyle = '#1C1814';
+      ctx.lineWidth   = 1.8;
+      ctx.lineCap     = 'round';
+      ctx.lineJoin    = 'round';
+      if (imgData && hasSig) {
+        const img = new Image();
+        img.onload = () => ctx.drawImage(img, 0, 0, rect.width, rect.height);
+        img.src = imgData;
+      }
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    function getPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      const src  = e.touches ? e.touches[0] : e;
+      return { x: src.clientX - rect.left, y: src.clientY - rect.top };
+    }
+
+    function startDraw(e) {
+      e.preventDefault();
+      drawing = true;
+      const { x, y } = getPos(e);
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      hasSig = true;
+      document.getElementById('sigPlaceholder').style.opacity = '0';
+    }
+    function draw(e) {
+      if (!drawing) return;
+      e.preventDefault();
+      const { x, y } = getPos(e);
+      ctx.lineTo(x, y);
+      ctx.stroke();
+    }
+    function stopDraw() { drawing = false; }
+
+    canvas.addEventListener('mousedown',  startDraw);
+    canvas.addEventListener('mousemove',  draw);
+    canvas.addEventListener('mouseup',    stopDraw);
+    canvas.addEventListener('mouseleave', stopDraw);
+    canvas.addEventListener('touchstart', startDraw, { passive: false });
+    canvas.addEventListener('touchmove',  draw,      { passive: false });
+    canvas.addEventListener('touchend',   stopDraw);
+
+    function clearSig() {
+      const rect = canvas.getBoundingClientRect();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      hasSig = false;
+      document.getElementById('sigPlaceholder').style.opacity = '1';
+    }
+
+    function isSigEmpty() {
+      // check if canvas has any non-transparent pixels
+      const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+      for (let i = 3; i < data.length; i += 4) {
+        if (data[i] > 0) return false;
+      }
+      return true;
+    }
+
+    // ── Validation ──
+    function validate() {
+      const req = [
+        ['projectCode',       'Project code is required.'],
+        ['clientName',        'Client name is required.'],
+        ['propAddress',       'Property address is required.'],
+        ['changeType',        'Please select a change order type.'],
+        ['changeDescription', 'Please describe the change.'],
+        ['changeReason',      'Please select a reason for the change.'],
+        ['printName',         'Please print your name.']
+      ];
+      for (const [id, msg] of req) {
+        const el = document.getElementById(id);
+        if (!el.value.trim()) return msg;
+      }
+      if (!document.getElementById('ackCheckbox').checked) {
+        return 'Please check the acknowledgment box before signing.';
+      }
+      if (isSigEmpty()) {
+        return 'Please draw your signature before submitting.';
+      }
+      return null;
+    }
+
+    async function submitChangeOrder() {
+      const err = validate();
+      const errEl = document.getElementById('coError');
+      if (err) { errEl.textContent = err; errEl.style.display = 'block'; return; }
+      errEl.style.display = 'none';
+
+      const btn = document.getElementById('btnSubmit');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      const sigDataUrl = canvas.toDataURL('image/png');
+
+      const payload = {
+        projectCode:     document.getElementById('projectCode').value.trim().toUpperCase(),
+        clientName:      document.getElementById('clientName').value.trim(),
+        address:         document.getElementById('propAddress').value.trim(),
+        changeType:      document.getElementById('changeType').value,
+        description:     document.getElementById('changeDescription').value.trim(),
+        reason:          document.getElementById('changeReason').value,
+        costImpact:      document.getElementById('costImpact').value || '0',
+        scheduleImpact:  document.getElementById('scheduleImpact').value,
+        otherImpact:     document.getElementById('otherImpact').value.trim(),
+        notes:           document.getElementById('supportingNotes').value.trim(),
+        clientPrintName: document.getElementById('printName').value.trim(),
+        signatureDataUrl: sigDataUrl,
+        submittedAt:     new Date().toISOString(),
+        ...getUTM()
+      };
+
+      try {
+        await fetch(GHL_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+      } catch(e) { console.warn('Webhook failed', e); }
+
+      // show confirmation
+      document.getElementById('coCard').style.display = 'none';
+      const sc = document.getElementById('successCard');
+      sc.style.display = 'block';
+      document.getElementById('successCode').textContent = 'Project: ' + payload.projectCode;
+      sc.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  </script>
+
+</body>
+</html>

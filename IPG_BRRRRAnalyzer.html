@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>BRRRR Deal Analyzer — Ironwood Property Group</title>
+<meta name="description" content="Analyze any BRRRR real estate deal in minutes. Cash flow, equity, cash-on-cash return, and capital recycled. Ironwood handles the renovation."/>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+/* ── PAGE-SPECIFIC STYLES ── */
+
+/* Step header */
+.step-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.step-num {
+  width: 32px;
+  height: 32px;
+  background: var(--bronze);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.step-title {
+  font-family: 'Instrument Serif', serif;
+  font-size: 20px;
+  color: var(--ink);
+}
+.step-sub {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+/* Page layout: inputs left, results right */
+.analyzer-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 28px;
+  align-items: start;
+}
+.inputs-col { min-width: 0; }
+.results-col { min-width: 0; }
+
+@media (max-width: 960px) {
+  .analyzer-layout { grid-template-columns: 1fr; }
+  .results-sticky { position: static !important; }
+}
+
+/* Results sticky panel */
+.results-sticky {
+  position: sticky;
+  top: 80px;
+}
+
+/* Toggle row for cash purchase */
+.toggle-row-inline {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+.toggle-row-inline span {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+/* Conditional fields */
+.conditional { transition: opacity .2s; }
+.conditional.hidden { opacity: .35; pointer-events: none; }
+
+/* Deal Score gauge */
+.score-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px 0 12px;
+}
+.score-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 4px solid var(--hairline);
+  background: var(--surface-2);
+  transition: border-color .3s, background .3s;
+  margin-bottom: 10px;
+}
+.score-grade {
+  font-family: 'Instrument Serif', serif;
+  font-size: 36px;
+  line-height: 1;
+  color: var(--ink);
+  transition: color .3s;
+}
+.score-num {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.score-verdict {
+  font-size: 13px;
+  text-align: center;
+  color: var(--ink-soft);
+  line-height: 1.5;
+  max-width: 260px;
+}
+.score-circle.grade-a { border-color: #2D6A4F; background: #f0faf4; }
+.score-circle.grade-a .score-grade { color: #2D6A4F; }
+.score-circle.grade-b { border-color: var(--bronze); background: var(--bronze-tint); }
+.score-circle.grade-b .score-grade { color: var(--bronze-deep); }
+.score-circle.grade-c { border-color: #B07800; background: #FFF8E6; }
+.score-circle.grade-c .score-grade { color: #B07800; }
+.score-circle.grade-d { border-color: var(--red); background: var(--red-tint); }
+.score-circle.grade-d .score-grade { color: var(--red); }
+
+/* Results stat rows */
+.res-section {
+  margin-bottom: 20px;
+}
+.res-section-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--muted);
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--hairline);
+}
+.res-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: 7px 0;
+  font-size: 13px;
+  border-bottom: 1px solid var(--hairline);
+}
+.res-row:last-child { border-bottom: none; }
+.res-label { color: var(--muted); }
+.res-value { font-weight: 700; color: var(--ink); font-variant-numeric: tabular-nums; }
+.res-value.positive { color: var(--green); }
+.res-value.negative { color: var(--red); }
+.res-value.bronze   { color: var(--bronze-deep); }
+.res-row.highlight .res-label { color: var(--ink-soft); font-weight: 600; font-size: 14px; }
+.res-row.highlight .res-value { font-size: 18px; font-family: 'Instrument Serif', serif; }
+
+/* MAO section */
+.mao-box {
+  background: var(--bronze-wash);
+  border: 1px solid var(--bronze-tint);
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin-top: 16px;
+}
+.mao-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--bronze);
+  margin-bottom: 6px;
+}
+.mao-amount {
+  font-family: 'Instrument Serif', serif;
+  font-size: 28px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+.mao-compare {
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+.mao-compare strong { color: var(--bronze-deep); }
+
+/* CTA Section */
+.cta-section {
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  padding: 40px 36px;
+  color: #fff;
+  margin-top: 40px;
+}
+.cta-section h2 { color: #fff; margin-bottom: 10px; }
+.cta-section > p { color: rgba(255,255,255,.6); font-size: 15px; margin-bottom: 28px; }
+.cta-btns {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 36px;
+}
+.cta-section .iw-label { color: rgba(255,255,255,.55); }
+.cta-section .iw-input,
+.cta-section .iw-select {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(255,255,255,.12);
+  color: #fff;
+}
+.cta-section .iw-input::placeholder { color: rgba(255,255,255,.35); }
+.cta-section .iw-input:focus,
+.cta-section .iw-select:focus {
+  border-color: var(--bronze);
+  box-shadow: 0 0 0 3px rgba(156,123,74,.25);
+}
+.cta-section .iw-btn-secondary {
+  color: rgba(255,255,255,.8);
+  border-color: rgba(255,255,255,.25);
+  background: transparent;
+}
+.cta-section .iw-btn-secondary:hover {
+  background: rgba(255,255,255,.08);
+}
+
+.form-success {
+  display: none;
+  text-align: center;
+  padding: 40px 24px;
+}
+.form-success h3 { color: #fff; font-family: 'Instrument Serif', serif; font-size: 24px; margin-bottom: 12px; }
+.form-success p  { color: rgba(255,255,255,.65); }
+
+/* Quote button inside step card */
+.quote-btn-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 16px 18px;
+  background: var(--bronze-wash);
+  border: 1px solid var(--bronze-tint);
+  border-radius: var(--radius);
+}
+.quote-btn-row p {
+  font-size: 13px;
+  color: var(--ink-soft);
+  flex: 1;
+}
+
+/* Range display */
+.range-display {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <div class="iw-logo-box">I</div>
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="iw-hero">
+  <div class="iw-eyebrow">Investor Tool</div>
+  <h1>Analyze any BRRRR deal in minutes</h1>
+  <p>Enter the property numbers and see if the deal works — cash flow, equity, cash-on-cash return, and how much capital you get back after refinance.</p>
+</div>
+
+<!-- MAIN -->
+<div class="iw-container-wide">
+  <div class="analyzer-layout">
+
+    <!-- LEFT: Input Steps -->
+    <div class="inputs-col">
+
+      <!-- STEP 1: ACQUISITION -->
+      <div class="iw-card iw-gap-md">
+        <div class="step-header">
+          <div class="step-num">1</div>
+          <div>
+            <div class="step-title">Acquisition</div>
+            <div class="step-sub">Purchase details and financing</div>
+          </div>
+        </div>
+
+        <div>
+          <label class="iw-label" for="address">Property Address</label>
+          <input class="iw-input" id="address" type="text" placeholder="123 Main St, Atlanta, GA 30301" oninput="recalc()"/>
+        </div>
+
+        <div class="iw-two-col" style="margin-top:16px;">
+          <div>
+            <label class="iw-label" for="purchasePrice">Purchase Price</label>
+            <div class="iw-input-wrap">
+              <span class="iw-input-prefix">$</span>
+              <input class="iw-input" id="purchasePrice" type="number" value="120000" min="0" step="1000" oninput="recalc()"/>
+            </div>
+          </div>
+          <div>
+            <label class="iw-label" for="closingCostsPct">Closing Costs</label>
+            <div class="iw-input-wrap">
+              <input class="iw-input has-suffix" id="closingCostsPct" type="number" value="3" min="0" max="10" step="0.5" oninput="recalc()"/>
+              <span class="iw-input-suffix">%</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="toggle-row-inline" style="margin-top:16px;">
+          <label class="iw-toggle">
+            <input type="checkbox" id="cashPurchase" onchange="toggleCashPurchase()"/>
+            <div class="iw-toggle-track"></div>
+            <div class="iw-toggle-thumb"></div>
+          </label>
+          <span>Cash purchase (no acquisition loan)</span>
+        </div>
+
+        <div class="conditional" id="financeFields">
+          <div class="iw-two-col">
+            <div>
+              <label class="iw-label" for="downPaymentPct">Down Payment</label>
+              <div class="iw-input-wrap">
+                <input class="iw-input has-suffix" id="downPaymentPct" type="number" value="20" min="0" max="100" step="5" oninput="recalc()"/>
+                <span class="iw-input-suffix">%</span>
+              </div>
+            </div>
+            <div>
+              <label class="iw-label" for="acqRate">Interest Rate</label>
+              <div class="iw-input-wrap">
+                <input class="iw-input has-suffix" id="acqRate" type="number" value="8" min="0" max="30" step="0.25" oninput="recalc()"/>
+                <span class="iw-input-suffix">%</span>
+              </div>
+            </div>
+          </div>
+          <div style="margin-top:0;">
+            <label class="iw-label" for="acqTerm">Loan Term</label>
+            <select class="iw-select" id="acqTerm" onchange="recalc()">
+              <option value="12">12 months</option>
+              <option value="24">24 months</option>
+              <option value="360" selected>30 years</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 2: RENOVATION -->
+      <div class="iw-card iw-gap-md">
+        <div class="step-header">
+          <div class="step-num">2</div>
+          <div>
+            <div class="step-title">Renovation</div>
+            <div class="step-sub">Rehab costs and timeline</div>
+          </div>
+        </div>
+
+        <div class="iw-two-col">
+          <div>
+            <label class="iw-label" for="rehabCost">Estimated Rehab Cost</label>
+            <div class="iw-input-wrap">
+              <span class="iw-input-prefix">$</span>
+              <input class="iw-input" id="rehabCost" type="number" value="45000" min="0" step="1000" oninput="recalc()"/>
+            </div>
+          </div>
+          <div>
+            <label class="iw-label" for="rehabTimeline">Rehab Timeline</label>
+            <select class="iw-select" id="rehabTimeline" onchange="recalc()">
+              <option value="1">1 month</option>
+              <option value="2">2 months</option>
+              <option value="3" selected>3 months</option>
+              <option value="4">4 months</option>
+              <option value="6">6 months</option>
+            </select>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <label class="iw-label" for="holdingCosts">Holding Costs / Month During Rehab</label>
+          <div class="iw-input-wrap">
+            <span class="iw-input-prefix">$</span>
+            <input class="iw-input" id="holdingCosts" type="number" value="800" min="0" step="50" oninput="recalc()"/>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-top:6px;">Taxes, insurance, utilities while property sits</div>
+        </div>
+
+        <div class="quote-btn-row">
+          <p>Not sure what the rehab will cost? Ironwood can walk the property and give you a real number.</p>
+          <a href="Ironwood_Estimator_Public.html" class="iw-btn-secondary" style="white-space:nowrap;font-size:13px;padding:9px 16px;">Get a Quote →</a>
+        </div>
+      </div>
+
+      <!-- STEP 3: ARV & RENT -->
+      <div class="iw-card iw-gap-md">
+        <div class="step-header">
+          <div class="step-num">3</div>
+          <div>
+            <div class="step-title">After Repair Value &amp; Rent</div>
+            <div class="step-sub">Post-renovation projections</div>
+          </div>
+        </div>
+
+        <div class="iw-two-col">
+          <div>
+            <label class="iw-label" for="arv">After Repair Value (ARV)</label>
+            <div class="iw-input-wrap">
+              <span class="iw-input-prefix">$</span>
+              <input class="iw-input" id="arv" type="number" value="220000" min="0" step="5000" oninput="recalc()"/>
+            </div>
+          </div>
+          <div>
+            <label class="iw-label" for="monthlyRent">Monthly Rent</label>
+            <div class="iw-input-wrap">
+              <span class="iw-input-prefix">$</span>
+              <input class="iw-input" id="monthlyRent" type="number" value="1800" min="0" step="50" oninput="recalc()"/>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top:16px;">
+          <label class="iw-label" for="vacancyRate">Vacancy Rate: <span id="vacancyDisplay">8%</span></label>
+          <input class="iw-range" id="vacancyRate" type="range" min="0" max="25" value="8" step="1"
+            oninput="document.getElementById('vacancyDisplay').textContent=this.value+'%'; recalc()"/>
+          <div class="range-display"><span>0%</span><span>25%</span></div>
+        </div>
+
+        <div class="iw-two-col" style="margin-top:0;">
+          <div>
+            <label class="iw-label" for="propMgmt">Property Management</label>
+            <div class="iw-input-wrap">
+              <input class="iw-input has-suffix" id="propMgmt" type="number" value="10" min="0" max="30" step="1" oninput="recalc()"/>
+              <span class="iw-input-suffix">% / yr</span>
+            </div>
+          </div>
+          <div>
+            <label class="iw-label" for="maintenance">Maintenance</label>
+            <div class="iw-input-wrap">
+              <input class="iw-input has-suffix" id="maintenance" type="number" value="2" min="0" max="20" step="0.5" oninput="recalc()"/>
+              <span class="iw-input-suffix">% ARV / yr</span>
+            </div>
+          </div>
+          <div>
+            <label class="iw-label" for="insurance">Annual Insurance</label>
+            <div class="iw-input-wrap">
+              <span class="iw-input-prefix">$</span>
+              <input class="iw-input" id="insurance" type="number" value="1800" min="0" step="100" oninput="recalc()"/>
+            </div>
+          </div>
+          <div>
+            <label class="iw-label" for="taxes">Annual Property Taxes</label>
+            <div class="iw-input-wrap">
+              <span class="iw-input-prefix">$</span>
+              <input class="iw-input" id="taxes" type="number" value="2400" min="0" step="100" oninput="recalc()"/>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- STEP 4: REFINANCE -->
+      <div class="iw-card iw-gap-md">
+        <div class="step-header">
+          <div class="step-num">4</div>
+          <div>
+            <div class="step-title">Refinance</div>
+            <div class="step-sub">Cash-out refi after renovation</div>
+          </div>
+        </div>
+
+        <div class="iw-two-col">
+          <div>
+            <label class="iw-label" for="refiLTV">Refi LTV</label>
+            <div class="iw-input-wrap">
+              <input class="iw-input has-suffix" id="refiLTV" type="number" value="75" min="50" max="90" step="5" oninput="recalc()"/>
+              <span class="iw-input-suffix">%</span>
+            </div>
+          </div>
+          <div>
+            <label class="iw-label" for="refiRate">Refi Interest Rate</label>
+            <div class="iw-input-wrap">
+              <input class="iw-input has-suffix" id="refiRate" type="number" value="7.0" min="0" max="20" step="0.25" oninput="recalc()"/>
+              <span class="iw-input-suffix">%</span>
+            </div>
+          </div>
+          <div>
+            <label class="iw-label" for="refiTerm">Refi Loan Term</label>
+            <select class="iw-select" id="refiTerm" onchange="recalc()">
+              <option value="180">15 years</option>
+              <option value="240">20 years</option>
+              <option value="300">25 years</option>
+              <option value="360" selected>30 years</option>
+            </select>
+          </div>
+          <div>
+            <label class="iw-label" for="refiClosingPct">Refi Closing Costs</label>
+            <div class="iw-input-wrap">
+              <input class="iw-input has-suffix" id="refiClosingPct" type="number" value="2.5" min="0" max="10" step="0.5" oninput="recalc()"/>
+              <span class="iw-input-suffix">%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /inputs-col -->
+
+    <!-- RIGHT: Results -->
+    <div class="results-col">
+      <div class="results-sticky">
+
+        <!-- Score Card -->
+        <div class="iw-card iw-gap-md">
+          <div class="score-wrap">
+            <div class="score-circle" id="scoreCircle">
+              <div class="score-grade" id="scoreGrade">—</div>
+              <div class="score-num" id="scoreNum">Enter numbers</div>
+            </div>
+            <div class="score-verdict" id="scoreVerdict">Fill in the deal details to the left to get your score.</div>
+          </div>
+
+          <!-- Deal Summary -->
+          <div class="res-section">
+            <div class="res-section-title">Deal Summary</div>
+            <div class="res-row">
+              <span class="res-label">All-In Cost</span>
+              <span class="res-value" id="rAllIn">—</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">ARV</span>
+              <span class="res-value" id="rARV">—</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Refi Loan Amount</span>
+              <span class="res-value" id="rRefiLoan">—</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Refi Closing Costs</span>
+              <span class="res-value" id="rRefiClosing">—</span>
+            </div>
+            <div class="res-row highlight">
+              <span class="res-label">Cash Left in Deal</span>
+              <span class="res-value" id="rCashLeft">—</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Capital Recycled</span>
+              <span class="res-value" id="rCapRecycled">—</span>
+            </div>
+          </div>
+
+          <!-- Cash Flow -->
+          <div class="res-section">
+            <div class="res-section-title">Monthly Cash Flow</div>
+            <div class="res-row">
+              <span class="res-label">Gross Rent</span>
+              <span class="res-value" id="rGrossRent">—</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Vacancy Loss</span>
+              <span class="res-value negative" id="rVacancy">—</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">NOI (monthly)</span>
+              <span class="res-value" id="rNOI">—</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Refi Mortgage (P&amp;I)</span>
+              <span class="res-value negative" id="rMortgage">—</span>
+            </div>
+            <div class="res-row highlight">
+              <span class="res-label">Monthly Cash Flow</span>
+              <span class="res-value" id="rCashFlow">—</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Annual Cash Flow</span>
+              <span class="res-value" id="rAnnualCF">—</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Cash-on-Cash Return</span>
+              <span class="res-value" id="rCoC">—</span>
+            </div>
+            <div class="res-row">
+              <span class="res-label">Cap Rate</span>
+              <span class="res-value" id="rCapRate">—</span>
+            </div>
+          </div>
+
+          <!-- MAO -->
+          <div class="mao-box" id="maoBox">
+            <div class="mao-label">70% Rule — Max Allowable Offer</div>
+            <div class="mao-amount" id="maoAmount">—</div>
+            <div class="mao-compare" id="maoCompare">Enter ARV and rehab cost to calculate.</div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /results-col -->
+
+  </div><!-- /analyzer-layout -->
+
+  <!-- CTA / LEAD CAPTURE -->
+  <div class="cta-section">
+    <h2 class="serif">Ironwood handles the renovation. You keep the equity.</h2>
+    <p>We've renovated dozens of BRRRR properties across Atlanta Metro — on time and on budget.</p>
+
+    <div class="cta-btns">
+      <a href="Ironwood_Estimator_Public.html" class="iw-btn-primary">Get a Renovation Quote</a>
+      <a href="tel:+14045550100" class="iw-btn-secondary">Talk to Our Team</a>
+    </div>
+
+    <form id="leadForm">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <label class="iw-label" for="leadName">Name *</label>
+          <input class="iw-input" id="leadName" type="text" placeholder="Your full name" required/>
+        </div>
+        <div>
+          <label class="iw-label" for="leadPhone">Phone *</label>
+          <input class="iw-input" id="leadPhone" type="tel" placeholder="(404) 555-0100" required/>
+        </div>
+        <div>
+          <label class="iw-label" for="leadEmail">Email *</label>
+          <input class="iw-input" id="leadEmail" type="email" placeholder="you@email.com" required/>
+        </div>
+      </div>
+      <div style="margin-top:18px;">
+        <label class="iw-label" for="leadNotes">Tell us about the deal</label>
+        <textarea class="iw-input" id="leadNotes" rows="3" placeholder="Property address, condition, what you're trying to accomplish..."></textarea>
+      </div>
+      <div style="margin-top:24px;">
+        <button type="submit" class="iw-btn-primary iw-btn-full" id="submitBtn">Submit Deal &amp; Get in Touch</button>
+      </div>
+    </form>
+
+    <div class="form-success" id="formSuccess">
+      <div style="font-size:40px;margin-bottom:16px;">✓</div>
+      <h3>We'll be in touch soon.</h3>
+      <p>One of our team members will review your deal and reach out within 24 hours.</p>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+
+<script>
+// ── GHL Webhook ──
+const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
+// ── UTM ──
+function getUTM() {
+  const p = new URLSearchParams(window.location.search);
+  return {
+    utm_source:   p.get('utm_source')   || '',
+    utm_medium:   p.get('utm_medium')   || '',
+    utm_campaign: p.get('utm_campaign') || '',
+    utm_content:  p.get('utm_content')  || '',
+    utm_term:     p.get('utm_term')     || '',
+  };
+}
+
+// ── Helpers ──
+function v(id) { return parseFloat(document.getElementById(id).value) || 0; }
+function fmt(n, dec=0) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  if (n < 0) return '-$' + Math.abs(n).toLocaleString('en-US', {maximumFractionDigits:dec});
+  return '$' + n.toLocaleString('en-US', {maximumFractionDigits:dec});
+}
+function pct(n, dec=1) {
+  if (isNaN(n) || !isFinite(n)) return '—';
+  return n.toFixed(dec) + '%';
+}
+function r(n) { return Math.round(n); }
+
+// Monthly mortgage payment P&I
+function monthlyPayment(principal, annualRatePct, termMonths) {
+  if (principal <= 0) return 0;
+  const mo = annualRatePct / 100 / 12;
+  if (mo === 0) return principal / termMonths;
+  return principal * mo * Math.pow(1+mo, termMonths) / (Math.pow(1+mo, termMonths) - 1);
+}
+
+function toggleCashPurchase() {
+  const isCash = document.getElementById('cashPurchase').checked;
+  document.getElementById('financeFields').classList.toggle('hidden', isCash);
+  recalc();
+}
+
+function recalc() {
+  // ── Pull Inputs ──
+  const purchasePrice    = v('purchasePrice');
+  const closingCostsPct  = v('closingCostsPct') / 100;
+  const isCash           = document.getElementById('cashPurchase').checked;
+  const downPaymentPct   = v('downPaymentPct') / 100;
+  const acqRate          = v('acqRate');
+  const acqTermMo        = v('acqTerm');
+
+  const rehabCost        = v('rehabCost');
+  const rehabMo          = v('rehabTimeline');
+  const holdingPerMo     = v('holdingCosts');
+
+  const arv              = v('arv');
+  const monthlyRent      = v('monthlyRent');
+  const vacancyPct       = v('vacancyRate') / 100;
+  const propMgmtPct      = v('propMgmt') / 100;
+  const maintPct         = v('maintenance') / 100;
+  const insurance        = v('insurance');
+  const taxes            = v('taxes');
+
+  const refiLTV          = v('refiLTV') / 100;
+  const refiRate         = v('refiRate');
+  const refiTermMo       = v('refiTerm');
+  const refiClosingPct   = v('refiClosingPct') / 100;
+
+  // ── Calculations ──
+  const closingCostsDol  = purchasePrice * closingCostsPct;
+  const totalHolding     = holdingPerMo * rehabMo;
+  const allInCost        = purchasePrice + closingCostsDol + rehabCost + totalHolding;
+
+  const refiLoanAmount   = arv * refiLTV;
+  const refiClosingDol   = refiLoanAmount * refiClosingPct;
+  const cashLeftInDeal   = allInCost - refiLoanAmount + refiClosingDol;
+  const capRecycled      = allInCost > 0 ? (refiLoanAmount / allInCost) * 100 : 0;
+
+  // Cash Flow
+  const vacancyLoss      = monthlyRent * vacancyPct;
+  const effectiveRent    = monthlyRent - vacancyLoss;
+  const mgmtMo           = (monthlyRent * 12 * propMgmtPct) / 12;
+  const maintMo          = (arv * maintPct) / 12;
+  const insuranceMo      = insurance / 12;
+  const taxesMo          = taxes / 12;
+  const NOI_monthly      = effectiveRent - mgmtMo - maintMo - insuranceMo - taxesMo;
+
+  const refiMortgage     = monthlyPayment(refiLoanAmount, refiRate, refiTermMo);
+  const monthlyCF        = NOI_monthly - refiMortgage;
+  const annualCF         = monthlyCF * 12;
+  const CoC              = cashLeftInDeal > 0 ? (annualCF / cashLeftInDeal) * 100 : null;
+
+  const annualNOI        = NOI_monthly * 12;
+  const capRate          = arv > 0 ? (annualNOI / arv) * 100 : 0;
+
+  // MAO
+  const mao = arv * 0.70 - rehabCost;
+  const maoVsPurchase = purchasePrice > 0 ? ((purchasePrice - mao) / mao) * 100 : null;
+
+  // Deal Score
+  let score = 0;
+  if (cashLeftInDeal <= 0) score += 30;
+  if (monthlyCF > 300) score += 25;
+  else if (monthlyCF >= 100) score += 15;
+  else if (monthlyCF >= 0) score += 5;
+  if (capRate > 8) score += 20;
+  else if (capRate >= 6) score += 12;
+  else if (capRate > 0) score += 5;
+  const arvRatio = allInCost > 0 ? arv / allInCost : 0;
+  if (arvRatio > 1.5) score += 15;
+  else if (arvRatio >= 1.3) score += 10;
+  else if (arvRatio > 0) score += 5;
+  if (CoC !== null && CoC > 10) score += 10;
+
+  // Grade
+  let grade, gradeClass, verdict;
+  if (score >= 80)      { grade = 'A+'; gradeClass = 'grade-a'; verdict = 'Exceptional deal — full capital recycled with strong cash flow.'; }
+  else if (score >= 65) { grade = 'A';  gradeClass = 'grade-a'; verdict = 'Strong deal — good equity and positive cash flow.'; }
+  else if (score >= 55) { grade = 'B+'; gradeClass = 'grade-b'; verdict = 'Solid deal — worth pursuing with some risk awareness.'; }
+  else if (score >= 45) { grade = 'B';  gradeClass = 'grade-b'; verdict = 'Decent deal — margins are workable but tight.'; }
+  else if (score >= 35) { grade = 'C';  gradeClass = 'grade-c'; verdict = 'Marginal deal — consider renegotiating or reducing rehab scope.'; }
+  else                  { grade = 'D';  gradeClass = 'grade-d'; verdict = 'Weak deal — the numbers don\'t work at current price or costs.'; }
+
+  if (allInCost === 0 && arv === 0) { grade = '—'; gradeClass = ''; verdict = 'Fill in the deal details to the left to get your score.'; }
+
+  // ── Update DOM ──
+  const sc = document.getElementById('scoreCircle');
+  sc.className = 'score-circle ' + gradeClass;
+  document.getElementById('scoreGrade').textContent   = grade;
+  document.getElementById('scoreNum').textContent     = score + ' / 100';
+  document.getElementById('scoreVerdict').textContent = verdict;
+
+  document.getElementById('rAllIn').textContent      = fmt(r(allInCost));
+  document.getElementById('rARV').textContent        = fmt(r(arv));
+  document.getElementById('rRefiLoan').textContent   = fmt(r(refiLoanAmount));
+  document.getElementById('rRefiClosing').textContent= fmt(r(refiClosingDol));
+
+  const cashLeftEl = document.getElementById('rCashLeft');
+  cashLeftEl.textContent = fmt(r(cashLeftInDeal));
+  cashLeftEl.className = 'res-value ' + (cashLeftInDeal <= 0 ? 'positive' : 'bronze');
+
+  document.getElementById('rCapRecycled').textContent = isFinite(capRecycled) ? pct(capRecycled, 0) : '—';
+
+  document.getElementById('rGrossRent').textContent = fmt(r(monthlyRent));
+  document.getElementById('rVacancy').textContent   = fmt(r(vacancyLoss));
+  document.getElementById('rNOI').textContent       = fmt(r(NOI_monthly));
+  document.getElementById('rMortgage').textContent  = fmt(r(refiMortgage));
+
+  const cfEl = document.getElementById('rCashFlow');
+  cfEl.textContent = fmt(r(monthlyCF));
+  cfEl.className   = 'res-value ' + (monthlyCF > 0 ? 'positive' : monthlyCF < 0 ? 'negative' : '');
+
+  const acfEl = document.getElementById('rAnnualCF');
+  acfEl.textContent = fmt(r(annualCF));
+  acfEl.className   = 'res-value ' + (annualCF > 0 ? 'positive' : annualCF < 0 ? 'negative' : '');
+
+  const cocEl = document.getElementById('rCoC');
+  if (CoC === null || !isFinite(CoC)) {
+    cocEl.textContent = cashLeftInDeal <= 0 ? 'N/A (full recycle)' : '—';
+    cocEl.className = 'res-value bronze';
+  } else {
+    cocEl.textContent = pct(CoC, 1);
+    cocEl.className = 'res-value ' + (CoC > 0 ? 'positive' : 'negative');
+  }
+
+  document.getElementById('rCapRate').textContent = arv > 0 ? pct(capRate, 1) : '—';
+
+  // MAO
+  if (arv > 0) {
+    document.getElementById('maoAmount').textContent = fmt(r(mao));
+    if (maoVsPurchase !== null && isFinite(maoVsPurchase)) {
+      const dir = maoVsPurchase > 0 ? 'above' : 'below';
+      const absDiff = Math.abs(maoVsPurchase).toFixed(1);
+      document.getElementById('maoCompare').innerHTML =
+        `Based on the 70% rule, your MAO is <strong>${fmt(r(mao))}</strong>. You're <strong>${absDiff}% ${dir}</strong> the 70% rule.`;
+    } else {
+      document.getElementById('maoCompare').textContent = 'Enter a purchase price to compare.';
+    }
+  } else {
+    document.getElementById('maoAmount').textContent = '—';
+    document.getElementById('maoCompare').textContent = 'Enter ARV and rehab cost to calculate.';
+  }
+
+  // Store for lead form
+  window._dealSnapshot = {
+    purchasePrice: r(purchasePrice),
+    closingCostsDol: r(closingCostsDol),
+    rehabCost: r(rehabCost),
+    rehabTimeline: rehabMo,
+    holdingCostsTotal: r(totalHolding),
+    arv: r(arv),
+    monthlyRent: r(monthlyRent),
+    vacancyPct: v('vacancyRate'),
+    propMgmtPct: v('propMgmt'),
+    maintenancePct: v('maintenance'),
+    annualInsurance: r(insurance),
+    annualTaxes: r(taxes),
+    refiLTV_pct: v('refiLTV'),
+    refiRate,
+    refiTermYears: r(refiTermMo / 12),
+    refiClosingPct: v('refiClosingPct'),
+    allInCost: r(allInCost),
+    refiProceeds: r(refiLoanAmount),
+    refiClosingDol: r(refiClosingDol),
+    cashLeftInDeal: r(cashLeftInDeal),
+    monthlyCashFlow: r(monthlyCF),
+    annualCashFlow: r(annualCF),
+    capitalRecycledPct: isFinite(capRecycled) ? Math.round(capRecycled * 10)/10 : null,
+    capRate: isFinite(capRate) ? Math.round(capRate * 10)/10 : null,
+    cashOnCash: (CoC !== null && isFinite(CoC)) ? Math.round(CoC * 10)/10 : null,
+    dealScore: score,
+    dealGrade: grade,
+    mao: r(mao),
+  };
+}
+
+// Lead form submit
+document.getElementById('leadForm').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.textContent = 'Sending…';
+
+  const snap = window._dealSnapshot || {};
+  const payload = {
+    name:    document.getElementById('leadName').value,
+    phone:   document.getElementById('leadPhone').value,
+    email:   document.getElementById('leadEmail').value,
+    notes:   document.getElementById('leadNotes').value,
+    address: document.getElementById('address').value,
+    ...snap,
+    ...getUTM(),
+    submittedAt: new Date().toISOString(),
+    source: 'IPG_BRRRRAnalyzer',
+  };
+
+  try {
+    await fetch(GHL_WEBHOOK_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      mode: 'no-cors',
+      body: JSON.stringify(payload),
+    });
+  } catch(err) { /* silent fail */ }
+
+  document.getElementById('leadForm').style.display = 'none';
+  document.getElementById('formSuccess').style.display = '';
+});
+
+// Init
+recalc();
+</script>
+</body>
+</html>

@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investor Inquiry — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css">
+<style>
+  .inv-wrap {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 0 16px 80px;
+  }
+
+  /* Dark premium hero */
+  .inv-hero {
+    background: var(--ink);
+    color: #fff;
+    border-radius: 14px;
+    padding: 52px 48px;
+    margin: 32px 0 32px;
+    position: relative;
+    overflow: hidden;
+  }
+  .inv-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(156,123,74,0.18) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .inv-hero-eyebrow {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    margin-bottom: 14px;
+  }
+  .inv-hero-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 2.6rem;
+    font-weight: 400;
+    line-height: 1.15;
+    margin-bottom: 16px;
+    color: #fff;
+  }
+  .inv-hero-sub {
+    font-size: 0.95rem;
+    color: rgba(255,255,255,0.72);
+    max-width: 520px;
+    line-height: 1.7;
+  }
+  @media (max-width: 560px) {
+    .inv-hero { padding: 32px 24px; }
+    .inv-hero-title { font-size: 1.8rem; }
+  }
+
+  /* Two-track cards */
+  .tracks-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 36px;
+  }
+  @media (max-width: 600px) {
+    .tracks-grid { grid-template-columns: 1fr; }
+  }
+
+  .track-card {
+    background: var(--surface-2);
+    border: 1.5px solid var(--hairline);
+    border-radius: 12px;
+    padding: 28px 24px;
+    position: relative;
+  }
+  .track-card.track-1 {
+    border-top: 3px solid var(--bronze);
+  }
+  .track-card.track-2 {
+    border-top: 3px solid var(--ok);
+  }
+  .track-badge {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 10px;
+  }
+  .track-1 .track-badge { background: var(--bronze-tint); color: var(--bronze-deep); }
+  .track-2 .track-badge { background: #eef6ed; color: var(--ok); }
+  .track-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.15rem;
+    color: var(--ink);
+    font-weight: 400;
+    margin-bottom: 16px;
+  }
+  .track-details {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .track-details li {
+    display: flex;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    line-height: 1.4;
+  }
+  .track-details li .td-key {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    min-width: 72px;
+    padding-top: 1px;
+    flex-shrink: 0;
+  }
+  .track-details li .td-val {
+    color: var(--ink-soft);
+  }
+  .track-note {
+    margin-top: 14px;
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-style: italic;
+    padding-top: 12px;
+    border-top: 1px solid var(--hairline);
+  }
+
+  /* Form sections */
+  .inv-section {
+    background: var(--surface-2);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+  }
+  .inv-section-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.1rem;
+    color: var(--bronze-deep);
+    font-weight: 400;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .inv-sec-num {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--bronze-tint);
+    color: var(--bronze-deep);
+    font-size: 0.7rem;
+    font-weight: 700;
+    font-family: 'Geist', system-ui, sans-serif;
+    flex-shrink: 0;
+  }
+
+  .inv-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .inv-row-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+  .inv-row-1 { margin-bottom: 14px; }
+  @media (max-width: 580px) {
+    .inv-row, .inv-row-3 { grid-template-columns: 1fr; }
+    .inv-section { padding: 20px; }
+  }
+
+  /* Accredited tooltip */
+  .accredited-label-wrap {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .tooltip-trigger {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--hairline-2);
+    color: var(--muted);
+    font-size: 0.62rem;
+    font-weight: 700;
+    cursor: default;
+    position: relative;
+  }
+  .tooltip-trigger:hover .tooltip-box {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+  }
+  .tooltip-box {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    background: var(--ink);
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 10px 14px;
+    border-radius: 7px;
+    width: 240px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.15s, transform 0.15s;
+    z-index: 10;
+    font-style: normal;
+  }
+  .tooltip-box::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 5px solid transparent;
+    border-top-color: var(--ink);
+  }
+
+  /* Chip multi-select */
+  .chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .chip {
+    padding: 6px 14px;
+    border: 1.5px solid var(--hairline-2);
+    border-radius: 20px;
+    background: var(--surface);
+    color: var(--ink-soft);
+    font-size: 0.78rem;
+    cursor: pointer;
+    user-select: none;
+    transition: border-color 0.12s, background 0.12s, color 0.12s;
+  }
+  .chip:hover {
+    border-color: var(--bronze);
+  }
+  .chip.selected {
+    border-color: var(--bronze);
+    background: var(--bronze-tint);
+    color: var(--bronze-deep);
+    font-weight: 600;
+  }
+
+  /* Compliance checkboxes */
+  .compliance-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 14px 16px;
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: var(--surface);
+  }
+  .compliance-row input[type="checkbox"] {
+    width: 17px;
+    height: 17px;
+    accent-color: var(--bronze);
+    flex-shrink: 0;
+    margin-top: 2px;
+    cursor: pointer;
+  }
+  .compliance-row label {
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    cursor: pointer;
+  }
+
+  /* Error */
+  #invError {
+    background: #fdf0ef;
+    border: 1px solid var(--err);
+    color: var(--err);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 0.83rem;
+    margin-bottom: 16px;
+    display: none;
+  }
+
+  /* Confirmation */
+  .inv-confirm {
+    background: var(--surface-2);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    padding: 0;
+    display: none;
+    overflow: hidden;
+    margin-top: 24px;
+  }
+  .inv-confirm-top {
+    background: var(--ink);
+    color: #fff;
+    padding: 44px 40px 36px;
+    text-align: center;
+  }
+  .inv-confirm-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--bronze);
+    color: #fff;
+    font-size: 1.6rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 18px;
+  }
+  .inv-confirm-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 2rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  .inv-confirm-sub {
+    font-size: 0.88rem;
+    color: rgba(255,255,255,0.72);
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+  .inv-confirm-body {
+    padding: 32px 40px;
+  }
+  .inv-confirm-profile {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  @media (max-width: 560px) {
+    .inv-confirm-profile { grid-template-columns: 1fr 1fr; }
+    .inv-confirm-body { padding: 24px; }
+    .inv-confirm-top { padding: 32px 20px 28px; }
+  }
+  .inv-cp-item {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 14px 16px;
+  }
+  .inv-cp-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .inv-cp-val {
+    font-size: 0.85rem;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .inv-social-proof {
+    background: var(--bronze-tint);
+    border: 1px solid var(--bronze);
+    border-radius: 8px;
+    padding: 16px 18px;
+    font-size: 0.82rem;
+    color: var(--bronze-deep);
+    line-height: 1.6;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <div class="iw-logo-box">I</div>
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<div class="inv-wrap">
+
+  <!-- Hero -->
+  <div class="inv-hero">
+    <div class="inv-hero-eyebrow">Capital Partners</div>
+    <div class="inv-hero-title">Invest with Ironwood</div>
+    <div class="inv-hero-sub">We partner with accredited investors and community backers on residential BRRRR, new construction, and commercial real estate deals across Atlanta.</div>
+  </div>
+
+  <!-- Two-track explainer -->
+  <div class="tracks-grid">
+    <div class="track-card track-1">
+      <span class="track-badge">Track 1</span>
+      <div class="track-title">Accredited Investors</div>
+      <ul class="track-details">
+        <li><span class="td-key">Minimum</span><span class="td-val">$5,000</span></li>
+        <li><span class="td-key">Returns</span><span class="td-val">8–12% preferred return + equity upside</span></li>
+        <li><span class="td-key">Deals</span><span class="td-val">BRRRR, new construction, commercial</span></li>
+        <li><span class="td-key">Access</span><span class="td-val">Deal-by-deal or fund participation</span></li>
+        <li><span class="td-key">Structure</span><span class="td-val">Project LLC — you never enter Ironwood LLC</span></li>
+        <li><span class="td-key">Solicitation</span><span class="td-val">Reg D 506(c) — public advertising permitted</span></li>
+      </ul>
+      <div class="track-note">Accredited status required. $1M+ net worth (excl. primary residence) or $200K+ annual income.</div>
+    </div>
+    <div class="track-card track-2">
+      <span class="track-badge" style="background:#eef6ed; color:var(--ok);">Track 2</span>
+      <div class="track-title">Community Investment</div>
+      <ul class="track-details">
+        <li><span class="td-key">Minimum</span><span class="td-val">$100</span></li>
+        <li><span class="td-key">Platform</span><span class="td-val">Wefunder / Republic / StartEngine</span></li>
+        <li><span class="td-key">Deals</span><span class="td-val">Veteran housing, affordable housing, community projects</span></li>
+        <li><span class="td-key">Access</span><span class="td-val">Anyone can invest — no accreditation required</span></li>
+        <li><span class="td-key">Returns</span><span class="td-val">Equity stake in mission-driven projects</span></li>
+      </ul>
+      <div class="track-note">Open to all investors regardless of accreditation status.</div>
+    </div>
+  </div>
+
+  <!-- Form -->
+  <form id="invForm" onsubmit="return false;">
+
+    <!-- Section 1: About You -->
+    <div class="inv-section">
+      <div class="inv-section-title"><span class="inv-sec-num">1</span> About You</div>
+      <div class="inv-row">
+        <div>
+          <label class="iw-label" for="invFirstName">First Name <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="text" id="invFirstName" required autocomplete="given-name">
+        </div>
+        <div>
+          <label class="iw-label" for="invLastName">Last Name <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="text" id="invLastName" required autocomplete="family-name">
+        </div>
+      </div>
+      <div class="inv-row">
+        <div>
+          <label class="iw-label" for="invEmail">Email <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="email" id="invEmail" required autocomplete="email">
+        </div>
+        <div>
+          <label class="iw-label" for="invPhone">Phone <span style="color:var(--err)">*</span></label>
+          <input class="iw-input" type="tel" id="invPhone" required autocomplete="tel">
+        </div>
+      </div>
+      <div class="inv-row">
+        <div>
+          <label class="iw-label" for="invCity">City</label>
+          <input class="iw-input" type="text" id="invCity">
+        </div>
+        <div>
+          <label class="iw-label" for="invState">State</label>
+          <input class="iw-input" type="text" id="invState" maxlength="2" placeholder="GA">
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: Investment Profile -->
+    <div class="inv-section">
+      <div class="inv-section-title"><span class="inv-sec-num">2</span> Investment Profile</div>
+
+      <div class="inv-row-1">
+        <div class="accredited-label-wrap">
+          <span class="iw-label" style="margin-bottom:0;">Are you an accredited investor? <span style="color:var(--err)">*</span></span>
+          <span class="tooltip-trigger">?
+            <span class="tooltip-box">Accredited investor = $1M+ net worth excluding primary residence, OR $200K+ annual income ($300K joint for past 2 years).</span>
+          </span>
+        </div>
+        <select class="iw-select" id="isAccredited" required>
+          <option value="">— Select —</option>
+          <option value="Yes">Yes, I am accredited</option>
+          <option value="No">No, I am not accredited</option>
+          <option value="Not sure">Not sure</option>
+        </select>
+      </div>
+
+      <div class="inv-row">
+        <div>
+          <label class="iw-label" for="trackPreference">Investment Track Preference <span style="color:var(--err)">*</span></label>
+          <select class="iw-select" id="trackPreference" required>
+            <option value="">— Select —</option>
+            <option>Track 1 — Accredited</option>
+            <option>Track 2 — Community</option>
+            <option>Both</option>
+            <option>Just learning</option>
+          </select>
+        </div>
+        <div>
+          <label class="iw-label" for="investmentRange">Investment Range <span style="color:var(--err)">*</span></label>
+          <select class="iw-select" id="investmentRange" required>
+            <option value="">— Select —</option>
+            <option>$100 – $999</option>
+            <option>$1,000 – $4,999</option>
+            <option>$5,000 – $24,999</option>
+            <option>$25,000 – $99,999</option>
+            <option>$100,000+</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="inv-row">
+        <div>
+          <label class="iw-label" for="investmentTimeline">Investment Timeline <span style="color:var(--err)">*</span></label>
+          <select class="iw-select" id="investmentTimeline" required>
+            <option value="">— Select —</option>
+            <option>Ready now</option>
+            <option>1–3 months</option>
+            <option>3–6 months</option>
+            <option>6–12 months</option>
+            <option>Just exploring</option>
+          </select>
+        </div>
+        <div>
+          <label class="iw-label" for="priorExperience">Prior Real Estate Investing Experience</label>
+          <select class="iw-select" id="priorExperience">
+            <option value="">— Select —</option>
+            <option>None</option>
+            <option>Some (1–2 deals)</option>
+            <option>Experienced (3–10 deals)</option>
+            <option>Very experienced (10+ deals)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="inv-row-1">
+        <label class="iw-label">Investment Goals <span style="font-weight:400; color:var(--muted);">(select all that apply)</span></label>
+        <div class="chip-group" id="goalsChips">
+          <div class="chip" onclick="toggleChip(this)" data-group="goals">Passive Income</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="goals">Equity Growth</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="goals">Tax Benefits</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="goals">Opportunity Zone</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="goals">Veteran / Community Impact</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="goals">Portfolio Diversification</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="goals">Learn Real Estate</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Deal Preferences -->
+    <div class="inv-section">
+      <div class="inv-section-title"><span class="inv-sec-num">3</span> Deal Preferences</div>
+
+      <div class="inv-row-1">
+        <label class="iw-label">Preferred Deal Types <span style="font-weight:400; color:var(--muted);">(select all that apply)</span></label>
+        <div class="chip-group" id="dealTypesChips">
+          <div class="chip" onclick="toggleChip(this)" data-group="dealTypes">BRRRR Residential</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="dealTypes">New Construction</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="dealTypes">Commercial NNN</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="dealTypes">Short-Term Rental</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="dealTypes">Opportunity Zone</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="dealTypes">Affordable Housing</div>
+          <div class="chip" onclick="toggleChip(this)" data-group="dealTypes">Veteran Housing</div>
+        </div>
+      </div>
+
+      <div class="inv-row">
+        <div>
+          <label class="iw-label" for="holdPeriod">Preferred Hold Period</label>
+          <select class="iw-select" id="holdPeriod">
+            <option value="">— Select —</option>
+            <option>Short (6–18 months)</option>
+            <option>Medium (2–5 years)</option>
+            <option>Long (5–10 years)</option>
+            <option>Any</option>
+          </select>
+        </div>
+        <div></div>
+      </div>
+
+      <div class="inv-row-1">
+        <label class="iw-label" for="invComments">Questions or Comments</label>
+        <textarea class="iw-textarea" id="invComments" rows="3" placeholder="Tell us more about what you're looking for, any specific questions, or how you heard about us…"></textarea>
+      </div>
+    </div>
+
+    <!-- Section 4: Compliance -->
+    <div class="inv-section">
+      <div class="inv-section-title"><span class="inv-sec-num">4</span> Compliance</div>
+
+      <div class="compliance-row">
+        <input type="checkbox" id="riskCheck" required>
+        <label for="riskCheck">I understand that investment offerings involve risk and past performance does not guarantee future results. Real estate investments are illiquid and may result in partial or total loss of capital.</label>
+      </div>
+
+      <div class="compliance-row">
+        <input type="checkbox" id="commsCheck" required>
+        <label for="commsCheck">I agree to receive information about Ironwood Property Group investment opportunities, including deal summaries, offering documents, and updates. I may unsubscribe at any time.</label>
+      </div>
+
+      <div id="invError"></div>
+
+      <button type="button" class="iw-btn-primary" id="invSubmitBtn" onclick="submitInquiry()" style="width:100%; margin-top: 8px;">
+        Join the Investor List
+      </button>
+    </div>
+
+  </form>
+
+  <!-- Confirmation -->
+  <div class="inv-confirm" id="invConfirm">
+    <div class="inv-confirm-top">
+      <div class="inv-confirm-icon">✓</div>
+      <div class="inv-confirm-title">You're on the list.</div>
+      <div class="inv-confirm-sub">Our team will reach out within 48 hours with information relevant to your investment profile.</div>
+    </div>
+    <div class="inv-confirm-body">
+      <div class="inv-confirm-profile" id="confirmProfile">
+        <!-- populated by JS -->
+      </div>
+      <div class="inv-social-proof">
+        Ironwood is building toward <strong>$100M AUM</strong> across residential, commercial, and opportunity zone real estate in the Atlanta metro. Thank you for being part of the journey.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="iw-footer">
+  Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a>
+</div>
+
+<script>
+  const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
+  // ── UTM ──────────────────────────────────────────────────────────────────
+  function getUTM() {
+    const p = new URLSearchParams(window.location.search);
+    return {
+      utm_source:   p.get('utm_source')   || '',
+      utm_medium:   p.get('utm_medium')   || '',
+      utm_campaign: p.get('utm_campaign') || '',
+      utm_content:  p.get('utm_content')  || '',
+      utm_term:     p.get('utm_term')     || ''
+    };
+  }
+
+  // ── CHIP MULTI-SELECT ────────────────────────────────────────────────────
+  function toggleChip(chip) {
+    chip.classList.toggle('selected');
+  }
+
+  function getSelectedChips(groupId) {
+    return Array.from(document.getElementById(groupId).querySelectorAll('.chip.selected'))
+               .map(c => c.textContent.trim());
+  }
+
+  // ── SUBMIT ───────────────────────────────────────────────────────────────
+  async function submitInquiry() {
+    const errEl = document.getElementById('invError');
+    errEl.style.display = 'none';
+
+    // Validate required fields
+    const requiredFields = ['invFirstName','invLastName','invEmail','invPhone','isAccredited','trackPreference','investmentRange','investmentTimeline'];
+    for (const id of requiredFields) {
+      const el = document.getElementById(id);
+      if (!el || !el.value.trim()) {
+        errEl.textContent = 'Please complete all required fields (marked with *).';
+        errEl.style.display = 'block';
+        el && el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        return;
+      }
+    }
+    if (!document.getElementById('riskCheck').checked || !document.getElementById('commsCheck').checked) {
+      errEl.textContent = 'Please acknowledge both compliance statements before submitting.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const btn = document.getElementById('invSubmitBtn');
+    btn.disabled = true;
+    btn.textContent = 'Submitting…';
+
+    const goals     = getSelectedChips('goalsChips');
+    const dealTypes = getSelectedChips('dealTypesChips');
+    const track     = document.getElementById('trackPreference').value;
+    const range     = document.getElementById('investmentRange').value;
+    const accredited = document.getElementById('isAccredited').value;
+
+    const payload = {
+      firstName:           document.getElementById('invFirstName').value.trim(),
+      lastName:            document.getElementById('invLastName').value.trim(),
+      email:               document.getElementById('invEmail').value.trim(),
+      phone:               document.getElementById('invPhone').value.trim(),
+      city:                document.getElementById('invCity').value.trim(),
+      state:               document.getElementById('invState').value.trim(),
+      accredited:          accredited,
+      investorTrack:       track,
+      investmentRange:     range,
+      investmentTimeline:  document.getElementById('investmentTimeline').value,
+      priorExperience:     document.getElementById('priorExperience').value,
+      goals:               goals,
+      dealTypes:           dealTypes,
+      holdPeriod:          document.getElementById('holdPeriod').value,
+      comments:            document.getElementById('invComments').value.trim(),
+      submittedAt:         new Date().toISOString(),
+      ...getUTM()
+    };
+
+    try {
+      await fetch(GHL_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {
+      console.warn('Webhook error (non-blocking):', e);
+    }
+
+    // Populate confirmation profile summary
+    const profile = document.getElementById('confirmProfile');
+    const items = [
+      { label: 'Track', val: track || '—' },
+      { label: 'Range', val: range || '—' },
+      { label: 'Accredited', val: accredited || '—' },
+      { label: 'Timeline', val: document.getElementById('investmentTimeline').value || '—' },
+      { label: 'Goals', val: goals.length ? goals.join(', ') : 'None selected' },
+      { label: 'Deal Types', val: dealTypes.length ? dealTypes.join(', ') : 'None selected' }
+    ];
+    profile.innerHTML = items.map(i => `
+      <div class="inv-cp-item">
+        <div class="inv-cp-label">${i.label}</div>
+        <div class="inv-cp-val">${i.val}</div>
+      </div>
+    `).join('');
+
+    document.getElementById('invForm').style.display = 'none';
+    document.querySelector('.tracks-grid').style.display = 'none';
+    const conf = document.getElementById('invConfirm');
+    conf.style.display = 'block';
+    conf.scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

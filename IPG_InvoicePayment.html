@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Invoice Payment — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css">
+<style>
+  .invoice-wrap {
+    max-width: 680px;
+    margin: 40px auto;
+    padding: 0 16px 80px;
+  }
+
+  /* Invoice document card */
+  .invoice-doc {
+    background: var(--surface-2);
+    border: 1px solid var(--hairline);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 16px rgba(28,24,20,0.07);
+  }
+
+  .invoice-doc-header {
+    padding: 32px 36px 28px;
+    border-bottom: 2px solid var(--hairline);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .invoice-brand-name {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.25rem;
+    color: var(--ink);
+    font-weight: 400;
+  }
+  .invoice-brand-sub {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+  }
+
+  .invoice-id-block {
+    text-align: right;
+  }
+  .invoice-label-big {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .invoice-number {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.5rem;
+    color: var(--bronze);
+    letter-spacing: 0.02em;
+  }
+
+  .invoice-meta-row {
+    padding: 20px 36px;
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--hairline);
+    background: var(--surface);
+  }
+  .invoice-meta-item label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 4px;
+  }
+  .invoice-meta-item span {
+    font-size: 0.9rem;
+    color: var(--ink);
+  }
+  .invoice-meta-item span.due-soon {
+    color: var(--bronze);
+    font-weight: 600;
+  }
+  .invoice-meta-item span.due-overdue {
+    color: var(--err);
+    font-weight: 600;
+  }
+
+  .invoice-bill-row {
+    padding: 24px 36px;
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .invoice-bill-block label {
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .invoice-bill-block .name {
+    font-size: 1rem;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .invoice-bill-block .address {
+    font-size: 0.85rem;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+  .invoice-project-label {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-top: 4px;
+    font-style: italic;
+  }
+
+  /* Line items table */
+  .invoice-items {
+    padding: 0 36px 0;
+  }
+  .invoice-items table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+  }
+  .invoice-items thead th {
+    padding: 14px 0 10px;
+    text-align: left;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border-bottom: 1px solid var(--hairline);
+  }
+  .invoice-items thead th:last-child {
+    text-align: right;
+  }
+  .invoice-items tbody tr {
+    border-bottom: 1px solid var(--hairline);
+  }
+  .invoice-items tbody tr:last-child {
+    border-bottom: none;
+  }
+  .invoice-items tbody td {
+    padding: 12px 0;
+    color: var(--ink-soft);
+  }
+  .invoice-items tbody td:last-child {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+    color: var(--ink);
+  }
+  .invoice-items tr.subtotal td {
+    color: var(--muted);
+    font-style: italic;
+  }
+  .invoice-items tr.total-row td {
+    padding-top: 14px;
+    font-weight: 700;
+    color: var(--ink);
+    font-size: 1rem;
+    border-top: 2px solid var(--hairline-2) !important;
+  }
+  .invoice-items tr.balance-row td {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.2rem;
+    color: var(--bronze-deep);
+    font-weight: 400;
+    border-top: 1px solid var(--hairline) !important;
+    padding-top: 12px;
+  }
+
+  .invoice-footer-note {
+    padding: 20px 36px 28px;
+    border-top: 1px solid var(--hairline);
+    font-size: 0.78rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-top: 8px;
+  }
+
+  /* Payment section */
+  .section-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.35rem;
+    color: var(--ink);
+    margin-bottom: 6px;
+    font-weight: 400;
+  }
+  .section-sub {
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  .payment-methods-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  @media (max-width: 520px) {
+    .payment-methods-grid { grid-template-columns: 1fr; }
+  }
+
+  .payment-method-card {
+    background: var(--surface-2);
+    border: 2px solid var(--hairline);
+    border-radius: 10px;
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: border-color 0.15s, background 0.15s;
+    user-select: none;
+  }
+  .payment-method-card:hover {
+    border-color: var(--bronze);
+  }
+  .payment-method-card.selected {
+    border-color: var(--bronze);
+    background: var(--bronze-tint);
+  }
+  .pm-name {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--ink);
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .pm-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 2px solid var(--hairline-2);
+    display: inline-block;
+    flex-shrink: 0;
+  }
+  .payment-method-card.selected .pm-dot {
+    background: var(--bronze);
+    border-color: var(--bronze);
+  }
+  .pm-detail {
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .pm-detail strong {
+    color: var(--bronze-deep);
+  }
+
+  .cc-note {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+
+  /* Confirmation form */
+  .pay-confirm-form {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-top: 20px;
+  }
+  .pay-confirm-form h3 {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.1rem;
+    color: var(--ink);
+    font-weight: 400;
+    margin-bottom: 18px;
+  }
+  .pay-confirm-form h3 span {
+    color: var(--bronze);
+    font-style: italic;
+  }
+
+  /* Confirmation screen */
+  .confirm-screen {
+    background: var(--surface-2);
+    border: 1px solid var(--ok);
+    border-radius: 12px;
+    padding: 40px 36px;
+    text-align: center;
+    display: none;
+  }
+  .confirm-check {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--ok);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    margin: 0 auto 20px;
+  }
+  .confirm-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 1.6rem;
+    color: var(--ink);
+    font-weight: 400;
+    margin-bottom: 10px;
+  }
+  .confirm-sub {
+    font-size: 0.9rem;
+    color: var(--ink-soft);
+    max-width: 400px;
+    margin: 0 auto 24px;
+    line-height: 1.6;
+  }
+  .confirm-contact-btn {
+    display: inline-block;
+    background: var(--bronze);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 8px;
+  }
+
+  @media (max-width: 600px) {
+    .invoice-doc-header, .invoice-meta-row, .invoice-bill-row,
+    .invoice-items, .invoice-footer-note { padding-left: 20px; padding-right: 20px; }
+    .pay-confirm-form { padding: 18px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <div class="iw-logo-box">I</div>
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<div class="invoice-wrap">
+
+  <!-- Invoice Document -->
+  <div class="invoice-doc" id="invoiceDoc">
+
+    <div class="invoice-doc-header">
+      <div>
+        <div class="invoice-brand-name">Ironwood Property Group</div>
+        <div class="invoice-brand-sub">Atlanta Metro · Licensed General Contractor</div>
+      </div>
+      <div class="invoice-id-block">
+        <div class="invoice-label-big">Invoice</div>
+        <div class="invoice-number" id="displayInvoiceNum">INV-2401</div>
+      </div>
+    </div>
+
+    <div class="invoice-meta-row">
+      <div class="invoice-meta-item">
+        <label>Invoice Date</label>
+        <span id="displayInvoiceDate">—</span>
+      </div>
+      <div class="invoice-meta-item">
+        <label>Due Date</label>
+        <span id="displayDueDate">—</span>
+      </div>
+      <div class="invoice-meta-item">
+        <label>Status</label>
+        <span id="displayStatus" class="iw-tag">Awaiting Payment</span>
+      </div>
+    </div>
+
+    <div class="invoice-bill-row">
+      <div class="invoice-bill-block">
+        <label>Bill To</label>
+        <div class="name" id="displayClient">—</div>
+        <div class="address" id="displayAddress">—</div>
+        <div class="invoice-project-label" id="displayProject">—</div>
+      </div>
+    </div>
+
+    <div class="invoice-items">
+      <table>
+        <thead>
+          <tr>
+            <th style="width:70%">Description</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody id="lineItemsBody">
+          <!-- populated by JS -->
+        </tbody>
+      </table>
+    </div>
+
+    <div class="invoice-footer-note">
+      Payment is due within the terms specified in your Client Service Agreement. For questions regarding this invoice, contact your project manager directly.
+    </div>
+  </div>
+
+  <!-- Payment Section -->
+  <div id="paymentSection" style="margin-top: 36px;">
+
+    <div class="section-title">How would you like to pay?</div>
+    <div class="section-sub">Select a payment method below, then confirm your payment.</div>
+
+    <div class="payment-methods-grid" id="methodGrid">
+
+      <div class="payment-method-card" data-method="Zelle" onclick="selectMethod(this)">
+        <div class="pm-name"><span class="pm-dot"></span> Zelle</div>
+        <div class="pm-detail">Send to: <strong>ZELLE_EMAIL_PLACEHOLDER</strong><br>Include your invoice number in the memo</div>
+      </div>
+
+      <div class="payment-method-card" data-method="Cash App" onclick="selectMethod(this)">
+        <div class="pm-name"><span class="pm-dot"></span> Cash App</div>
+        <div class="pm-detail">Send to: <strong>$CASHAPP_HANDLE_PLACEHOLDER</strong><br>Include your invoice number</div>
+      </div>
+
+      <div class="payment-method-card" data-method="Check" onclick="selectMethod(this)">
+        <div class="pm-name"><span class="pm-dot"></span> Check</div>
+        <div class="pm-detail">Make payable to: <strong>Ironwood Property Group LLC</strong><br>Mail to: ADDRESS_PLACEHOLDER</div>
+      </div>
+
+      <div class="payment-method-card" data-method="Bank Transfer (ACH)" onclick="selectMethod(this)">
+        <div class="pm-name"><span class="pm-dot"></span> Bank Transfer (ACH)</div>
+        <div class="pm-detail">Contact us for routing and account details. Same-day confirmation available.</div>
+      </div>
+
+    </div>
+
+    <p class="cc-note">Credit card payments available upon request. A 3% processing fee applies.</p>
+
+    <!-- Payment confirmation form -->
+    <div class="pay-confirm-form" id="payConfirmForm" style="display:none;">
+      <h3>I'm submitting payment via <span id="selectedMethodLabel">—</span></h3>
+
+      <div class="iw-two-col" style="margin-bottom: 16px;">
+        <div>
+          <label class="iw-label" for="amountPaid">Amount Being Paid</label>
+          <input class="iw-input" type="number" id="amountPaid" placeholder="0.00" step="0.01" min="0">
+        </div>
+        <div>
+          <label class="iw-label" for="refNumber">Confirmation / Reference #</label>
+          <input class="iw-input" type="text" id="refNumber" placeholder="Zelle conf., check number, etc.">
+        </div>
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label class="iw-label" for="payNote">Note to Ironwood (optional)</label>
+        <textarea class="iw-textarea" id="payNote" placeholder="Any details you'd like us to know…" rows="3"></textarea>
+      </div>
+
+      <div id="payFormError" class="iw-callout" style="display:none; border-left-color: var(--err); background: #fdf0ef; color: var(--err); margin-bottom: 16px;"></div>
+
+      <button class="iw-btn-primary" id="submitPayBtn" onclick="submitPayment()">Confirm My Payment</button>
+    </div>
+
+  </div>
+
+  <!-- Confirmation Screen -->
+  <div class="confirm-screen" id="confirmScreen">
+    <div class="confirm-check">✓</div>
+    <div class="confirm-title">Payment Notification Sent</div>
+    <div class="confirm-sub">
+      Your project manager has been notified. Payment will be confirmed within 1 business day. You'll receive a receipt once verified.
+    </div>
+    <div style="font-size: 0.82rem; color: var(--muted); margin-bottom: 20px;">
+      Questions? Reach out directly:
+    </div>
+    <a class="confirm-contact-btn" href="tel:+1-800-000-0000">Call Us</a>
+    <a class="confirm-contact-btn" href="mailto:info@ironwoodpropertygroup.com" style="margin-left: 10px;">Email Us</a>
+  </div>
+
+</div>
+
+<div class="iw-footer">
+  Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a>
+</div>
+
+<script>
+  const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
+  // ── UTM ──────────────────────────────────────────────────────────────────
+  function getUTM() {
+    const p = new URLSearchParams(window.location.search);
+    return {
+      utm_source:   p.get('utm_source')   || '',
+      utm_medium:   p.get('utm_medium')   || '',
+      utm_campaign: p.get('utm_campaign') || '',
+      utm_content:  p.get('utm_content')  || '',
+      utm_term:     p.get('utm_term')     || ''
+    };
+  }
+
+  // ── URL PARAMS ───────────────────────────────────────────────────────────
+  const params = new URLSearchParams(window.location.search);
+  const invoiceNum  = params.get('invoice')  || 'INV-2401';
+  const clientName  = params.get('client')   || 'Johnson Family';
+  const amountDue   = parseFloat(params.get('amount') || '41100');
+  const projectName = params.get('project')  || 'Kitchen & Bath Remodel';
+  const dueDateStr  = params.get('due')      || '2026-06-01';
+  const projAddress = params.get('address')  || '';
+
+  // ── POPULATE INVOICE HEADER ──────────────────────────────────────────────
+  document.getElementById('displayInvoiceNum').textContent = invoiceNum;
+  document.getElementById('displayClient').textContent = clientName;
+  document.getElementById('displayProject').textContent = 'Project: ' + projectName;
+  if (projAddress) {
+    document.getElementById('displayAddress').textContent = projAddress;
+  } else {
+    document.getElementById('displayAddress').style.display = 'none';
+  }
+
+  const today = new Date();
+  document.getElementById('displayInvoiceDate').textContent = today.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+
+  const dueDate = new Date(dueDateStr + 'T00:00:00');
+  const dueFmt  = dueDate.toLocaleDateString('en-US', { year:'numeric', month:'long', day:'numeric' });
+  const diffDays = Math.ceil((dueDate - today) / (1000 * 60 * 60 * 24));
+  const dueDateEl = document.getElementById('displayDueDate');
+  dueDateEl.textContent = dueFmt;
+  if (diffDays < 0) {
+    dueDateEl.className = 'due-overdue';
+    document.getElementById('displayStatus').textContent = 'Overdue';
+    document.getElementById('displayStatus').style.background = '#fdf0ef';
+    document.getElementById('displayStatus').style.color = 'var(--err)';
+  } else if (diffDays <= 7) {
+    dueDateEl.className = 'due-soon';
+  }
+
+  // ── LINE ITEMS (demo/default) ────────────────────────────────────────────
+  const lineItems = [
+    { desc: 'Project deposit (30%)',                     amount: 20550,  bold: false },
+    { desc: 'Phase 1 completion — Demo & Site Prep',     amount: 6850,   bold: false },
+    { desc: 'Total Contract Value',                      amount: 68500,  bold: true,  class: 'total-row' },
+    { desc: 'Previously Paid',                           amount: -27400, bold: true,  class: 'subtotal' },
+    { desc: 'Balance Due',                               amount: amountDue, bold: true, class: 'balance-row' }
+  ];
+
+  function fmtMoney(n) {
+    const abs = Math.abs(n);
+    const str = abs.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+    return (n < 0 ? '($' : '$') + str + (n < 0 ? ')' : '');
+  }
+
+  const tbody = document.getElementById('lineItemsBody');
+  lineItems.forEach(item => {
+    const tr = document.createElement('tr');
+    if (item.class) tr.className = item.class;
+    const tdDesc = document.createElement('td');
+    tdDesc.textContent = item.desc;
+    if (item.bold) tdDesc.style.fontWeight = '700';
+    const tdAmt = document.createElement('td');
+    tdAmt.textContent = fmtMoney(item.amount);
+    if (item.bold) tdAmt.style.fontWeight = '700';
+    tr.appendChild(tdDesc);
+    tr.appendChild(tdAmt);
+    tbody.appendChild(tr);
+  });
+
+  // ── PAYMENT METHOD SELECTION ─────────────────────────────────────────────
+  let selectedMethod = null;
+
+  function selectMethod(card) {
+    document.querySelectorAll('.payment-method-card').forEach(c => c.classList.remove('selected'));
+    card.classList.add('selected');
+    selectedMethod = card.dataset.method;
+    document.getElementById('selectedMethodLabel').textContent = selectedMethod;
+    document.getElementById('payConfirmForm').style.display = 'block';
+    // Pre-fill amount
+    document.getElementById('amountPaid').value = amountDue;
+    document.getElementById('payConfirmForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // ── SUBMIT PAYMENT ───────────────────────────────────────────────────────
+  async function submitPayment() {
+    const errEl = document.getElementById('payFormError');
+    errEl.style.display = 'none';
+
+    if (!selectedMethod) {
+      errEl.textContent = 'Please select a payment method.';
+      errEl.style.display = 'block';
+      return;
+    }
+    const amt = parseFloat(document.getElementById('amountPaid').value);
+    if (!amt || amt <= 0) {
+      errEl.textContent = 'Please enter a valid payment amount.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const btn = document.getElementById('submitPayBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending…';
+
+    const payload = {
+      invoiceNumber:   invoiceNum,
+      clientName:      clientName,
+      projectName:     projectName,
+      amountPaid:      amt,
+      paymentMethod:   selectedMethod,
+      referenceNumber: document.getElementById('refNumber').value.trim(),
+      note:            document.getElementById('payNote').value.trim(),
+      submittedAt:     new Date().toISOString(),
+      ...getUTM()
+    };
+
+    try {
+      await fetch(GHL_WEBHOOK_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+    } catch (e) {
+      console.warn('Webhook error (non-blocking):', e);
+    }
+
+    document.getElementById('paymentSection').style.display = 'none';
+    document.getElementById('invoiceDoc').style.display = 'none';
+    const cs = document.getElementById('confirmScreen');
+    cs.style.display = 'block';
+    cs.scrollIntoView({ behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>

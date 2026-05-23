@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Status — Ironwood Property Group</title>
+  <link rel="stylesheet" href="iw-design.css" />
+  <style>
+    /* ── Page-specific styles ── */
+    .ps-body {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+
+    /* ── Lookup screen ── */
+    #lookupScreen {
+      min-height: calc(100vh - 140px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+    .lookup-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 16px;
+      padding: 48px 40px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 4px 32px rgba(28,24,20,.06);
+    }
+    @media (max-width: 520px) {
+      .lookup-card { padding: 32px 24px; }
+    }
+    .lookup-logo-box {
+      width: 52px;
+      height: 52px;
+      background: var(--ink);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Instrument Serif', serif;
+      font-size: 24px;
+      color: #fff;
+      margin: 0 auto 20px;
+    }
+    .lookup-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 28px;
+      color: var(--ink);
+      margin-bottom: 8px;
+    }
+    .lookup-sub {
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+    .lookup-input-wrap {
+      position: relative;
+      margin-bottom: 12px;
+    }
+    .lookup-input {
+      width: 100%;
+      box-sizing: border-box;
+      background: var(--surface-2);
+      border: 1.5px solid var(--hairline-2);
+      border-radius: 10px;
+      padding: 14px 18px;
+      font-family: 'Geist', sans-serif;
+      font-size: 18px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-align: center;
+      text-transform: uppercase;
+      color: var(--ink);
+      outline: none;
+      transition: border-color .15s;
+    }
+    .lookup-input:focus {
+      border-color: var(--bronze);
+      box-shadow: 0 0 0 3px rgba(156,123,74,.12);
+    }
+    .lookup-input::placeholder {
+      color: var(--muted);
+      font-weight: 400;
+      letter-spacing: .04em;
+    }
+    .lookup-btn {
+      width: 100%;
+      padding: 13px 20px;
+      background: var(--ink);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Geist', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .15s;
+      margin-bottom: 20px;
+    }
+    .lookup-btn:hover { background: var(--bronze-deep); }
+    .lookup-error {
+      font-family: 'Geist', sans-serif;
+      font-size: 13px;
+      color: var(--err);
+      margin-bottom: 12px;
+      display: none;
+    }
+    .lookup-help {
+      font-family: 'Geist', sans-serif;
+      font-size: 13px;
+      color: var(--muted);
+      border-top: 1px solid var(--hairline);
+      padding-top: 16px;
+      margin-top: 4px;
+    }
+    .lookup-help a {
+      color: var(--bronze);
+      text-decoration: none;
+    }
+    .demo-hint {
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 10px;
+    }
+
+    /* ── Project View ── */
+    #projectView { display: none; }
+
+    /* project header card */
+    .proj-header-card {
+      background: var(--ink);
+      border-radius: 14px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+      color: #fff;
+    }
+    @media (max-width: 560px) { .proj-header-card { padding: 20px; } }
+    .proj-header-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+    .proj-code {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--bronze);
+      margin-bottom: 4px;
+    }
+    .proj-client {
+      font-family: 'Instrument Serif', serif;
+      font-size: 26px;
+      color: #fff;
+      line-height: 1.1;
+    }
+    .proj-address {
+      font-family: 'Geist', sans-serif;
+      font-size: 13px;
+      color: rgba(255,255,255,.6);
+      margin-top: 4px;
+    }
+    .phase-badge {
+      background: var(--bronze);
+      color: #fff;
+      font-family: 'Geist', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 100px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .proj-type-row {
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: rgba(255,255,255,.75);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .proj-type-sep { opacity: .3; }
+
+    .btn-pm {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      background: rgba(255,255,255,.12);
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 8px;
+      font-family: 'Geist', sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: #fff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background .15s;
+      margin-top: 14px;
+    }
+    .btn-pm:hover { background: rgba(255,255,255,.2); }
+
+    /* stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 640px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 360px) { .stats-row { grid-template-columns: 1fr; } }
+
+    .stat-tile {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 10px;
+      padding: 16px;
+    }
+    .stat-label {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      color: var(--ink);
+      line-height: 1.2;
+    }
+
+    /* ── Phase Stepper ── */
+    .stepper-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 560px) { .stepper-card { padding: 20px 16px; } }
+    .stepper-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 18px;
+      color: var(--ink);
+      margin-bottom: 24px;
+    }
+
+    /* horizontal stepper */
+    .stepper {
+      display: flex;
+      align-items: flex-start;
+      position: relative;
+    }
+    .stepper::before {
+      content: '';
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      right: 20px;
+      height: 2px;
+      background: var(--hairline-2);
+      z-index: 0;
+    }
+    .step {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+      text-align: center;
+    }
+    .step-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      flex-shrink: 0;
+      position: relative;
+      transition: box-shadow .3s;
+    }
+    .step.complete .step-circle {
+      background: var(--bronze);
+      color: #fff;
+      font-size: 16px;
+    }
+    .step.active .step-circle {
+      background: var(--ink);
+      color: #fff;
+      box-shadow: 0 0 0 5px rgba(156,123,74,.25), 0 0 0 9px rgba(156,123,74,.1);
+      animation: pulse-ring 2s ease-in-out infinite;
+    }
+    @keyframes pulse-ring {
+      0%, 100% { box-shadow: 0 0 0 5px rgba(156,123,74,.25), 0 0 0 9px rgba(156,123,74,.1); }
+      50%       { box-shadow: 0 0 0 8px rgba(156,123,74,.15), 0 0 0 14px rgba(156,123,74,.05); }
+    }
+    .step.upcoming .step-circle {
+      background: var(--surface-2);
+      border: 2px solid var(--hairline-2);
+      color: var(--muted);
+    }
+    .step-name {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted);
+      line-height: 1.3;
+      padding: 0 4px;
+    }
+    .step.complete .step-name { color: var(--bronze-deep); }
+    .step.active .step-name { color: var(--ink); font-weight: 700; }
+    .step-date {
+      font-family: 'Geist', sans-serif;
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 4px;
+      opacity: .75;
+    }
+
+    /* vertical stepper (mobile) */
+    @media (max-width: 600px) {
+      .stepper { flex-direction: column; align-items: stretch; }
+      .stepper::before {
+        top: 20px;
+        bottom: 20px;
+        left: 19px;
+        right: auto;
+        width: 2px;
+        height: auto;
+      }
+      .step {
+        flex-direction: row;
+        align-items: flex-start;
+        text-align: left;
+        padding: 0 0 20px 0;
+        gap: 14px;
+      }
+      .step:last-child { padding-bottom: 0; }
+      .step-circle { margin-bottom: 0; flex-shrink: 0; }
+      .step-name { font-size: 13px; }
+      .step-date { margin-top: 2px; }
+    }
+
+    /* ── Updates feed ── */
+    .updates-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-radius: 12px;
+      padding: 28px 32px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 560px) { .updates-card { padding: 20px; } }
+    .updates-title {
+      font-family: 'Instrument Serif', serif;
+      font-size: 18px;
+      color: var(--ink);
+      margin-bottom: 20px;
+    }
+    .update-item {
+      display: flex;
+      gap: 16px;
+      position: relative;
+      padding-bottom: 20px;
+    }
+    .update-item:last-child { padding-bottom: 0; }
+    .update-item:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      left: 15px;
+      top: 32px;
+      bottom: 0;
+      width: 1px;
+      background: var(--hairline-2);
+    }
+    .update-dot {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--bronze-tint);
+      border: 2px solid var(--bronze);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 14px;
+    }
+    .update-content {}
+    .update-date {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--bronze);
+      margin-bottom: 4px;
+    }
+    .update-message {
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+
+    /* ── Next milestone ── */
+    .milestone-card {
+      background: var(--bronze-tint);
+      border: 1px solid var(--bronze);
+      border-radius: 12px;
+      padding: 20px 24px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+    .milestone-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .milestone-label {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--bronze-deep);
+      margin-bottom: 4px;
+    }
+    .milestone-text {
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--ink);
+    }
+
+    /* ── Action buttons ── */
+    .action-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .btn-action {
+      flex: 1;
+      min-width: 200px;
+      padding: 13px 20px;
+      border-radius: 8px;
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background .15s, border-color .15s;
+      border: 1.5px solid transparent;
+    }
+    .btn-action-primary {
+      background: var(--ink);
+      color: #fff;
+    }
+    .btn-action-primary:hover { background: var(--bronze-deep); }
+    .btn-action-secondary {
+      background: var(--surface);
+      border-color: var(--hairline-2);
+      color: var(--ink);
+    }
+    .btn-action-secondary:hover { border-color: var(--bronze); color: var(--bronze-deep); }
+
+    /* payment progress */
+    .payment-bar-wrap {
+      margin-top: 8px;
+    }
+    .payment-track {
+      background: rgba(255,255,255,.15);
+      border-radius: 100px;
+      height: 4px;
+      overflow: hidden;
+    }
+    .payment-fill {
+      height: 100%;
+      background: var(--bronze);
+      border-radius: 100px;
+    }
+    .payment-note {
+      font-family: 'Geist', sans-serif;
+      font-size: 11px;
+      color: rgba(255,255,255,.5);
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <div class="iw-header">
+    <a class="iw-logo-area" href="index.html">
+      <div class="iw-logo-box">I</div>
+      <div>
+        <div class="iw-logo-text">Ironwood Property Group</div>
+        <div class="iw-logo-sub">Atlanta Metro</div>
+      </div>
+    </a>
+    <div class="iw-header-right">
+      <a class="iw-back-btn" href="index.html">← Toolkit</a>
+    </div>
+  </div>
+
+  <!-- ── LOOKUP SCREEN ── -->
+  <div id="lookupScreen">
+    <div class="lookup-card">
+      <div class="lookup-logo-box">I</div>
+      <div class="lookup-title">Check your project status</div>
+      <div class="lookup-sub">Enter your project code to see live updates on your renovation.</div>
+
+      <div class="lookup-input-wrap">
+        <input
+          class="lookup-input"
+          type="text"
+          id="codeInput"
+          placeholder="IPG-0000"
+          maxlength="16"
+          autocomplete="off"
+          autocorrect="off"
+          autocapitalize="characters"
+          spellcheck="false"
+        />
+      </div>
+      <div class="lookup-error" id="lookupError">Project code not found. Please check and try again.</div>
+      <button class="lookup-btn" onclick="lookupProject()">View My Project</button>
+
+      <div class="lookup-help">
+        Don't have a code? Contact us at <a href="tel:+14045550000">(404) 555-0000</a>
+      </div>
+      <div class="demo-hint">Try code <strong>DEMO</strong> or <strong>IPG-DEMO</strong> to see a sample project.</div>
+    </div>
+  </div>
+
+  <!-- ── PROJECT VIEW ── -->
+  <div id="projectView">
+    <div class="ps-body">
+
+      <!-- Project Header -->
+      <div class="proj-header-card">
+        <div class="proj-header-top">
+          <div>
+            <div class="proj-code" id="pvCode">—</div>
+            <div class="proj-client" id="pvClient">—</div>
+            <div class="proj-address" id="pvAddress">—</div>
+          </div>
+          <div class="phase-badge" id="pvPhaseBadge">—</div>
+        </div>
+        <div class="proj-type-row">
+          <span id="pvType">—</span>
+          <span class="proj-type-sep">·</span>
+          <span>PM: <strong id="pvPM">—</strong></span>
+        </div>
+        <div id="pvPaymentBar" class="payment-bar-wrap" style="margin-top:16px;">
+          <div class="payment-track">
+            <div class="payment-fill" id="pvPayFill" style="width:0%"></div>
+          </div>
+          <div class="payment-note" id="pvPayNote">—</div>
+        </div>
+        <a class="btn-pm" id="pvPMLink" href="#">
+          ☎ Call Project Manager
+        </a>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-row">
+        <div class="stat-tile">
+          <div class="stat-label">Contract Value</div>
+          <div class="stat-value" id="pvContract">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-label">Paid to Date</div>
+          <div class="stat-value" id="pvPaid">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-label">Est. Completion</div>
+          <div class="stat-value" id="pvCompletion">—</div>
+        </div>
+        <div class="stat-tile">
+          <div class="stat-label">Days Remaining</div>
+          <div class="stat-value" id="pvDays">—</div>
+        </div>
+      </div>
+
+      <!-- Phase Stepper -->
+      <div class="stepper-card">
+        <div class="stepper-title">Project Phases</div>
+        <div class="stepper" id="phaseStepper"></div>
+      </div>
+
+      <!-- Next Milestone -->
+      <div class="milestone-card">
+        <div class="milestone-icon">📌</div>
+        <div>
+          <div class="milestone-label">Next Milestone</div>
+          <div class="milestone-text" id="pvMilestone">—</div>
+        </div>
+      </div>
+
+      <!-- Updates Feed -->
+      <div class="updates-card">
+        <div class="updates-title">Recent Updates</div>
+        <div id="updatesFeed"></div>
+      </div>
+
+      <!-- Actions -->
+      <div class="action-row">
+        <a class="btn-action btn-action-primary" id="pvCallBtn" href="#">
+          ☎ Contact My Project Manager
+        </a>
+        <a class="btn-action btn-action-secondary" href="IPG_ChangeOrder.html" id="pvChangeOrderBtn">
+          ✎ Request a Change Order
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+
+  <script>
+    // ── Demo project data ──
+    const PROJECTS = {
+      'IPG-DEMO': {
+        projectCode: 'IPG-DEMO',
+        clientName: 'The Johnson Family',
+        address: '1842 Peachtree Rd, Atlanta, GA 30309',
+        projectType: 'Full Kitchen & Master Bath Remodel',
+        startDate: '2026-05-01',
+        estimatedCompletion: '2026-07-15',
+        projectManager: 'Ty Jackson',
+        phone: '+14045550000',
+        totalContract: 68500,
+        amountPaid: 27400,
+        currentPhase: 'Framing & Rough-In',
+        phases: [
+          { name: 'Contract & Permits',       status: 'complete',  date: 'May 1' },
+          { name: 'Demo & Site Prep',          status: 'complete',  date: 'May 8' },
+          { name: 'Framing & Rough-In',        status: 'active',    date: 'May 19 – Jun 6' },
+          { name: 'Drywall & Insulation',      status: 'upcoming',  date: 'Jun 9' },
+          { name: 'Finish Work',               status: 'upcoming',  date: 'Jun 23' },
+          { name: 'Final Punch & Walkthrough', status: 'upcoming',  date: 'Jul 8' }
+        ],
+        recentUpdates: [
+          { date: 'May 21', message: 'Electrical rough-in complete. Plumbing rough-in starts tomorrow.' },
+          { date: 'May 19', message: 'Framing phase has begun. Walls are going up in the kitchen.' },
+          { date: 'May 15', message: 'Demo is complete. Site is clean and ready for framing.' }
+        ],
+        nextMilestone: 'Plumbing rough-in inspection scheduled for May 28'
+      }
+    };
+
+    function lookupProject() {
+      const raw = document.getElementById('codeInput').value.trim().toUpperCase();
+      const key = (raw === 'DEMO') ? 'IPG-DEMO' : raw;
+      const errEl = document.getElementById('lookupError');
+
+      if (!PROJECTS[key]) {
+        errEl.style.display = 'block';
+        document.getElementById('codeInput').style.borderColor = 'var(--err)';
+        return;
+      }
+      errEl.style.display = 'none';
+      renderProject(PROJECTS[key]);
+    }
+
+    // allow Enter key
+    document.getElementById('codeInput').addEventListener('keydown', e => {
+      if (e.key === 'Enter') lookupProject();
+      document.getElementById('lookupError').style.display = 'none';
+      e.target.style.borderColor = '';
+    });
+
+    function fmt$(n) { return '$' + n.toLocaleString(); }
+
+    function daysUntil(dateStr) {
+      const target = new Date(dateStr);
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      target.setHours(0,0,0,0);
+      const diff = Math.round((target - today) / 86400000);
+      return diff;
+    }
+
+    function fmtDate(dateStr) {
+      const d = new Date(dateStr + 'T00:00:00');
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function renderProject(p) {
+      // header
+      document.getElementById('pvCode').textContent    = p.projectCode;
+      document.getElementById('pvClient').textContent  = p.clientName;
+      document.getElementById('pvAddress').textContent = p.address;
+      document.getElementById('pvPhaseBadge').textContent = p.currentPhase;
+      document.getElementById('pvType').textContent    = p.projectType;
+      document.getElementById('pvPM').textContent      = p.projectManager;
+
+      // payment bar
+      const payPct = Math.round((p.amountPaid / p.totalContract) * 100);
+      document.getElementById('pvPayFill').style.width = payPct + '%';
+      document.getElementById('pvPayNote').textContent =
+        fmt$(p.amountPaid) + ' paid of ' + fmt$(p.totalContract) + ' (' + payPct + '%)';
+
+      // PM link
+      const pmLink = 'tel:' + p.phone;
+      document.getElementById('pvPMLink').href    = pmLink;
+      document.getElementById('pvCallBtn').href   = pmLink;
+      document.getElementById('pvCallBtn').textContent = '☎  Call ' + p.projectManager;
+
+      // change order link with pre-fill
+      const coParams = new URLSearchParams({
+        project: p.projectCode,
+        client:  p.clientName,
+        address: p.address
+      });
+      document.getElementById('pvChangeOrderBtn').href = 'IPG_ChangeOrder.html?' + coParams.toString();
+
+      // stats
+      document.getElementById('pvContract').textContent   = fmt$(p.totalContract);
+      document.getElementById('pvPaid').textContent       = fmt$(p.amountPaid);
+      document.getElementById('pvCompletion').textContent = fmtDate(p.estimatedCompletion);
+      const days = daysUntil(p.estimatedCompletion);
+      document.getElementById('pvDays').textContent       = days > 0 ? days + ' days' : (days === 0 ? 'Today' : 'Completed');
+
+      // milestone
+      document.getElementById('pvMilestone').textContent = p.nextMilestone;
+
+      // stepper
+      const stepper = document.getElementById('phaseStepper');
+      stepper.innerHTML = '';
+      p.phases.forEach((phase, i) => {
+        const step = document.createElement('div');
+        step.className = 'step ' + phase.status;
+
+        let circleContent = '';
+        if (phase.status === 'complete') circleContent = '✓';
+        else if (phase.status === 'active') circleContent = String(i + 1);
+        else circleContent = String(i + 1);
+
+        step.innerHTML = `
+          <div class="step-circle">${circleContent}</div>
+          <div>
+            <div class="step-name">${phase.name}</div>
+            <div class="step-date">${phase.date}</div>
+          </div>
+        `;
+        stepper.appendChild(step);
+      });
+
+      // updates feed
+      const feed = document.getElementById('updatesFeed');
+      feed.innerHTML = '';
+      p.recentUpdates.forEach(u => {
+        const item = document.createElement('div');
+        item.className = 'update-item';
+        item.innerHTML = `
+          <div class="update-dot">📋</div>
+          <div class="update-content">
+            <div class="update-date">${u.date}</div>
+            <div class="update-message">${u.message}</div>
+          </div>
+        `;
+        feed.appendChild(item);
+      });
+
+      // show/hide
+      document.getElementById('lookupScreen').style.display = 'none';
+      document.getElementById('projectView').style.display = 'block';
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Check URL param ?code=XXX on load
+    (function() {
+      const params = new URLSearchParams(window.location.search);
+      const code = (params.get('code') || '').toUpperCase();
+      if (code) {
+        document.getElementById('codeInput').value = code;
+        lookupProject();
+      }
+    })();
+  </script>
+
+</body>
+</html>
