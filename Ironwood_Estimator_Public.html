@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Free Renovation Estimate — Ironwood Property Group</title>
+<title>Free Renovation Estimate - Ironwood Property Group</title>
 <meta name="description" content="Get an instant renovation estimate from Ironwood Property Group. Atlanta's trusted renovation team."/>
 <link rel="stylesheet" href="iw-design.css"/>
 <style>
@@ -141,7 +141,7 @@
   <div class="inner">
     <div class="iw-eyebrow">Free Instant Estimate</div>
     <h1 class="iw-page-title">How Much Will Your <em>Renovation Cost?</em></h1>
-    <p class="iw-page-sub">Answer a few quick questions and get an instant estimate range — no signup required, no sales pressure.</p>
+    <p class="iw-page-sub">Answer a few quick questions and get an instant estimate range - no signup required, no sales pressure.</p>
     <div class="trust-row">
       <div class="trust-item"><div class="trust-dot"></div>Licensed &amp; Insured</div>
       <div class="trust-item"><div class="trust-dot"></div>Free Site Visit</div>
@@ -181,7 +181,7 @@
     <div class="iw-progress-fill" id="progressFill" style="width:25%"></div>
   </div>
 
-  <!-- ══ STEP 1 — PROJECT TYPE ══ -->
+  <!-- ══ STEP 1 - PROJECT TYPE ══ -->
   <div id="step1">
     <div class="iw-card">
       <div class="card-title">What type of project is this?</div>
@@ -232,7 +232,7 @@
     <button class="iw-btn iw-btn-primary iw-btn-full" id="step1Next" onclick="goStep(2)" disabled style="margin-top:12px;">Continue</button>
   </div>
 
-  <!-- ══ STEP 2 — SCOPE ══ -->
+  <!-- ══ STEP 2 - SCOPE ══ -->
   <div id="step2" class="hidden">
     <div class="iw-card">
       <div class="card-title">Tell us about the scope</div>
@@ -273,11 +273,11 @@
       <label class="iw-label" style="margin-top:22px;">Approximate square footage of the project area<span class="iw-required">*</span></label>
       <input class="iw-input" type="number" id="sqft" placeholder="e.g. 1200" min="100" max="10000" oninput="calcEstimate()"/>
 
-      <label class="iw-label">Project condition — <span style="font-weight:400;color:var(--muted);">pick the one that best describes the space <em>today</em></span></label>
+      <label class="iw-label">Project condition - <span style="font-weight:400;color:var(--muted);">pick the one that best describes the space <em>today</em></span></label>
       <div class="diff-grid" id="condGrid" style="grid-template-columns:1fr 1fr;">
         <div class="diff-btn" onclick="selectCond(this,'good')">
           <div class="diff-btn-label">Good</div>
-          <div class="diff-btn-desc">Everything works — just dated. Fresh paint, new flooring, fixture swaps. No rot, no leaks, no surprises behind the walls.</div>
+          <div class="diff-btn-desc">Everything works - just dated. Fresh paint, new flooring, fixture swaps. No rot, no leaks, no surprises behind the walls.</div>
         </div>
         <div class="diff-btn" onclick="selectCond(this,'fair')">
           <div class="diff-btn-label">Fair</div>
@@ -285,7 +285,7 @@
         </div>
         <div class="diff-btn" onclick="selectCond(this,'poor')">
           <div class="diff-btn-label">Poor</div>
-          <div class="diff-btn-desc">Visible damage — soft floors, mold, failing systems, deferred maintenance piled up. Needs serious work before cosmetics even start.</div>
+          <div class="diff-btn-desc">Visible damage - soft floors, mold, failing systems, deferred maintenance piled up. Needs serious work before cosmetics even start.</div>
         </div>
         <div class="diff-btn" onclick="selectCond(this,'gut')">
           <div class="diff-btn-label">Full Gut</div>
@@ -303,7 +303,7 @@
         </div>
         <div class="diff-btn" onclick="selectDiff(this,'moderate',1.15)">
           <div class="diff-btn-label">Moderate</div>
-          <div class="diff-btn-desc">Some complexity — tight access, partial demo, mixed finishes</div>
+          <div class="diff-btn-desc">Some complexity - tight access, partial demo, mixed finishes</div>
         </div>
         <div class="diff-btn" onclick="selectDiff(this,'complex',1.35)">
           <div class="diff-btn-label">Complex</div>
@@ -323,7 +323,7 @@
     <button class="iw-btn iw-btn-outline iw-btn-full" onclick="goStep(1)" style="margin-top:8px;">Back</button>
   </div>
 
-  <!-- ══ STEP 3 — CONTACT INFO ══ -->
+  <!-- ══ STEP 3 - CONTACT INFO ══ -->
   <div id="step3" class="hidden">
     <!-- Standard estimate preview (hidden for large projects) -->
     <div class="estimate-box" id="estimateBox">
@@ -333,15 +333,15 @@
       <div class="est-breakdown">
         <div class="est-item">
           <div class="est-item-label">Project Type</div>
-          <div class="est-item-val" id="estType">—</div>
+          <div class="est-item-val" id="estType">-</div>
         </div>
         <div class="est-item">
           <div class="est-item-label">Sq Ft</div>
-          <div class="est-item-val" id="estSqft">—</div>
+          <div class="est-item-val" id="estSqft">-</div>
         </div>
         <div class="est-item">
           <div class="est-item-label">Scope</div>
-          <div class="est-item-val" id="estScope">—</div>
+          <div class="est-item-val" id="estScope">-</div>
         </div>
       </div>
     </div>
@@ -349,7 +349,7 @@
     <!-- Large project notice (shown instead of estimate for large jobs) -->
     <div class="large-project-notice hidden" id="largeProjectNotice">
       <div class="lpn-title">This One Deserves a Real Conversation</div>
-      <div class="lpn-sub">Projects like yours need more than a calculator — they need an experienced set of eyes. Leave your info below and <strong>Jeff will reach out personally</strong> to talk through what you're working with, answer your questions, and set up a free walkthrough at your property.</div>
+      <div class="lpn-sub">Projects like yours need more than a calculator - they need an experienced set of eyes. Leave your info below and <strong>Jeff will reach out personally</strong> to talk through what you're working with, answer your questions, and set up a free walkthrough at your property.</div>
     </div>
 
     <div class="iw-card">
@@ -396,7 +396,7 @@
     <button class="iw-btn iw-btn-outline iw-btn-full" onclick="goStep(2)" style="margin-top:8px;">Back</button>
   </div>
 
-  <!-- ══ STEP 4 — CONFIRMATION ══ -->
+  <!-- ══ STEP 4 - CONFIRMATION ══ -->
   <div id="step4" class="hidden">
     <div class="iw-card">
       <div class="confirm-box">
@@ -427,12 +427,12 @@
       <div class="proof-card">
         <div class="proof-stars">★★★★★</div>
         <div class="proof-text">"Ironwood transformed our outdated kitchen in under 3 weeks. Professional, on budget, and the quality exceeded our expectations."</div>
-        <div class="proof-name">— M. Johnson, East Point, GA</div>
+        <div class="proof-name">- M. Johnson, East Point, GA</div>
       </div>
       <div class="proof-card">
         <div class="proof-stars">★★★★★</div>
         <div class="proof-text">"They gave us a realistic estimate upfront and hit the number. No surprise charges, no excuses. Would recommend to anyone."</div>
-        <div class="proof-name">— D. Williams, College Park, GA</div>
+        <div class="proof-name">- D. Williams, College Park, GA</div>
       </div>
     </div>
   </div>
@@ -552,7 +552,7 @@ function calcEstimate() {
   const cond = document.getElementById('condition').value;
   if (!sqft || !cond) return;
   const BASE = 165;
-  // Multipliers include ~20-25% underreporting buffer — clients consistently understate condition
+  // Multipliers include ~20-25% underreporting buffer - clients consistently understate condition
   const condMult   = { good:[0.45,0.70], fair:[0.70,1.00], poor:[1.00,1.40], gut:[1.30,1.65] }[cond] || [0.80,1.10];
   const typeAdder  = { full_rehab:[1.05,1.15], kitchen:[0.90,1.10], bathroom:[0.85,1.00], addition:[1.10,1.30], flooring:[0.25,0.40], paint:[0.15,0.25], exterior:[0.30,0.50], multi:[0.90,1.10] }[state.projectType] || [0.80,1.00];
   const workAdder  = state.workTypes.length * 0.03;
@@ -597,14 +597,14 @@ function updateEstimateDisplay() {
     ? 'How should Jeff reach you?'
     : 'Where do we send your full quote?';
   document.getElementById('step3CardSub').textContent = isLarge
-    ? 'Your project deserves a personal conversation, not a form letter. Drop your number and Jeff will call you directly — usually same day.'
+    ? 'Your project deserves a personal conversation, not a form letter. Drop your number and Jeff will call you directly - usually same day.'
     : 'We\'ll send a detailed breakdown to your inbox and have our team reach out to schedule your free site visit.';
 
   if (!isLarge) {
     document.getElementById('estRange').textContent = fmt(state.lowEst) + ' – ' + fmt(state.highEst);
-    document.getElementById('estType').textContent  = state.projectLabel || '—';
-    document.getElementById('estSqft').textContent  = state.sqft ? state.sqft.toLocaleString() + ' sqft' : '—';
-    document.getElementById('estScope').textContent = workCount ? workCount + ' trade' + (workCount>1?'s':'') : (state.rooms.length ? state.rooms.length + ' rooms' : '—');
+    document.getElementById('estType').textContent  = state.projectLabel || '-';
+    document.getElementById('estSqft').textContent  = state.sqft ? state.sqft.toLocaleString() + ' sqft' : '-';
+    document.getElementById('estScope').textContent = workCount ? workCount + ' trade' + (workCount>1?'s':'') : (state.rooms.length ? state.rooms.length + ' rooms' : '-');
   }
 }
 
@@ -650,7 +650,7 @@ async function submitForm() {
     workTypes:       state.workTypes.join(', '),
     estimateLow:     state.lowEst,
     estimateHigh:    state.highEst,
-    estimateRange:   isLarge ? 'Large project — requires site visit' : fmt(state.lowEst) + ' – ' + fmt(state.highEst),
+    estimateRange:   isLarge ? 'Large project - requires site visit' : fmt(state.lowEst) + ' – ' + fmt(state.highEst),
     isLargeProject:  isLarge,
     utmSource:       state.utmSource,
     utmMedium:       state.utmMedium,
@@ -688,7 +688,7 @@ async function submitForm() {
   const firstName = document.getElementById('firstName').value.trim().split(' ')[0];
   document.getElementById('confirmTitle').textContent = isLarge ? 'Got It, ' + firstName + '.' : 'You\'re All Set, ' + firstName + '.';
   document.getElementById('confirmSub').innerHTML = isLarge
-    ? 'Jeff will reach out personally — usually within a few hours during business days. This is the part where you actually talk to the person doing the work, not a call center.'
+    ? 'Jeff will reach out personally - usually within a few hours during business days. This is the part where you actually talk to the person doing the work, not a call center.'
     : 'Your estimate request is in. Someone from our team will reach out within <strong>2 business hours</strong> to confirm the details and get your site visit scheduled.';
 
   if (!isLarge) {
