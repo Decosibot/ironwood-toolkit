@@ -273,14 +273,27 @@
       <label class="iw-label" style="margin-top:22px;">Approximate square footage of the project area<span class="iw-required">*</span></label>
       <input class="iw-input" type="number" id="sqft" placeholder="e.g. 1200" min="100" max="10000" oninput="calcEstimate()"/>
 
-      <label class="iw-label">Project condition</label>
-      <select class="iw-select" id="condition" onchange="calcEstimate()">
-        <option value="">Select condition...</option>
-        <option value="good">Good — mostly cosmetic updates</option>
-        <option value="fair">Fair — some systems need work</option>
-        <option value="poor">Poor — significant repairs needed</option>
-        <option value="gut">Full gut — down to the studs</option>
-      </select>
+      <label class="iw-label">Project condition — <span style="font-weight:400;color:var(--muted);">pick the one that best describes the space <em>today</em></span></label>
+      <div class="diff-grid" id="condGrid" style="grid-template-columns:1fr 1fr;">
+        <div class="diff-btn" onclick="selectCond(this,'good')">
+          <div class="diff-btn-label">Good</div>
+          <div class="diff-btn-desc">Everything works — just dated. Fresh paint, new flooring, fixture swaps. No rot, no leaks, no surprises behind the walls.</div>
+        </div>
+        <div class="diff-btn" onclick="selectCond(this,'fair')">
+          <div class="diff-btn-label">Fair</div>
+          <div class="diff-btn-desc">Mostly functional but showing real wear. Some water stains, older HVAC or plumbing, a few things that need more than cosmetics to fix right.</div>
+        </div>
+        <div class="diff-btn" onclick="selectCond(this,'poor')">
+          <div class="diff-btn-label">Poor</div>
+          <div class="diff-btn-desc">Visible damage — soft floors, mold, failing systems, deferred maintenance piled up. Needs serious work before cosmetics even start.</div>
+        </div>
+        <div class="diff-btn" onclick="selectCond(this,'gut')">
+          <div class="diff-btn-label">Full Gut</div>
+          <div class="diff-btn-desc">Down to the studs. Fire damage, major structural issues, hoarding situation, or a full reconfig of the layout. Nothing is staying.</div>
+        </div>
+      </div>
+      <input type="hidden" id="condition" value=""/>
+      <div id="condError" class="error-msg hidden">Please select a condition.</div>
 
       <label class="iw-label" style="margin-top:22px;">Project difficulty</label>
       <div class="diff-grid" id="diffGrid">
@@ -306,7 +319,7 @@
       <input class="iw-input" type="number" id="mileage" placeholder="e.g. 20" min="0" max="200" oninput="calcEstimate()" style="max-width:200px;"/>
       <div style="font-size:11px;color:var(--muted);margin-top:4px;font-family:var(--sans);">Mileage surcharge applied for projects outside the metro core (over 20 miles).</div>
     </div>
-    <button class="iw-btn iw-btn-primary iw-btn-full" id="step2Next" onclick="goStep(3)" disabled style="margin-top:12px;">See My Estimate</button>
+    <button class="iw-btn iw-btn-primary iw-btn-full" id="step2Next" onclick="tryStep3()" disabled style="margin-top:12px;">See My Estimate</button>
     <button class="iw-btn iw-btn-outline iw-btn-full" onclick="goStep(1)" style="margin-top:8px;">Back</button>
   </div>
 
@@ -490,8 +503,26 @@ function selectProject(el, type) {
   document.getElementById('step1Next').disabled = false;
 }
 
+function tryStep3() {
+  const cond = document.getElementById('condition').value;
+  if (!cond) {
+    document.getElementById('condError').classList.remove('hidden');
+    document.getElementById('condGrid').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+  goStep(3);
+}
+
+function selectCond(el, val) {
+  document.querySelectorAll('#condGrid .diff-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('condition').value = val;
+  document.getElementById('condError').classList.add('hidden');
+  calcEstimate();
+}
+
 function selectDiff(el, key, mult) {
-  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+  document.querySelectorAll('#diffGrid .diff-btn').forEach(b => b.classList.remove('selected'));
   el.classList.add('selected');
   state.difficulty     = key;
   state.difficultyMult = mult;
@@ -512,7 +543,7 @@ function toggleRoom(el, val) {
 function validateStep2() {
   const sqft = parseFloat(document.getElementById('sqft').value) || 0;
   const cond = document.getElementById('condition').value;
-  document.getElementById('step2Next').disabled = !(sqft > 0 && cond);
+  document.getElementById('step2Next').disabled = !(sqft > 0 && cond !== '');
 }
 
 function calcEstimate() {
@@ -521,7 +552,8 @@ function calcEstimate() {
   const cond = document.getElementById('condition').value;
   if (!sqft || !cond) return;
   const BASE = 165;
-  const condMult   = { good:[0.35,0.55], fair:[0.55,0.80], poor:[0.80,1.10], gut:[1.05,1.35] }[cond] || [0.65,0.95];
+  // Multipliers include ~20-25% underreporting buffer — clients consistently understate condition
+  const condMult   = { good:[0.45,0.70], fair:[0.70,1.00], poor:[1.00,1.40], gut:[1.30,1.65] }[cond] || [0.80,1.10];
   const typeAdder  = { full_rehab:[1.05,1.15], kitchen:[0.90,1.10], bathroom:[0.85,1.00], addition:[1.10,1.30], flooring:[0.25,0.40], paint:[0.15,0.25], exterior:[0.30,0.50], multi:[0.90,1.10] }[state.projectType] || [0.80,1.00];
   const workAdder  = state.workTypes.length * 0.03;
   const diffMult   = state.difficultyMult || 1.0;
