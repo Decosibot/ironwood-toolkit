@@ -1056,23 +1056,25 @@ function updateEstimateDisplay() {
   calcEstimate();
   const fmt = n => '$' + n.toLocaleString();
   const workCount = state.workTypes.length;
-
-  // Toggle estimate box vs large-project notice
   const isLarge = state.isLargeProject;
-  document.getElementById('estimateBox').classList.toggle('hidden', isLarge);
+  const hasSqft = state.sqft > 0;
 
-  if (!isLarge) {
-    const hasSqft = state.sqft > 0;
-    document.getElementById('estRange').textContent = hasSqft
-      ? fmt(state.lowEst) + ' – ' + fmt(state.highEst)
-      : 'We\'ll price it on site';
-    document.getElementById('estSub').textContent = hasSqft
-      ? 'Based on your project scope. Final pricing confirmed after free site visit.'
-      : 'No square footage entered - our team will measure and quote during the free site visit.';
-    document.getElementById('estType').textContent  = state.projectLabel || '-';
-    document.getElementById('estSqft').textContent  = hasSqft ? state.sqft.toLocaleString() + ' sqft' : 'Not provided';
-    document.getElementById('estScope').textContent = workCount ? workCount + ' trade' + (workCount>1?'s':'') : (state.rooms.length ? state.rooms.length + ' rooms' : '-');
+  document.getElementById('estimateBox').classList.remove('hidden');
+
+  if (hasSqft) {
+    document.getElementById('estRange').textContent = fmt(state.lowEst) + ' – ' + fmt(state.highEst);
+    document.getElementById('estSub').textContent = isLarge
+      ? 'This is a larger project - Jeff will reach out to walk through the details and give you a firm number.'
+      : 'Based on your project scope. Final pricing confirmed after free site visit.';
+  } else {
+    document.getElementById('estRange').textContent = 'We\'ll price it on site';
+    document.getElementById('estSub').textContent = 'No square footage entered - our team will measure and quote during the free site visit.';
   }
+
+  document.getElementById('estType').textContent  = state.projectLabel || '-';
+  document.getElementById('estSqft').textContent  = hasSqft ? state.sqft.toLocaleString() + ' sqft' : 'Not provided';
+  document.getElementById('estScope').textContent = workCount ? workCount + ' trade' + (workCount>1?'s':'') : (state.rooms.length ? state.rooms.length + ' rooms' : '-');
+
   updateVisualization();
 }
 
