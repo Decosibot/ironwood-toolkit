@@ -603,7 +603,7 @@ body { background: var(--bg); }
     <div style="text-align:center; padding: 12px 0 8px;">
       <div style="font-size:52px; margin-bottom:16px;"></div>
     </div>
-    <h2 class="conf-heading">Got it. Jeff will be in touch.</h2>
+    <h2 class="conf-heading">Got it. Someone from our team will be in touch.</h2>
     <p class="conf-subhead" id="conf-subhead">We'll send your personalized report to your email shortly.</p>
 
     <div class="conf-estimate-row" id="conf-estimate-row">
@@ -620,13 +620,13 @@ body { background: var(--bg); }
       <div class="conf-cta-card">
         <div class="conf-cta-icon"></div>
         <div class="conf-cta-title">Want a Cash Offer?</div>
-        <div class="conf-cta-desc">Skip the listing process. Jeff will give you a real number on the spot - no repairs, no showings, no hassle.</div>
+        <div class="conf-cta-desc">Skip the listing process. Someone from our team will give you a real number - no repairs, no showings, no hassle.</div>
         <a href="tel:+1XXXXXXXXXX" class="iw-btn iw-btn-bronze iw-btn-full">Request a Cash Offer</a>
       </div>
       <div class="conf-cta-card">
         <div class="conf-cta-icon"></div>
         <div class="conf-cta-title">Need Renovations First?</div>
-        <div class="conf-cta-desc">Jeff and the crew can renovate and list your home for maximum value - handled start to finish.</div>
+        <div class="conf-cta-desc">Our team can renovate and list your home for maximum value - handled start to finish.</div>
         <a href="tel:+1XXXXXXXXXX" class="iw-btn iw-btn-outline iw-btn-full">Talk to Our Team</a>
       </div>
     </div>
@@ -877,7 +877,7 @@ async function submitForm() {
   confRow.after(confRow2);
 
   document.getElementById('conf-subhead').textContent =
-    `Hi ${payload.firstName} - your report is heading to ${payload.email}. Jeff will follow up personally to walk you through the numbers.`;
+    `Hi ${payload.firstName} - your report is heading to ${payload.email}. Someone from our team will follow up to walk you through the numbers.`;
 
   goToStep(4);
 }
