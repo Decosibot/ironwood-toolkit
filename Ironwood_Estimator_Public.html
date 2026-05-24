@@ -376,8 +376,8 @@
       <div class="upload-previews" id="uploadPreviews"></div>
       <div class="upload-file-list" id="uploadFileList"></div>
 
-      <label class="iw-label" style="margin-top:22px;">Approximate square footage of the project area<span class="iw-required">*</span></label>
-      <input class="iw-input" type="number" id="sqft" placeholder="e.g. 1200" min="100" max="10000" oninput="calcEstimate()"/>
+      <label class="iw-label" style="margin-top:22px;">Approximate square footage of the project area <span style="font-weight:400;color:var(--muted);">- optional</span></label>
+      <input class="iw-input" type="number" id="sqft" placeholder="e.g. 1200 - skip if you're not sure" min="100" max="10000" oninput="calcEstimate()"/>
 
       <label class="iw-label">Project condition - <span style="font-weight:400;color:var(--muted);">pick the one that best describes the space <em>today</em></span></label>
       <div class="diff-grid" id="condGrid" style="grid-template-columns:1fr 1fr;">
@@ -421,9 +421,6 @@
         </div>
       </div>
 
-      <label class="iw-label" style="margin-top:22px;">Approximate distance from Atlanta (miles)</label>
-      <input class="iw-input" type="number" id="mileage" placeholder="e.g. 20" min="0" max="200" oninput="calcEstimate()" style="max-width:200px;"/>
-      <div style="font-size:11px;color:var(--muted);margin-top:4px;font-family:var(--sans);">Mileage surcharge applied for projects outside the metro core (over 20 miles).</div>
     </div>
 
     <!-- ── UPSELL: Additional inspection add-ons ── -->
@@ -904,16 +901,15 @@ function toggleRoom(el, val) {
 }
 
 function validateStep2() {
-  const sqft = parseFloat(document.getElementById('sqft').value) || 0;
   const cond = document.getElementById('condition').value;
-  document.getElementById('step2Next').disabled = !(sqft > 0 && cond !== '');
+  document.getElementById('step2Next').disabled = (cond === '');
 }
 
 function calcEstimate() {
   validateStep2();
   const sqft = parseFloat(document.getElementById('sqft').value) || 0;
   const cond = document.getElementById('condition').value;
-  if (!sqft || !cond) return;
+  if (!cond) return;
   const BASE = 165;
   // Multipliers include ~20-25% underreporting buffer - clients consistently understate condition
   const condMult   = { good:[0.45,0.70], fair:[0.70,1.00], poor:[1.00,1.40], gut:[1.30,1.65] }[cond] || [0.80,1.10];
@@ -921,22 +917,26 @@ function calcEstimate() {
   const workAdder  = state.workTypes.length * 0.03;
   const diffMult   = state.difficultyMult || 1.0;
 
-  // Mileage surcharge
-  const miles = parseFloat(document.getElementById('mileage').value) || 0;
-  const extraMiles = Math.max(0, miles - MILEAGE_FREE_RADIUS);
-  const mileageCost = Math.round(extraMiles * MILEAGE_RATE / 50) * 50;
+  state.sqft        = sqft;
+  state.condition   = cond;
+  state.mileage     = 0;
+  state.mileageCost = 0;
+
+  if (!sqft) {
+    state.lowEst = 0;
+    state.highEst = 0;
+    // Large project flag without sqft - only trigger on gut condition
+    state.isLargeProject = cond === 'gut' && ['complex','historic'].includes(state.difficulty);
+    return;
+  }
 
   let low  = Math.round(sqft * BASE * condMult[0] * typeAdder[0] * (1 + workAdder) * diffMult / 500) * 500;
   let high = Math.round(sqft * BASE * condMult[1] * typeAdder[1] * (1 + workAdder) * diffMult / 500) * 500;
-  low  = Math.max(low,  2500) + mileageCost;
-  high = Math.max(high, 5000) + mileageCost;
+  low  = Math.max(low,  2500);
+  high = Math.max(high, 5000);
 
-  state.sqft        = sqft;
-  state.condition   = cond;
-  state.mileage     = miles;
-  state.mileageCost = mileageCost;
-  state.lowEst      = low;
-  state.highEst     = high;
+  state.lowEst  = low;
+  state.highEst = high;
 
   // Large project flag: estimate over threshold OR complex/historic + large sqft
   const isLarge = high >= LARGE_PROJECT_THRESHOLD ||
@@ -1026,9 +1026,15 @@ function updateEstimateDisplay() {
     : 'We\'ll send a detailed breakdown to your inbox and have our team reach out to schedule your free site visit.';
 
   if (!isLarge) {
-    document.getElementById('estRange').textContent = fmt(state.lowEst) + ' – ' + fmt(state.highEst);
+    const hasSqft = state.sqft > 0;
+    document.getElementById('estRange').textContent = hasSqft
+      ? fmt(state.lowEst) + ' – ' + fmt(state.highEst)
+      : 'We\'ll price it on site';
+    document.getElementById('estSub').textContent = hasSqft
+      ? 'Based on your project scope. Final pricing confirmed after free site visit.'
+      : 'No square footage entered - our team will measure and quote during the free site visit.';
     document.getElementById('estType').textContent  = state.projectLabel || '-';
-    document.getElementById('estSqft').textContent  = state.sqft ? state.sqft.toLocaleString() + ' sqft' : '-';
+    document.getElementById('estSqft').textContent  = hasSqft ? state.sqft.toLocaleString() + ' sqft' : 'Not provided';
     document.getElementById('estScope').textContent = workCount ? workCount + ' trade' + (workCount>1?'s':'') : (state.rooms.length ? state.rooms.length + ' rooms' : '-');
   }
   updateVisualization();
@@ -1102,8 +1108,7 @@ async function submitForm() {
     ['Email',        payload.email],
     ['Project',      payload.projectLabel],
     ['Difficulty',   state.difficulty.charAt(0).toUpperCase() + state.difficulty.slice(1)],
-    ['Square Footage', payload.sqft.toLocaleString() + ' sqft'],
-    ...(payload.mileage > 0 ? [['Distance', payload.mileage + ' miles' + (payload.mileageSurcharge > 0 ? ' (+' + fmt(payload.mileageSurcharge) + ' surcharge)' : '')]] : []),
+    ...(payload.sqft > 0 ? [['Square Footage', payload.sqft.toLocaleString() + ' sqft']] : []),
     ['Estimate',     isLarge ? 'Site visit required' : payload.estimateRange],
     ...(state.upsells.length > 0 ? [['Also inspect', state.upsells.join(', ')]] : []),
   ];
