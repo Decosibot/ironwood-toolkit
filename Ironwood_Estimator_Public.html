@@ -349,7 +349,7 @@
     <!-- Large project notice (shown instead of estimate for large jobs) -->
     <div class="large-project-notice hidden" id="largeProjectNotice">
       <div class="lpn-title">This One Deserves a Real Conversation</div>
-      <div class="lpn-sub">Projects like yours need more than a calculator — they need an experienced set of eyes. Leave your info below and <strong>Ty will call you personally</strong> to talk through what you're working with, answer your questions, and set up a free walkthrough at your property.</div>
+      <div class="lpn-sub">Projects like yours need more than a calculator — they need an experienced set of eyes. Leave your info below and <strong>Jeff will reach out personally</strong> to talk through what you're working with, answer your questions, and set up a free walkthrough at your property.</div>
     </div>
 
     <div class="iw-card">
@@ -417,8 +417,8 @@
 
         <!-- Large project: we'll call them -->
         <div class="booking-card hidden" id="largeConfirmCard" style="background:var(--bronze-wash);border-color:var(--bronze-border);">
-          <div class="booking-title">Ty Will Call You Personally</div>
-          <div class="booking-sub">No automated texts, no call center. Ty will reach out directly to hear what you've got going on, answer any questions, and set up a free on-site walkthrough at a time that works for you. Can't wait? Call or text now: <a href="tel:+1XXXXXXXXXX" style="color:var(--bronze-deep);font-weight:600;">reach us directly</a>.</div>
+          <div class="booking-title">Jeff Will Reach Out Personally</div>
+          <div class="booking-sub">No automated texts, no call center. Jeff will reach out directly to hear what you've got going on, answer any questions, and set up a free on-site walkthrough at a time that works for you. Can't wait? Call or text now: <a href="tel:+1XXXXXXXXXX" style="color:var(--bronze-deep);font-weight:600;">reach us directly</a>.</div>
         </div>
       </div>
     </div>
@@ -594,10 +594,10 @@ function updateEstimateDisplay() {
 
   // Update step 3 card heading
   document.getElementById('step3CardTitle').textContent = isLarge
-    ? 'How should Ty reach you?'
+    ? 'How should Jeff reach you?'
     : 'Where do we send your full quote?';
   document.getElementById('step3CardSub').textContent = isLarge
-    ? 'Your project deserves a personal conversation, not a form letter. Drop your number and Ty will call you directly — usually same day.'
+    ? 'Your project deserves a personal conversation, not a form letter. Drop your number and Jeff will call you directly — usually same day.'
     : 'We\'ll send a detailed breakdown to your inbox and have our team reach out to schedule your free site visit.';
 
   if (!isLarge) {
@@ -688,7 +688,7 @@ async function submitForm() {
   const firstName = document.getElementById('firstName').value.trim().split(' ')[0];
   document.getElementById('confirmTitle').textContent = isLarge ? 'Got It, ' + firstName + '.' : 'You\'re All Set, ' + firstName + '.';
   document.getElementById('confirmSub').innerHTML = isLarge
-    ? 'Ty has your info and will call you personally — usually within a few hours during business days. This is the part where you actually talk to the person doing the work, not a call center.'
+    ? 'Jeff will reach out personally — usually within a few hours during business days. This is the part where you actually talk to the person doing the work, not a call center.'
     : 'Your estimate request is in. Someone from our team will reach out within <strong>2 business hours</strong> to confirm the details and get your site visit scheduled.';
 
   if (!isLarge) {
