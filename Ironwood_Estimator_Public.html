@@ -113,6 +113,69 @@
 /* Upsell selected state - reuse room-btn selected */
 .upsell-btn.selected { border-color:var(--bronze); background:var(--bronze-wash); color:var(--ink); }
 
+/* ── Visualization ── */
+.viz-card {
+  background:var(--surface); border:1px solid var(--hairline);
+  border-radius:var(--radius-lg); padding:24px 28px; margin-bottom:20px;
+}
+.viz-title {
+  font-family:var(--serif); font-size:18px; font-weight:400; color:var(--ink);
+  margin-bottom:4px;
+}
+.viz-sub {
+  font-size:12px; color:var(--muted); font-family:var(--sans); margin-bottom:20px;
+}
+.viz-layout {
+  display:grid; grid-template-columns:1fr 1fr; gap:24px; align-items:start;
+}
+@media(max-width:640px){ .viz-layout { grid-template-columns:1fr; } }
+
+/* Floor plan SVG */
+.floorplan-wrap {
+  background:var(--bg); border:1px solid var(--hairline);
+  border-radius:10px; padding:12px; overflow:hidden;
+}
+.floorplan-wrap svg { display:block; width:100%; height:auto; }
+.fp-room {
+  fill:var(--surface-2); stroke:#C8BFAE; stroke-width:1.5;
+  transition:fill .25s, stroke .25s;
+  cursor:default;
+}
+.fp-room.active { fill:#EFE6D4; stroke:var(--bronze); stroke-width:2; }
+.fp-label {
+  font-family:'Geist',sans-serif; font-size:8px; font-weight:600;
+  fill:#999; text-anchor:middle; dominant-baseline:middle;
+  pointer-events:none; transition:fill .25s;
+  text-transform:uppercase; letter-spacing:.04em;
+}
+.fp-label.active { fill:var(--bronze-deep); }
+
+/* Cost bar chart */
+.chart-wrap { display:flex; flex-direction:column; gap:8px; }
+.chart-row { display:flex; flex-direction:column; gap:3px; }
+.chart-row-label {
+  display:flex; justify-content:space-between; align-items:center;
+  font-family:var(--sans); font-size:11px; color:var(--ink-soft);
+}
+.chart-row-val { font-weight:600; color:var(--ink); }
+.chart-track {
+  height:8px; background:var(--hairline); border-radius:4px; overflow:hidden;
+}
+.chart-fill {
+  height:100%; background:var(--bronze); border-radius:4px;
+  transition:width .4s cubic-bezier(.4,0,.2,1);
+  min-width:0;
+}
+.chart-fill.muted { background:#D4C9B8; }
+.chart-total-row {
+  display:flex; justify-content:space-between; align-items:center;
+  border-top:1px solid var(--hairline); padding-top:10px; margin-top:4px;
+  font-family:var(--sans); font-size:12px; font-weight:700; color:var(--ink);
+}
+.chart-total-val {
+  font-family:var(--serif); font-size:20px; color:var(--bronze-deep);
+}
+
 /* Util */
 .hidden { display:none !important; }
 .error-msg { font-size:12px; color:var(--err); margin-top:6px; font-family:var(--sans); }
@@ -381,6 +444,82 @@
     <div class="large-project-notice hidden" id="largeProjectNotice">
       <div class="lpn-title">This One Deserves a Real Conversation</div>
       <div class="lpn-sub">Projects like yours need more than a calculator - they need an experienced set of eyes. Leave your info below and <strong>Jeff will reach out personally</strong> to talk through what you're working with, answer your questions, and set up a free walkthrough at your property.</div>
+    </div>
+
+    <!-- Visualization card (hidden for large projects) -->
+    <div class="viz-card hidden" id="vizCard">
+      <div class="viz-title">Your Project at a Glance</div>
+      <div class="viz-sub">Highlighted areas show selected rooms. Bars show how your estimate breaks down.</div>
+      <div class="viz-layout">
+        <!-- Floor plan SVG -->
+        <div class="floorplan-wrap">
+          <svg id="floorplanSvg" viewBox="0 0 220 200" xmlns="http://www.w3.org/2000/svg">
+            <!-- Living Room -->
+            <rect class="fp-room" id="fp-Living Room"      x="4"   y="4"   width="90" height="70" rx="3"/>
+            <text class="fp-label" id="fpl-Living Room"    x="49"  y="39">Living</text>
+            <!-- Kitchen -->
+            <rect class="fp-room" id="fp-Kitchen"          x="100" y="4"   width="58" height="50" rx="3"/>
+            <text class="fp-label" id="fpl-Kitchen"        x="129" y="29">Kitchen</text>
+            <!-- Dining Room -->
+            <rect class="fp-room" id="fp-Dining Room"      x="164" y="4"   width="52" height="50" rx="3"/>
+            <text class="fp-label" id="fpl-Dining Room"    x="190" y="29">Dining</text>
+            <!-- Primary Bedroom -->
+            <rect class="fp-room" id="fp-Primary Bedroom"  x="4"   y="80"  width="90" height="60" rx="3"/>
+            <text class="fp-label" id="fpl-Primary Bedroom" x="49" y="110">Prim. Bed</text>
+            <!-- Primary Bath -->
+            <rect class="fp-room" id="fp-Primary Bath"     x="100" y="60"  width="58" height="40" rx="3"/>
+            <text class="fp-label" id="fpl-Primary Bath"   x="129" y="80">P. Bath</text>
+            <!-- Guest Bath -->
+            <rect class="fp-room" id="fp-Guest Bath"       x="164" y="60"  width="52" height="40" rx="3"/>
+            <text class="fp-label" id="fpl-Guest Bath"     x="190" y="80">G. Bath</text>
+            <!-- Bedrooms (2+) -->
+            <rect class="fp-room" id="fp-Bedrooms (2+)"    x="100" y="106" width="116" height="46" rx="3"/>
+            <text class="fp-label" id="fpl-Bedrooms (2+)"  x="158" y="129">Bedrooms</text>
+            <!-- Laundry Room -->
+            <rect class="fp-room" id="fp-Laundry Room"     x="4"   y="146" width="44" height="34" rx="3"/>
+            <text class="fp-label" id="fpl-Laundry Room"   x="26"  y="163">Laundry</text>
+            <!-- Basement -->
+            <rect class="fp-room" id="fp-Basement"         x="54"  y="146" width="80" height="34" rx="3"/>
+            <text class="fp-label" id="fpl-Basement"       x="94"  y="163">Basement</text>
+            <!-- Garage -->
+            <rect class="fp-room" id="fp-Garage"           x="140" y="158" width="76" height="38" rx="3"/>
+            <text class="fp-label" id="fpl-Garage"         x="178" y="177">Garage</text>
+            <!-- Exterior band -->
+            <rect class="fp-room" id="fp-Exterior"         x="4"   y="184" width="130" height="12" rx="3"/>
+            <text class="fp-label" id="fpl-Exterior"       x="69"  y="190">Exterior</text>
+            <!-- Whole Home overlay indicator (text only, no rect) -->
+            <text class="fp-label" id="fpl-Whole Home"     x="110" y="196" style="display:none">Whole Home</text>
+          </svg>
+        </div>
+
+        <!-- Cost breakdown bar chart -->
+        <div class="chart-wrap" id="costChart">
+          <div class="chart-row" id="cr-base">
+            <div class="chart-row-label"><span>Base Labor &amp; Materials</span><span class="chart-row-val" id="cv-base">-</span></div>
+            <div class="chart-track"><div class="chart-fill" id="cf-base" style="width:0%"></div></div>
+          </div>
+          <div class="chart-row" id="cr-type">
+            <div class="chart-row-label"><span>Project Type</span><span class="chart-row-val" id="cv-type">-</span></div>
+            <div class="chart-track"><div class="chart-fill" id="cf-type" style="width:0%"></div></div>
+          </div>
+          <div class="chart-row" id="cr-condition">
+            <div class="chart-row-label"><span>Condition Factor</span><span class="chart-row-val" id="cv-condition">-</span></div>
+            <div class="chart-track"><div class="chart-fill" id="cf-condition" style="width:0%"></div></div>
+          </div>
+          <div class="chart-row" id="cr-difficulty">
+            <div class="chart-row-label"><span>Difficulty</span><span class="chart-row-val" id="cv-difficulty">-</span></div>
+            <div class="chart-track"><div class="chart-fill chart-fill muted" id="cf-difficulty" style="width:0%"></div></div>
+          </div>
+          <div class="chart-row hidden" id="cr-mileage">
+            <div class="chart-row-label"><span>Mileage Surcharge</span><span class="chart-row-val" id="cv-mileage">-</span></div>
+            <div class="chart-track"><div class="chart-fill muted" id="cf-mileage" style="width:0%"></div></div>
+          </div>
+          <div class="chart-total-row">
+            <span>Estimated Range</span>
+            <span class="chart-total-val" id="cv-total">-</span>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="iw-card">
@@ -713,6 +852,68 @@ function calcEstimate() {
   state.isLargeProject = isLarge;
 }
 
+function updateVisualization() {
+  const isLarge = state.isLargeProject;
+  const vizCard = document.getElementById('vizCard');
+  vizCard.classList.toggle('hidden', isLarge);
+  if (isLarge) return;
+
+  // Floor plan: activate rooms
+  const ROOM_IDS = ['Living Room','Kitchen','Dining Room','Primary Bedroom','Primary Bath',
+    'Guest Bath','Bedrooms (2+)','Laundry Room','Basement','Garage','Exterior','Whole Home'];
+  const activeRooms = new Set(state.rooms);
+  const wholeHome = activeRooms.has('Whole Home');
+  ROOM_IDS.forEach(r => {
+    const rect = document.getElementById('fp-' + r);
+    const lbl  = document.getElementById('fpl-' + r);
+    const on   = wholeHome || activeRooms.has(r);
+    if (rect) rect.classList.toggle('active', on);
+    if (lbl)  { lbl.classList.toggle('active', on); lbl.style.display = ''; }
+  });
+
+  // Bar chart breakdown
+  const sqft = state.sqft || 0;
+  const cond = state.condition || 'fair';
+  const condMult  = { good:[0.45,0.70], fair:[0.70,1.00], poor:[1.00,1.40], gut:[1.30,1.65] }[cond] || [0.80,1.10];
+  const typeAdder = { full_rehab:[1.05,1.15], kitchen:[0.90,1.10], bathroom:[0.85,1.00], addition:[1.10,1.30], flooring:[0.25,0.40], paint:[0.15,0.25], exterior:[0.30,0.50], multi:[0.90,1.10] }[state.projectType] || [0.80,1.00];
+  const workAdder = state.workTypes.length * 0.03;
+  const diffMult  = state.difficultyMult || 1.0;
+  const BASE = 165;
+
+  const midCondMult = (condMult[0] + condMult[1]) / 2;
+  const midTypeMult = (typeAdder[0] + typeAdder[1]) / 2;
+
+  const baseAmt       = Math.round(sqft * BASE / 100) * 100;
+  const condAmt       = Math.round(baseAmt * midCondMult / 100) * 100;
+  const typeAmt       = Math.round(condAmt * midTypeMult * (1 + workAdder) / 100) * 100;
+  const diffAmt       = diffMult > 1.0 ? Math.round(typeAmt * (diffMult - 1.0) / 50) * 50 : 0;
+  const mileageAmt    = state.mileageCost || 0;
+  const totalMid      = typeAmt + diffAmt + mileageAmt;
+  const maxVal        = Math.max(totalMid, baseAmt, condAmt, typeAmt, 1);
+  const fmt           = n => '$' + n.toLocaleString();
+  const pct           = v => Math.round(Math.max(0, Math.min(100, v / maxVal * 100))) + '%';
+
+  document.getElementById('cv-base').textContent      = fmt(baseAmt);
+  document.getElementById('cf-base').style.width      = pct(baseAmt);
+  document.getElementById('cv-type').textContent      = fmt(typeAmt);
+  document.getElementById('cf-type').style.width      = pct(typeAmt);
+  document.getElementById('cv-condition').textContent = fmt(condAmt);
+  document.getElementById('cf-condition').style.width = pct(condAmt);
+
+  const diffRow = document.getElementById('cr-difficulty');
+  diffRow.classList.toggle('hidden', diffAmt === 0);
+  document.getElementById('cv-difficulty').textContent = fmt(diffAmt);
+  document.getElementById('cf-difficulty').style.width = pct(diffAmt);
+
+  const mileRow = document.getElementById('cr-mileage');
+  mileRow.classList.toggle('hidden', mileageAmt === 0);
+  document.getElementById('cv-mileage').textContent = fmt(mileageAmt);
+  document.getElementById('cf-mileage').style.width = pct(mileageAmt);
+
+  document.getElementById('cv-total').textContent =
+    sqft && cond ? fmt(state.lowEst) + ' – ' + fmt(state.highEst) : '-';
+}
+
 function updateEstimateDisplay() {
   calcEstimate();
   const fmt = n => '$' + n.toLocaleString();
@@ -737,6 +938,7 @@ function updateEstimateDisplay() {
     document.getElementById('estSqft').textContent  = state.sqft ? state.sqft.toLocaleString() + ' sqft' : '-';
     document.getElementById('estScope').textContent = workCount ? workCount + ' trade' + (workCount>1?'s':'') : (state.rooms.length ? state.rooms.length + ' rooms' : '-');
   }
+  updateVisualization();
 }
 
 function validateStep3() {
