@@ -101,14 +101,6 @@
 .diff-btn-label { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:2px; }
 .diff-btn-desc  { font-size:11px; color:var(--muted); line-height:1.4; }
 
-/* Large project callout */
-.large-project-notice {
-  background:#FFF8EE; border:1.5px solid var(--bronze-border);
-  border-radius:var(--radius-lg); padding:28px 32px; margin:24px 0; text-align:center;
-}
-.lpn-icon { font-size:28px; margin-bottom:12px; }
-.lpn-title { font-family:var(--serif); font-size:22px; font-weight:400; color:var(--ink); margin-bottom:8px; }
-.lpn-sub { font-size:14px; color:var(--muted); line-height:1.7; max-width:440px; margin:0 auto; font-family:var(--sans); }
 
 /* Upsell selected state - reuse room-btn selected */
 .upsell-btn.selected { border-color:var(--bronze); background:var(--bronze-wash); color:var(--ink); }
@@ -527,12 +519,6 @@
           <div class="est-item-val" id="estScope">-</div>
         </div>
       </div>
-    </div>
-
-    <!-- Large project notice -->
-    <div class="large-project-notice hidden" id="largeProjectNotice">
-      <div class="lpn-title">This One Deserves a Real Conversation</div>
-      <div class="lpn-sub">Projects like yours need more than a calculator - they need an experienced set of eyes. Jeff will reach out personally to talk through what you're working with, answer your questions, and set up a free walkthrough at your property.</div>
     </div>
 
     <!-- Visualization card (hidden for large projects) -->
@@ -1074,7 +1060,6 @@ function updateEstimateDisplay() {
   // Toggle estimate box vs large-project notice
   const isLarge = state.isLargeProject;
   document.getElementById('estimateBox').classList.toggle('hidden', isLarge);
-  document.getElementById('largeProjectNotice').classList.toggle('hidden', !isLarge);
 
   if (!isLarge) {
     const hasSqft = state.sqft > 0;
