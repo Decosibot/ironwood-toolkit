@@ -150,6 +150,26 @@
 }
 .upload-file-remove:hover { color:var(--err); }
 
+/* Per-photo feature tags */
+.upload-entry { margin-top:12px; background:var(--surface); border:1px solid var(--hairline); border-radius:var(--radius); overflow:hidden; }
+.upload-entry-header { display:flex; align-items:center; gap:10px; padding:10px 12px; border-bottom:1px solid var(--hairline); }
+.upload-entry-thumb { width:48px; height:48px; border-radius:5px; object-fit:cover; flex-shrink:0; border:1px solid var(--hairline); }
+.upload-entry-thumb.pdf { width:48px; height:48px; border-radius:5px; background:var(--bronze-wash); display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:var(--bronze-deep); font-family:var(--sans); flex-shrink:0; }
+.upload-entry-name { font-family:var(--sans); font-size:12px; color:var(--ink-soft); flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.upload-entry-remove { background:none; border:none; color:var(--muted); cursor:pointer; font-size:18px; line-height:1; padding:0; flex-shrink:0; }
+.upload-entry-remove:hover { color:var(--err); }
+.upload-entry-body { padding:10px 12px; }
+.upload-entry-q { font-family:var(--sans); font-size:12px; font-weight:600; color:var(--ink); margin-bottom:8px; }
+.feature-tags { display:flex; flex-wrap:wrap; gap:6px; }
+.feature-tag {
+  font-family:var(--sans); font-size:11px; font-weight:500; color:var(--muted);
+  background:var(--surface-2); border:1.5px solid var(--hairline-2);
+  border-radius:20px; padding:5px 11px; cursor:pointer; transition:all .15s;
+  user-select:none;
+}
+.feature-tag:hover { border-color:var(--bronze-border); color:var(--ink); }
+.feature-tag.selected { border-color:var(--bronze); background:var(--bronze-wash); color:var(--ink); font-weight:600; }
+
 /* ── Visualization ── */
 .viz-card {
   background:var(--surface); border:1px solid var(--hairline);
@@ -662,7 +682,7 @@ let state = {
   mileage:0, mileageCost:0,
   isLargeProject: false,
   upsells: [],
-  uploadedFiles: [],
+  uploadedFiles: [],   // [{file, features:[]}]
   utmSource:'', utmMedium:'', utmCampaign:'', utmContent:'', utmTerm:''
 };
 
@@ -764,6 +784,14 @@ function toggleUpsell(el, val) {
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 const MAX_FILES = 10;
 
+const FEATURE_TAGS = [
+  'Open floor plan', 'Modern kitchen', 'Custom cabinets', 'Quartz / stone counters',
+  'Tile backsplash', 'Hardwood floors', 'Luxury vinyl plank', 'Walk-in shower',
+  'Freestanding tub', 'Double vanity', 'Barn door', 'Shiplap / accent wall',
+  'Built-in shelving', 'Recessed lighting', 'Large windows', 'Vaulted ceilings',
+  'Outdoor living space', 'Fresh exterior paint', 'Landscaping', 'Other'
+];
+
 function handleFileSelect(fileList) {
   const files = Array.from(fileList);
   let added = 0;
@@ -773,9 +801,9 @@ function handleFileSelect(fileList) {
       alert(file.name + ' is over 10 MB and was skipped.');
       return;
     }
-    const already = state.uploadedFiles.some(f => f.name === file.name && f.size === file.size);
+    const already = state.uploadedFiles.some(e => e.file.name === file.name && e.file.size === file.size);
     if (already) return;
-    state.uploadedFiles.push(file);
+    state.uploadedFiles.push({ file, features: [] });
     added++;
   });
   if (added > 0) renderUploadUI();
@@ -786,39 +814,81 @@ function removeUploadFile(idx) {
   renderUploadUI();
 }
 
-function renderUploadUI() {
-  const previews  = document.getElementById('uploadPreviews');
-  const fileList  = document.getElementById('uploadFileList');
-  previews.innerHTML  = '';
-  fileList.innerHTML  = '';
+function toggleFeatureTag(idx, tag, el) {
+  const entry = state.uploadedFiles[idx];
+  const pos = entry.features.indexOf(tag);
+  if (pos === -1) entry.features.push(tag);
+  else entry.features.splice(pos, 1);
+  el.classList.toggle('selected', entry.features.includes(tag));
+}
 
-  state.uploadedFiles.forEach((file, i) => {
-    if (file.type.startsWith('image/')) {
-      const thumb = document.createElement('div');
-      thumb.className = 'upload-thumb';
+function renderUploadUI() {
+  const container = document.getElementById('uploadFileList');
+  container.innerHTML = '';
+  document.getElementById('uploadPreviews').innerHTML = '';
+
+  state.uploadedFiles.forEach((entry, i) => {
+    const { file, features } = entry;
+    const isImage = file.type.startsWith('image/');
+
+    const card = document.createElement('div');
+    card.className = 'upload-entry';
+
+    // Header row: thumbnail + name + remove
+    const header = document.createElement('div');
+    header.className = 'upload-entry-header';
+
+    if (isImage) {
       const img = document.createElement('img');
+      img.className = 'upload-entry-thumb';
       img.src = URL.createObjectURL(file);
       img.alt = file.name;
-      const rm = document.createElement('button');
-      rm.className = 'upload-thumb-remove';
-      rm.innerHTML = '&times;';
-      rm.setAttribute('aria-label', 'Remove ' + file.name);
-      rm.onclick = (e) => { e.stopPropagation(); removeUploadFile(i); };
-      thumb.appendChild(img);
-      thumb.appendChild(rm);
-      previews.appendChild(thumb);
+      header.appendChild(img);
     } else {
-      const row = document.createElement('div');
-      row.className = 'upload-file-item';
-      row.innerHTML = '<span>' + file.name + '</span><button class="upload-file-remove" aria-label="Remove">&times;</button>';
-      row.querySelector('button').onclick = () => removeUploadFile(i);
-      fileList.appendChild(row);
+      const pdfBox = document.createElement('div');
+      pdfBox.className = 'upload-entry-thumb pdf';
+      pdfBox.textContent = 'PDF';
+      header.appendChild(pdfBox);
     }
+
+    const name = document.createElement('span');
+    name.className = 'upload-entry-name';
+    name.textContent = file.name;
+    header.appendChild(name);
+
+    const rm = document.createElement('button');
+    rm.className = 'upload-entry-remove';
+    rm.innerHTML = '&times;';
+    rm.setAttribute('aria-label', 'Remove');
+    rm.onclick = () => removeUploadFile(i);
+    header.appendChild(rm);
+    card.appendChild(header);
+
+    // Body: feature tag question
+    const body = document.createElement('div');
+    body.className = 'upload-entry-body';
+
+    const q = document.createElement('div');
+    q.className = 'upload-entry-q';
+    q.textContent = 'What would you like to include from this? (tap all that apply)';
+    body.appendChild(q);
+
+    const tags = document.createElement('div');
+    tags.className = 'feature-tags';
+    FEATURE_TAGS.forEach(tag => {
+      const btn = document.createElement('div');
+      btn.className = 'feature-tag' + (features.includes(tag) ? ' selected' : '');
+      btn.textContent = tag;
+      btn.onclick = () => toggleFeatureTag(i, tag, btn);
+      tags.appendChild(btn);
+    });
+    body.appendChild(tags);
+    card.appendChild(body);
+
+    container.appendChild(card);
   });
 
-  // Reset the file input so the same file can be re-added after removal
-  const input = document.getElementById('photoInput');
-  input.value = '';
+  document.getElementById('photoInput').value = '';
 }
 
 (function readUTM() {
@@ -1082,8 +1152,15 @@ async function submitForm() {
     workTypes:       state.workTypes.join(', '),
     upsellInspections: state.upsells.join(', ') || 'None requested',
     projectDescription: document.getElementById('projectDesc').value.trim(),
-    attachedFiles:   state.uploadedFiles.length ? state.uploadedFiles.map(f => f.name).join(', ') : 'None',
+    attachedFiles:    state.uploadedFiles.length ? state.uploadedFiles.map(e => e.file.name).join(', ') : 'None',
     attachedFileCount: state.uploadedFiles.length,
+    inspirationFeatures: state.uploadedFiles.length
+      ? state.uploadedFiles.map((e,i) => {
+          const label = e.file.name;
+          const tags  = e.features.length ? e.features.join(', ') : 'None selected';
+          return (i+1) + '. ' + label + ': ' + tags;
+        }).join(' | ')
+      : 'None',
     estimateLow:     state.lowEst,
     estimateHigh:    state.highEst,
     estimateRange:   isLarge ? 'Large project - requires site visit' : fmt(state.lowEst) + ' – ' + fmt(state.highEst),
