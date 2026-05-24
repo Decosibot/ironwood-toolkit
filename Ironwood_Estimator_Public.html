@@ -89,6 +89,27 @@
 .proof-text { font-size:13px; color:var(--ink-soft); line-height:1.65; margin-bottom:8px; font-style:italic; font-family:var(--sans); }
 .proof-name { font-size:11px; color:var(--muted); font-weight:500; font-family:var(--sans); }
 
+/* Difficulty selector */
+.diff-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:4px; }
+@media(max-width:480px){ .diff-grid { grid-template-columns:1fr; } }
+.diff-btn {
+  background:var(--surface-2); border:2px solid var(--hairline-2); border-radius:var(--radius-sm);
+  padding:12px 14px; cursor:pointer; text-align:left; transition:all .2s; font-family:var(--sans);
+}
+.diff-btn:hover { border-color:var(--bronze-border); }
+.diff-btn.selected { border-color:var(--bronze); background:var(--bronze-wash); }
+.diff-btn-label { font-size:13px; font-weight:600; color:var(--ink); margin-bottom:2px; }
+.diff-btn-desc  { font-size:11px; color:var(--muted); line-height:1.4; }
+
+/* Large project callout */
+.large-project-notice {
+  background:#FFF8EE; border:1.5px solid var(--bronze-border);
+  border-radius:var(--radius-lg); padding:28px 32px; margin:24px 0; text-align:center;
+}
+.lpn-icon { font-size:28px; margin-bottom:12px; }
+.lpn-title { font-family:var(--serif); font-size:22px; font-weight:400; color:var(--ink); margin-bottom:8px; }
+.lpn-sub { font-size:14px; color:var(--muted); line-height:1.7; max-width:440px; margin:0 auto; font-family:var(--sans); }
+
 /* Util */
 .hidden { display:none !important; }
 .error-msg { font-size:12px; color:var(--err); margin-top:6px; font-family:var(--sans); }
@@ -260,6 +281,30 @@
         <option value="poor">Poor — significant repairs needed</option>
         <option value="gut">Full gut — down to the studs</option>
       </select>
+
+      <label class="iw-label" style="margin-top:22px;">Project difficulty</label>
+      <div class="diff-grid" id="diffGrid">
+        <div class="diff-btn selected" onclick="selectDiff(this,'standard',1.0)">
+          <div class="diff-btn-label">Standard</div>
+          <div class="diff-btn-desc">Straightforward layout, typical finishes, no surprises</div>
+        </div>
+        <div class="diff-btn" onclick="selectDiff(this,'moderate',1.15)">
+          <div class="diff-btn-label">Moderate</div>
+          <div class="diff-btn-desc">Some complexity — tight access, partial demo, mixed finishes</div>
+        </div>
+        <div class="diff-btn" onclick="selectDiff(this,'complex',1.35)">
+          <div class="diff-btn-label">Complex</div>
+          <div class="diff-btn-desc">Custom work, load-bearing changes, high-end materials</div>
+        </div>
+        <div class="diff-btn" onclick="selectDiff(this,'historic',1.55)">
+          <div class="diff-btn-label">Historic / Structural</div>
+          <div class="diff-btn-desc">Older home, code upgrades, structural repairs, permits required</div>
+        </div>
+      </div>
+
+      <label class="iw-label" style="margin-top:22px;">Approximate distance from Atlanta (miles)</label>
+      <input class="iw-input" type="number" id="mileage" placeholder="e.g. 20" min="0" max="200" oninput="calcEstimate()" style="max-width:200px;"/>
+      <div style="font-size:11px;color:var(--muted);margin-top:4px;font-family:var(--sans);">Mileage surcharge applied for projects outside the metro core (over 20 miles).</div>
     </div>
     <button class="iw-btn iw-btn-primary iw-btn-full" id="step2Next" onclick="goStep(3)" disabled style="margin-top:12px;">See My Estimate</button>
     <button class="iw-btn iw-btn-outline iw-btn-full" onclick="goStep(1)" style="margin-top:8px;">Back</button>
@@ -267,8 +312,8 @@
 
   <!-- ══ STEP 3 — CONTACT INFO ══ -->
   <div id="step3" class="hidden">
-    <!-- Live estimate preview -->
-    <div class="estimate-box">
+    <!-- Standard estimate preview (hidden for large projects) -->
+    <div class="estimate-box" id="estimateBox">
       <div class="est-label">Your Estimated Project Range</div>
       <div class="est-range" id="estRange">Calculating...</div>
       <div class="est-sub">Based on your project scope. Final pricing confirmed after free site visit.</div>
@@ -288,9 +333,15 @@
       </div>
     </div>
 
+    <!-- Large project notice (shown instead of estimate for large jobs) -->
+    <div class="large-project-notice hidden" id="largeProjectNotice">
+      <div class="lpn-title">This Sounds Like a Larger Project</div>
+      <div class="lpn-sub">Projects of this size and complexity need a proper walkthrough before we can give you an accurate number. Leave your info below and our team will call you — usually within 2 business hours — to discuss the details and schedule a free on-site assessment.</div>
+    </div>
+
     <div class="iw-card">
-      <div class="card-title">Where do we send your full quote?</div>
-      <div class="card-sub">We'll send a detailed breakdown to your inbox and have our team reach out to schedule your free site visit.</div>
+      <div class="card-title" id="step3CardTitle">Where do we send your full quote?</div>
+      <div class="card-sub" id="step3CardSub">We'll send a detailed breakdown to your inbox and have our team reach out to schedule your free site visit.</div>
 
       <div class="iw-two-col">
         <div>
@@ -339,15 +390,22 @@
         <div class="confirm-icon">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4F7A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
-        <div class="confirm-title">You're All Set</div>
-        <div class="confirm-sub">Your estimate request has been received. Our team will contact you within <strong>2 business hours</strong> to discuss your project and confirm pricing.</div>
+        <div class="confirm-title" id="confirmTitle">You're All Set</div>
+        <div class="confirm-sub" id="confirmSub">Your estimate request has been received. Our team will contact you within <strong>2 business hours</strong> to discuss your project and confirm pricing.</div>
 
         <div class="confirm-summary" id="confirmSummary"></div>
 
-        <div class="booking-card">
+        <!-- Standard: show booking button -->
+        <div class="booking-card" id="bookingCard">
           <div class="booking-title">Book Your Free Site Visit</div>
           <div class="booking-sub">Pick a time that works for you and we'll come out to your property, assess the project in person, and give you a firm quote on the spot. No obligation.</div>
           <a class="iw-btn iw-btn-bronze iw-btn-full" href="YOUR_CALENDLY_OR_GHL_CALENDAR_LINK" target="_blank">Book a Free Site Visit</a>
+        </div>
+
+        <!-- Large project: we'll call them -->
+        <div class="booking-card hidden" id="largeConfirmCard" style="background:var(--bronze-wash);border-color:var(--bronze-border);">
+          <div class="booking-title">We'll Call You</div>
+          <div class="booking-sub">One of our project specialists will call you within <strong>2 business hours</strong> to discuss your project in detail and schedule a free on-site walkthrough. You can also reach us directly at <a href="tel:+1XXXXXXXXXX" style="color:var(--bronze-deep);font-weight:600;">call us</a>.</div>
         </div>
       </div>
     </div>
@@ -377,9 +435,16 @@ const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
 const CALENDLY_URL    = 'YOUR_CALENDLY_OR_GHL_CALENDAR_LINK';
 const PHONE_NUMBER    = '+1XXXXXXXXXX';
 
+const LARGE_PROJECT_THRESHOLD = 50000; // flag as large project above this estimate
+const MILEAGE_RATE = 1.50;             // $ per mile over 20-mile radius
+const MILEAGE_FREE_RADIUS = 20;        // miles within metro core, no surcharge
+
 let state = {
   projectType:'', projectLabel:'', rooms:[], workTypes:[],
   sqft:0, condition:'', lowEst:0, highEst:0,
+  difficulty:'standard', difficultyMult:1.0,
+  mileage:0, mileageCost:0,
+  isLargeProject: false,
   utmSource:'', utmMedium:'', utmCampaign:'', utmContent:'', utmTerm:''
 };
 
@@ -425,6 +490,14 @@ function selectProject(el, type) {
   document.getElementById('step1Next').disabled = false;
 }
 
+function selectDiff(el, key, mult) {
+  document.querySelectorAll('.diff-btn').forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  state.difficulty     = key;
+  state.difficultyMult = mult;
+  calcEstimate();
+}
+
 function toggleRoom(el, val) {
   const grid = el.closest('.room-grid');
   const isRoom = grid.id === 'roomGrid';
@@ -448,25 +521,59 @@ function calcEstimate() {
   const cond = document.getElementById('condition').value;
   if (!sqft || !cond) return;
   const BASE = 165;
-  const condMult = { good:[0.35,0.55], fair:[0.55,0.80], poor:[0.80,1.10], gut:[1.05,1.35] }[cond] || [0.65,0.95];
-  const typeAdder = { full_rehab:[1.05,1.15], kitchen:[0.90,1.10], bathroom:[0.85,1.00], addition:[1.10,1.30], flooring:[0.25,0.40], paint:[0.15,0.25], exterior:[0.30,0.50], multi:[0.90,1.10] }[state.projectType] || [0.80,1.00];
-  const workAdder = state.workTypes.length * 0.03;
-  const low  = Math.round(sqft * BASE * condMult[0] * typeAdder[0] * (1 + workAdder) / 500) * 500;
-  const high = Math.round(sqft * BASE * condMult[1] * typeAdder[1] * (1 + workAdder) / 500) * 500;
-  state.sqft      = sqft;
-  state.condition = cond;
-  state.lowEst    = Math.max(low, 2500);
-  state.highEst   = Math.max(high, 5000);
+  const condMult   = { good:[0.35,0.55], fair:[0.55,0.80], poor:[0.80,1.10], gut:[1.05,1.35] }[cond] || [0.65,0.95];
+  const typeAdder  = { full_rehab:[1.05,1.15], kitchen:[0.90,1.10], bathroom:[0.85,1.00], addition:[1.10,1.30], flooring:[0.25,0.40], paint:[0.15,0.25], exterior:[0.30,0.50], multi:[0.90,1.10] }[state.projectType] || [0.80,1.00];
+  const workAdder  = state.workTypes.length * 0.03;
+  const diffMult   = state.difficultyMult || 1.0;
+
+  // Mileage surcharge
+  const miles = parseFloat(document.getElementById('mileage').value) || 0;
+  const extraMiles = Math.max(0, miles - MILEAGE_FREE_RADIUS);
+  const mileageCost = Math.round(extraMiles * MILEAGE_RATE / 50) * 50;
+
+  let low  = Math.round(sqft * BASE * condMult[0] * typeAdder[0] * (1 + workAdder) * diffMult / 500) * 500;
+  let high = Math.round(sqft * BASE * condMult[1] * typeAdder[1] * (1 + workAdder) * diffMult / 500) * 500;
+  low  = Math.max(low,  2500) + mileageCost;
+  high = Math.max(high, 5000) + mileageCost;
+
+  state.sqft        = sqft;
+  state.condition   = cond;
+  state.mileage     = miles;
+  state.mileageCost = mileageCost;
+  state.lowEst      = low;
+  state.highEst     = high;
+
+  // Large project flag: estimate over threshold OR complex/historic + large sqft
+  const isLarge = high >= LARGE_PROJECT_THRESHOLD ||
+    (sqft >= 2000 && ['complex','historic'].includes(state.difficulty)) ||
+    (sqft >= 3000 && ['poor','gut'].includes(cond));
+  state.isLargeProject = isLarge;
 }
 
 function updateEstimateDisplay() {
   calcEstimate();
   const fmt = n => '$' + n.toLocaleString();
-  document.getElementById('estRange').textContent = fmt(state.lowEst) + ' – ' + fmt(state.highEst);
-  document.getElementById('estType').textContent  = state.projectLabel || '—';
-  document.getElementById('estSqft').textContent  = state.sqft ? state.sqft.toLocaleString() + ' sqft' : '—';
   const workCount = state.workTypes.length;
-  document.getElementById('estScope').textContent = workCount ? workCount + ' trade' + (workCount>1?'s':'') : (state.rooms.length ? state.rooms.length + ' rooms' : '—');
+
+  // Toggle estimate box vs large-project notice
+  const isLarge = state.isLargeProject;
+  document.getElementById('estimateBox').classList.toggle('hidden', isLarge);
+  document.getElementById('largeProjectNotice').classList.toggle('hidden', !isLarge);
+
+  // Update step 3 card heading
+  document.getElementById('step3CardTitle').textContent = isLarge
+    ? 'Tell us how to reach you'
+    : 'Where do we send your full quote?';
+  document.getElementById('step3CardSub').textContent = isLarge
+    ? 'This project needs a proper on-site assessment. Drop your info and we\'ll call you within 2 business hours.'
+    : 'We\'ll send a detailed breakdown to your inbox and have our team reach out to schedule your free site visit.';
+
+  if (!isLarge) {
+    document.getElementById('estRange').textContent = fmt(state.lowEst) + ' – ' + fmt(state.highEst);
+    document.getElementById('estType').textContent  = state.projectLabel || '—';
+    document.getElementById('estSqft').textContent  = state.sqft ? state.sqft.toLocaleString() + ' sqft' : '—';
+    document.getElementById('estScope').textContent = workCount ? workCount + ' trade' + (workCount>1?'s':'') : (state.rooms.length ? state.rooms.length + ' rooms' : '—');
+  }
 }
 
 function validateStep3() {
@@ -489,49 +596,75 @@ async function submitForm() {
   const btn = document.getElementById('step3Submit');
   btn.disabled = true;
   btn.textContent = 'Submitting...';
+  const isLarge = state.isLargeProject;
+  const fmt = n => '$' + n.toLocaleString();
   const payload = {
-    firstName:    document.getElementById('firstName').value.trim(),
-    lastName:     document.getElementById('lastName').value.trim(),
-    phone:        document.getElementById('phone').value.trim(),
-    email:        document.getElementById('email').value.trim(),
-    address:      document.getElementById('address').value.trim(),
-    timeline:     document.getElementById('timeline').value,
-    notes:        document.getElementById('notes').value.trim(),
-    projectType:  state.projectType,
-    projectLabel: state.projectLabel,
-    sqft:         state.sqft,
-    condition:    state.condition,
-    rooms:        state.rooms.join(', '),
-    workTypes:    state.workTypes.join(', '),
-    estimateLow:  state.lowEst,
-    estimateHigh: state.highEst,
-    estimateRange: '$' + state.lowEst.toLocaleString() + ' – $' + state.highEst.toLocaleString(),
-    utmSource:   state.utmSource,
-    utmMedium:   state.utmMedium,
-    utmCampaign: state.utmCampaign,
-    utmContent:  state.utmContent,
-    utmTerm:     state.utmTerm,
-    leadSource:  state.utmSource || 'direct',
-    pageUrl:     window.location.href,
-    submittedAt: new Date().toISOString()
+    firstName:       document.getElementById('firstName').value.trim(),
+    lastName:        document.getElementById('lastName').value.trim(),
+    phone:           document.getElementById('phone').value.trim(),
+    email:           document.getElementById('email').value.trim(),
+    address:         document.getElementById('address').value.trim(),
+    timeline:        document.getElementById('timeline').value,
+    notes:           document.getElementById('notes').value.trim(),
+    projectType:     state.projectType,
+    projectLabel:    state.projectLabel,
+    sqft:            state.sqft,
+    condition:       state.condition,
+    difficulty:      state.difficulty,
+    difficultyMult:  state.difficultyMult,
+    mileage:         state.mileage,
+    mileageSurcharge: state.mileageCost,
+    rooms:           state.rooms.join(', '),
+    workTypes:       state.workTypes.join(', '),
+    estimateLow:     state.lowEst,
+    estimateHigh:    state.highEst,
+    estimateRange:   isLarge ? 'Large project — requires site visit' : fmt(state.lowEst) + ' – ' + fmt(state.highEst),
+    isLargeProject:  isLarge,
+    utmSource:       state.utmSource,
+    utmMedium:       state.utmMedium,
+    utmCampaign:     state.utmCampaign,
+    utmContent:      state.utmContent,
+    utmTerm:         state.utmTerm,
+    leadSource:      state.utmSource || 'direct',
+    pageUrl:         window.location.href,
+    submittedAt:     new Date().toISOString()
   };
   try {
     await fetch(GHL_WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
   } catch(e) { console.warn('Webhook error:', e); }
-  const fmt = n => '$' + n.toLocaleString();
-  document.getElementById('confirmSummary').innerHTML = `
-    <div class="cs-row"><span class="cs-label">Name</span><span class="cs-val">${payload.firstName} ${payload.lastName}</span></div>
-    <div class="cs-row"><span class="cs-label">Phone</span><span class="cs-val">${payload.phone}</span></div>
-    <div class="cs-row"><span class="cs-label">Email</span><span class="cs-val">${payload.email}</span></div>
-    <div class="cs-row"><span class="cs-label">Project</span><span class="cs-val">${payload.projectLabel}</span></div>
-    <div class="cs-row"><span class="cs-label">Square Footage</span><span class="cs-val">${payload.sqft.toLocaleString()} sqft</span></div>
-    <div class="cs-row"><span class="cs-label">Estimate Range</span><span class="cs-val bronze">${payload.estimateRange}</span></div>
-  `;
-  document.querySelector('.iw-btn-bronze').href = CALENDLY_URL
-    + (CALENDLY_URL.includes('?') ? '&' : '?')
-    + 'name=' + encodeURIComponent(payload.firstName + ' ' + payload.lastName)
-    + '&email=' + encodeURIComponent(payload.email)
-    + '&a1=' + encodeURIComponent(payload.address);
+
+  // Confirmation summary rows
+  const summaryRows = [
+    ['Name',         payload.firstName + ' ' + payload.lastName],
+    ['Phone',        payload.phone],
+    ['Email',        payload.email],
+    ['Project',      payload.projectLabel],
+    ['Difficulty',   state.difficulty.charAt(0).toUpperCase() + state.difficulty.slice(1)],
+    ['Square Footage', payload.sqft.toLocaleString() + ' sqft'],
+    ...(payload.mileage > 0 ? [['Distance', payload.mileage + ' miles' + (payload.mileageSurcharge > 0 ? ' (+' + fmt(payload.mileageSurcharge) + ' surcharge)' : '')]] : []),
+    ['Estimate',     isLarge ? 'Site visit required' : payload.estimateRange],
+  ];
+  document.getElementById('confirmSummary').innerHTML = summaryRows.map(([label, val]) =>
+    `<div class="cs-row"><span class="cs-label">${label}</span><span class="cs-val${label==='Estimate'&&!isLarge?' bronze':''}">${val}</span></div>`
+  ).join('');
+
+  // Show/hide booking vs call-you card
+  document.getElementById('bookingCard').classList.toggle('hidden', isLarge);
+  document.getElementById('largeConfirmCard').classList.toggle('hidden', !isLarge);
+
+  // Update confirmation heading
+  document.getElementById('confirmTitle').textContent = isLarge ? 'Request Received' : 'You\'re All Set';
+  document.getElementById('confirmSub').innerHTML = isLarge
+    ? 'Your project details have been sent to our team. <strong>We\'ll call you within 2 business hours</strong> to walk through the scope and schedule a free on-site assessment.'
+    : 'Your estimate request has been received. Our team will contact you within <strong>2 business hours</strong> to discuss your project and confirm pricing.';
+
+  if (!isLarge) {
+    document.querySelector('#bookingCard .iw-btn-bronze').href = CALENDLY_URL
+      + (CALENDLY_URL.includes('?') ? '&' : '?')
+      + 'name=' + encodeURIComponent(payload.firstName + ' ' + payload.lastName)
+      + '&email=' + encodeURIComponent(payload.email)
+      + '&a1=' + encodeURIComponent(payload.address);
+  }
   goStep(4);
 }
 </script>
