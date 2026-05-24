@@ -237,6 +237,24 @@
   .project-grid { grid-template-columns:repeat(2,1fr); }
 }
 </style>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9mdZKuJJHkHcJ40run3yY15Dtzsyi6pM&libraries=places&callback=initAutocomplete" async defer></script>
+<script>
+function initAutocomplete() {
+  const input = document.getElementById('address');
+  if (!input) return;
+  const ac = new google.maps.places.Autocomplete(input, {
+    types: ['address'],
+    componentRestrictions: { country: 'us' },
+    fields: ['formatted_address']
+  });
+  ac.addListener('place_changed', () => {
+    const place = ac.getPlace();
+    if (place.formatted_address) {
+      input.value = place.formatted_address;
+    }
+  });
+}
+</script>
 </head>
 <body>
 
@@ -475,7 +493,7 @@
       <input class="iw-input" type="email" id="email" placeholder="you@email.com" oninput="validateStep2()"/>
 
       <label class="iw-label">Property Address</label>
-      <input class="iw-input" type="text" id="address" placeholder="Street address"/>
+      <input class="iw-input" type="text" id="address" placeholder="Start typing your address..." autocomplete="off"/>
 
       <label class="iw-label">Timeline</label>
       <select class="iw-select" id="timeline">
