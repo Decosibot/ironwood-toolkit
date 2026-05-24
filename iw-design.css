@@ -1,6 +1,7 @@
 /* ══════════════════════════════════════════════════════
-   Ironwood Homes and Renovations — Shared Design System v2
-   Warm ivory palette · Instrument Serif + Geist
+   Ironwood Homes and Renovations — Shared Design System v3
+   SW palette: Night Watch · Blustery Sky · Nocturne
+              Mountain Air · Constellation · Moonlit Orchid
    ══════════════════════════════════════════════════════ */
 
 @import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700&display=swap');
@@ -8,20 +9,32 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:          #F4EFE6;
-  --surface:     #FBF8F2;
+  /* SW paint palette */
+  --night-watch:    #414545;   /* SW9680 — deep charcoal green */
+  --blustery-sky:   #6F848B;   /* SW9140 — mid blue-gray */
+  --nocturne:       #5E584F;   /* SW9520 — warm dark brown */
+  --mountain-air:   #D8E0DF;   /* SW6224 — light blue-gray */
+  --constellation:  #CDCDC5;   /* SW9629 — soft warm gray */
+  --moonlit-orchid: #949294;   /* SW9153 — muted purple-gray */
+
+  /* Semantic tokens */
+  --bg:          #EEF2F1;                        /* lighter tint of Mountain Air */
+  --surface:     #F5F7F7;                        /* near-white with Mountain Air warmth */
   --surface-2:   #FFFFFF;
-  --ink:         #1C1814;
-  --ink-soft:    #3A332B;
-  --muted:       #7A6F60;
-  --muted-2:     #A89C8B;
-  --hairline:    #E3DBCC;
-  --hairline-2:  #D6CCB9;
-  --bronze:      #9C7B4A;
-  --bronze-deep: #7A5F38;
-  --bronze-tint: #EFE6D4;
-  --bronze-wash: rgba(156,123,74,.08);
-  --bronze-border: rgba(156,123,74,.25);
+  --ink:         var(--night-watch);             /* #414545 */
+  --ink-soft:    var(--nocturne);                /* #5E584F */
+  --muted:       var(--moonlit-orchid);          /* #949294 */
+  --muted-2:     #B0AEB0;
+  --hairline:    var(--mountain-air);            /* #D8E0DF */
+  --hairline-2:  var(--constellation);           /* #CDCDC5 */
+
+  /* Primary accent — Blustery Sky replaces bronze */
+  --bronze:        var(--blustery-sky);          /* #6F848B */
+  --bronze-deep:   var(--nocturne);              /* #5E584F */
+  --bronze-tint:   #C8D4D7;
+  --bronze-wash:   rgba(111,132,139,.08);
+  --bronze-border: rgba(111,132,139,.30);
+
   --ok:          #4F7A4A;
   --ok-bg:       rgba(79,122,74,.08);
   --warn:        #8A6A1A;
