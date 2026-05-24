@@ -110,6 +110,9 @@
 .lpn-title { font-family:var(--serif); font-size:22px; font-weight:400; color:var(--ink); margin-bottom:8px; }
 .lpn-sub { font-size:14px; color:var(--muted); line-height:1.7; max-width:440px; margin:0 auto; font-family:var(--sans); }
 
+/* Upsell selected state - reuse room-btn selected */
+.upsell-btn.selected { border-color:var(--bronze); background:var(--bronze-wash); color:var(--ink); }
+
 /* Util */
 .hidden { display:none !important; }
 .error-msg { font-size:12px; color:var(--err); margin-top:6px; font-family:var(--sans); }
@@ -236,7 +239,11 @@
   <div id="step2" class="hidden">
     <div class="iw-card">
       <div class="card-title">Tell us about the scope</div>
-      <div class="card-sub">Select everything that applies to your project. This helps us give you the most accurate estimate range.</div>
+      <div class="card-sub">Describe your project in your own words and we'll fill in the details - or just tap what applies below.</div>
+
+      <label class="iw-label">Describe what you want done <span style="font-weight:400;color:var(--muted);">- we'll figure out the rest</span></label>
+      <textarea class="iw-textarea" id="projectDesc" rows="3" placeholder="e.g. I want to update my kitchen and both bathrooms, replace the flooring throughout, and repaint the whole house..." oninput="parseDescription(this.value)" style="margin-bottom:6px;"></textarea>
+      <div id="autoDetectBadge" style="font-family:var(--sans);font-size:12px;color:var(--bronze);min-height:18px;margin-bottom:16px;"></div>
 
       <label class="iw-label">Which rooms or areas are involved?</label>
       <div class="room-grid" id="roomGrid">
@@ -319,6 +326,30 @@
       <input class="iw-input" type="number" id="mileage" placeholder="e.g. 20" min="0" max="200" oninput="calcEstimate()" style="max-width:200px;"/>
       <div style="font-size:11px;color:var(--muted);margin-top:4px;font-family:var(--sans);">Mileage surcharge applied for projects outside the metro core (over 20 miles).</div>
     </div>
+
+    <!-- ── UPSELL: Additional inspection add-ons ── -->
+    <div class="iw-card" style="margin-top:16px;">
+      <div class="card-title" style="font-size:17px;">While our tech is there...</div>
+      <div class="card-sub" style="margin-bottom:20px;">Would you like us to take a look at anything else while we're at the property? Check anything you'd like eyes on - no extra charge for the walkthrough.</div>
+
+      <div class="room-grid" id="upsellGrid">
+        <div class="upsell-btn room-btn" onclick="toggleUpsell(this,'Roof Inspection')">Roof condition</div>
+        <div class="upsell-btn room-btn" onclick="toggleUpsell(this,'HVAC Assessment')">HVAC / AC</div>
+        <div class="upsell-btn room-btn" onclick="toggleUpsell(this,'Plumbing Inspection')">Plumbing / Water lines</div>
+        <div class="upsell-btn room-btn" onclick="toggleUpsell(this,'Electrical Panel')">Electrical panel</div>
+        <div class="upsell-btn room-btn" onclick="toggleUpsell(this,'Foundation / Crawlspace')">Foundation / Crawlspace</div>
+        <div class="upsell-btn room-btn" onclick="toggleUpsell(this,'Windows & Doors')">Windows and doors</div>
+        <div class="upsell-btn room-btn" onclick="toggleUpsell(this,'Insulation / Attic')">Insulation / Attic</div>
+        <div class="upsell-btn room-btn" onclick="toggleUpsell(this,'Deck / Patio')">Deck or patio</div>
+        <div class="upsell-btn room-btn" onclick="toggleUpsell(this,'Garage')">Garage</div>
+        <div class="upsell-btn room-btn" onclick="toggleUpsell(this,'Full Walkthrough')">Full home walkthrough</div>
+      </div>
+
+      <div id="upsellNote" style="display:none;margin-top:14px;background:var(--bronze-wash);border:1px solid var(--bronze-border);border-radius:8px;padding:12px 16px;font-family:var(--sans);font-size:13px;color:var(--ink-soft);line-height:1.6;">
+        We'll make sure our tech spends time on the areas you flagged. If we spot anything worth addressing we'll include it in your quote - no obligation to add it to the project.
+      </div>
+    </div>
+
     <button class="iw-btn iw-btn-primary iw-btn-full" id="step2Next" onclick="tryStep3()" disabled style="margin-top:12px;">See My Estimate</button>
     <button class="iw-btn iw-btn-outline iw-btn-full" onclick="goStep(1)" style="margin-top:8px;">Back</button>
   </div>
@@ -458,8 +489,108 @@ let state = {
   difficulty:'standard', difficultyMult:1.0,
   mileage:0, mileageCost:0,
   isLargeProject: false,
+  upsells: [],
   utmSource:'', utmMedium:'', utmCampaign:'', utmContent:'', utmTerm:''
 };
+
+// ── Plain-language description parser ──
+const KEYWORD_MAP = {
+  // Rooms
+  'kitchen':       { rooms:['Kitchen'],          work:['Cabinets','Countertops','Tile / Backsplash'] },
+  'bath':          { rooms:['Primary Bath'],      work:['Tile / Backsplash','Plumbing'] },
+  'bathroom':      { rooms:['Primary Bath'],      work:['Tile / Backsplash','Plumbing'] },
+  'bathrooms':     { rooms:['Primary Bath','Guest Bath'], work:['Tile / Backsplash','Plumbing'] },
+  'master bath':   { rooms:['Primary Bath'],      work:['Tile / Backsplash','Plumbing'] },
+  'guest bath':    { rooms:['Guest Bath'],         work:['Tile / Backsplash','Plumbing'] },
+  'living room':   { rooms:['Living Room'],        work:['Paint','Flooring'] },
+  'bedroom':       { rooms:['Primary Bedroom'],    work:['Paint','Flooring'] },
+  'bedrooms':      { rooms:['Bedrooms (2+)'],      work:['Paint','Flooring'] },
+  'dining':        { rooms:['Dining Room'],         work:['Paint','Flooring'] },
+  'laundry':       { rooms:['Laundry Room'],        work:['Plumbing'] },
+  'basement':      { rooms:['Basement'],            work:['Drywall / Ceilings','Flooring'] },
+  'garage':        { rooms:['Garage'],              work:[] },
+  'exterior':      { rooms:['Exterior'],            work:[] },
+  'whole house':   { rooms:['Whole Home'],          work:['Paint','Flooring'] },
+  'whole home':    { rooms:['Whole Home'],          work:['Paint','Flooring'] },
+  'entire house':  { rooms:['Whole Home'],          work:['Paint','Flooring'] },
+  // Work types
+  'floor':         { rooms:[], work:['Flooring'] },
+  'flooring':      { rooms:[], work:['Flooring'] },
+  'hardwood':      { rooms:[], work:['Flooring'] },
+  'carpet':        { rooms:[], work:['Flooring'] },
+  'tile':          { rooms:[], work:['Tile / Backsplash'] },
+  'paint':         { rooms:[], work:['Paint'] },
+  'repaint':       { rooms:[], work:['Paint'] },
+  'painting':      { rooms:[], work:['Paint'] },
+  'cabinet':       { rooms:[], work:['Cabinets'] },
+  'cabinets':      { rooms:[], work:['Cabinets'] },
+  'countertop':    { rooms:[], work:['Countertops'] },
+  'countertops':   { rooms:[], work:['Countertops'] },
+  'quartz':        { rooms:[], work:['Countertops'] },
+  'granite':       { rooms:[], work:['Countertops'] },
+  'plumbing':      { rooms:[], work:['Plumbing'] },
+  'electrical':    { rooms:[], work:['Electrical'] },
+  'hvac':          { rooms:[], work:['HVAC'] },
+  'ac ':           { rooms:[], work:['HVAC'] },
+  'heat':          { rooms:[], work:['HVAC'] },
+  'drywall':       { rooms:[], work:['Drywall / Ceilings'] },
+  'ceiling':       { rooms:[], work:['Drywall / Ceilings'] },
+  'window':        { rooms:[], work:['Windows / Doors'] },
+  'windows':       { rooms:[], work:['Windows / Doors'] },
+  'door':          { rooms:[], work:['Windows / Doors'] },
+  'doors':         { rooms:[], work:['Windows / Doors'] },
+  'roof':          { rooms:[], work:['Roofing'] },
+  'roofing':       { rooms:[], work:['Roofing'] },
+  'landscap':      { rooms:[], work:['Landscaping'] },
+  'yard':          { rooms:[], work:['Landscaping'] },
+  'backsplash':    { rooms:[], work:['Tile / Backsplash'] },
+};
+
+function parseDescription(text) {
+  const lower = text.toLowerCase();
+  const newRooms = new Set(state.rooms);
+  const newWork  = new Set(state.workTypes);
+  let matched = [];
+
+  for (const [kw, val] of Object.entries(KEYWORD_MAP)) {
+    if (lower.includes(kw)) {
+      val.rooms.forEach(r => newRooms.add(r));
+      val.work.forEach(w  => newWork.add(w));
+      matched.push(kw);
+    }
+  }
+
+  // Apply to state and update UI buttons
+  state.rooms     = [...newRooms];
+  state.workTypes = [...newWork];
+
+  document.querySelectorAll('#roomGrid .room-btn').forEach(btn => {
+    const val = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+    btn.classList.toggle('selected', state.rooms.includes(val));
+  });
+  document.querySelectorAll('#workGrid .room-btn').forEach(btn => {
+    const val = btn.getAttribute('onclick').match(/'([^']+)'/)[1];
+    btn.classList.toggle('selected', state.workTypes.includes(val));
+  });
+
+  const badge = document.getElementById('autoDetectBadge');
+  if (matched.length > 0) {
+    const roomCount = state.rooms.length;
+    const workCount = state.workTypes.length;
+    badge.textContent = 'Auto-selected: ' + roomCount + ' area' + (roomCount !== 1 ? 's' : '') + ', ' + workCount + ' work type' + (workCount !== 1 ? 's' : '') + ' - adjust below if needed.';
+  } else {
+    badge.textContent = '';
+  }
+  calcEstimate();
+}
+
+// ── Upsell toggles ──
+function toggleUpsell(el, val) {
+  el.classList.toggle('selected');
+  const idx = state.upsells.indexOf(val);
+  if (idx === -1) state.upsells.push(val); else state.upsells.splice(idx, 1);
+  document.getElementById('upsellNote').style.display = state.upsells.length > 0 ? 'block' : 'none';
+}
 
 (function readUTM() {
   const p = new URLSearchParams(window.location.search);
@@ -648,6 +779,8 @@ async function submitForm() {
     mileageSurcharge: state.mileageCost,
     rooms:           state.rooms.join(', '),
     workTypes:       state.workTypes.join(', '),
+    upsellInspections: state.upsells.join(', ') || 'None requested',
+    projectDescription: document.getElementById('projectDesc').value.trim(),
     estimateLow:     state.lowEst,
     estimateHigh:    state.highEst,
     estimateRange:   isLarge ? 'Large project - requires site visit' : fmt(state.lowEst) + ' – ' + fmt(state.highEst),
@@ -675,6 +808,7 @@ async function submitForm() {
     ['Square Footage', payload.sqft.toLocaleString() + ' sqft'],
     ...(payload.mileage > 0 ? [['Distance', payload.mileage + ' miles' + (payload.mileageSurcharge > 0 ? ' (+' + fmt(payload.mileageSurcharge) + ' surcharge)' : '')]] : []),
     ['Estimate',     isLarge ? 'Site visit required' : payload.estimateRange],
+    ...(state.upsells.length > 0 ? [['Also inspect', state.upsells.join(', ')]] : []),
   ];
   document.getElementById('confirmSummary').innerHTML = summaryRows.map(([label, val]) =>
     `<div class="cs-row"><span class="cs-label">${label}</span><span class="cs-val${label==='Estimate'&&!isLarge?' bronze':''}">${val}</span></div>`
