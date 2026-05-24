@@ -285,30 +285,25 @@
     <div class="step-line" id="line1"></div>
     <div class="step-dot">
       <div class="step-circle" id="sc2">2</div>
-      <div class="step-label" id="sl2">Scope</div>
+      <div class="step-label" id="sl2">Your Info</div>
     </div>
     <div class="step-line" id="line2"></div>
     <div class="step-dot">
       <div class="step-circle" id="sc3">3</div>
-      <div class="step-label" id="sl3">Details</div>
-    </div>
-    <div class="step-line" id="line3"></div>
-    <div class="step-dot">
-      <div class="step-circle" id="sc4">4</div>
-      <div class="step-label" id="sl4">Your Estimate</div>
+      <div class="step-label" id="sl3">Your Estimate</div>
     </div>
   </div>
 
   <!-- PROGRESS BAR -->
   <div class="iw-progress-track" style="margin-bottom:36px;">
-    <div class="iw-progress-fill" id="progressFill" style="width:25%"></div>
+    <div class="iw-progress-fill" id="progressFill" style="width:33%"></div>
   </div>
 
-  <!-- ══ STEP 1 - PROJECT TYPE ══ -->
+  <!-- ══ STEP 1 - PROJECT + SCOPE ══ -->
   <div id="step1">
     <div class="iw-card">
       <div class="card-title">What type of project is this?</div>
-      <div class="card-sub">Select the option that best describes your renovation. You can describe specifics in the next step.</div>
+      <div class="card-sub">Select the option that best describes your renovation, then tell us more below.</div>
       <div class="project-grid">
         <div class="project-btn" onclick="selectProject(this,'full_rehab')">
           <img class="pb-img" src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=300&q=70" alt="Full Home"/>
@@ -352,14 +347,9 @@
         </div>
       </div>
     </div>
-    <button class="iw-btn iw-btn-primary iw-btn-full" id="step1Next" onclick="goStep(2)" disabled style="margin-top:12px;">Continue</button>
-  </div>
-
-  <!-- ══ STEP 2 - SCOPE ══ -->
-  <div id="step2" class="hidden">
-    <div class="iw-card">
-      <div class="card-title">Tell us about the scope</div>
-      <div class="card-sub">Describe your project in your own words and we'll fill in the details - or just tap what applies below.</div>
+    <div style="border-top:1px solid var(--hairline);margin:24px -28px 0;padding:24px 28px 0;">
+      <div class="card-title" style="font-size:17px;">Tell us about the scope</div>
+      <div class="card-sub" style="margin-bottom:20px;">Describe your project in your own words and we'll fill in the details - or just tap what applies below.</div>
 
       <label class="iw-label">Describe what you want done <span style="font-weight:400;color:var(--muted);">- we'll figure out the rest</span></label>
       <textarea class="iw-textarea" id="projectDesc" rows="3" placeholder="e.g. I want to update my kitchen and both bathrooms, replace the flooring throughout, and repaint the whole house..." oninput="parseDescription(this.value)" style="margin-bottom:6px;"></textarea>
@@ -466,17 +456,63 @@
       </div>
     </div>
 
-    <button class="iw-btn iw-btn-primary iw-btn-full" id="step2Next" onclick="tryStep3()" disabled style="margin-top:12px;">See My Estimate</button>
+    <button class="iw-btn iw-btn-primary iw-btn-full" id="step1Next" onclick="tryStep2()" disabled style="margin-top:12px;">Continue</button>
+  </div>
+
+  <!-- ══ STEP 2 - CONTACT INFO ══ -->
+  <div id="step2" class="hidden">
+    <div class="iw-card">
+      <div class="card-title">Almost there - who should we send this to?</div>
+      <div class="card-sub">Drop your info below and we'll show you your estimate right away. Someone from our team will also follow up to walk you through it - usually same day.</div>
+
+      <div class="iw-two-col">
+        <div>
+          <label class="iw-label">First Name<span class="iw-required">*</span></label>
+          <input class="iw-input" type="text" id="firstName" placeholder="First name" oninput="validateStep2()"/>
+        </div>
+        <div>
+          <label class="iw-label">Last Name<span class="iw-required">*</span></label>
+          <input class="iw-input" type="text" id="lastName" placeholder="Last name" oninput="validateStep2()"/>
+        </div>
+      </div>
+
+      <label class="iw-label">Phone Number<span class="iw-required">*</span></label>
+      <input class="iw-input" type="tel" id="phone" placeholder="(404) 000-0000" oninput="formatPhone(this); validateStep2()"/>
+
+      <label class="iw-label">Email Address<span class="iw-required">*</span></label>
+      <input class="iw-input" type="email" id="email" placeholder="you@email.com" oninput="validateStep2()"/>
+
+      <label class="iw-label">Property Address</label>
+      <input class="iw-input" type="text" id="address" placeholder="Street address"/>
+
+      <label class="iw-label">Timeline</label>
+      <select class="iw-select" id="timeline">
+        <option value="">When are you looking to start?</option>
+        <option value="asap">As soon as possible</option>
+        <option value="1month">Within 1 month</option>
+        <option value="3months">Within 3 months</option>
+        <option value="6months">Within 6 months</option>
+        <option value="planning">Just planning ahead</option>
+      </select>
+
+      <label class="iw-label">Anything else we should know?</label>
+      <textarea class="iw-textarea" id="notes" placeholder="Special requests, concerns, or additional details..."></textarea>
+
+      <div id="submitError" class="error-msg hidden">Please fill in all required fields before submitting.</div>
+    </div>
+
+    <button class="iw-btn iw-btn-primary iw-btn-full" id="step2Submit" onclick="submitForm()" disabled style="margin-top:12px;">See My Estimate</button>
     <button class="iw-btn iw-btn-outline iw-btn-full" onclick="goStep(1)" style="margin-top:8px;">Back</button>
   </div>
 
-  <!-- ══ STEP 3 - CONTACT INFO ══ -->
+  <!-- ══ STEP 3 - ESTIMATE REVEAL ══ -->
   <div id="step3" class="hidden">
-    <!-- Standard estimate preview (hidden for large projects) -->
+
+    <!-- Standard estimate -->
     <div class="estimate-box" id="estimateBox">
       <div class="est-label">Your Estimated Project Range</div>
       <div class="est-range" id="estRange">Calculating...</div>
-      <div class="est-sub">Based on your project scope. Final pricing confirmed after free site visit.</div>
+      <div class="est-sub" id="estSub">Based on your project scope. Final pricing confirmed after free site visit.</div>
       <div class="est-breakdown">
         <div class="est-item">
           <div class="est-item-label">Project Type</div>
@@ -493,10 +529,10 @@
       </div>
     </div>
 
-    <!-- Large project notice (shown instead of estimate for large jobs) -->
+    <!-- Large project notice -->
     <div class="large-project-notice hidden" id="largeProjectNotice">
       <div class="lpn-title">This One Deserves a Real Conversation</div>
-      <div class="lpn-sub">Projects like yours need more than a calculator - they need an experienced set of eyes. Leave your info below and <strong>Jeff will reach out personally</strong> to talk through what you're working with, answer your questions, and set up a free walkthrough at your property.</div>
+      <div class="lpn-sub">Projects like yours need more than a calculator - they need an experienced set of eyes. Jeff will reach out personally to talk through what you're working with, answer your questions, and set up a free walkthrough at your property.</div>
     </div>
 
     <!-- Visualization card (hidden for large projects) -->
@@ -575,78 +611,30 @@
       </div>
     </div>
 
-    <div class="iw-card">
-      <div class="card-title" id="step3CardTitle">Where do we send your full quote?</div>
-      <div class="card-sub" id="step3CardSub">We'll send a detailed breakdown to your inbox and have our team reach out to schedule your free site visit.</div>
-
-      <div class="iw-two-col">
-        <div>
-          <label class="iw-label">First Name<span class="iw-required">*</span></label>
-          <input class="iw-input" type="text" id="firstName" placeholder="First name" oninput="validateStep3()"/>
-        </div>
-        <div>
-          <label class="iw-label">Last Name<span class="iw-required">*</span></label>
-          <input class="iw-input" type="text" id="lastName" placeholder="Last name" oninput="validateStep3()"/>
-        </div>
+    <!-- We'll call you notice (always shown) -->
+    <div class="booking-card" id="callNoticeCard" style="margin-bottom:0;">
+      <div class="confirm-icon" style="margin-bottom:12px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4F7A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </div>
-
-      <label class="iw-label">Phone Number<span class="iw-required">*</span></label>
-      <input class="iw-input" type="tel" id="phone" placeholder="(404) 000-0000" oninput="formatPhone(this); validateStep3()"/>
-
-      <label class="iw-label">Email Address<span class="iw-required">*</span></label>
-      <input class="iw-input" type="email" id="email" placeholder="you@email.com" oninput="validateStep3()"/>
-
-      <label class="iw-label">Property Address</label>
-      <input class="iw-input" type="text" id="address" placeholder="Street address"/>
-
-      <label class="iw-label">Timeline</label>
-      <select class="iw-select" id="timeline">
-        <option value="">When are you looking to start?</option>
-        <option value="asap">As soon as possible</option>
-        <option value="1month">Within 1 month</option>
-        <option value="3months">Within 3 months</option>
-        <option value="6months">Within 6 months</option>
-        <option value="planning">Just planning ahead</option>
-      </select>
-
-      <label class="iw-label">Anything else we should know?</label>
-      <textarea class="iw-textarea" id="notes" placeholder="Special requests, concerns, or additional details..."></textarea>
-
-      <div id="submitError" class="error-msg hidden">Please fill in all required fields before submitting.</div>
+      <div class="booking-title" id="confirmTitle">Your Estimate Is Ready</div>
+      <div class="booking-sub" id="confirmSub">Someone from our team will follow up to walk you through the numbers and get a free site visit on the calendar - usually same day.</div>
+      <div class="confirm-summary" id="confirmSummary" style="margin-top:16px;"></div>
     </div>
 
-    <button class="iw-btn iw-btn-primary iw-btn-full" id="step3Submit" onclick="submitForm()" disabled style="margin-top:12px;">Get My Full Quote &amp; Book a Visit</button>
-    <button class="iw-btn iw-btn-outline iw-btn-full" onclick="goStep(2)" style="margin-top:8px;">Back</button>
-  </div>
-
-  <!-- ══ STEP 4 - CONFIRMATION ══ -->
-  <div id="step4" class="hidden">
-    <div class="iw-card">
-      <div class="confirm-box">
-        <div class="confirm-icon">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4F7A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="confirm-title" id="confirmTitle">You're All Set</div>
-        <div class="confirm-sub" id="confirmSub">Your estimate request has been received. Our team will contact you within <strong>2 business hours</strong> to discuss your project and confirm pricing.</div>
-
-        <div class="confirm-summary" id="confirmSummary"></div>
-
-        <!-- Standard: show booking button -->
-        <div class="booking-card" id="bookingCard">
-          <div class="booking-title">Book Your Free Site Visit</div>
-          <div class="booking-sub">Pick a time that works for you and we'll come out to your property, assess the project in person, and give you a firm quote on the spot. No obligation.</div>
-          <a class="iw-btn iw-btn-bronze iw-btn-full" href="YOUR_CALENDLY_OR_GHL_CALENDAR_LINK" target="_blank">Book a Free Site Visit</a>
-        </div>
-
-        <!-- Large project: we'll call them -->
-        <div class="booking-card hidden" id="largeConfirmCard" style="background:var(--bronze-wash);border-color:var(--bronze-border);">
-          <div class="booking-title">Jeff Will Reach Out Personally</div>
-          <div class="booking-sub">No automated texts, no call center. Jeff will reach out directly to hear what you've got going on, answer any questions, and set up a free on-site walkthrough at a time that works for you. Can't wait? Call or text now: <a href="tel:+1XXXXXXXXXX" style="color:var(--bronze-deep);font-weight:600;">reach us directly</a>.</div>
-        </div>
-      </div>
+    <!-- Standard: booking CTA -->
+    <div class="booking-card" id="bookingCard" style="margin-top:12px;">
+      <div class="booking-title">Book Your Free Site Visit</div>
+      <div class="booking-sub">Pick a time that works for you and we'll come out, take a look, and give you a firm number on the spot. No obligation.</div>
+      <a class="iw-btn iw-btn-bronze iw-btn-full" href="YOUR_CALENDLY_OR_GHL_CALENDAR_LINK" target="_blank">Book a Free Site Visit</a>
     </div>
 
-    <div class="proof-row">
+    <!-- Large project: Jeff calls -->
+    <div class="booking-card hidden" id="largeConfirmCard" style="margin-top:12px;background:var(--bronze-wash);border-color:var(--bronze-border);">
+      <div class="booking-title">Jeff Will Reach Out Personally</div>
+      <div class="booking-sub">No automated texts, no call center. Jeff will call directly to hear what you've got going on, answer questions, and set up a free walkthrough at a time that works for you.</div>
+    </div>
+
+    <div class="proof-row" style="margin-top:24px;">
       <div class="proof-card">
         <div class="proof-stars">★★★★★</div>
         <div class="proof-text">"Ironwood transformed our outdated kitchen in under 3 weeks. Professional, on budget, and the quality exceeded our expectations."</div>
@@ -904,9 +892,9 @@ function renderUploadUI() {
 })();
 
 function goStep(n) {
-  [1,2,3,4].forEach(i => document.getElementById('step'+i).classList.add('hidden'));
+  [1,2,3].forEach(i => document.getElementById('step'+i).classList.add('hidden'));
   document.getElementById('step'+n).classList.remove('hidden');
-  [1,2,3,4].forEach(i => {
+  [1,2,3].forEach(i => {
     const circ = document.getElementById('sc'+i);
     const lbl  = document.getElementById('sl'+i);
     circ.classList.remove('active','done');
@@ -915,11 +903,11 @@ function goStep(n) {
     if (i === n){ circ.classList.add('active'); circ.textContent = i; lbl.classList.add('active'); }
     if (i > n)  { circ.textContent = i; }
   });
-  [1,2,3].forEach(i => {
+  [1,2].forEach(i => {
     const line = document.getElementById('line'+i);
     line.classList.toggle('done', i < n);
   });
-  const pct = {1:25, 2:50, 3:75, 4:100};
+  const pct = {1:33, 2:66, 3:100};
   document.getElementById('progressFill').style.width = pct[n] + '%';
   window.scrollTo({top: 0, behavior: 'smooth'});
   if (n === 3) { updateEstimateDisplay(); }
@@ -930,17 +918,22 @@ function selectProject(el, type) {
   el.classList.add('selected');
   state.projectType  = type;
   state.projectLabel = el.querySelector('.pb-label').textContent;
-  document.getElementById('step1Next').disabled = false;
+  validateStep1();
 }
 
-function tryStep3() {
+function validateStep1() {
+  const hasCond = document.getElementById('condition').value !== '';
+  document.getElementById('step1Next').disabled = !(state.projectType && hasCond);
+}
+
+function tryStep2() {
   const cond = document.getElementById('condition').value;
   if (!cond) {
     document.getElementById('condError').classList.remove('hidden');
     document.getElementById('condGrid').scrollIntoView({ behavior: 'smooth', block: 'center' });
     return;
   }
-  goStep(3);
+  goStep(2);
 }
 
 function selectCond(el, val) {
@@ -949,6 +942,7 @@ function selectCond(el, val) {
   document.getElementById('condition').value = val;
   document.getElementById('condError').classList.add('hidden');
   calcEstimate();
+  validateStep1();
 }
 
 function selectDiff(el, key, mult) {
@@ -966,17 +960,12 @@ function toggleRoom(el, val) {
   const arr = isRoom ? state.rooms : state.workTypes;
   const idx = arr.indexOf(val);
   if (idx === -1) arr.push(val); else arr.splice(idx,1);
-  validateStep2();
+  validateStep1();
   calcEstimate();
 }
 
-function validateStep2() {
-  const cond = document.getElementById('condition').value;
-  document.getElementById('step2Next').disabled = (cond === '');
-}
-
 function calcEstimate() {
-  validateStep2();
+  validateStep1();
   const sqft = parseFloat(document.getElementById('sqft').value) || 0;
   const cond = document.getElementById('condition').value;
   if (!cond) return;
@@ -1087,14 +1076,6 @@ function updateEstimateDisplay() {
   document.getElementById('estimateBox').classList.toggle('hidden', isLarge);
   document.getElementById('largeProjectNotice').classList.toggle('hidden', !isLarge);
 
-  // Update step 3 card heading
-  document.getElementById('step3CardTitle').textContent = isLarge
-    ? 'How should Jeff reach you?'
-    : 'Where do we send your full quote?';
-  document.getElementById('step3CardSub').textContent = isLarge
-    ? 'Your project deserves a personal conversation, not a form letter. Drop your number and Jeff will call you directly - usually same day.'
-    : 'We\'ll send a detailed breakdown to your inbox and have our team reach out to schedule your free site visit.';
-
   if (!isLarge) {
     const hasSqft = state.sqft > 0;
     document.getElementById('estRange').textContent = hasSqft
@@ -1110,13 +1091,13 @@ function updateEstimateDisplay() {
   updateVisualization();
 }
 
-function validateStep3() {
+function validateStep2() {
   const fn = document.getElementById('firstName').value.trim();
   const ln = document.getElementById('lastName').value.trim();
   const ph = document.getElementById('phone').value.replace(/\D/g,'');
   const em = document.getElementById('email').value.trim();
   const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em);
-  document.getElementById('step3Submit').disabled = !(fn && ln && ph.length >= 10 && emailOk);
+  document.getElementById('step2Submit').disabled = !(fn && ln && ph.length >= 10 && emailOk);
 }
 
 function formatPhone(el) {
@@ -1127,7 +1108,7 @@ function formatPhone(el) {
 }
 
 async function submitForm() {
-  const btn = document.getElementById('step3Submit');
+  const btn = document.getElementById('step2Submit');
   btn.disabled = true;
   btn.textContent = 'Submitting...';
   const isLarge = state.isLargeProject;
@@ -1199,10 +1180,12 @@ async function submitForm() {
 
   // Update confirmation heading
   const firstName = document.getElementById('firstName').value.trim().split(' ')[0];
-  document.getElementById('confirmTitle').textContent = isLarge ? 'Got It, ' + firstName + '.' : 'You\'re All Set, ' + firstName + '.';
+  document.getElementById('confirmTitle').textContent = isLarge
+    ? 'Got It, ' + firstName + ' - Jeff Will Call You'
+    : 'Here\'s Your Estimate, ' + firstName;
   document.getElementById('confirmSub').innerHTML = isLarge
-    ? 'Jeff will reach out personally - usually within a few hours during business days. This is the part where you actually talk to the person doing the work, not a call center.'
-    : 'Your estimate request is in. Someone from our team will reach out within <strong>2 business hours</strong> to confirm the details and get your site visit scheduled.';
+    ? 'Jeff will reach out personally - usually within a few hours. This is the part where you actually talk to the person doing the work, not a call center.'
+    : 'This is your ballpark based on what you\'ve shared. Someone from our team will call to walk you through it and schedule a free site visit - usually same day.';
 
   if (!isLarge) {
     document.querySelector('#bookingCard .iw-btn-bronze').href = CALENDLY_URL
@@ -1211,7 +1194,7 @@ async function submitForm() {
       + '&email=' + encodeURIComponent(payload.email)
       + '&a1=' + encodeURIComponent(payload.address);
   }
-  goStep(4);
+  goStep(3);
 }
 </script>
 
