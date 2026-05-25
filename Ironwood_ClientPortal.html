@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ironwood Client Portal</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0a;
+    --bg2: #111;
+    --card: #1a1a1a;
+    --border: #222;
+    --gold: #c9a84c;
+    --gold-hover: #dbb85e;
+    --text: #f5f0e8;
+    --text-muted: #9a9080;
+    --green: #4caf50;
+    --green-bg: #2d6a2d;
+    --amber: #c9843a;
+    --gray: #555;
+    --blue: #4a90c4;
+    --red: #c94c4c;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+  }
+
+  h1, h2, h3, h4 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-weight: normal;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg2); }
+  ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+
+  /* ── UTILITIES ── */
+  .hidden { display: none !important; }
+  .gold { color: var(--gold); }
+  .muted { color: var(--text-muted); }
+
+  /* ── BUTTONS ── */
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 4px; border: none;
+    cursor: pointer; font-size: 13px; font-family: Arial, sans-serif;
+    transition: background 0.15s, opacity 0.15s;
+    white-space: nowrap;
+  }
+  .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+  .btn-gold { background: var(--gold); color: #0a0a0a; font-weight: bold; }
+  .btn-gold:hover:not(:disabled) { background: var(--gold-hover); }
+  .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
+  .btn-outline:hover:not(:disabled) { background: rgba(201,168,76,0.1); }
+  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+  .btn-ghost:hover:not(:disabled) { background: var(--card); color: var(--text); }
+  .btn-danger { background: transparent; color: var(--red); border: 1px solid var(--red); }
+  .btn-danger:hover:not(:disabled) { background: rgba(201,76,76,0.1); }
+  .btn-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
+  .btn-green:hover:not(:disabled) { background: #3a7a3a; }
+  .btn-sm { padding: 5px 10px; font-size: 12px; }
+
+  /* ── FORM ELEMENTS ── */
+  .form-group { margin-bottom: 14px; }
+  .form-group label {
+    display: block; font-size: 11px; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px;
+  }
+  .form-control {
+    width: 100%; background: #0f0f0f; border: 1px solid var(--border);
+    color: var(--text); padding: 8px 10px; border-radius: 4px;
+    font-size: 13px; font-family: Arial, sans-serif;
+    transition: border-color 0.15s;
+  }
+  .form-control:focus { outline: none; border-color: var(--gold); }
+  .form-control::placeholder { color: var(--gray); }
+  textarea.form-control { resize: vertical; min-height: 72px; }
+  select.form-control { cursor: pointer; }
+  select.form-control option { background: #1a1a1a; }
+
+  /* ── LOAD DEAL BAR ── */
+  #load-deal-bar {
+    background: linear-gradient(90deg, #0f1a0f, #111a0a);
+    border-bottom: 1px solid #2a3a1a;
+    padding: 10px 20px;
+    display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+  }
+  #load-deal-bar .ldb-label {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--green); font-weight: bold;
+  }
+  #load-deal-bar select {
+    background: #0f1a0f; border: 1px solid #2a3a1a; color: var(--text);
+    padding: 6px 10px; border-radius: 4px; font-size: 13px;
+    min-width: 220px; cursor: pointer;
+  }
+  #load-deal-bar select option { background: #1a1a1a; }
+
+  /* ── ADMIN SHELL ── */
+  #admin-shell { min-height: 100vh; display: flex; flex-direction: column; }
+
+  #admin-topbar {
+    background: var(--bg2); border-bottom: 1px solid var(--border);
+    padding: 0 20px; height: 60px;
+    display: flex; align-items: center; gap: 16px;
+  }
+  #admin-topbar .logo-area { flex: 0 0 auto; }
+  #admin-topbar .logo-area .wordmark {
+    font-family: Georgia, serif; font-size: 18px; letter-spacing: 0.14em;
+    color: var(--gold); line-height: 1;
+  }
+  #admin-topbar .logo-area .sub {
+    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-top: 1px;
+  }
+  #admin-topbar .spacer { flex: 1; }
+  #view-toggle {
+    display: flex; background: #0f0f0f; border: 1px solid var(--border);
+    border-radius: 4px; overflow: hidden;
+  }
+  #view-toggle button {
+    padding: 6px 14px; background: transparent; border: none;
+    color: var(--text-muted); cursor: pointer; font-size: 12px;
+    transition: background 0.15s, color 0.15s;
+  }
+  #view-toggle button.active { background: var(--gold); color: #0a0a0a; font-weight: bold; }
+
+  /* ── DASHBOARD SUMMARY ── */
+  #dashboard-bar {
+    background: var(--card); border-bottom: 1px solid var(--border);
+    padding: 12px 20px; display: flex; gap: 24px; flex-wrap: wrap;
+  }
+  .dash-stat { min-width: 120px; }
+  .dash-stat .ds-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);
+  }
+  .dash-stat .ds-value {
+    font-size: 22px; font-family: Georgia, serif; color: var(--gold); line-height: 1.1; margin-top: 2px;
+  }
+  .dash-stat .ds-value.white { color: var(--text); }
+  .dash-stat .ds-value.green { color: var(--green); }
+  .dash-stat .ds-value.red { color: var(--red); }
+
+  /* ── MAIN CONTENT ── */
+  #admin-main {
+    display: flex; flex: 1; overflow: hidden; min-height: 0;
+  }
+  #job-list-panel {
+    width: 320px; flex: 0 0 320px; border-right: 1px solid var(--border);
+    overflow-y: auto; background: var(--bg2);
+  }
+  #job-list-header {
+    padding: 14px 16px 10px; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  #job-list-header h3 { font-size: 13px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  #job-list { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
+
+  .job-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+    padding: 12px; cursor: pointer; transition: border-color 0.15s, background 0.15s;
+    position: relative;
+  }
+  .job-card:hover { border-color: #333; background: #1e1e1e; }
+  .job-card.selected { border-color: var(--gold); background: #1e1c14; }
+  .job-card .jc-name { font-family: Georgia, serif; font-size: 14px; margin-bottom: 3px; }
+  .job-card .jc-addr { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .job-card .jc-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+  .job-card .jc-price { font-size: 13px; color: var(--gold); font-weight: bold; }
+  .job-card .jc-phase-bar { margin-top: 8px; }
+  .job-card .jc-phase-bar .pb-label { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
+  .phase-bar-track { height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
+  .phase-bar-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s; }
+
+  /* STATUS BADGES */
+  .badge {
+    display: inline-block; padding: 2px 8px; border-radius: 3px;
+    font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: bold;
+  }
+  .badge-draft { background: #222; color: var(--gray); border: 1px solid #333; }
+  .badge-sent { background: #0d1f35; color: var(--blue); border: 1px solid #1a3a5c; }
+  .badge-approved { background: transparent; color: var(--green); border: 1px solid var(--green); }
+  .badge-active { background: #2a1e08; color: var(--gold); border: 1px solid var(--amber); }
+  .badge-complete { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
+
+  /* ── JOB DETAIL PANEL ── */
+  #job-detail-panel {
+    flex: 1; overflow-y: auto; padding: 24px;
+    background: var(--bg);
+  }
+  #job-detail-panel .empty-state {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; min-height: 300px; color: var(--text-muted); gap: 12px;
+  }
+  #job-detail-panel .empty-state .big-icon { font-size: 48px; opacity: 0.3; }
+  #job-detail-panel .empty-state p { font-size: 14px; }
+
+  .detail-header {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 24px; gap: 16px; flex-wrap: wrap;
+  }
+  .detail-header h2 { font-size: 22px; color: var(--gold); margin-bottom: 4px; }
+  .detail-header .dh-sub { font-size: 13px; color: var(--text-muted); }
+  .detail-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .section-card {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px; margin-bottom: 20px;
+  }
+  .section-card h3 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-muted); margin-bottom: 16px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .form-grid .span2 { grid-column: 1 / -1; }
+
+  /* ── PHASE TABLE ── */
+  .phase-table { width: 100%; border-collapse: collapse; }
+  .phase-table th {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
+    color: var(--text-muted); text-align: left; padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  .phase-table td { padding: 8px; vertical-align: middle; }
+  .phase-table tr:not(:last-child) td { border-bottom: 1px solid #191919; }
+  .phase-table input[type="text"],
+  .phase-table input[type="number"] {
+    background: #0f0f0f; border: 1px solid var(--border); color: var(--text);
+    padding: 6px 8px; border-radius: 3px; font-size: 12px; font-family: Arial, sans-serif;
+    width: 100%;
+  }
+  .phase-table input:focus { outline: none; border-color: var(--gold); }
+  .phase-table .pct-warn { color: var(--red); font-size: 11px; margin-top: 4px; }
+  .phase-table .amount-display { color: var(--gold); font-weight: bold; font-size: 13px; min-width: 80px; }
+
+  .phase-status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .phase-status-row select {
+    background: #0f0f0f; border: 1px solid var(--border); color: var(--text);
+    padding: 5px 8px; border-radius: 3px; font-size: 12px; cursor: pointer;
+  }
+  .phase-status-row input[type="date"] {
+    background: #0f0f0f; border: 1px solid var(--border); color: var(--text);
+    padding: 5px 8px; border-radius: 3px; font-size: 12px;
+  }
+  .pct-total-row {
+    display: flex; justify-content: flex-end; margin-top: 8px;
+    font-size: 12px; gap: 6px; align-items: center;
+  }
+  .pct-total-row .pct-val { font-weight: bold; }
+  .pct-total-row .pct-ok { color: var(--green); }
+  .pct-total-row .pct-bad { color: var(--red); }
+
+  /* ── CLIENT VIEW ── */
+  #client-shell {
+    min-height: 100vh;
+    background: #0a0a0a;
+  }
+  #client-topbar {
+    background: #111; border-bottom: 2px solid var(--gold);
+    padding: 20px 24px;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  #client-topbar .ct-wordmark {
+    font-family: Georgia, serif; font-size: 22px; letter-spacing: 0.16em;
+    color: var(--gold); line-height: 1;
+  }
+  #client-topbar .ct-sub {
+    font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--text-muted); margin-top: 3px;
+  }
+  #client-back-btn {
+    background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+    padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;
+  }
+  #client-back-btn:hover { background: var(--card); color: var(--text); }
+
+  #client-content {
+    max-width: 680px; margin: 0 auto; padding: 28px 16px 60px;
+  }
+
+  .client-info-bar {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 18px 20px; margin-bottom: 20px;
+  }
+  .client-info-bar .cib-name { font-family: Georgia, serif; font-size: 20px; margin-bottom: 4px; }
+  .client-info-bar .cib-addr { color: var(--text-muted); font-size: 13px; }
+
+  .status-banner {
+    border-radius: 8px; padding: 16px 20px; margin-bottom: 20px;
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    background: #1a1a0a; border: 1px solid var(--amber);
+  }
+  .status-banner.complete { background: #0a1a0a; border-color: var(--green); }
+  .status-banner.draft { background: #141414; border-color: #444; }
+  .status-pill {
+    font-family: Georgia, serif; font-size: 14px; letter-spacing: 0.08em;
+    padding: 6px 16px; border-radius: 20px; font-weight: normal;
+  }
+  .pill-active { background: var(--amber); color: #0a0a0a; }
+  .pill-complete { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
+  .pill-draft { background: #222; color: var(--gray); }
+  .pill-sent { background: #0d1f35; color: var(--blue); }
+  .pill-approved { background: transparent; color: var(--green); border: 1px solid var(--green); }
+  .sb-start { font-size: 13px; color: var(--text-muted); }
+
+  /* Progress section */
+  .progress-section {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 18px 20px; margin-bottom: 20px;
+  }
+  .progress-section h3 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-muted); margin-bottom: 12px;
+  }
+  .progress-track {
+    height: 8px; background: #333; border-radius: 4px; overflow: hidden; margin-bottom: 8px;
+  }
+  .progress-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width 0.4s; }
+  .progress-label { font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between; }
+
+  /* Phase Timeline */
+  .phase-timeline { margin-bottom: 24px; }
+  .phase-timeline h3 {
+    font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--text-muted); margin-bottom: 16px;
+  }
+  .phase-item {
+    display: flex; gap: 0; position: relative;
+    margin-bottom: 0;
+  }
+  .phase-item:not(:last-child) .pi-line { flex: 1; width: 2px; }
+  .pi-left {
+    display: flex; flex-direction: column; align-items: center;
+    margin-right: 16px; flex: 0 0 auto; width: 28px;
+  }
+  .pi-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex: 0 0 auto; font-size: 13px; font-weight: bold;
+    border: 2px solid;
+  }
+  .pi-dot-paid { background: var(--green-bg); border-color: var(--green); color: var(--green); }
+  .pi-dot-current { background: #2a1a06; border-color: var(--amber); color: var(--amber); animation: pulseGlow 2s infinite; }
+  .pi-dot-upcoming { background: #1a1a1a; border-color: var(--gray); color: var(--gray); }
+  @keyframes pulseGlow {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(201,132,58,0.4); }
+    50% { box-shadow: 0 0 0 8px rgba(201,132,58,0); }
+  }
+  .pi-connector {
+    width: 2px; flex: 1; min-height: 16px;
+  }
+  .pi-connector-paid { background: var(--green); }
+  .pi-connector-current { background: linear-gradient(var(--green), var(--amber)); }
+  .pi-connector-upcoming { background: #333; }
+
+  .pi-card {
+    flex: 1; background: var(--card); border: 1px solid var(--border);
+    border-radius: 8px; padding: 16px; margin-bottom: 10px;
+    transition: border-color 0.2s;
+  }
+  .pi-card-paid { border-color: var(--green-bg); }
+  .pi-card-current { border-color: var(--amber); background: #1a1208; }
+  .pi-card-upcoming { opacity: 0.7; }
+
+  .pi-card .pic-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
+  .pi-card .pic-name { font-family: Georgia, serif; font-size: 16px; }
+  .pi-card .pic-amount { font-size: 20px; font-family: Georgia, serif; color: var(--gold); }
+  .pi-card .pic-trigger { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .pi-card .pic-status { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .pic-status-paid {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--green-bg); color: var(--green); padding: 4px 10px;
+    border-radius: 4px; font-size: 11px; font-weight: bold; letter-spacing: 0.06em;
+  }
+  .pic-status-current {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #2a1a06; color: var(--amber); padding: 4px 10px;
+    border-radius: 4px; font-size: 11px; font-weight: bold; letter-spacing: 0.06em;
+    animation: pulseBg 2s infinite;
+  }
+  @keyframes pulseBg {
+    0%, 100% { background: #2a1a06; }
+    50% { background: #3a2406; }
+  }
+  .pic-status-upcoming {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: #1a1a1a; color: var(--gray); padding: 4px 10px;
+    border-radius: 4px; font-size: 11px; letter-spacing: 0.06em;
+  }
+  .pic-paid-date { font-size: 11px; color: var(--text-muted); }
+  .btn-pay-now {
+    background: var(--amber); color: #0a0a0a; border: none;
+    padding: 8px 18px; border-radius: 4px; font-size: 12px; font-weight: bold;
+    cursor: pointer; letter-spacing: 0.04em;
+    transition: background 0.15s;
+  }
+  .btn-pay-now:hover { background: #d9944a; }
+
+  /* Contact Block */
+  .contact-block {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px; text-align: center; margin-top: 24px;
+  }
+  .contact-block h3 { font-size: 14px; color: var(--gold); margin-bottom: 8px; }
+  .contact-block p { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+  .contact-block .contact-info { margin-top: 12px; display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
+  .contact-block .ci-item { font-size: 13px; color: var(--text); }
+  .contact-block .ci-item span { color: var(--gold); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.75);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 1000; padding: 16px;
+  }
+  .modal-box {
+    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    padding: 28px; max-width: 420px; width: 100%; text-align: center;
+  }
+  .modal-box .modal-icon { font-size: 36px; margin-bottom: 12px; }
+  .modal-box h3 { font-family: Georgia, serif; font-size: 18px; color: var(--gold); margin-bottom: 10px; }
+  .modal-box p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
+  .modal-box .modal-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+
+  /* ── CONFIRM MODAL ── */
+  #confirm-modal .modal-box { border-color: var(--red); }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    background: var(--card); border: 1px solid var(--green); color: var(--green);
+    padding: 10px 20px; border-radius: 6px; font-size: 13px;
+    z-index: 2000; opacity: 0; transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  #toast.show { opacity: 1; }
+  #toast.error { border-color: var(--red); color: var(--red); }
+
+  /* ── PRINT ── */
+  @media print {
+    #admin-shell, #load-deal-bar, #client-topbar, .btn-pay-now, #print-btn, #client-back-btn { }
+    #admin-shell { display: none !important; }
+    #client-shell { display: block !important; }
+    #client-topbar { display: none; }
+    #client-back-btn { display: none; }
+    .btn-pay-now { display: none; }
+    .modal-overlay { display: none !important; }
+    body { background: white; color: #111; }
+    #client-shell { background: white; }
+    .client-info-bar, .status-banner, .progress-section, .pi-card, .contact-block, .phase-timeline h3 {
+      border-color: #ccc !important; background: #f9f9f9 !important; color: #111 !important;
+    }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    #admin-main { flex-direction: column; }
+    #job-list-panel { width: 100%; flex: 0 0 auto; max-height: 260px; border-right: none; border-bottom: 1px solid var(--border); }
+    .form-grid { grid-template-columns: 1fr; }
+    .detail-header { flex-direction: column; }
+    #admin-topbar { gap: 10px; flex-wrap: wrap; height: auto; padding: 10px 16px; }
+    #client-topbar { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOAD DEAL BAR (admin only) -->
+<div id="load-deal-bar">
+  <span class="ldb-label">&#9654; Load Deal</span>
+  <select id="deal-select" onchange="loadDeal()">
+    <option value="">— Select a Pipeline Deal —</option>
+  </select>
+  <span id="deal-loaded-msg" class="hidden" style="font-size:12px;color:var(--green);">&#10003; Deal loaded into form</span>
+</div>
+
+<!-- ═══════════════════ ADMIN SHELL ═══════════════════ -->
+<div id="admin-shell">
+
+  <!-- TOPBAR -->
+  <div id="admin-topbar">
+    <div class="logo-area">
+      <div class="wordmark">IRONWOOD</div>
+      <div class="sub">Client Portal</div>
+    </div>
+    <div class="spacer"></div>
+    <div id="view-toggle">
+      <button id="btn-admin-view" class="active" onclick="switchToAdmin()">Admin View</button>
+      <button id="btn-client-view" onclick="switchToClientPreview()">Preview Client View</button>
+    </div>
+    <button class="btn btn-gold" onclick="newJob()">+ New Job</button>
+  </div>
+
+  <!-- DASHBOARD BAR -->
+  <div id="dashboard-bar">
+    <div class="dash-stat">
+      <div class="ds-label">Active Jobs</div>
+      <div class="ds-value white" id="stat-active">0</div>
+    </div>
+    <div class="dash-stat">
+      <div class="ds-label">Total Contract Value</div>
+      <div class="ds-value" id="stat-total">$0</div>
+    </div>
+    <div class="dash-stat">
+      <div class="ds-label">Collected</div>
+      <div class="ds-value green" id="stat-collected">$0</div>
+    </div>
+    <div class="dash-stat">
+      <div class="ds-label">Outstanding</div>
+      <div class="ds-value red" id="stat-outstanding">$0</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div id="admin-main">
+
+    <!-- JOB LIST PANEL -->
+    <div id="job-list-panel">
+      <div id="job-list-header">
+        <h3>All Jobs</h3>
+        <span id="job-count" class="muted" style="font-size:12px;"></span>
+      </div>
+      <div id="job-list">
+        <!-- populated by JS -->
+      </div>
+    </div>
+
+    <!-- JOB DETAIL PANEL -->
+    <div id="job-detail-panel">
+      <div class="empty-state" id="empty-state">
+        <div class="big-icon">&#9638;</div>
+        <p>Select a job to view details, or create a new one.</p>
+        <button class="btn btn-gold" onclick="newJob()">+ New Job</button>
+      </div>
+
+      <div id="job-form-area" class="hidden">
+
+        <!-- HEADER -->
+        <div class="detail-header">
+          <div>
+            <h2 id="form-heading">New Job</h2>
+            <div class="dh-sub" id="form-sub"></div>
+          </div>
+          <div class="detail-actions" id="form-actions">
+            <!-- populated by JS -->
+          </div>
+        </div>
+
+        <!-- CLIENT INFO -->
+        <div class="section-card">
+          <h3>Client Information</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Client Name *</label>
+              <input class="form-control" id="f-clientName" type="text" placeholder="Full name">
+            </div>
+            <div class="form-group">
+              <label>Email</label>
+              <input class="form-control" id="f-clientEmail" type="email" placeholder="email@example.com">
+            </div>
+            <div class="form-group">
+              <label>Phone</label>
+              <input class="form-control" id="f-clientPhone" type="tel" placeholder="(555) 555-5555">
+            </div>
+            <div class="form-group">
+              <label>Job Address *</label>
+              <input class="form-control" id="f-jobAddress" type="text" placeholder="123 Main St, City, ST">
+            </div>
+          </div>
+        </div>
+
+        <!-- JOB DETAILS -->
+        <div class="section-card">
+          <h3>Job Details</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Job Type</label>
+              <select class="form-control" id="f-jobType">
+                <option value="">— Select —</option>
+                <option>Remodel</option>
+                <option>Deck</option>
+                <option>Basement</option>
+                <option>Kitchen</option>
+                <option>Bathroom</option>
+                <option>Addition</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Total Contract Price ($)</label>
+              <input class="form-control" id="f-totalPrice" type="number" min="0" step="100" placeholder="0" oninput="recalcPhases()">
+            </div>
+            <div class="form-group">
+              <label>Start Date</label>
+              <input class="form-control" id="f-startDate" type="date">
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select class="form-control" id="f-status">
+                <option>Draft</option>
+                <option>Sent</option>
+                <option>Approved</option>
+                <option>Active</option>
+                <option>Complete</option>
+              </select>
+            </div>
+            <div class="form-group span2">
+              <label>Description</label>
+              <textarea class="form-control" id="f-description" placeholder="Scope of work, materials, etc."></textarea>
+            </div>
+            <div class="form-group span2">
+              <label>Internal Notes</label>
+              <textarea class="form-control" id="f-notes" placeholder="Internal notes (not shown to client)"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <!-- PHASE SCHEDULE -->
+        <div class="section-card">
+          <h3>Phase Payment Schedule</h3>
+          <table class="phase-table" id="phase-schedule-table">
+            <thead>
+              <tr>
+                <th style="width:140px">Phase Name</th>
+                <th>Trigger / Milestone</th>
+                <th style="width:70px">%</th>
+                <th style="width:100px">Amount</th>
+                <th style="width:30px"></th>
+              </tr>
+            </thead>
+            <tbody id="phase-schedule-body">
+              <!-- populated by JS -->
+            </tbody>
+          </table>
+          <div class="pct-total-row">
+            <span class="muted">Total:</span>
+            <span class="pct-val" id="pct-total">0%</span>
+            <span id="pct-status"></span>
+          </div>
+          <div style="margin-top:12px;">
+            <button class="btn btn-ghost btn-sm" onclick="addPhase()">+ Add Phase</button>
+          </div>
+        </div>
+
+        <!-- PHASE STATUS (active/complete only) -->
+        <div class="section-card" id="phase-status-section">
+          <h3>Phase Status &amp; Payments</h3>
+          <div id="phase-status-body">
+            <!-- populated by JS -->
+          </div>
+        </div>
+
+        <!-- SAVE ACTIONS -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:32px;">
+          <button class="btn btn-gold" onclick="saveJob()">Save Job</button>
+          <button class="btn btn-ghost" id="btn-send-client" onclick="sendToClient()">Send to Client</button>
+          <button class="btn btn-outline" id="btn-mark-active" onclick="markActive()">Mark Active</button>
+          <button class="btn btn-danger" id="btn-delete" onclick="confirmDelete()">Delete Job</button>
+        </div>
+
+      </div><!-- /job-form-area -->
+    </div><!-- /job-detail-panel -->
+  </div><!-- /admin-main -->
+</div><!-- /admin-shell -->
+
+<!-- ═══════════════════ CLIENT SHELL ═══════════════════ -->
+<div id="client-shell" class="hidden">
+
+  <div id="client-topbar">
+    <div>
+      <div class="ct-wordmark">IRONWOOD</div>
+      <div class="ct-sub">Homes and Renovations &nbsp;·&nbsp; Your Project Dashboard</div>
+    </div>
+    <div style="display:flex;gap:10px;align-items:center;">
+      <button id="print-btn" class="btn btn-ghost btn-sm" onclick="window.print()">&#128438; Print</button>
+      <button id="client-back-btn" onclick="switchToAdmin()">&#8592; Admin</button>
+    </div>
+  </div>
+
+  <div id="client-content">
+    <!-- populated by JS -->
+  </div>
+
+</div><!-- /client-shell -->
+
+<!-- PAY NOW MODAL -->
+<div id="pay-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-icon">&#128274;</div>
+    <h3>Payment Processing Coming Soon</h3>
+    <p>Online payments will be available shortly. Please contact Ironwood Homes and Renovations directly to arrange your payment.</p>
+    <div class="modal-actions">
+      <button class="btn btn-gold" onclick="closeModal('pay-modal')">Got It</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM DELETE MODAL -->
+<div id="confirm-modal" class="modal-overlay hidden">
+  <div class="modal-box">
+    <div class="modal-icon" style="color:var(--red)">&#9888;</div>
+    <h3 style="color:var(--red)">Delete Job?</h3>
+    <p>This action cannot be undone. The job and all its data will be permanently removed.</p>
+    <div class="modal-actions">
+      <button class="btn btn-danger" onclick="deleteJob()">Yes, Delete</button>
+      <button class="btn btn-ghost" onclick="closeModal('confirm-modal')">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════
+const JOBS_KEY = 'ironwood_jobs';
+const DEALS_KEY = 'ironwood_deals';
+
+let jobs = [];
+let currentJobId = null;
+let currentPhases = [];
+let isNewJob = false;
+
+// ═══════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════
+function init() {
+  loadJobs();
+  renderJobList();
+  updateDashboard();
+  populateDealDropdown();
+  handleHashNav();
+  window.addEventListener('hashchange', handleHashNav);
+  window.addEventListener('storage', onStorageChange);
+}
+
+function handleHashNav() {
+  const hash = window.location.hash;
+  const m = hash.match(/^#client\?job=(.+)$/);
+  if (m) {
+    const jobId = decodeURIComponent(m[1]);
+    const job = jobs.find(j => j.id === jobId);
+    if (job) {
+      renderClientView(job);
+      return;
+    }
+  }
+  // default: admin view
+}
+
+function onStorageChange(e) {
+  if (e.key === JOBS_KEY) {
+    loadJobs();
+    renderJobList();
+    updateDashboard();
+    if (currentJobId) {
+      const j = jobs.find(j => j.id === currentJobId);
+      if (j) loadJobIntoForm(j);
+    }
+  }
+  if (e.key === DEALS_KEY) {
+    populateDealDropdown();
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  STORAGE HELPERS
+// ═══════════════════════════════════════════════════
+function loadJobs() {
+  try { jobs = JSON.parse(localStorage.getItem(JOBS_KEY)) || []; }
+  catch(e) { jobs = []; }
+}
+
+function saveJobs() {
+  localStorage.setItem(JOBS_KEY, JSON.stringify(jobs));
+  syncDeals();
+}
+
+function syncDeals() {
+  // Build ironwood_deals from all non-Draft jobs
+  let deals = [];
+  try { deals = JSON.parse(localStorage.getItem(DEALS_KEY)) || []; } catch(e) { deals = []; }
+
+  jobs.forEach(job => {
+    const dealId = 'job_deal_' + job.id;
+    const existing = deals.findIndex(d => d.id === dealId);
+    const dealObj = {
+      id: dealId,
+      dealType: 'Remodel',
+      address: job.jobAddress,
+      arv: job.totalPrice,
+      stage: job.status === 'Complete' ? 'Exited' : 'Rehab',
+      clientName: job.clientName,
+      jobType: job.jobType,
+      status: job.status,
+      sourceJobId: job.id
+    };
+    if (existing >= 0) deals[existing] = dealObj;
+    else deals.push(dealObj);
+  });
+
+  localStorage.setItem(DEALS_KEY, JSON.stringify(deals));
+}
+
+// ═══════════════════════════════════════════════════
+//  DEAL DROPDOWN
+// ═══════════════════════════════════════════════════
+function populateDealDropdown() {
+  let deals = [];
+  try { deals = JSON.parse(localStorage.getItem(DEALS_KEY)) || []; } catch(e) {}
+  const sel = document.getElementById('deal-select');
+  const cur = sel.value;
+  // Keep only non-job-sourced deals (or all if no sourceJobId)
+  const external = deals.filter(d => !d.sourceJobId);
+  sel.innerHTML = '<option value="">— Select a Pipeline Deal —</option>';
+  external.forEach(d => {
+    const opt = document.createElement('option');
+    opt.value = JSON.stringify(d);
+    opt.textContent = `${d.address || '(no address)'} — ${d.dealType || ''} — $${fmtMoney(d.arv || 0)}`;
+    sel.appendChild(opt);
+  });
+  if (external.length === 0) {
+    const opt = document.createElement('option');
+    opt.disabled = true;
+    opt.textContent = '(No pipeline deals found)';
+    sel.appendChild(opt);
+  }
+}
+
+function loadDeal() {
+  const sel = document.getElementById('deal-select');
+  if (!sel.value) return;
+  let deal;
+  try { deal = JSON.parse(sel.value); } catch(e) { return; }
+
+  // Open form if not already open
+  if (!document.getElementById('job-form-area').classList.contains('hidden') === false) {
+    newJob();
+  } else if (isNewJob || !currentJobId) {
+    // already on new job form — just fill
+  } else {
+    newJob();
+  }
+
+  // Fill fields
+  if (deal.address) document.getElementById('f-jobAddress').value = deal.address;
+  if (deal.arv) {
+    document.getElementById('f-totalPrice').value = deal.arv;
+    recalcPhases();
+  }
+  if (deal.dealType) {
+    const sel2 = document.getElementById('f-jobType');
+    for (let i = 0; i < sel2.options.length; i++) {
+      if (sel2.options[i].value === deal.dealType) { sel2.selectedIndex = i; break; }
+    }
+  }
+
+  const msg = document.getElementById('deal-loaded-msg');
+  msg.classList.remove('hidden');
+  setTimeout(() => msg.classList.add('hidden'), 3000);
+  sel.value = '';
+}
+
+// ═══════════════════════════════════════════════════
+//  DASHBOARD STATS
+// ═══════════════════════════════════════════════════
+function updateDashboard() {
+  const active = jobs.filter(j => j.status === 'Active').length;
+  const contractVal = jobs.filter(j => j.status !== 'Draft').reduce((s, j) => s + (j.totalPrice || 0), 0);
+  const collected = jobs.reduce((s, j) => {
+    return s + j.phases.filter(p => p.status === 'paid').reduce((ps, p) => ps + (p.amount || 0), 0);
+  }, 0);
+  const outstanding = contractVal - collected;
+
+  document.getElementById('stat-active').textContent = active;
+  document.getElementById('stat-total').textContent = '$' + fmtMoney(contractVal);
+  document.getElementById('stat-collected').textContent = '$' + fmtMoney(collected);
+  document.getElementById('stat-outstanding').textContent = '$' + fmtMoney(Math.max(0, outstanding));
+}
+
+// ═══════════════════════════════════════════════════
+//  JOB LIST
+// ═══════════════════════════════════════════════════
+function renderJobList() {
+  const list = document.getElementById('job-list');
+  document.getElementById('job-count').textContent = jobs.length + ' job' + (jobs.length !== 1 ? 's' : '');
+
+  if (jobs.length === 0) {
+    list.innerHTML = '<div style="padding:20px;color:var(--text-muted);font-size:13px;text-align:center;">No jobs yet.<br>Click "+ New Job" to get started.</div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  // Sort: Active first, then by createdAt desc
+  const sorted = [...jobs].sort((a, b) => {
+    const order = { Active: 0, Approved: 1, Sent: 2, Draft: 3, Complete: 4 };
+    const oa = order[a.status] ?? 5;
+    const ob = order[b.status] ?? 5;
+    if (oa !== ob) return oa - ob;
+    return (b.createdAt || '').localeCompare(a.createdAt || '');
+  });
+
+  sorted.forEach(job => {
+    const paidCount = job.phases.filter(p => p.status === 'paid').length;
+    const totalPhases = job.phases.length;
+    const paidPct = totalPhases > 0 ? Math.round((paidCount / totalPhases) * 100) : 0;
+
+    const card = document.createElement('div');
+    card.className = 'job-card' + (job.id === currentJobId ? ' selected' : '');
+    card.dataset.jobId = job.id;
+    card.onclick = () => selectJob(job.id);
+    card.innerHTML = `
+      <div class="jc-name">${escHtml(job.clientName || '(No Name)')}</div>
+      <div class="jc-addr">${escHtml(job.jobAddress || '(No Address)')}</div>
+      <div class="jc-meta">
+        <span class="badge ${statusBadgeClass(job.status)}">${job.status}</span>
+        <span class="jc-price">${job.totalPrice ? '$' + fmtMoney(job.totalPrice) : '—'}</span>
+      </div>
+      <div class="jc-phase-bar">
+        <div class="pb-label">${paidCount} of ${totalPhases} phases paid</div>
+        <div class="phase-bar-track"><div class="phase-bar-fill" style="width:${paidPct}%"></div></div>
+      </div>
+    `;
+    list.appendChild(card);
+  });
+}
+
+function statusBadgeClass(s) {
+  return {
+    Draft: 'badge-draft', Sent: 'badge-sent', Approved: 'badge-approved',
+    Active: 'badge-active', Complete: 'badge-complete'
+  }[s] || 'badge-draft';
+}
+
+// ═══════════════════════════════════════════════════
+//  SELECT / NEW JOB
+// ═══════════════════════════════════════════════════
+function selectJob(id) {
+  const job = jobs.find(j => j.id === id);
+  if (!job) return;
+  currentJobId = id;
+  isNewJob = false;
+  loadJobIntoForm(job);
+  renderJobList();
+}
+
+function newJob() {
+  currentJobId = null;
+  isNewJob = true;
+  currentPhases = defaultPhases();
+  showForm();
+  clearForm();
+  renderPhaseSchedule();
+  renderPhaseStatus();
+  updateFormHeader();
+  updateActionButtons();
+  document.getElementById('empty-state').classList.add('hidden');
+  renderJobList();
+}
+
+function defaultPhases() {
+  return [
+    { name: 'Deposit', label: 'Contract Signed', pct: 33, amount: 0, status: 'pending', paidDate: null },
+    { name: 'Mid-Project', label: 'Rough-in / Demo Complete', pct: 33, amount: 0, status: 'pending', paidDate: null },
+    { name: 'Final', label: 'Punch List Signed Off', pct: 34, amount: 0, status: 'pending', paidDate: null }
+  ];
+}
+
+function loadJobIntoForm(job) {
+  isNewJob = false;
+  currentPhases = job.phases.map(p => ({...p}));
+  showForm();
+
+  document.getElementById('f-clientName').value = job.clientName || '';
+  document.getElementById('f-clientEmail').value = job.clientEmail || '';
+  document.getElementById('f-clientPhone').value = job.clientPhone || '';
+  document.getElementById('f-jobAddress').value = job.jobAddress || '';
+  document.getElementById('f-jobType').value = job.jobType || '';
+  document.getElementById('f-description').value = job.description || '';
+  document.getElementById('f-totalPrice').value = job.totalPrice || '';
+  document.getElementById('f-startDate').value = job.startDate || '';
+  document.getElementById('f-status').value = job.status || 'Draft';
+  document.getElementById('f-notes').value = job.notes || '';
+
+  renderPhaseSchedule();
+  renderPhaseStatus();
+  updateFormHeader(job);
+  updateActionButtons(job);
+}
+
+function showForm() {
+  document.getElementById('empty-state').classList.add('hidden');
+  document.getElementById('job-form-area').classList.remove('hidden');
+}
+
+function clearForm() {
+  ['f-clientName','f-clientEmail','f-clientPhone','f-jobAddress','f-description',
+   'f-totalPrice','f-startDate','f-notes'].forEach(id => {
+    document.getElementById(id).value = '';
+  });
+  document.getElementById('f-jobType').value = '';
+  document.getElementById('f-status').value = 'Draft';
+}
+
+function updateFormHeader(job) {
+  const heading = document.getElementById('form-heading');
+  const sub = document.getElementById('form-sub');
+  if (isNewJob || !job) {
+    heading.textContent = 'New Job';
+    sub.textContent = '';
+  } else {
+    heading.textContent = job.clientName || '(No Name)';
+    sub.textContent = (job.jobType ? job.jobType + ' · ' : '') + (job.jobAddress || '');
+  }
+}
+
+function updateActionButtons(job) {
+  const actions = document.getElementById('form-actions');
+  const status = job ? job.status : 'Draft';
+
+  const sendBtn = document.getElementById('btn-send-client');
+  const markActiveBtn = document.getElementById('btn-mark-active');
+  const deleteBtn = document.getElementById('btn-delete');
+
+  if (isNewJob || !job) {
+    sendBtn.disabled = true;
+    markActiveBtn.disabled = true;
+    deleteBtn.disabled = true;
+  } else {
+    sendBtn.disabled = (status === 'Active' || status === 'Complete');
+    markActiveBtn.disabled = (status === 'Active' || status === 'Complete');
+    deleteBtn.disabled = false;
+  }
+
+  // Client link display
+  let existing = document.getElementById('client-link-area');
+  if (existing) existing.remove();
+  if (job && (status === 'Sent' || status === 'Approved' || status === 'Active' || status === 'Complete')) {
+    const link = document.createElement('div');
+    link.id = 'client-link-area';
+    link.style.cssText = 'background:#0f1a0f;border:1px solid #2a3a1a;border-radius:4px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--text-muted);';
+    const url = window.location.pathname + window.location.search + '#client?job=' + encodeURIComponent(job.id);
+    link.innerHTML = `<span style="color:var(--green)">&#128279; Client Link:</span> <a href="${url}" style="color:var(--gold);word-break:break-all;" onclick="event.preventDefault();renderClientViewById('${job.id}')">${url}</a>`;
+    document.getElementById('job-form-area').insertBefore(link, document.querySelector('.detail-header').nextSibling);
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  PHASE SCHEDULE (edit table)
+// ═══════════════════════════════════════════════════
+function renderPhaseSchedule() {
+  const tbody = document.getElementById('phase-schedule-body');
+  tbody.innerHTML = '';
+  const total = parseFloat(document.getElementById('f-totalPrice').value) || 0;
+
+  currentPhases.forEach((phase, i) => {
+    const amount = calcPhaseAmount(i, total, currentPhases);
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input type="text" value="${escHtml(phase.name)}" placeholder="Phase name"
+        oninput="currentPhases[${i}].name = this.value"></td>
+      <td><input type="text" value="${escHtml(phase.label)}" placeholder="Trigger / milestone"
+        oninput="currentPhases[${i}].label = this.value"></td>
+      <td>
+        <input type="number" min="1" max="99" value="${phase.pct}"
+          oninput="currentPhases[${i}].pct = parseFloat(this.value)||0; recalcPhases()">
+      </td>
+      <td><span class="amount-display">$${fmtMoney(amount)}</span></td>
+      <td>${currentPhases.length > 2 ? `<button class="btn btn-ghost btn-sm" onclick="removePhase(${i})" title="Remove phase">&times;</button>` : ''}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  updatePctTotal();
+}
+
+function recalcPhases() {
+  const total = parseFloat(document.getElementById('f-totalPrice').value) || 0;
+  // Update amount displays
+  const rows = document.querySelectorAll('#phase-schedule-body tr');
+  rows.forEach((tr, i) => {
+    const amt = calcPhaseAmount(i, total, currentPhases);
+    const disp = tr.querySelector('.amount-display');
+    if (disp) disp.textContent = '$' + fmtMoney(amt);
+  });
+  updatePctTotal();
+  renderPhaseStatus();
+}
+
+function calcPhaseAmount(i, total, phases) {
+  // Last phase absorbs rounding difference
+  if (i === phases.length - 1) {
+    const otherSum = phases.slice(0, -1).reduce((s, p) => s + Math.round(total * (p.pct / 100)), 0);
+    return Math.max(0, total - otherSum);
+  }
+  return Math.round(total * (phases[i].pct / 100));
+}
+
+function updatePctTotal() {
+  const total = currentPhases.reduce((s, p) => s + (p.pct || 0), 0);
+  const el = document.getElementById('pct-total');
+  const st = document.getElementById('pct-status');
+  el.textContent = total + '%';
+  if (total === 100) {
+    el.className = 'pct-val pct-ok';
+    st.textContent = '✓';
+    st.style.color = 'var(--green)';
+  } else {
+    el.className = 'pct-val pct-bad';
+    st.textContent = total < 100 ? `(${100 - total}% remaining)` : `(${total - 100}% over)`;
+    st.style.color = 'var(--red)';
+  }
+}
+
+function addPhase() {
+  // Insert before last phase, split its % roughly
+  const last = currentPhases[currentPhases.length - 1];
+  const split = Math.floor(last.pct / 2);
+  last.pct = last.pct - split;
+  currentPhases.splice(currentPhases.length - 1, 0, {
+    name: 'Phase ' + currentPhases.length,
+    label: 'Milestone',
+    pct: split,
+    amount: 0,
+    status: 'pending',
+    paidDate: null
+  });
+  renderPhaseSchedule();
+  renderPhaseStatus();
+}
+
+function removePhase(i) {
+  if (currentPhases.length <= 2) return;
+  // Give pct to last phase
+  const removed = currentPhases.splice(i, 1)[0];
+  currentPhases[currentPhases.length - 1].pct += removed.pct;
+  renderPhaseSchedule();
+  renderPhaseStatus();
+}
+
+// ═══════════════════════════════════════════════════
+//  PHASE STATUS (when Active/Complete)
+// ═══════════════════════════════════════════════════
+function renderPhaseStatus() {
+  const section = document.getElementById('phase-status-section');
+  const status = document.getElementById('f-status').value;
+  const total = parseFloat(document.getElementById('f-totalPrice').value) || 0;
+
+  const showStatus = (status === 'Active' || status === 'Complete');
+  section.style.display = showStatus ? 'block' : 'none';
+  if (!showStatus) return;
+
+  const body = document.getElementById('phase-status-body');
+  body.innerHTML = '';
+
+  currentPhases.forEach((phase, i) => {
+    const amt = calcPhaseAmount(i, total, currentPhases);
+    const div = document.createElement('div');
+    div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;';
+    div.innerHTML = `
+      <div style="min-width:120px;font-family:Georgia,serif;font-size:14px;">${escHtml(phase.name)}</div>
+      <div style="color:var(--gold);font-weight:bold;min-width:80px;">$${fmtMoney(amt)}</div>
+      <select onchange="onPhaseStatusChange(${i}, this.value)"
+        style="background:#0f0f0f;border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:3px;font-size:12px;cursor:pointer;">
+        <option value="pending" ${phase.status==='pending'?'selected':''}>Pending</option>
+        <option value="invoiced" ${phase.status==='invoiced'?'selected':''}>Invoice Sent</option>
+        <option value="paid" ${phase.status==='paid'?'selected':''}>Paid</option>
+      </select>
+      <div style="display:${phase.status==='paid'?'flex':'none'};align-items:center;gap:6px;" id="paid-date-row-${i}">
+        <label style="font-size:11px;color:var(--text-muted);">Paid Date:</label>
+        <input type="date" value="${phase.paidDate || ''}"
+          onchange="currentPhases[${i}].paidDate = this.value"
+          style="background:#0f0f0f;border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:3px;font-size:12px;">
+      </div>
+      ${phase.status==='paid'?`<span style="background:var(--green-bg);color:var(--green);padding:3px 8px;border-radius:3px;font-size:11px;font-weight:bold;">&#10003; PAID</span>`:''}
+    `;
+    body.appendChild(div);
+  });
+}
+
+function onPhaseStatusChange(i, value) {
+  currentPhases[i].status = value;
+  if (value === 'paid' && !currentPhases[i].paidDate) {
+    currentPhases[i].paidDate = todayStr();
+  }
+  if (value !== 'paid') {
+    currentPhases[i].paidDate = null;
+  }
+  // Check if all paid → auto-complete
+  if (currentPhases.every(p => p.status === 'paid')) {
+    document.getElementById('f-status').value = 'Complete';
+    showToast('All phases paid — job marked Complete!');
+  }
+  renderPhaseStatus();
+}
+
+// ═══════════════════════════════════════════════════
+//  SAVE JOB
+// ═══════════════════════════════════════════════════
+function saveJob() {
+  const clientName = document.getElementById('f-clientName').value.trim();
+  const jobAddress = document.getElementById('f-jobAddress').value.trim();
+  if (!clientName) { showToast('Client Name is required.', true); return; }
+  if (!jobAddress) { showToast('Job Address is required.', true); return; }
+
+  const totalPct = currentPhases.reduce((s, p) => s + (p.pct || 0), 0);
+  if (totalPct !== 100) {
+    showToast('Phase percentages must total 100% before saving.', true); return;
+  }
+
+  const total = parseFloat(document.getElementById('f-totalPrice').value) || 0;
+  const phases = currentPhases.map((p, i) => ({
+    ...p,
+    amount: calcPhaseAmount(i, total, currentPhases)
+  }));
+
+  if (isNewJob || !currentJobId) {
+    const id = 'job_' + Date.now();
+    const job = {
+      id,
+      clientName,
+      clientEmail: document.getElementById('f-clientEmail').value.trim(),
+      clientPhone: document.getElementById('f-clientPhone').value.trim(),
+      jobAddress,
+      jobType: document.getElementById('f-jobType').value,
+      description: document.getElementById('f-description').value.trim(),
+      totalPrice: total,
+      startDate: document.getElementById('f-startDate').value,
+      status: document.getElementById('f-status').value,
+      phases,
+      notes: document.getElementById('f-notes').value.trim(),
+      createdAt: new Date().toISOString()
+    };
+    jobs.push(job);
+    currentJobId = id;
+    isNewJob = false;
+    saveJobs();
+    loadJobIntoForm(job);
+    showToast('Job created!');
+  } else {
+    const idx = jobs.findIndex(j => j.id === currentJobId);
+    if (idx >= 0) {
+      jobs[idx] = {
+        ...jobs[idx],
+        clientName,
+        clientEmail: document.getElementById('f-clientEmail').value.trim(),
+        clientPhone: document.getElementById('f-clientPhone').value.trim(),
+        jobAddress,
+        jobType: document.getElementById('f-jobType').value,
+        description: document.getElementById('f-description').value.trim(),
+        totalPrice: total,
+        startDate: document.getElementById('f-startDate').value,
+        status: document.getElementById('f-status').value,
+        phases,
+        notes: document.getElementById('f-notes').value.trim(),
+      };
+      saveJobs();
+      loadJobIntoForm(jobs[idx]);
+      showToast('Job saved!');
+    }
+  }
+
+  renderJobList();
+  updateDashboard();
+}
+
+// ═══════════════════════════════════════════════════
+//  SEND TO CLIENT
+// ═══════════════════════════════════════════════════
+function sendToClient() {
+  if (!currentJobId && !isNewJob) return;
+  // Auto-save first
+  saveJob();
+  const job = jobs.find(j => j.id === currentJobId);
+  if (!job) return;
+  if (job.status === 'Draft') {
+    job.status = 'Sent';
+    document.getElementById('f-status').value = 'Sent';
+    saveJobs();
+    renderJobList();
+    updateDashboard();
+    updateActionButtons(job);
+    showToast('Status updated to Sent. Client link is ready.');
+  } else {
+    showToast('Job already sent or beyond Draft status.');
+  }
+}
+
+// ═══════════════════════════════════════════════════
+//  MARK ACTIVE
+// ═══════════════════════════════════════════════════
+function markActive() {
+  if (!currentJobId) { showToast('Save the job first.', true); return; }
+  const job = jobs.find(j => j.id === currentJobId);
+  if (!job) return;
+  if (job.status === 'Active' || job.status === 'Complete') {
+    showToast('Job is already Active or Complete.'); return;
+  }
+  job.status = 'Active';
+  document.getElementById('f-status').value = 'Active';
+  saveJobs();
+  loadJobIntoForm(job);
+  renderJobList();
+  updateDashboard();
+  showToast('Job marked Active!');
+}
+
+// ═══════════════════════════════════════════════════
+//  DELETE JOB
+// ═══════════════════════════════════════════════════
+function confirmDelete() {
+  if (!currentJobId) return;
+  document.getElementById('confirm-modal').classList.remove('hidden');
+}
+
+function deleteJob() {
+  closeModal('confirm-modal');
+  if (!currentJobId) return;
+  jobs = jobs.filter(j => j.id !== currentJobId);
+  saveJobs();
+  currentJobId = null;
+  isNewJob = false;
+  document.getElementById('job-form-area').classList.add('hidden');
+  document.getElementById('empty-state').classList.remove('hidden');
+  renderJobList();
+  updateDashboard();
+  showToast('Job deleted.');
+}
+
+// ═══════════════════════════════════════════════════
+//  VIEW SWITCHING
+// ═══════════════════════════════════════════════════
+function switchToAdmin() {
+  document.getElementById('admin-shell').classList.remove('hidden');
+  document.getElementById('load-deal-bar').classList.remove('hidden');
+  document.getElementById('client-shell').classList.add('hidden');
+  document.getElementById('btn-admin-view').classList.add('active');
+  document.getElementById('btn-client-view').classList.remove('active');
+  window.history.replaceState(null, '', window.location.pathname);
+}
+
+function switchToClientPreview() {
+  if (!currentJobId) {
+    showToast('Select a job first to preview the client view.', true); return;
+  }
+  renderClientViewById(currentJobId);
+}
+
+function renderClientViewById(jobId) {
+  const job = jobs.find(j => j.id === jobId);
+  if (!job) { showToast('Job not found.', true); return; }
+  renderClientView(job);
+  window.history.replaceState(null, '', '#client?job=' + encodeURIComponent(jobId));
+}
+
+function renderClientView(job) {
+  document.getElementById('admin-shell').classList.add('hidden');
+  document.getElementById('load-deal-bar').classList.add('hidden');
+  document.getElementById('client-shell').classList.remove('hidden');
+  document.getElementById('btn-client-view').classList.add('active');
+  document.getElementById('btn-admin-view').classList.remove('active');
+
+  const total = job.totalPrice || 0;
+  const paidPhases = job.phases.filter(p => p.status === 'paid');
+  const paidAmount = paidPhases.reduce((s, p) => s + (p.amount || 0), 0);
+  const paidCount = paidPhases.length;
+  const totalPhases = job.phases.length;
+  const paidPct = total > 0 ? Math.round((paidAmount / total) * 100) : 0;
+
+  // Determine "current" phase (first non-paid)
+  let currentPhaseIdx = job.phases.findIndex(p => p.status !== 'paid');
+
+  // Status banner class
+  const statusClass = job.status === 'Complete' ? 'complete' : job.status === 'Draft' ? 'draft' : '';
+  const pillClass = {
+    Draft: 'pill-draft', Sent: 'pill-sent', Approved: 'pill-approved',
+    Active: 'pill-active', Complete: 'pill-complete'
+  }[job.status] || 'pill-draft';
+
+  // Build timeline HTML
+  let timelineHtml = '';
+  job.phases.forEach((phase, i) => {
+    const amt = phase.amount || 0;
+    const isPaid = phase.status === 'paid';
+    const isCurrent = !isPaid && i === currentPhaseIdx;
+    const isUpcoming = !isPaid && !isCurrent;
+
+    const dotClass = isPaid ? 'pi-dot-paid' : isCurrent ? 'pi-dot-current' : 'pi-dot-upcoming';
+    const cardClass = isPaid ? 'pi-card-paid' : isCurrent ? 'pi-card-current' : 'pi-card-upcoming';
+    const dotIcon = isPaid ? '&#10003;' : (i + 1);
+
+    // Connector line between phases
+    let connectorClass = 'pi-connector-upcoming';
+    if (isPaid) connectorClass = 'pi-connector-paid';
+    else if (isCurrent) connectorClass = 'pi-connector-current';
+
+    const statusBadgeHtml = isPaid
+      ? `<span class="pic-status-paid">&#10003; PAID</span><span class="pic-paid-date">Paid ${fmtDate(phase.paidDate)}</span>`
+      : isCurrent
+        ? `<span class="pic-status-current">&#9679; CURRENT — DUE NOW</span>`
+        : `<span class="pic-status-upcoming">&#128274; UPCOMING</span>`;
+
+    const payBtn = isCurrent
+      ? `<button class="btn-pay-now" onclick="openModal('pay-modal')">Pay Now</button>`
+      : '';
+
+    const connectorHtml = i < job.phases.length - 1
+      ? `<div class="pi-connector ${connectorClass}" style="margin:4px auto;width:2px;min-height:10px;"></div>`
+      : '';
+
+    timelineHtml += `
+      <div class="phase-item">
+        <div class="pi-left">
+          <div class="pi-dot ${dotClass}">${dotIcon}</div>
+          ${connectorHtml}
+        </div>
+        <div class="pi-card ${cardClass}">
+          <div class="pic-header">
+            <span class="pic-name">${escHtml(phase.name)}</span>
+            <span class="pic-amount">$${fmtMoney(amt)}</span>
+          </div>
+          <div class="pic-trigger">${escHtml(phase.label)}</div>
+          <div class="pic-status">
+            ${statusBadgeHtml}
+            ${payBtn}
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  const content = document.getElementById('client-content');
+  content.innerHTML = `
+    <div class="client-info-bar">
+      <div class="cib-name">${escHtml(job.clientName || '—')}</div>
+      <div class="cib-addr">${escHtml(job.jobAddress || '—')}</div>
+    </div>
+
+    <div class="status-banner ${statusClass}">
+      <span class="status-pill ${pillClass}">${job.status}</span>
+      <span class="sb-start">${job.startDate ? 'Start Date: ' + fmtDate(job.startDate) : ''}</span>
+      ${job.jobType ? `<span class="sb-start">${escHtml(job.jobType)}</span>` : ''}
+    </div>
+
+    <div class="progress-section">
+      <h3>Project Progress</h3>
+      <div class="progress-track">
+        <div class="progress-fill" style="width:${paidPct}%"></div>
+      </div>
+      <div class="progress-label">
+        <span>${paidCount} of ${totalPhases} phases complete</span>
+        <span>${paidPct}% of project paid &nbsp;·&nbsp; $${fmtMoney(paidAmount)} of $${fmtMoney(total)}</span>
+      </div>
+    </div>
+
+    <div class="phase-timeline">
+      <h3>Payment Schedule</h3>
+      ${timelineHtml}
+    </div>
+
+    <div class="contact-block">
+      <h3>Questions About Your Project?</h3>
+      <p>Our team is here to help. Reach out anytime.</p>
+      <div class="contact-info">
+        <div class="ci-item"><span>Phone:</span> (555) 000-0000</div>
+        <div class="ci-item"><span>Email:</span> hello@ironwoodhomes.com</div>
+      </div>
+    </div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════
+//  MODAL
+// ═══════════════════════════════════════════════════
+function openModal(id) {
+  document.getElementById(id).classList.remove('hidden');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.add('hidden');
+}
+// Close modals on overlay click
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', function(e) {
+    if (e.target === this) closeModal(this.id);
+  });
+});
+
+// ═══════════════════════════════════════════════════
+//  TOAST
+// ═══════════════════════════════════════════════════
+let toastTimer;
+function showToast(msg, isError) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (isError ? ' error' : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = ''; }, 3000);
+}
+
+// ═══════════════════════════════════════════════════
+//  HELPERS
+// ═══════════════════════════════════════════════════
+function fmtMoney(n) {
+  if (!n && n !== 0) return '0';
+  return Number(n).toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+function fmtDate(s) {
+  if (!s) return '—';
+  try {
+    // Handle ISO and YYYY-MM-DD
+    const d = new Date(s + (s.length === 10 ? 'T00:00:00' : ''));
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  } catch(e) { return s; }
+}
+
+function todayStr() {
+  const d = new Date();
+  return d.toISOString().slice(0, 10);
+}
+
+function escHtml(s) {
+  if (!s) return '';
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+// ═══════════════════════════════════════════════════
+//  BOOT
+// ═══════════════════════════════════════════════════
+init();
+</script>
+</body>
+</html>

@@ -828,16 +828,36 @@ function getPipelineStats() {
   }
 }
 
+function getPortalStats() {
+  try {
+    const jobs = JSON.parse(localStorage.getItem('ironwood_jobs') || '[]');
+    const activeJobs    = jobs.filter(j => j.status === 'Active').length;
+    const contractValue = jobs.filter(j => j.status !== 'Draft')
+                              .reduce((s,j) => s + (j.totalPrice || 0), 0);
+    const collected     = jobs.reduce((s,j) => s +
+                            (j.phases || []).filter(p => p.status === 'paid')
+                                           .reduce((a,p) => a + (p.amount || 0), 0), 0);
+    const outstanding   = contractValue - collected;
+    return { activeJobs, contractValue, collected, outstanding };
+  } catch(e) {
+    return { activeJobs:0, contractValue:0, collected:0, outstanding:0 };
+  }
+}
+
 // ── SNAPSHOT CARDS ─────────────────────────────────────────────────────────
 const SNAP_CONFIG = [
-  { key: 'active_deals',     label: 'Active Deals',      type: 'number', default: '0',     live: s => String(s.active),     liveLabel: 'from Pipeline' },
-  { key: 'monthly_revenue',  label: 'Monthly Revenue',   type: 'dollar', default: '0',     live: s => String(s.monthlyRev), liveLabel: 'rental income' },
-  { key: 'total_arv',        label: 'Total ARV',         type: 'dollar', default: '0',     live: s => String(s.totalARV),   liveLabel: 'pipeline value' },
-  { key: 'capital_deployed', label: 'Capital Deployed',  type: 'dollar', default: '0',     live: s => String(s.deployed),   liveLabel: 'all-in costs' },
-  { key: 'doors_owned',      label: 'Rental Doors',      type: 'number', default: '0',     live: s => String(s.doors),      liveLabel: 'from Pipeline' },
-  { key: 'vr_properties',    label: 'VR Properties',     type: 'number', default: '0',     live: s => String(s.vrProps),    liveLabel: 'from Pipeline' },
-  { key: 'deals_exited',     label: 'Deals Closed',      type: 'number', default: '0',     live: s => String(s.exited),     liveLabel: 'from Pipeline' },
-  { key: 'op_reserve',       label: 'Operating Reserve', type: 'dollar', default: '10000', live: null,                      liveLabel: 'manual entry'  },
+  { key: 'active_deals',     label: 'Active Deals',        type: 'number', default: '0',     src: 'pipeline', live: (s,p) => String(s.active),          liveLabel: 'from Pipeline' },
+  { key: 'monthly_revenue',  label: 'Monthly Revenue',     type: 'dollar', default: '0',     src: 'pipeline', live: (s,p) => String(s.monthlyRev),       liveLabel: 'rental income' },
+  { key: 'total_arv',        label: 'Total ARV',           type: 'dollar', default: '0',     src: 'pipeline', live: (s,p) => String(s.totalARV),         liveLabel: 'pipeline value' },
+  { key: 'capital_deployed', label: 'Capital Deployed',    type: 'dollar', default: '0',     src: 'pipeline', live: (s,p) => String(s.deployed),         liveLabel: 'all-in costs' },
+  { key: 'doors_owned',      label: 'Rental Doors',        type: 'number', default: '0',     src: 'pipeline', live: (s,p) => String(s.doors),            liveLabel: 'from Pipeline' },
+  { key: 'vr_properties',    label: 'VR Properties',       type: 'number', default: '0',     src: 'pipeline', live: (s,p) => String(s.vrProps),          liveLabel: 'from Pipeline' },
+  { key: 'deals_exited',     label: 'Deals Closed',        type: 'number', default: '0',     src: 'pipeline', live: (s,p) => String(s.exited),           liveLabel: 'from Pipeline' },
+  { key: 'active_jobs',      label: 'Active Jobs',         type: 'number', default: '0',     src: 'portal',   live: (s,p) => String(p.activeJobs),       liveLabel: 'from Portal' },
+  { key: 'contract_value',   label: 'Contract Value',      type: 'dollar', default: '0',     src: 'portal',   live: (s,p) => String(p.contractValue),    liveLabel: 'open jobs' },
+  { key: 'collected',        label: 'Collected',           type: 'dollar', default: '0',     src: 'portal',   live: (s,p) => String(p.collected),        liveLabel: 'phases paid' },
+  { key: 'outstanding',      label: 'Outstanding',         type: 'dollar', default: '0',     src: 'portal',   live: (s,p) => String(p.outstanding),      liveLabel: 'balance due' },
+  { key: 'op_reserve',       label: 'Operating Reserve',   type: 'dollar', default: '10000', src: 'manual',   live: null,                                liveLabel: 'manual entry'  },
 ];
 
 function loadSnap() { return lsGetJSON('ironwood_snapshot', {}); }
@@ -853,10 +873,11 @@ function buildSnapCards() {
   const grid = $('snap-grid');
   const data  = loadSnap();
   const stats = getPipelineStats();
+  const portal = getPortalStats();
   grid.innerHTML = '';
 
   SNAP_CONFIG.forEach(cfg => {
-    const liveVal = cfg.live ? cfg.live(stats) : null;
+    const liveVal = cfg.live ? cfg.live(stats, portal) : null;
     const raw     = liveVal !== null ? liveVal : (data[cfg.key] !== undefined ? data[cfg.key] : cfg.default);
     const isLive  = liveVal !== null;
     const card = document.createElement('div');
@@ -906,7 +927,9 @@ function startEditSnap(key) {
 }
 
 buildSnapCards();
-window.addEventListener('storage', e => { if (e.key === 'ironwood_deals') buildSnapCards(); });
+window.addEventListener('storage', e => {
+  if (e.key === 'ironwood_deals' || e.key === 'ironwood_jobs') buildSnapCards();
+});
 
 // ── QUICK NOTES ────────────────────────────────────────────────────────────
 (function() {
