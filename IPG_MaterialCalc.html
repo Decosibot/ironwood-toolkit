@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Material Calculator — Ironwood Homes and Renovations</title>
+<meta name="description" content="Calculate exactly how much material you need for your renovation — paint, flooring, drywall, tile, deck, and basement finish."/>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+
+/* ── PROJECT TYPE SELECTOR ── */
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  margin-top: 4px;
+}
+.proj-btn {
+  background: var(--surface-2);
+  border: 1.5px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 18px 14px;
+  cursor: pointer;
+  text-align: center;
+  transition: border-color .18s, background .18s, box-shadow .18s;
+  user-select: none;
+}
+.proj-btn:hover { border-color: var(--bronze); background: var(--bronze-wash); }
+.proj-btn.active {
+  border-color: var(--bronze);
+  background: var(--bronze-wash);
+  box-shadow: 0 0 0 3px var(--bronze-border);
+}
+.proj-btn-icon { font-size: 28px; margin-bottom: 8px; }
+.proj-btn-label { font-size: 13px; font-weight: 600; color: var(--ink); }
+.proj-btn-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+/* ── ROOM BUILDER ── */
+.room-card {
+  background: var(--surface-2);
+  border: 1.5px solid var(--hairline);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  position: relative;
+  margin-bottom: 14px;
+}
+.room-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.room-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.room-number {
+  width: 24px; height: 24px;
+  background: var(--bronze);
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700;
+}
+.remove-room {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color .15s, background .15s;
+}
+.remove-room:hover { color: var(--err); background: var(--err-bg); }
+
+.dim-grid {
+  display: grid;
+  gap: 12px;
+}
+.dim-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+.dim-grid-2 { grid-template-columns: 1fr 1fr; }
+.dim-grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+.room-options {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.opt-check {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--ink-soft);
+  cursor: pointer;
+  user-select: none;
+}
+.opt-check input { accent-color: var(--bronze); width: 15px; height: 15px; cursor: pointer; }
+
+.add-room-btn {
+  width: 100%;
+  padding: 13px;
+  border: 1.5px dashed var(--hairline-2);
+  border-radius: var(--radius);
+  background: transparent;
+  color: var(--bronze);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .18s, background .18s;
+  margin-bottom: 20px;
+}
+.add-room-btn:hover { border-color: var(--bronze); background: var(--bronze-wash); }
+
+/* ── RESULTS ── */
+.results-wrapper {
+  background: var(--night-watch);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  color: #fff;
+}
+.results-title {
+  font-family: var(--serif);
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+.results-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,.55);
+  margin-bottom: 24px;
+}
+.results-section-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: rgba(255,255,255,.45);
+  margin-bottom: 10px;
+  margin-top: 20px;
+}
+.results-section-label:first-of-type { margin-top: 0; }
+
+.mat-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.mat-table th {
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .07em;
+  color: rgba(255,255,255,.45);
+  padding: 0 0 8px;
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+.mat-table th:not(:first-child) { text-align: right; }
+.mat-table td {
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(255,255,255,.07);
+  vertical-align: top;
+}
+.mat-table td:not(:first-child) { text-align: right; }
+.mat-item-name { font-weight: 500; color: #fff; }
+.mat-item-brand { font-size: 11px; color: rgba(255,255,255,.45); margin-top: 1px; }
+.mat-qty { color: rgba(255,255,255,.8); font-weight: 600; }
+.mat-cost { color: #fff; font-weight: 700; }
+
+.results-total-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-top: 18px;
+}
+.results-total-label { font-size: 13px; color: rgba(255,255,255,.7); font-weight: 600; }
+.results-total-value { font-size: 22px; font-weight: 700; color: #fff; }
+
+.waste-note {
+  font-size: 11px;
+  color: rgba(255,255,255,.4);
+  margin-top: 10px;
+  text-align: right;
+}
+
+.print-btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 13px;
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.18);
+  color: #fff;
+  border-radius: var(--radius);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .18s;
+}
+.print-btn:hover { background: rgba(255,255,255,.18); }
+
+.empty-results {
+  text-align: center;
+  padding: 48px 24px;
+  color: rgba(255,255,255,.4);
+  font-size: 14px;
+}
+.empty-results-icon { font-size: 36px; margin-bottom: 12px; }
+
+/* ── SUMMARY CHIPS ── */
+.summary-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.chip {
+  background: rgba(255,255,255,.10);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: rgba(255,255,255,.75);
+}
+.chip strong { color: #fff; }
+
+/* ── PAGE LAYOUT ── */
+.mc-layout {
+  display: grid;
+  grid-template-columns: 1fr 380px;
+  gap: 24px;
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .mc-layout { grid-template-columns: 1fr; }
+  .dim-grid-3 { grid-template-columns: 1fr 1fr; }
+  .dim-grid-4 { grid-template-columns: 1fr 1fr; }
+  .project-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+}
+
+/* ── STICKY RESULTS ── */
+.results-sticky { position: sticky; top: 88px; }
+
+/* ── SECTION STEPS ── */
+.step-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.iw-section-divider {
+  border: none;
+  border-top: 1px solid var(--hairline);
+  margin: 24px 0;
+}
+
+@media print {
+  .iw-header, .iw-hero, .add-room-btn, .print-btn,
+  .proj-selector-card, .step-label { display: none !important; }
+  .mc-layout { grid-template-columns: 1fr; }
+  .results-wrapper {
+    background: #fff !important;
+    color: #000 !important;
+    border: 1px solid #ccc;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .results-title, .results-total-value, .mat-item-name, .mat-cost, .mat-qty { color: #000 !important; }
+  .results-sub, .results-section-label, .mat-item-brand, .mat-table th,
+  .results-total-label, .chip, .waste-note { color: #555 !important; }
+  .mat-table th { border-bottom-color: #ccc !important; }
+  .mat-table td { border-bottom-color: #eee !important; }
+  .results-total-bar { background: #f5f5f5 !important; }
+  .chip { background: #eee !important; border-color: #ccc !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <div class="iw-logo-box"><span class="iw-logo-letter">I</span></div>
+    <div>
+      <div class="iw-logo-name">Ironwood</div>
+      <div class="iw-logo-sub">Homes &amp; Renovations</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="iw-hero">
+  <div class="iw-eyebrow">Material Calculator</div>
+  <h1>Know exactly what to buy before the job starts.</h1>
+  <p>Enter room dimensions — no blueprints needed. Get a full materials list with mid-range pricing.</p>
+</div>
+
+<!-- MAIN -->
+<div class="iw-container-wide">
+<div class="mc-layout">
+
+  <!-- LEFT: INPUTS -->
+  <div>
+
+    <!-- STEP 1: PROJECT TYPE -->
+    <div class="iw-card iw-gap-lg proj-selector-card">
+      <div class="step-label">Step 1 — Choose Project Type</div>
+      <div class="project-grid" id="projectGrid">
+        <div class="proj-btn active" data-type="paint" onclick="selectProject('paint')">
+          <div class="proj-btn-icon">🖌️</div>
+          <div class="proj-btn-label">Paint</div>
+          <div class="proj-btn-sub">Interior walls</div>
+        </div>
+        <div class="proj-btn" data-type="flooring" onclick="selectProject('flooring')">
+          <div class="proj-btn-icon">🪵</div>
+          <div class="proj-btn-label">Flooring</div>
+          <div class="proj-btn-sub">LVP / hardwood</div>
+        </div>
+        <div class="proj-btn" data-type="carpet" onclick="selectProject('carpet')">
+          <div class="proj-btn-icon">🏠</div>
+          <div class="proj-btn-label">Carpet</div>
+          <div class="proj-btn-sub">Bedrooms</div>
+        </div>
+        <div class="proj-btn" data-type="tile" onclick="selectProject('tile')">
+          <div class="proj-btn-icon">🔲</div>
+          <div class="proj-btn-label">Tile</div>
+          <div class="proj-btn-sub">Bath / kitchen</div>
+        </div>
+        <div class="proj-btn" data-type="drywall" onclick="selectProject('drywall')">
+          <div class="proj-btn-icon">🧱</div>
+          <div class="proj-btn-label">Drywall</div>
+          <div class="proj-btn-sub">Walls + ceiling</div>
+        </div>
+        <div class="proj-btn" data-type="deck" onclick="selectProject('deck')">
+          <div class="proj-btn-icon">🌿</div>
+          <div class="proj-btn-label">Deck / Patio</div>
+          <div class="proj-btn-sub">Outdoor build</div>
+        </div>
+        <div class="proj-btn" data-type="basement" onclick="selectProject('basement')">
+          <div class="proj-btn-icon">🏗️</div>
+          <div class="proj-btn-label">Basement</div>
+          <div class="proj-btn-sub">Full finish</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: ROOMS -->
+    <div class="iw-card iw-gap-lg" style="margin-top:16px;">
+      <div class="step-label">Step 2 — Add Rooms / Areas</div>
+      <div id="roomsContainer"></div>
+      <button class="add-room-btn" onclick="addRoom()">+ Add Another Room</button>
+    </div>
+
+  </div>
+
+  <!-- RIGHT: RESULTS -->
+  <div class="results-sticky">
+    <div class="results-wrapper">
+      <div class="results-title">Materials List</div>
+      <div class="results-sub" id="resultsSubtitle">Select a project type and add a room to get started.</div>
+      <div id="resultsBody">
+        <div class="empty-results">
+          <div class="empty-results-icon">📋</div>
+          Add at least one room to generate your materials list.
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+<script>
+// ── STATE ──
+let projectType = 'paint';
+let rooms = [];
+let roomCounter = 0;
+
+// ── PROJECT CONFIG ──
+const PROJECT_CONFIG = {
+  paint: {
+    label: 'Interior Paint',
+    roomLabel: 'Room',
+    fields: ['length','width','height','doors','windows'],
+    options: ['include_ceiling','include_primer','two_coats'],
+    optionLabels: { include_ceiling:'Paint ceiling too', include_primer:'Include primer coat', two_coats:'Two finish coats (recommended)' },
+    optionDefaults: { include_ceiling: false, include_primer: true, two_coats: true },
+  },
+  flooring: {
+    label: 'LVP Flooring',
+    roomLabel: 'Room',
+    fields: ['length','width'],
+    options: ['include_transitions','include_underlayment'],
+    optionLabels: { include_transitions:'Include transition strips', include_underlayment:'Include underlayment' },
+    optionDefaults: { include_transitions: true, include_underlayment: true },
+  },
+  carpet: {
+    label: 'Carpet',
+    roomLabel: 'Room',
+    fields: ['length','width'],
+    options: ['include_pad','include_tack'],
+    optionLabels: { include_pad:'Include carpet pad', include_tack:'Include tack strips' },
+    optionDefaults: { include_pad: true, include_tack: true },
+  },
+  tile: {
+    label: 'Tile',
+    roomLabel: 'Area',
+    fields: ['length','width'],
+    options: ['floor_tile','wall_tile','include_backer','include_schluter'],
+    optionLabels: { floor_tile:'Floor tile', wall_tile:'Wall tile (backsplash/shower)', include_backer:'Include cement backer board', include_schluter:'Include Schluter edge trim' },
+    optionDefaults: { floor_tile: true, wall_tile: false, include_backer: true, include_schluter: false },
+  },
+  drywall: {
+    label: 'Drywall',
+    roomLabel: 'Room',
+    fields: ['length','width','height','doors','windows'],
+    options: ['include_ceiling','include_mud','include_tape'],
+    optionLabels: { include_ceiling:'Include ceiling', include_mud:'Include joint compound', include_tape:'Include tape + corner bead' },
+    optionDefaults: { include_ceiling: true, include_mud: true, include_tape: true },
+  },
+  deck: {
+    label: 'Deck / Patio',
+    roomLabel: 'Deck',
+    fields: ['length','width'],
+    options: ['include_railing','include_posts','include_ledger'],
+    optionLabels: { include_railing:'Include railing', include_posts:'Include concrete footings', include_ledger:'Include ledger board (house-attached)' },
+    optionDefaults: { include_railing: true, include_posts: true, include_ledger: false },
+  },
+  basement: {
+    label: 'Basement Finish',
+    roomLabel: 'Space',
+    fields: ['length','width','height','doors','windows'],
+    options: ['include_flooring','include_drywall','include_paint','include_ceiling_tile'],
+    optionLabels: { include_flooring:'LVP flooring', include_drywall:'Drywall walls', include_paint:'Paint walls', include_ceiling_tile:'Drop ceiling tile' },
+    optionDefaults: { include_flooring: true, include_drywall: true, include_paint: true, include_ceiling_tile: false },
+  },
+};
+
+// ── FIELD LABELS ──
+const FIELD_META = {
+  length:  { label:'Length (ft)',  placeholder:'e.g. 14', min:2,  max:200 },
+  width:   { label:'Width (ft)',   placeholder:'e.g. 12', min:2,  max:200 },
+  height:  { label:'Ceiling Height (ft)', placeholder:'e.g. 9', min:6, max:20 },
+  doors:   { label:'Doors',        placeholder:'0', min:0, max:10 },
+  windows: { label:'Windows',      placeholder:'0', min:0, max:20 },
+};
+
+// ── SELECT PROJECT ──
+function selectProject(type) {
+  projectType = type;
+  document.querySelectorAll('.proj-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-type="${type}"]`).classList.add('active');
+  rooms = [];
+  roomCounter = 0;
+  renderRooms();
+  addRoom();
+}
+
+// ── ADD ROOM ──
+function addRoom() {
+  const cfg = PROJECT_CONFIG[projectType];
+  const id = ++roomCounter;
+  const defaults = {};
+  cfg.fields.forEach(f => defaults[f] = '');
+  const optDefaults = { ...cfg.optionDefaults };
+  rooms.push({ id, fields: defaults, options: { ...optDefaults } });
+  renderRooms();
+  recalc();
+}
+
+function removeRoom(id) {
+  rooms = rooms.filter(r => r.id !== id);
+  recalc();
+  renderRooms();
+}
+
+function updateField(id, field, val) {
+  const room = rooms.find(r => r.id === id);
+  if (room) { room.fields[field] = parseFloat(val) || 0; recalc(); }
+}
+
+function updateOption(id, opt, val) {
+  const room = rooms.find(r => r.id === id);
+  if (room) { room.options[opt] = val; recalc(); }
+}
+
+// ── RENDER ROOMS ──
+function renderRooms() {
+  const cfg = PROJECT_CONFIG[projectType];
+  const container = document.getElementById('roomsContainer');
+  container.innerHTML = '';
+
+  if (rooms.length === 0) { addRoom(); return; }
+
+  rooms.forEach((room, idx) => {
+    const colClass = cfg.fields.length >= 4 ? 'dim-grid-4' : cfg.fields.length === 3 ? 'dim-grid-3' : 'dim-grid-2';
+    const fieldsHTML = cfg.fields.map(f => {
+      const meta = FIELD_META[f];
+      return `
+        <div>
+          <label class="iw-label">${meta.label}</label>
+          <input class="iw-input" type="number" min="${meta.min}" max="${meta.max}"
+            placeholder="${meta.placeholder}"
+            value="${room.fields[f] || ''}"
+            oninput="updateField(${room.id}, '${f}', this.value)"/>
+        </div>`;
+    }).join('');
+
+    const optionsHTML = cfg.options.map(opt => `
+      <label class="opt-check">
+        <input type="checkbox" ${room.options[opt] ? 'checked' : ''}
+          onchange="updateOption(${room.id}, '${opt}', this.checked)"/>
+        ${cfg.optionLabels[opt]}
+      </label>`).join('');
+
+    const div = document.createElement('div');
+    div.className = 'room-card';
+    div.innerHTML = `
+      <div class="room-card-header">
+        <div class="room-label">
+          <div class="room-number">${idx + 1}</div>
+          ${cfg.roomLabel} ${idx + 1}
+        </div>
+        ${rooms.length > 1 ? `<button class="remove-room" onclick="removeRoom(${room.id})" title="Remove">×</button>` : ''}
+      </div>
+      <div class="dim-grid ${colClass}">${fieldsHTML}</div>
+      ${cfg.options.length ? `<div class="room-options">${optionsHTML}</div>` : ''}
+    `;
+    container.appendChild(div);
+  });
+}
+
+// ── CALCULATE ──
+const WASTE = 1.20; // 20% waste factor
+
+function recalc() {
+  const lines = [];
+  let hasData = false;
+
+  rooms.forEach((room, idx) => {
+    const f = room.fields;
+    const o = room.options;
+    const l = parseFloat(f.length) || 0;
+    const w = parseFloat(f.width)  || 0;
+    const h = parseFloat(f.height) || 0;
+    const doors   = parseInt(f.doors)   || 0;
+    const windows = parseInt(f.windows) || 0;
+    if (!l || !w) return;
+    hasData = true;
+    const roomLabel = `${PROJECT_CONFIG[projectType].roomLabel} ${idx + 1}`;
+
+    if (projectType === 'paint') calcPaint(lines, roomLabel, l, w, h, doors, windows, o);
+    if (projectType === 'flooring') calcFlooring(lines, roomLabel, l, w, o);
+    if (projectType === 'carpet') calcCarpet(lines, roomLabel, l, w, o);
+    if (projectType === 'tile') calcTile(lines, roomLabel, l, w, o);
+    if (projectType === 'drywall') calcDrywall(lines, roomLabel, l, w, h, doors, windows, o);
+    if (projectType === 'deck') calcDeck(lines, roomLabel, l, w, o);
+    if (projectType === 'basement') calcBasement(lines, roomLabel, l, w, h, doors, windows, o);
+  });
+
+  renderResults(lines, hasData);
+}
+
+// ── PAINT ──
+function calcPaint(lines, label, l, w, h, doors, windows, o) {
+  if (!h) return;
+  const wallSqft = (2 * l + 2 * w) * h;
+  const deduct = (doors * 21) + (windows * 15);
+  const paintable = Math.max(wallSqft - deduct, 0);
+  const ceilingSqft = o.include_ceiling ? l * w : 0;
+  const totalSqft = (paintable + ceilingSqft) * WASTE;
+  const coats = o.two_coats ? 2 : 1;
+  const gallonsNeeded = Math.ceil((totalSqft * coats) / 400);
+
+  lines.push({ section: label });
+  lines.push({
+    name: 'Sherwin-Williams Emerald Interior Paint',
+    brand: 'SW Emerald — 1 gal / ~400 sq ft per coat',
+    qty: `${gallonsNeeded} gal`,
+    unit: 72,
+    total: gallonsNeeded * 72,
+  });
+  if (o.include_primer) {
+    const primerGal = Math.ceil((paintable * WASTE) / 400);
+    lines.push({
+      name: 'SW ProBlock Primer',
+      brand: 'Sherwin-Williams ProBlock — 1 gal',
+      qty: `${primerGal} gal`,
+      unit: 55,
+      total: primerGal * 55,
+    });
+  }
+  const rollerPacks = Math.ceil(gallonsNeeded / 2);
+  lines.push({
+    name: 'Wooster Roller Covers 3/8" nap (2-pack)',
+    brand: 'Wooster Pro/Doo-Z',
+    qty: `${rollerPacks} pk`,
+    unit: 18,
+    total: rollerPacks * 18,
+  });
+  lines.push({
+    name: "FrogTape Multi-Surface Painter's Tape 60yd",
+    brand: 'FrogTape',
+    qty: `${Math.max(2, Math.ceil((l+w)/20))} rolls`,
+    unit: 12,
+    total: Math.max(2, Math.ceil((l+w)/20)) * 12,
+  });
+  lines.push({
+    name: 'Canvas Drop Cloth 9×12',
+    brand: 'Trimaco / HDX',
+    qty: `${Math.ceil((l*w)/108)} ea`,
+    unit: 28,
+    total: Math.ceil((l*w)/108) * 28,
+  });
+}
+
+// ── FLOORING ──
+function calcFlooring(lines, label, l, w, o) {
+  const sqft = Math.ceil(l * w * WASTE);
+  lines.push({ section: label });
+  lines.push({
+    name: 'LifeProof LVP Flooring (12 sq ft / carton)',
+    brand: 'LifeProof / Shaw Floorte — 20 mil wear layer',
+    qty: `${Math.ceil(sqft / 12)} cartons (${sqft} sq ft)`,
+    unit: 62,
+    total: Math.ceil(sqft / 12) * 62,
+  });
+  if (o.include_underlayment) {
+    const rollsSqft = 200;
+    lines.push({
+      name: 'QuietWalk Plus Underlayment (200 sq ft roll)',
+      brand: 'MP Global QuietWalk Plus',
+      qty: `${Math.ceil(sqft / rollsSqft)} rolls`,
+      unit: 55,
+      total: Math.ceil(sqft / rollsSqft) * 55,
+    });
+  }
+  if (o.include_transitions) {
+    lines.push({
+      name: 'Schluter RENO-T Transition Strip',
+      brand: 'Schluter — per doorway',
+      qty: `2 ea`,
+      unit: 22,
+      total: 44,
+    });
+  }
+  lines.push({
+    name: 'Tapping Block + Pull Bar Kit',
+    brand: 'Roberts / QEP',
+    qty: '1 kit',
+    unit: 28,
+    total: 28,
+  });
+}
+
+// ── CARPET ──
+function calcCarpet(lines, label, l, w, o) {
+  const sqyd = Math.ceil((l * w * WASTE) / 9);
+  lines.push({ section: label });
+  lines.push({
+    name: 'Shaw Floors Carpet — mid-lux cut pile',
+    brand: 'Shaw — 12 ft roll, sold by sq yd',
+    qty: `${sqyd} sq yd`,
+    unit: 6.50,
+    total: sqyd * 6.50,
+  });
+  if (o.include_pad) {
+    lines.push({
+      name: '8lb Carpet Pad (rebond)',
+      brand: 'Leggett & Platt — 7/16" thick',
+      qty: `${sqyd} sq yd`,
+      unit: 2.80,
+      total: sqyd * 2.80,
+    });
+  }
+  if (o.include_tack) {
+    const linearFt = Math.ceil(2 * (l + w) * 1.05);
+    lines.push({
+      name: 'Carpet Tack Strip (4 ft lengths)',
+      brand: 'Roberts',
+      qty: `${Math.ceil(linearFt / 4)} pcs`,
+      unit: 3.50,
+      total: Math.ceil(linearFt / 4) * 3.50,
+    });
+  }
+  lines.push({
+    name: 'Carpet Seam Tape 3" (50 ft roll)',
+    brand: 'Roberts 6″ seam tape',
+    qty: '1 roll',
+    unit: 22,
+    total: 22,
+  });
+}
+
+// ── TILE ──
+function calcTile(lines, label, l, w, o) {
+  const sqft = Math.ceil(l * w * WASTE);
+  lines.push({ section: label });
+  if (o.floor_tile) {
+    lines.push({
+      name: 'Daltile Ceramic/Porcelain Floor Tile 12×24',
+      brand: 'Daltile — mid-lux porcelain',
+      qty: `${sqft} sq ft`,
+      unit: 4.25,
+      total: sqft * 4.25,
+    });
+    lines.push({
+      name: 'Mapei Ultraflex 2 Tile Mortar (50 lb)',
+      brand: 'Mapei Ultraflex 2 — ~40 sq ft / bag',
+      qty: `${Math.ceil(sqft / 40)} bags`,
+      unit: 32,
+      total: Math.ceil(sqft / 40) * 32,
+    });
+    lines.push({
+      name: 'Mapei Flexcolor CQ Grout (9 lb)',
+      brand: 'Mapei Flexcolor CQ — ~50 sq ft / pail',
+      qty: `${Math.ceil(sqft / 50)} pails`,
+      unit: 38,
+      total: Math.ceil(sqft / 50) * 38,
+    });
+  }
+  if (o.wall_tile) {
+    const wallSqft = Math.ceil(l * w * WASTE);
+    lines.push({
+      name: 'Subway Tile 3×6 Ceramic Wall Tile',
+      brand: 'Daltile / MSI — glazed ceramic',
+      qty: `${wallSqft} sq ft`,
+      unit: 3.50,
+      total: wallSqft * 3.50,
+    });
+    lines.push({
+      name: 'Mapei Kerabond Wall Tile Mortar (50 lb)',
+      brand: 'Mapei Kerabond — ~50 sq ft / bag',
+      qty: `${Math.ceil(wallSqft / 50)} bags`,
+      unit: 28,
+      total: Math.ceil(wallSqft / 50) * 28,
+    });
+  }
+  if (o.include_backer) {
+    lines.push({
+      name: 'HardieBacker Cement Board 3×5 sheets',
+      brand: 'James Hardie 1/4"',
+      qty: `${Math.ceil(sqft / 15)} sheets`,
+      unit: 18,
+      total: Math.ceil(sqft / 15) * 18,
+    });
+  }
+  if (o.include_schluter) {
+    lines.push({
+      name: 'Schluter JOLLY Edge Trim (8 ft)',
+      brand: 'Schluter Systems — brushed nickel',
+      qty: `${Math.ceil((l + w) / 4)} pcs`,
+      unit: 28,
+      total: Math.ceil((l + w) / 4) * 28,
+    });
+  }
+  lines.push({
+    name: 'Tile Spacers 3/16" (500-pack)',
+    brand: 'QEP',
+    qty: '1 bag',
+    unit: 8,
+    total: 8,
+  });
+}
+
+// ── DRYWALL ──
+function calcDrywall(lines, label, l, w, h, doors, windows, o) {
+  if (!h) return;
+  const wallSqft = (2 * l + 2 * w) * h;
+  const deduct = (doors * 21) + (windows * 15);
+  const netWall = Math.max(wallSqft - deduct, 0);
+  const ceilingSqft = o.include_ceiling ? l * w : 0;
+  const totalSqft = (netWall + ceilingSqft) * WASTE;
+  const sheetSqft = 32; // 4×8
+  const sheets = Math.ceil(totalSqft / sheetSqft);
+
+  lines.push({ section: label });
+  lines.push({
+    name: 'USG Sheetrock 5/8" Drywall 4×8',
+    brand: 'USG Sheetrock — fire-rated',
+    qty: `${sheets} sheets`,
+    unit: 18,
+    total: sheets * 18,
+  });
+  lines.push({
+    name: 'Drywall Screws 1-5/8" (5 lb box)',
+    brand: 'Grip-Rite',
+    qty: `${Math.ceil(sheets / 15)} boxes`,
+    unit: 14,
+    total: Math.ceil(sheets / 15) * 14,
+  });
+  if (o.include_mud) {
+    lines.push({
+      name: 'USG All-Purpose Joint Compound (4.5 gal)',
+      brand: 'USG Sheetrock Plus 3',
+      qty: `${Math.ceil(totalSqft / 400)} buckets`,
+      unit: 22,
+      total: Math.ceil(totalSqft / 400) * 22,
+    });
+  }
+  if (o.include_tape) {
+    lines.push({
+      name: 'Fiberglass Mesh Drywall Tape (150 ft)',
+      brand: 'Saint-Gobain',
+      qty: `${Math.ceil((2*(l+w)*h) / 150)} rolls`,
+      unit: 12,
+      total: Math.ceil((2*(l+w)*h) / 150) * 12,
+    });
+    lines.push({
+      name: 'Galvanized Corner Bead (8 ft)',
+      brand: 'USG / ClarkWestern',
+      qty: `${Math.ceil(h * 4 / 8) + 2} pcs`,
+      unit: 4,
+      total: (Math.ceil(h * 4 / 8) + 2) * 4,
+    });
+  }
+}
+
+// ── DECK ──
+function calcDeck(lines, label, l, w, o) {
+  const sqft = l * w;
+  const boardSqft = 1.0; // 1×6 decking approx 1 sq ft coverage per linear ft
+  const boards = Math.ceil(sqft / boardSqft * WASTE / 12); // 12 ft boards
+  lines.push({ section: label });
+  lines.push({
+    name: 'Trex Enhance Composite Decking 1×6×12',
+    brand: 'Trex Enhance Naturals — mid-lux composite',
+    qty: `${boards} boards`,
+    unit: 28,
+    total: boards * 28,
+  });
+  lines.push({
+    name: 'Trex Hidden Fasteners (100-pack)',
+    brand: 'Trex Hideaway',
+    qty: `${Math.ceil(boards / 25)} boxes`,
+    unit: 32,
+    total: Math.ceil(boards / 25) * 32,
+  });
+  if (o.include_posts) {
+    const posts = Math.ceil((sqft / 64) + 4);
+    lines.push({
+      name: 'PT 6×6×10 Post',
+      brand: 'Pressure-treated lumber',
+      qty: `${posts} ea`,
+      unit: 38,
+      total: posts * 38,
+    });
+    lines.push({
+      name: 'Quikrete Fast-Setting Concrete (50 lb)',
+      brand: 'Quikrete 5000',
+      qty: `${posts * 2} bags`,
+      unit: 9,
+      total: posts * 2 * 9,
+    });
+  }
+  if (o.include_railing) {
+    const linearFt = Math.ceil(2 * (l + w) - 4);
+    lines.push({
+      name: 'Trex Signature Aluminum Rail Kit (6 ft)',
+      brand: 'Trex Signature — 36" rail',
+      qty: `${Math.ceil(linearFt / 6)} sections`,
+      unit: 145,
+      total: Math.ceil(linearFt / 6) * 145,
+    });
+  }
+  if (o.include_ledger) {
+    lines.push({
+      name: 'PT 2×10×16 Ledger Board',
+      brand: 'Pressure-treated',
+      qty: `${Math.ceil(l / 16)} pcs`,
+      unit: 42,
+      total: Math.ceil(l / 16) * 42,
+    });
+    lines.push({
+      name: 'LedgerLOK Structural Screws (50-pack)',
+      brand: 'FastenMaster LedgerLOK',
+      qty: '1 box',
+      unit: 48,
+      total: 48,
+    });
+  }
+  lines.push({
+    name: 'Joist Hanger (50-pack)',
+    brand: 'Simpson Strong-Tie LUS26',
+    qty: '1 box',
+    unit: 35,
+    total: 35,
+  });
+}
+
+// ── BASEMENT ──
+function calcBasement(lines, label, l, w, h, doors, windows, o) {
+  if (!h) return;
+  if (o.include_flooring) calcFlooring(lines, label + ' — Flooring', l, w, { include_transitions: true, include_underlayment: true });
+  if (o.include_drywall)  calcDrywall(lines,  label + ' — Drywall',  l, w, h, doors, windows, { include_ceiling: false, include_mud: true, include_tape: true });
+  if (o.include_paint)    calcPaint(lines,    label + ' — Paint',    l, w, h, doors, windows, { include_ceiling: false, include_primer: true, two_coats: true });
+  if (o.include_ceiling_tile) {
+    const ceilingSqft = Math.ceil(l * w * WASTE);
+    lines.push({ section: label + ' — Drop Ceiling' });
+    lines.push({
+      name: 'Armstrong Ceilings Cortega Tile 2×2',
+      brand: 'Armstrong — mid-grade drop tile',
+      qty: `${Math.ceil(ceilingSqft / 4)} tiles`,
+      unit: 2.50,
+      total: Math.ceil(ceilingSqft / 4) * 2.50,
+    });
+    lines.push({
+      name: 'Armstrong Main Tee 12 ft',
+      brand: 'Armstrong grid system',
+      qty: `${Math.ceil(l / 2)} pcs`,
+      unit: 8,
+      total: Math.ceil(l / 2) * 8,
+    });
+    lines.push({
+      name: 'Armstrong Cross Tee 4 ft',
+      brand: 'Armstrong grid system',
+      qty: `${Math.ceil(ceilingSqft / 8)} pcs`,
+      unit: 3.50,
+      total: Math.ceil(ceilingSqft / 8) * 3.50,
+    });
+    lines.push({
+      name: 'Perimeter Wall Angle 10 ft',
+      brand: 'Armstrong',
+      qty: `${Math.ceil(2*(l+w)/10)} pcs`,
+      unit: 5,
+      total: Math.ceil(2*(l+w)/10) * 5,
+    });
+  }
+}
+
+// ── RENDER RESULTS ──
+function renderResults(lines, hasData) {
+  const body = document.getElementById('resultsBody');
+  const subtitle = document.getElementById('resultsSubtitle');
+
+  if (!hasData || lines.length === 0) {
+    subtitle.textContent = 'Select a project type and add room dimensions.';
+    body.innerHTML = `<div class="empty-results"><div class="empty-results-icon">📋</div>Add at least one room to generate your materials list.</div>`;
+    return;
+  }
+
+  // Count rooms with data
+  const roomCount = rooms.filter(r => r.fields.length && r.fields.width).length;
+  subtitle.textContent = `${PROJECT_CONFIG[projectType].label} — ${rooms.length} room${rooms.length !== 1 ? 's' : ''} — 20% waste factor included`;
+
+  // Build chips
+  const totalMaterials = lines.filter(l => l.total).reduce((s, l) => s + l.total, 0);
+  const chipsHTML = `
+    <div class="summary-chips">
+      <div class="chip"><strong>${lines.filter(l=>l.total).length}</strong> line items</div>
+      <div class="chip">20% waste built in</div>
+      <div class="chip">Mid-range pricing</div>
+    </div>`;
+
+  // Group lines by section
+  let html = chipsHTML;
+  let currentSection = null;
+  let tableOpen = false;
+
+  lines.forEach(line => {
+    if (line.section !== undefined) {
+      if (tableOpen) { html += '</tbody></table>'; tableOpen = false; }
+      html += `<div class="results-section-label">${line.section}</div>`;
+      html += `<table class="mat-table"><thead><tr>
+        <th>Item</th><th>Qty</th><th>Est. Cost</th>
+      </tr></thead><tbody>`;
+      tableOpen = true;
+      currentSection = line.section;
+      return;
+    }
+    if (!tableOpen) {
+      html += `<table class="mat-table"><thead><tr>
+        <th>Item</th><th>Qty</th><th>Est. Cost</th>
+      </tr></thead><tbody>`;
+      tableOpen = true;
+    }
+    html += `<tr>
+      <td><div class="mat-item-name">${line.name}</div><div class="mat-item-brand">${line.brand}</div></td>
+      <td><span class="mat-qty">${line.qty}</span></td>
+      <td><span class="mat-cost">${fmtMoney(line.total)}</span></td>
+    </tr>`;
+  });
+
+  if (tableOpen) html += '</tbody></table>';
+
+  html += `
+    <div class="results-total-bar">
+      <span class="results-total-label">Estimated Materials Total</span>
+      <span class="results-total-value">${fmtMoney(totalMaterials)}</span>
+    </div>
+    <div class="waste-note">All quantities include 20% waste factor. Prices are mid-range estimates — client supplies all materials.</div>
+    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>`;
+
+  body.innerHTML = html;
+}
+
+function fmtMoney(n) {
+  return '$' + Math.round(n).toLocaleString();
+}
+
+// ── INIT ──
+addRoom();
+</script>
+</body>
+</html>
