@@ -808,46 +808,66 @@ function lsSetJSON(key, val) { try { localStorage.setItem(key, JSON.stringify(va
   $('footer-year').textContent = now.getFullYear();
 })();
 
+// ── PIPELINE LIVE DATA ─────────────────────────────────────────────────────
+function getPipelineStats() {
+  try {
+    const deals = JSON.parse(localStorage.getItem('ironwood_deals') || '[]');
+    const activeStages  = ['Lead','Analyzing','Offer Made','Under Contract','Rehab','Renting','Refinancing'];
+    const rentalStages  = ['Rented','Refinancing','Refinanced'];
+    const active        = deals.filter(d => activeStages.includes(d.stage)).length;
+    const totalARV      = deals.reduce((s,d) => s + (d.arv || 0), 0);
+    const deployed      = deals.reduce((s,d) => s + (d.allIn || 0), 0);
+    const doors         = deals.filter(d => rentalStages.includes(d.stage)).length;
+    const vrProps       = deals.filter(d => d.dealType === 'Vacation Rental' && rentalStages.includes(d.stage)).length;
+    const exited        = deals.filter(d => d.stage === 'Exited').length;
+    const monthlyRev    = deals.filter(d => rentalStages.includes(d.stage))
+                               .reduce((s,d) => s + (d.rentTarget || d.vrMonthlyRev || 0), 0);
+    return { active, totalARV, deployed, doors, vrProps, exited, monthlyRev, total: deals.length };
+  } catch(e) {
+    return { active:0, totalARV:0, deployed:0, doors:0, vrProps:0, exited:0, monthlyRev:0, total:0 };
+  }
+}
+
 // ── SNAPSHOT CARDS ─────────────────────────────────────────────────────────
 const SNAP_CONFIG = [
-  { key: 'active_deals',     label: 'Active Deals',      type: 'number', default: '0',      prefix: '',  suffix: '' },
-  { key: 'monthly_revenue',  label: 'Monthly Revenue',   type: 'dollar', default: '0',      prefix: '$', suffix: '' },
-  { key: 'doors_owned',      label: 'Doors Owned',       type: 'number', default: '0',      prefix: '',  suffix: '' },
-  { key: 'vr_properties',    label: 'VR Properties',     type: 'number', default: '0',      prefix: '',  suffix: '' },
-  { key: 'op_reserve',       label: 'Operating Reserve', type: 'dollar', default: '10000',  prefix: '$', suffix: '' },
+  { key: 'active_deals',     label: 'Active Deals',      type: 'number', default: '0',     live: s => String(s.active),     liveLabel: 'from Pipeline' },
+  { key: 'monthly_revenue',  label: 'Monthly Revenue',   type: 'dollar', default: '0',     live: s => String(s.monthlyRev), liveLabel: 'rental income' },
+  { key: 'total_arv',        label: 'Total ARV',         type: 'dollar', default: '0',     live: s => String(s.totalARV),   liveLabel: 'pipeline value' },
+  { key: 'capital_deployed', label: 'Capital Deployed',  type: 'dollar', default: '0',     live: s => String(s.deployed),   liveLabel: 'all-in costs' },
+  { key: 'doors_owned',      label: 'Rental Doors',      type: 'number', default: '0',     live: s => String(s.doors),      liveLabel: 'from Pipeline' },
+  { key: 'vr_properties',    label: 'VR Properties',     type: 'number', default: '0',     live: s => String(s.vrProps),    liveLabel: 'from Pipeline' },
+  { key: 'deals_exited',     label: 'Deals Closed',      type: 'number', default: '0',     live: s => String(s.exited),     liveLabel: 'from Pipeline' },
+  { key: 'op_reserve',       label: 'Operating Reserve', type: 'dollar', default: '10000', live: null,                      liveLabel: 'manual entry'  },
 ];
 
-function loadSnap() {
-  return lsGetJSON('ironwood_snapshot', {});
-}
-
-function saveSnap(data) {
-  lsSetJSON('ironwood_snapshot', data);
-}
+function loadSnap() { return lsGetJSON('ironwood_snapshot', {}); }
+function saveSnap(data) { lsSetJSON('ironwood_snapshot', data); }
 
 function formatSnapValue(cfg, rawVal) {
   const num = parseFloat(rawVal) || 0;
-  if (cfg.type === 'dollar') {
-    return '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
-  }
+  if (cfg.type === 'dollar') return '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
   return String(Math.round(num));
 }
 
 function buildSnapCards() {
   const grid = $('snap-grid');
-  const data = loadSnap();
+  const data  = loadSnap();
+  const stats = getPipelineStats();
   grid.innerHTML = '';
 
   SNAP_CONFIG.forEach(cfg => {
-    const raw = data[cfg.key] !== undefined ? data[cfg.key] : cfg.default;
+    const liveVal = cfg.live ? cfg.live(stats) : null;
+    const raw     = liveVal !== null ? liveVal : (data[cfg.key] !== undefined ? data[cfg.key] : cfg.default);
+    const isLive  = liveVal !== null;
     const card = document.createElement('div');
     card.className = 'snap-card';
     card.innerHTML = `
-      <div class="snap-label">${cfg.label}</div>
+      <div class="snap-label">${cfg.label}${isLive ? '<span style="font-size:9px;color:#4a9c6d;margin-left:6px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;">● LIVE</span>' : ''}</div>
       <div class="snap-value-wrap">
         <div class="snap-value" id="sv-${cfg.key}">${formatSnapValue(cfg, raw)}</div>
-        <button class="edit-btn" title="Edit" data-key="${cfg.key}">✏️</button>
-      </div>`;
+        ${!isLive ? `<button class="edit-btn" title="Edit" data-key="${cfg.key}">✏️</button>` : ''}
+      </div>
+      <div style="font-size:10px;color:#555;margin-top:2px;">${cfg.liveLabel}</div>`;
     grid.appendChild(card);
   });
 
@@ -857,11 +877,10 @@ function buildSnapCards() {
 }
 
 function startEditSnap(key) {
-  const cfg = SNAP_CONFIG.find(c => c.key === key);
+  const cfg  = SNAP_CONFIG.find(c => c.key === key);
   const data = loadSnap();
-  const raw = data[key] !== undefined ? data[key] : cfg.default;
+  const raw  = data[key] !== undefined ? data[key] : cfg.default;
   const valEl = $('sv-' + key);
-  const wrap = valEl.parentElement;
 
   const input = document.createElement('input');
   input.type = 'text';
@@ -887,6 +906,7 @@ function startEditSnap(key) {
 }
 
 buildSnapCards();
+window.addEventListener('storage', e => { if (e.key === 'ironwood_deals') buildSnapCards(); });
 
 // ── QUICK NOTES ────────────────────────────────────────────────────────────
 (function() {

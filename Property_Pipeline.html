@@ -698,10 +698,14 @@ function load() {
     if (raw) deals = JSON.parse(raw);
     if (!Array.isArray(deals)) deals = [];
   } catch(e) { deals = []; }
+  // Keep shared store in sync on load
+  localStorage.setItem('ironwood_deals', JSON.stringify(deals));
 }
 
 function save() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(deals));
+  // Shared store — all other internal tools read from this key
+  localStorage.setItem('ironwood_deals', JSON.stringify(deals));
 }
 
 function getDeal(id) {

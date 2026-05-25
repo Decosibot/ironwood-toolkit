@@ -200,6 +200,7 @@ body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system
     <input type="month" id="monthPicker" class="month-selector" />
     <button class="btn btn-outline" onclick="printReport()">Print Report</button>
     <button class="btn btn-outline" onclick="exportJSON()">Export JSON</button>
+    <button class="btn btn-outline" onclick="importFromPipeline()" title="Pull closed deals from Property Pipeline into revenue rows">Import Pipeline Deals</button>
     <button class="btn btn-gold" onclick="newMonth()">New Month</button>
   </div>
 </div>
@@ -522,6 +523,50 @@ body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system
 const REVENUE_TYPES  = ['Flip Sale','Remodel Job','LTR Rent','VR Rent','PM Fee','Processing Fee','Commission','Other'];
 const COST_TYPES     = ['Materials','Subs','Closing Costs','Permits','Other'];
 const EXPENSE_CATS   = ['Fixed','Variable','Labor','Marketing','Admin','Insurance','Utilities','Platform Fees','Other'];
+
+// ── PIPELINE IMPORT ──────────────────────────────────────────────────────────
+function importFromPipeline() {
+  try {
+    const deals = JSON.parse(localStorage.getItem('ironwood_deals') || '[]');
+    const month = document.getElementById('monthPicker').value; // YYYY-MM
+    if (!month) { alert('Select a month first.'); return; }
+
+    // Match deals whose stageDate falls in the selected month
+    const closedStages = ['Exited', 'Rented', 'Refinanced'];
+    const relevant = deals.filter(d => {
+      if (!d.stageDate) return false;
+      return d.stageDate.slice(0, 7) === month;
+    });
+
+    if (relevant.length === 0) {
+      alert('No Pipeline deals found with a stage date in ' + month + '.\n\nTip: deals are matched by their Stage Entry Date in the Pipeline.');
+      return;
+    }
+
+    let added = 0;
+    relevant.forEach(d => {
+      const label = [d.address, d.city].filter(Boolean).join(', ') || 'Pipeline Deal';
+      // Revenue from ARV (flip/sale) or monthly rent (rental)
+      const isRental = ['Renting','Rented','Refinancing','Refinanced'].includes(d.stage);
+      const isVR = d.dealType === 'Vacation Rental';
+      const amt = isRental ? (isVR ? d.vrMonthlyRev : d.rentTarget) : d.arv;
+      const type = isVR ? 'VR Rent' : isRental ? 'LTR Rent' : d.dealType === 'Flip' ? 'Flip Sale' : 'Remodel Job';
+      if (amt > 0) {
+        addRow('revenue', `${label} — ${d.stage}`, amt, type);
+        added++;
+      }
+      // Hard costs
+      if (d.rehabBudget > 0) {
+        addRow('costs', `Rehab — ${label}`, d.rehabBudget, 'Materials', label);
+      }
+    });
+
+    recalcAll();
+    alert(`Imported ${added} deal${added !== 1 ? 's' : ''} from the Pipeline for ${month}.`);
+  } catch(e) {
+    alert('Could not read Pipeline data. Make sure Property Pipeline has been opened at least once.');
+  }
+}
 
 let saveTimer = null;
 
