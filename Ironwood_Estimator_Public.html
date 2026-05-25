@@ -632,10 +632,10 @@ function initAutocomplete() {
       <a class="iw-btn iw-btn-bronze iw-btn-full" href="YOUR_CALENDLY_OR_GHL_CALENDAR_LINK" target="_blank">Book a Free Site Visit</a>
     </div>
 
-    <!-- Large project: Jeff calls -->
+    <!-- Large project: team calls -->
     <div class="booking-card hidden" id="largeConfirmCard" style="margin-top:12px;background:var(--bronze-wash);border-color:var(--bronze-border);">
-      <div class="booking-title">Jeff Will Reach Out Personally</div>
-      <div class="booking-sub">No automated texts, no call center. Jeff will call directly to hear what you've got going on, answer questions, and set up a free walkthrough at a time that works for you.</div>
+      <div class="booking-title">Our Team Will Reach Out Personally</div>
+      <div class="booking-sub">No automated texts, no call center. Someone from our team will call directly to hear what you've got going on, answer questions, and set up a free walkthrough at a time that works for you.</div>
     </div>
 
     <div class="proof-row" style="margin-top:24px;">
@@ -1082,7 +1082,7 @@ function updateEstimateDisplay() {
   if (hasSqft) {
     document.getElementById('estRange').textContent = fmt(state.lowEst) + ' – ' + fmt(state.highEst);
     document.getElementById('estSub').textContent = isLarge
-      ? 'This is a larger project - Jeff will reach out to walk through the details and give you a firm number.'
+      ? 'This is a larger project - someone from our team will reach out to walk through the details and give you a firm number.'
       : 'Based on your project scope. Final pricing confirmed after free site visit.';
   } else {
     document.getElementById('estRange').textContent = 'We\'ll price it on site';
@@ -1186,10 +1186,10 @@ async function submitForm() {
   // Update confirmation heading
   const firstName = document.getElementById('firstName').value.trim().split(' ')[0];
   document.getElementById('confirmTitle').textContent = isLarge
-    ? 'Got It, ' + firstName + ' - Jeff Will Call You'
+    ? 'Got It, ' + firstName + ' - We Will Be In Touch'
     : 'Here\'s Your Estimate, ' + firstName;
   document.getElementById('confirmSub').innerHTML = isLarge
-    ? 'Jeff will reach out personally - usually within a few hours. This is the part where you actually talk to the person doing the work, not a call center.'
+    ? 'Someone from our team will reach out personally - usually within a few hours.'
     : 'This is your ballpark based on what you\'ve shared. Someone from our team will call to walk you through it and schedule a free site visit - usually same day.';
 
   if (!isLarge) {
