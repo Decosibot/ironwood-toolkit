@@ -235,6 +235,66 @@
 }
 .chip strong { color: #fff; }
 
+/* ── VIEW TOGGLE ── */
+.view-toggle {
+  display: flex;
+  background: rgba(255,255,255,.08);
+  border-radius: 8px;
+  padding: 3px;
+  margin-bottom: 18px;
+  gap: 2px;
+}
+.view-toggle-btn {
+  flex: 1;
+  padding: 7px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255,255,255,.5);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.view-toggle-btn.active {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+}
+
+/* ── SPLIT VIEW ROWS ── */
+.mat-cost-your  { color: rgba(255,255,255,.6); font-size: 12px; }
+.mat-cost-client { color: #fff; font-weight: 700; }
+.mat-margin { color: #7EC98A; font-size: 11px; font-weight: 600; }
+
+/* ── TOTALS GRID ── */
+.totals-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  margin-top: 18px;
+}
+.totals-cell {
+  background: rgba(255,255,255,.07);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  text-align: center;
+}
+.totals-cell-label { font-size: 11px; color: rgba(255,255,255,.45); margin-bottom: 4px; }
+.totals-cell-value { font-size: 16px; font-weight: 700; color: #fff; }
+.totals-cell-value.green { color: #7EC98A; }
+.totals-cell-single {
+  grid-column: 1 / -1;
+  background: rgba(255,255,255,.08);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.totals-cell-single .label { font-size: 13px; color: rgba(255,255,255,.7); font-weight: 600; }
+.totals-cell-single .value { font-size: 22px; font-weight: 700; color: #fff; }
+
 /* ── PAGE LAYOUT ── */
 .mc-layout {
   display: grid;
@@ -269,7 +329,8 @@
 
 @media print {
   .iw-header, .iw-hero, .add-room-btn, .print-btn,
-  .proj-selector-card, .step-label { display: none !important; }
+  .proj-selector-card, .step-label, .view-toggle,
+  .internal-only { display: none !important; }
   .mc-layout { grid-template-columns: 1fr; }
   .results-wrapper {
     background: #fff !important;
@@ -278,13 +339,20 @@
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-  .results-title, .results-total-value, .mat-item-name, .mat-cost, .mat-qty { color: #000 !important; }
+  .results-title, .mat-item-name, .mat-qty { color: #000 !important; }
   .results-sub, .results-section-label, .mat-item-brand, .mat-table th,
-  .results-total-label, .chip, .waste-note { color: #555 !important; }
+  .chip, .waste-note { color: #555 !important; }
   .mat-table th { border-bottom-color: #ccc !important; }
   .mat-table td { border-bottom-color: #eee !important; }
-  .results-total-bar { background: #f5f5f5 !important; }
+  .totals-cell { background: #f5f5f5 !important; }
+  .totals-cell-label { color: #555 !important; }
+  .totals-cell-value { color: #000 !important; }
+  .totals-cell-single { background: #f5f5f5 !important; }
+  .totals-cell-single .label { color: #555 !important; }
+  .totals-cell-single .value { color: #000 !important; }
   .chip { background: #eee !important; border-color: #ccc !important; }
+  .mat-cost-client { color: #000 !important; }
+  .mat-cost-your, .mat-margin { display: none !important; }
 }
 </style>
 </head>
@@ -391,6 +459,9 @@
 let projectType = 'paint';
 let rooms = [];
 let roomCounter = 0;
+let viewMode = 'split'; // 'split' | 'client'
+
+const MARKUP = 1.10; // 10% over retail — what client pays
 
 // ── PROJECT CONFIG ──
 const PROJECT_CONFIG = {
@@ -944,6 +1015,14 @@ function calcBasement(lines, label, l, w, h, doors, windows, o) {
   }
 }
 
+// ── VIEW TOGGLE ──
+function setView(mode) {
+  viewMode = mode;
+  document.querySelectorAll('.view-toggle-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('btn-' + mode).classList.add('active');
+  recalc();
+}
+
 // ── RENDER RESULTS ──
 function renderResults(lines, hasData) {
   const body = document.getElementById('resultsBody');
@@ -955,57 +1034,101 @@ function renderResults(lines, hasData) {
     return;
   }
 
-  // Count rooms with data
-  const roomCount = rooms.filter(r => r.fields.length && r.fields.width).length;
   subtitle.textContent = `${PROJECT_CONFIG[projectType].label} — ${rooms.length} room${rooms.length !== 1 ? 's' : ''} — 20% waste factor included`;
 
-  // Build chips
-  const totalMaterials = lines.filter(l => l.total).reduce((s, l) => s + l.total, 0);
-  const chipsHTML = `
-    <div class="summary-chips">
-      <div class="chip"><strong>${lines.filter(l=>l.total).length}</strong> line items</div>
-      <div class="chip">20% waste built in</div>
-      <div class="chip">Mid-range pricing</div>
+  const matLines = lines.filter(l => l.total !== undefined);
+  const totalYour   = matLines.reduce((s, l) => s + l.total, 0);
+  const totalClient = matLines.reduce((s, l) => s + Math.round(l.total * MARKUP), 0);
+  const totalMargin = totalClient - totalYour;
+
+  // View toggle
+  const toggleHTML = `
+    <div class="view-toggle">
+      <button class="view-toggle-btn ${viewMode==='split'?'active':''}" id="btn-split" onclick="setView('split')">Split View (Internal)</button>
+      <button class="view-toggle-btn ${viewMode==='client'?'active':''}" id="btn-client" onclick="setView('client')">Client View</button>
     </div>`;
 
-  // Group lines by section
-  let html = chipsHTML;
-  let currentSection = null;
+  // Chips
+  const chipsHTML = `
+    <div class="summary-chips">
+      <div class="chip"><strong>${matLines.length}</strong> line items</div>
+      <div class="chip">20% waste built in</div>
+      <div class="chip">10% markup applied</div>
+    </div>`;
+
+  // Table header based on view
+  const thHTML = viewMode === 'split'
+    ? `<th>Item</th><th>Qty</th><th>Your Cost</th><th>Client Price</th><th>Margin</th>`
+    : `<th>Item</th><th>Qty</th><th>Price</th>`;
+
+  let html = toggleHTML + chipsHTML;
   let tableOpen = false;
 
   lines.forEach(line => {
     if (line.section !== undefined) {
       if (tableOpen) { html += '</tbody></table>'; tableOpen = false; }
       html += `<div class="results-section-label">${line.section}</div>`;
-      html += `<table class="mat-table"><thead><tr>
-        <th>Item</th><th>Qty</th><th>Est. Cost</th>
-      </tr></thead><tbody>`;
+      html += `<table class="mat-table"><thead><tr>${thHTML}</tr></thead><tbody>`;
       tableOpen = true;
-      currentSection = line.section;
       return;
     }
     if (!tableOpen) {
-      html += `<table class="mat-table"><thead><tr>
-        <th>Item</th><th>Qty</th><th>Est. Cost</th>
-      </tr></thead><tbody>`;
+      html += `<table class="mat-table"><thead><tr>${thHTML}</tr></thead><tbody>`;
       tableOpen = true;
     }
-    html += `<tr>
-      <td><div class="mat-item-name">${line.name}</div><div class="mat-item-brand">${line.brand}</div></td>
-      <td><span class="mat-qty">${line.qty}</span></td>
-      <td><span class="mat-cost">${fmtMoney(line.total)}</span></td>
-    </tr>`;
+    const yourCost    = line.total;
+    const clientPrice = Math.round(line.total * MARKUP);
+    const margin      = clientPrice - yourCost;
+
+    if (viewMode === 'split') {
+      html += `<tr>
+        <td><div class="mat-item-name">${line.name}</div><div class="mat-item-brand">${line.brand}</div></td>
+        <td><span class="mat-qty">${line.qty}</span></td>
+        <td><span class="mat-cost-your">${fmtMoney(yourCost)}</span></td>
+        <td><span class="mat-cost-client">${fmtMoney(clientPrice)}</span></td>
+        <td><span class="mat-margin">+${fmtMoney(margin)}</span></td>
+      </tr>`;
+    } else {
+      html += `<tr>
+        <td><div class="mat-item-name">${line.name}</div><div class="mat-item-brand">${line.brand}</div></td>
+        <td><span class="mat-qty">${line.qty}</span></td>
+        <td><span class="mat-cost-client">${fmtMoney(clientPrice)}</span></td>
+      </tr>`;
+    }
   });
 
   if (tableOpen) html += '</tbody></table>';
 
+  // Totals
+  if (viewMode === 'split') {
+    html += `
+      <div class="totals-grid internal-only">
+        <div class="totals-cell">
+          <div class="totals-cell-label">Your Cost</div>
+          <div class="totals-cell-value">${fmtMoney(totalYour)}</div>
+        </div>
+        <div class="totals-cell">
+          <div class="totals-cell-label">Client Price</div>
+          <div class="totals-cell-value">${fmtMoney(totalClient)}</div>
+        </div>
+        <div class="totals-cell">
+          <div class="totals-cell-label">Material Margin</div>
+          <div class="totals-cell-value green">+${fmtMoney(totalMargin)}</div>
+        </div>
+      </div>`;
+  } else {
+    html += `
+      <div class="totals-grid">
+        <div class="totals-cell-single">
+          <span class="label">Total Materials</span>
+          <span class="value">${fmtMoney(totalClient)}</span>
+        </div>
+      </div>`;
+  }
+
   html += `
-    <div class="results-total-bar">
-      <span class="results-total-label">Estimated Materials Total</span>
-      <span class="results-total-value">${fmtMoney(totalMaterials)}</span>
-    </div>
-    <div class="waste-note">All quantities include 20% waste factor. Prices are mid-range estimates — client supplies all materials.</div>
-    <button class="print-btn" onclick="window.print()">Print / Save as PDF</button>`;
+    <div class="waste-note" style="margin-top:12px;">All quantities include 20% waste factor. Mid-range material pricing.</div>
+    <button class="print-btn" onclick="window.print()">Print Client Sheet (PDF)</button>`;
 
   body.innerHTML = html;
 }
