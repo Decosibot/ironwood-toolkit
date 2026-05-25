@@ -664,6 +664,16 @@
 </head>
 <body>
 
+<!-- LOAD DEAL BAR -->
+<div id="iw-deal-bar" style="width:100%;background:#1a2a1f;border-bottom:1px solid #2d4a35;padding:10px 24px;display:flex;align-items:center;gap:12px;font-size:13px;flex-wrap:wrap;">
+  <span style="color:#7EC98A;font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:11px;">Load Deal</span>
+  <select id="iw-deal-select" style="background:#0f1f14;border:1px solid #2d4a35;color:#e8f5e9;padding:6px 12px;border-radius:6px;font-size:13px;min-width:260px;" onchange="iwLoadDeal()">
+    <option value="">— Select from Property Pipeline —</option>
+  </select>
+  <span id="iw-deal-badge" style="display:none;background:#2d4a35;color:#7EC98A;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;"></span>
+  <a href="Property_Pipeline.html" style="margin-left:auto;color:#7EC98A;font-size:12px;text-decoration:none;opacity:.7;">Open Pipeline →</a>
+</div>
+
 <!-- TOPBAR -->
 <div id="topbar">
   <div id="logo-badge">L</div>
@@ -866,6 +876,41 @@
 </div>
 
 <script>
+  // ── DEAL LOADER ──
+  function iwPopulateDeals() {
+    try {
+      const deals = JSON.parse(localStorage.getItem('ironwood_deals') || '[]');
+      const sel = document.getElementById('iw-deal-select');
+      sel.innerHTML = '<option value="">— Select from Property Pipeline —</option>';
+      deals.forEach(d => {
+        const label = [d.address, d.city, d.state].filter(Boolean).join(', ') || 'Unnamed Deal';
+        const opt = document.createElement('option');
+        opt.value = d.id;
+        opt.textContent = `${label} · ${d.stage || ''}`;
+        opt.dataset.deal = JSON.stringify(d);
+        sel.appendChild(opt);
+      });
+    } catch(e) {}
+  }
+
+  function iwLoadDeal() {
+    const sel = document.getElementById('iw-deal-select');
+    const opt = sel.options[sel.selectedIndex];
+    if (!opt || !opt.dataset.deal) return;
+    const d = JSON.parse(opt.dataset.deal);
+    const badge = document.getElementById('iw-deal-badge');
+    badge.textContent = [d.address, d.city].filter(Boolean).join(', ');
+    badge.style.display = 'inline-block';
+    const addr = [d.address, d.city, d.state].filter(Boolean).join(', ');
+    if (addr) document.getElementById('job-address').value = addr;
+    if (d.clientName)  document.getElementById('client-name').value  = d.clientName;
+    if (d.clientPhone) document.getElementById('client-phone').value = d.clientPhone;
+    if (d.clientEmail) document.getElementById('client-email').value = d.clientEmail;
+  }
+
+  iwPopulateDeals();
+  window.addEventListener('storage', e => { if (e.key === 'ironwood_deals') iwPopulateDeals(); });
+
   /* ── HELPERS ── */
   function uid() {
     return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
