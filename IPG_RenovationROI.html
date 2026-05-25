@@ -321,7 +321,7 @@
           <div class="iw-card-title" style="margin-bottom:0;">Choose Your Renovations</div>
           <span class="selected-count" id="selectedCount">0 selected</span>
         </div>
-        <p class="iw-card-sub" style="margin-bottom:20px;">Toggle any renovation to add it to your plan. Results update instantly.</p>
+        <p class="iw-card-sub" style="margin-bottom:20px;">Toggle any renovation to add it to your plan. Results update instantly. All cost ranges are all-in estimates — materials and labor included.</p>
 
         <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:20px;align-items:center;">
           <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#2D6A4F;display:inline-block;"></span> ROI &gt; 80% — High return</span>
@@ -471,7 +471,7 @@ const RENOS = [
   { id:'garage',   name:'Garage Door Replacement',                   costLo:1200,  costHi:2500,  valueAdded:4500,  note:'Extremely high ROI' },
   { id:'smart',    name:'Smart Home Upgrades',                       costLo:2000,  costHi:5000,  valueAdded:4000,  note:'Thermostat, locks, lights' },
   { id:'deck',     name:'Deck / Patio Addition',                     costLo:8000,  costHi:20000, valueAdded:12000, note:'Outdoor living demand in ATL' },
-  { id:'basement', name:'Basement Finish',                           costLo:20000, costHi:40000, valueAdded:28000, note:'Adds sq footage and bedrooms' },
+  { id:'basement', name:'Basement Finish (living, bed, bath)',       costLo:35000, costHi:75000, valueAdded:65000, note:'Adds livable sq ft — bedroom, full bath, living area. Highest absolute value add.' },
 ];
 
 // Compute mid cost and ROI for each reno
@@ -511,7 +511,7 @@ function buildGrid() {
       </div>
       <div class="reno-card-stats">
         <div class="reno-mini-stat">
-          <div class="reno-mini-label">Cost Range</div>
+          <div class="reno-mini-label">All-In Cost (materials + labor)</div>
           <div class="reno-mini-value">$${(r.costLo/1000).toFixed(0)}k–$${(r.costHi/1000).toFixed(0)}k</div>
         </div>
         <div class="reno-mini-stat">
