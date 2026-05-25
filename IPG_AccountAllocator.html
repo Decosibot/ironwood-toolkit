@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Account Allocator - Ironwood Homes and Renovations</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+.alloc-hero {
+  background: var(--ink); color: var(--bg);
+  padding: 48px 40px 40px; text-align: center;
+}
+.alloc-hero-eyebrow {
+  font-size: 11px; color: var(--bronze); text-transform: uppercase;
+  letter-spacing: .16em; font-weight: 500; margin-bottom: 12px; font-family: var(--sans);
+}
+.alloc-hero-title {
+  font-family: var(--serif); font-size: clamp(28px, 5vw, 42px);
+  font-weight: 400; margin-bottom: 10px; letter-spacing: -.02em;
+}
+.alloc-hero-sub {
+  font-size: 14px; color: var(--muted-2,#B0AEB0); max-width: 500px;
+  margin: 0 auto; line-height: 1.6; font-family: var(--sans);
+}
+
+/* Input card */
+.input-card {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg); padding: 28px 32px; margin-bottom: 24px;
+}
+.input-row {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px;
+}
+@media(max-width:560px){ .input-row { grid-template-columns: 1fr; } }
+.input-group { display: flex; flex-direction: column; gap: 6px; }
+.input-prefix-wrap {
+  position: relative; display: flex; align-items: center;
+}
+.input-prefix {
+  position: absolute; left: 12px; font-size: 14px; color: var(--muted);
+  font-family: var(--sans); pointer-events: none;
+}
+.input-prefix-wrap .iw-input { padding-left: 24px; }
+.phase-toggle {
+  display: flex; gap: 8px; margin-bottom: 8px;
+}
+.phase-btn {
+  flex: 1; padding: 10px; border: 2px solid var(--hairline-2);
+  border-radius: var(--radius-sm); background: var(--surface-2);
+  font-family: var(--sans); font-size: 12px; font-weight: 600;
+  color: var(--muted); cursor: pointer; text-align: center; transition: all .2s;
+}
+.phase-btn.active { border-color: var(--bronze); background: var(--bronze-wash); color: var(--ink); }
+.phase-note {
+  font-size: 11px; color: var(--muted); font-family: var(--sans);
+  margin-top: 4px; line-height: 1.5;
+}
+
+/* Results */
+.results-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
+  gap: 16px; margin-bottom: 24px;
+}
+.account-card {
+  border-radius: var(--radius-lg); padding: 22px 24px;
+  border: 1.5px solid var(--hairline);
+  background: var(--surface);
+  position: relative; overflow: hidden;
+}
+.account-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+}
+.account-card.ops::before    { background: var(--blustery-sky,#6F848B); }
+.account-card.payroll::before { background: var(--nocturne,#5E584F); }
+.account-card.tax::before     { background: #B0463C; }
+.account-card.profit::before  { background: #4F7A4A; }
+.account-card.income::before  { background: var(--moonlit-orchid,#949294); }
+
+.ac-label {
+  font-size: 10px; text-transform: uppercase; letter-spacing: .1em;
+  font-weight: 600; font-family: var(--sans); color: var(--muted); margin-bottom: 6px;
+}
+.ac-name {
+  font-family: var(--serif); font-size: 20px; color: var(--ink);
+  margin-bottom: 14px; letter-spacing: -.01em;
+}
+.ac-amount {
+  font-family: var(--serif); font-size: 32px; color: var(--bronze-deep);
+  letter-spacing: -.02em; margin-bottom: 4px;
+}
+.ac-pct {
+  font-size: 12px; color: var(--muted); font-family: var(--sans); margin-bottom: 16px;
+}
+.ac-bar-track {
+  height: 6px; background: var(--hairline); border-radius: 4px; overflow: hidden; margin-bottom: 14px;
+}
+.ac-bar-fill {
+  height: 100%; border-radius: 4px; transition: width .5s cubic-bezier(.4,0,.2,1);
+}
+.account-card.ops    .ac-bar-fill { background: var(--blustery-sky,#6F848B); }
+.account-card.payroll .ac-bar-fill { background: var(--nocturne,#5E584F); }
+.account-card.tax    .ac-bar-fill { background: #B0463C; }
+.account-card.profit .ac-bar-fill { background: #4F7A4A; }
+.account-card.income .ac-bar-fill { background: var(--moonlit-orchid,#949294); }
+
+.ac-desc { font-size: 12px; color: var(--muted); font-family: var(--sans); line-height: 1.55; }
+
+/* Payroll breakdown */
+.payroll-breakdown {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg); padding: 24px 28px; margin-bottom: 24px;
+}
+.pb-title {
+  font-family: var(--serif); font-size: 18px; color: var(--ink);
+  margin-bottom: 4px;
+}
+.pb-sub {
+  font-size: 12px; color: var(--muted); font-family: var(--sans); margin-bottom: 20px;
+}
+.pb-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--hairline);
+  font-family: var(--sans); font-size: 13px;
+}
+.pb-row:last-child { border-bottom: none; }
+.pb-name { color: var(--ink); font-weight: 500; }
+.pb-detail { color: var(--muted); font-size: 11px; margin-top: 2px; }
+.pb-amount { font-weight: 700; color: var(--ink); }
+.pb-amount.highlight { color: var(--bronze-deep); font-family: var(--serif); font-size: 16px; }
+
+/* Profit split */
+.profit-split {
+  background: var(--surface); border: 1px solid var(--hairline);
+  border-radius: var(--radius-lg); padding: 24px 28px; margin-bottom: 24px;
+}
+.split-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--hairline);
+  font-family: var(--sans); font-size: 13px;
+}
+.split-row:last-child { border-bottom: none; }
+.split-name { color: var(--ink); font-weight: 500; }
+.split-pct { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.split-amount { font-weight: 700; font-family: var(--serif); font-size: 18px; color: var(--bronze-deep); }
+.split-zero { color: var(--muted); font-size: 13px; font-family: var(--sans); }
+
+/* Sweep schedule */
+.sweep-card {
+  background: var(--bronze-wash); border: 1px solid var(--bronze-border);
+  border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px;
+  font-family: var(--sans); font-size: 13px; color: var(--ink-soft);
+  line-height: 1.6;
+}
+.sweep-card strong { color: var(--ink); }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header class="iw-header">
+  <a href="index.html" class="iw-logo-area">
+    <div class="iw-logo-box"><em>I</em></div>
+    <div class="iw-logo-text">Ironwood Homes and Renovations</div>
+  </a>
+  <div class="iw-header-right">
+    <a href="index.html" class="iw-btn iw-btn-outline" style="font-size:13px;">Back to Toolkit</a>
+  </div>
+</header>
+
+<div class="alloc-hero">
+  <div class="alloc-hero-eyebrow">Profit First · Internal</div>
+  <div class="alloc-hero-title">Account Allocator</div>
+  <div class="alloc-hero-sub">Enter project revenue and monthly overhead. See exactly how much flows to each account and who gets paid what.</div>
+</div>
+
+<div class="iw-container-sm" style="padding-top:32px;padding-bottom:60px;">
+
+  <!-- Input card -->
+  <div class="input-card">
+    <div class="iw-label" style="margin-bottom:12px;font-size:13px;font-weight:700;">Project Phase</div>
+    <div class="phase-toggle">
+      <div class="phase-btn active" id="phase1Btn" onclick="setPhase(1)">Phase 1 — Hourly</div>
+      <div class="phase-btn" id="phase2Btn" onclick="setPhase(2)">Phase 2 — % Split</div>
+    </div>
+    <div class="phase-note" id="phaseNote">Phase 1: Jeff and Ty bill hourly as operating expenses before the profit split.</div>
+
+    <div class="input-row" style="margin-top:24px;">
+      <div class="input-group">
+        <label class="iw-label">Project Revenue (gross)</label>
+        <div class="input-prefix-wrap">
+          <span class="input-prefix">$</span>
+          <input class="iw-input" type="number" id="revenue" placeholder="e.g. 85000" min="0" oninput="calculate()"/>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="iw-label">Hard Costs (materials, subs, carrying)</label>
+        <div class="input-prefix-wrap">
+          <span class="input-prefix">$</span>
+          <input class="iw-input" type="number" id="hardCosts" placeholder="e.g. 43000" min="0" oninput="calculate()"/>
+        </div>
+      </div>
+    </div>
+
+    <div class="input-row" id="hourlyRow">
+      <div class="input-group">
+        <label class="iw-label">Jeff's Hours This Project</label>
+        <input class="iw-input" type="number" id="jeffHours" placeholder="e.g. 120" min="0" oninput="calculate()"/>
+      </div>
+      <div class="input-group">
+        <label class="iw-label">Ty's Hours This Project</label>
+        <input class="iw-input" type="number" id="tyHours" placeholder="e.g. 40" min="0" oninput="calculate()"/>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <div class="input-group">
+        <label class="iw-label">Jordan's Monthly Salary</label>
+        <div class="input-prefix-wrap">
+          <span class="input-prefix">$</span>
+          <input class="iw-input" type="number" id="jordanSalary" value="3500" min="0" oninput="calculate()"/>
+        </div>
+      </div>
+      <div class="input-group">
+        <label class="iw-label">Project Duration (months)</label>
+        <input class="iw-input" type="number" id="projectMonths" value="1" min="0.25" step="0.25" oninput="calculate()"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account cards -->
+  <div class="results-grid" id="resultsGrid" style="display:none;">
+    <div class="account-card income">
+      <div class="ac-label">Account 1</div>
+      <div class="ac-name">Income</div>
+      <div class="ac-amount" id="ac-income">$0</div>
+      <div class="ac-pct">All revenue lands here first</div>
+      <div class="ac-bar-track"><div class="ac-bar-fill" id="bar-income" style="width:100%"></div></div>
+      <div class="ac-desc">Holding account only. Swept to other accounts on the 1st and 15th of each month.</div>
+    </div>
+    <div class="account-card ops">
+      <div class="ac-label">Account 2</div>
+      <div class="ac-name">Operations</div>
+      <div class="ac-amount" id="ac-ops">$0</div>
+      <div class="ac-pct" id="pct-ops">—</div>
+      <div class="ac-bar-track"><div class="ac-bar-fill" id="bar-ops" style="width:0%"></div></div>
+      <div class="ac-desc">Hard costs, vendor payments, materials, subs, software, tools, ad spend.</div>
+    </div>
+    <div class="account-card payroll">
+      <div class="ac-label">Account 3</div>
+      <div class="ac-name">Payroll</div>
+      <div class="ac-amount" id="ac-payroll">$0</div>
+      <div class="ac-pct" id="pct-payroll">—</div>
+      <div class="ac-bar-track"><div class="ac-bar-fill" id="bar-payroll" style="width:0%"></div></div>
+      <div class="ac-desc">Jeff and Ty salaries ($5K/mo each) + Jordan's salary + hourly billing in Phase 1.</div>
+    </div>
+    <div class="account-card tax">
+      <div class="ac-label">Account 4</div>
+      <div class="ac-name">Tax Reserve</div>
+      <div class="ac-amount" id="ac-tax">$0</div>
+      <div class="ac-pct" id="pct-tax">—</div>
+      <div class="ac-bar-track"><div class="ac-bar-fill" id="bar-tax" style="width:0%"></div></div>
+      <div class="ac-desc">Set aside for quarterly IRS estimated payments. Never touch this account for operations.</div>
+    </div>
+    <div class="account-card profit">
+      <div class="ac-label">Account 5</div>
+      <div class="ac-name">Profit &amp; Reinvestment</div>
+      <div class="ac-amount" id="ac-profit">$0</div>
+      <div class="ac-pct" id="pct-profit">—</div>
+      <div class="ac-bar-track"><div class="ac-bar-fill" id="bar-profit" style="width:0%"></div></div>
+      <div class="ac-desc">Net distributable profit split 35/30/35. Ironwood's 35% stays here for next deal.</div>
+    </div>
+  </div>
+
+  <!-- Payroll breakdown -->
+  <div class="payroll-breakdown hidden" id="payrollBreakdown">
+    <div class="pb-title">Payroll Breakdown</div>
+    <div class="pb-sub">Who gets paid from the payroll account this project</div>
+    <div class="pb-row">
+      <div>
+        <div class="pb-name">Jeff Sarabia</div>
+        <div class="pb-detail" id="jeff-detail">$5,000/mo salary</div>
+      </div>
+      <div class="pb-amount highlight" id="jeff-total">$0</div>
+    </div>
+    <div class="pb-row">
+      <div>
+        <div class="pb-name">Ty Jackson</div>
+        <div class="pb-detail" id="ty-detail">$5,000/mo salary</div>
+      </div>
+      <div class="pb-amount highlight" id="ty-total">$0</div>
+    </div>
+    <div class="pb-row">
+      <div>
+        <div class="pb-name">Jordan Sarabia</div>
+        <div class="pb-detail" id="jordan-detail">W-2 salary</div>
+      </div>
+      <div class="pb-amount highlight" id="jordan-total">$0</div>
+    </div>
+    <div class="pb-row" style="background:var(--bronze-wash);margin:0 -28px;padding:10px 28px;border-radius:0 0 var(--radius-lg) var(--radius-lg);">
+      <div class="pb-name" style="font-weight:700;">Total Payroll</div>
+      <div class="pb-amount highlight" id="payroll-total">$0</div>
+    </div>
+  </div>
+
+  <!-- Profit split -->
+  <div class="profit-split hidden" id="profitSplit">
+    <div class="pb-title">Net Profit Split</div>
+    <div class="pb-sub">After hard costs and payroll — 35 / 30 / 35</div>
+    <div class="split-row">
+      <div>
+        <div class="split-name">Landon Renovations — Jeff</div>
+        <div class="split-pct">35% of net profit</div>
+      </div>
+      <div class="split-amount" id="split-landon">$0</div>
+    </div>
+    <div class="split-row">
+      <div>
+        <div class="split-name">Anchor Pro Solutions — Ty</div>
+        <div class="split-pct">30% of net profit</div>
+      </div>
+      <div class="split-amount" id="split-anchor">$0</div>
+    </div>
+    <div class="split-row">
+      <div>
+        <div class="split-name">Ironwood LLC — Reinvest</div>
+        <div class="split-pct">35% of net profit</div>
+      </div>
+      <div class="split-amount" id="split-ironwood">$0</div>
+    </div>
+    <div class="split-row" style="background:var(--bronze-wash);margin:0 -28px;padding:10px 28px;border-radius:0 0 var(--radius-lg) var(--radius-lg);">
+      <div class="split-name" style="font-weight:700;">Net Distributable Profit</div>
+      <div class="split-amount" id="split-net">$0</div>
+    </div>
+  </div>
+
+  <!-- Sweep reminder -->
+  <div class="sweep-card" id="sweepCard" style="display:none;">
+    <strong>Profit First Sweep Schedule</strong><br>
+    On the <strong>1st and 15th</strong> of each month, transfer from Income to each account per these allocations. Keep a minimum <strong>$10,000 operating reserve</strong> in Operations at all times. Tax Reserve is untouchable — only used for quarterly IRS payments.
+  </div>
+
+</div>
+
+<footer class="iw-footer">
+  &copy; 2026 Ironwood Homes and Renovations &nbsp;&middot;&nbsp; <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a>
+</footer>
+
+<script>
+let phase = 1;
+
+const JEFF_SALARY  = 5000;
+const TY_SALARY    = 5000;
+const JEFF_HOURLY  = 50;
+const TY_HOURLY    = 30;
+const TAX_RATE     = 0.18;
+
+function setPhase(n) {
+  phase = n;
+  document.getElementById('phase1Btn').classList.toggle('active', n === 1);
+  document.getElementById('phase2Btn').classList.toggle('active', n === 2);
+  document.getElementById('hourlyRow').style.display = n === 1 ? '' : 'none';
+  document.getElementById('phaseNote').textContent = n === 1
+    ? 'Phase 1: Jeff and Ty bill hourly as operating expenses before the profit split.'
+    : 'Phase 2: Hourly billing stops. Jeff and Ty receive salary + 35%/30% profit split only.';
+  calculate();
+}
+
+function fmt(n) {
+  return '$' + Math.round(n).toLocaleString();
+}
+
+function pct(part, total) {
+  if (!total) return '0%';
+  return Math.round(part / total * 100) + '% of revenue';
+}
+
+function calculate() {
+  const revenue     = parseFloat(document.getElementById('revenue').value) || 0;
+  const hardCosts   = parseFloat(document.getElementById('hardCosts').value) || 0;
+  const jordanSal   = parseFloat(document.getElementById('jordanSalary').value) || 0;
+  const months      = parseFloat(document.getElementById('projectMonths').value) || 1;
+  const jeffHours   = phase === 1 ? (parseFloat(document.getElementById('jeffHours').value) || 0) : 0;
+  const tyHours     = phase === 1 ? (parseFloat(document.getElementById('tyHours').value) || 0) : 0;
+
+  if (!revenue) {
+    document.getElementById('resultsGrid').style.display = 'none';
+    document.getElementById('payrollBreakdown').classList.add('hidden');
+    document.getElementById('profitSplit').classList.add('hidden');
+    document.getElementById('sweepCard').style.display = 'none';
+    return;
+  }
+
+  // Payroll calculations
+  const jeffSalaryTotal  = JEFF_SALARY * months;
+  const tySalaryTotal    = TY_SALARY * months;
+  const jordanTotal      = jordanSal * months;
+  const jeffHourlyTotal  = jeffHours * JEFF_HOURLY;
+  const tyHourlyTotal    = tyHours * TY_HOURLY;
+
+  const jeffTotal   = jeffSalaryTotal + jeffHourlyTotal;
+  const tyTotal     = tySalaryTotal + tyHourlyTotal;
+  const payrollTotal = jeffTotal + tyTotal + jordanTotal;
+
+  // Account allocations
+  const opsAmount     = hardCosts;
+  const taxAmount     = Math.round(revenue * TAX_RATE);
+  const netProfit     = Math.max(0, revenue - hardCosts - payrollTotal - taxAmount);
+  const splitLandon   = netProfit * 0.35;
+  const splitAnchor   = netProfit * 0.30;
+  const splitIronwood = netProfit * 0.35;
+
+  // Update account cards
+  document.getElementById('resultsGrid').style.display = '';
+  document.getElementById('ac-income').textContent   = fmt(revenue);
+  document.getElementById('ac-ops').textContent      = fmt(opsAmount);
+  document.getElementById('ac-payroll').textContent  = fmt(payrollTotal);
+  document.getElementById('ac-tax').textContent      = fmt(taxAmount);
+  document.getElementById('ac-profit').textContent   = fmt(netProfit);
+
+  document.getElementById('pct-ops').textContent     = pct(opsAmount, revenue);
+  document.getElementById('pct-payroll').textContent = pct(payrollTotal, revenue);
+  document.getElementById('pct-tax').textContent     = pct(taxAmount, revenue);
+  document.getElementById('pct-profit').textContent  = pct(netProfit, revenue);
+
+  // Bar widths relative to revenue
+  const bar = (v) => Math.min(100, Math.round(v / revenue * 100)) + '%';
+  document.getElementById('bar-ops').style.width     = bar(opsAmount);
+  document.getElementById('bar-payroll').style.width = bar(payrollTotal);
+  document.getElementById('bar-tax').style.width     = bar(taxAmount);
+  document.getElementById('bar-profit').style.width  = bar(netProfit);
+
+  // Payroll breakdown
+  document.getElementById('payrollBreakdown').classList.remove('hidden');
+  document.getElementById('jeff-total').textContent  = fmt(jeffTotal);
+  document.getElementById('ty-total').textContent    = fmt(tyTotal);
+  document.getElementById('jordan-total').textContent = fmt(jordanTotal);
+  document.getElementById('payroll-total').textContent = fmt(payrollTotal);
+
+  const jeffDetail = phase === 1
+    ? fmt(jeffSalaryTotal) + ' salary + ' + fmt(jeffHourlyTotal) + ' hourly (' + jeffHours + ' hrs @ $50)'
+    : fmt(jeffSalaryTotal) + ' salary (' + months + ' mo × $5,000)';
+  const tyDetail = phase === 1
+    ? fmt(tySalaryTotal) + ' salary + ' + fmt(tyHourlyTotal) + ' hourly (' + tyHours + ' hrs @ $30)'
+    : fmt(tySalaryTotal) + ' salary (' + months + ' mo × $5,000)';
+
+  document.getElementById('jeff-detail').textContent   = jeffDetail;
+  document.getElementById('ty-detail').textContent     = tyDetail;
+  document.getElementById('jordan-detail').textContent = fmt(jordanTotal) + ' salary (' + months + ' mo × ' + fmt(jordanSal) + ')';
+
+  // Profit split
+  document.getElementById('profitSplit').classList.remove('hidden');
+  document.getElementById('split-landon').textContent   = fmt(splitLandon);
+  document.getElementById('split-anchor').textContent   = fmt(splitAnchor);
+  document.getElementById('split-ironwood').textContent = fmt(splitIronwood);
+  document.getElementById('split-net').textContent      = fmt(netProfit);
+
+  document.getElementById('sweepCard').style.display = '';
+}
+
+// Init
+setPhase(1);
+</script>
+
+</body>
+</html>
