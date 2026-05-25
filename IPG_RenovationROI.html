@@ -321,7 +321,7 @@
           <div class="iw-card-title" style="margin-bottom:0;">Choose Your Renovations</div>
           <span class="selected-count" id="selectedCount">0 selected</span>
         </div>
-        <p class="iw-card-sub" style="margin-bottom:20px;">Toggle any renovation to add it to your plan. Results update instantly. All cost ranges are all-in estimates — materials and labor included.</p>
+        <p class="iw-card-sub" style="margin-bottom:20px;">Toggle any renovation to build your plan. Labor costs shown are what Ironwood charges — you supply the materials. ROI and net gain reflect labor cost only.</p>
 
         <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-bottom:20px;align-items:center;">
           <span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;border-radius:50%;background:#2D6A4F;display:inline-block;"></span> ROI &gt; 80% — High return</span>
@@ -346,7 +346,7 @@
 
         <div id="resultsContent" style="display:none;">
           <div class="stat-row">
-            <span class="stat-row-label">Total Budget</span>
+            <span class="stat-row-label">Total Labor Cost</span>
             <span class="stat-row-value" id="rTotalBudget">$0</span>
           </div>
           <div class="stat-row">
@@ -368,7 +368,7 @@
 
           <div class="progress-section">
             <div class="progress-section-label">
-              <span>Budget</span>
+              <span>Labor Cost</span>
               <span>Value Added</span>
             </div>
             <div style="position:relative;">
@@ -453,30 +453,33 @@ function getUTM() {
 }
 
 // ── Renovation Data ──
+// costLo/costHi = all-in (materials + labor) for reference
+// laborLo/laborHi = labor only — what Ironwood charges (client supplies materials)
 const RENOS = [
-  { id:'paint',    name:'Interior Paint (whole home)',               costLo:3500,  costHi:6000,  valueAdded:8500,  note:'Highest ROI per dollar' },
-  { id:'staging',  name:'Deep Clean + Staging',                      costLo:1500,  costHi:3000,  valueAdded:7000,  note:'Fastest turnaround' },
-  { id:'curb',     name:'Landscaping / Curb Appeal',                 costLo:2000,  costHi:5000,  valueAdded:9000,  note:'First impression' },
-  { id:'krefresh', name:'Kitchen Refresh (hardware, paint, fixtures)',costLo:4000,  costHi:8000,  valueAdded:12000, note:'Not a full remodel' },
-  { id:'kremodel', name:'Full Kitchen Remodel',                      costLo:25000, costHi:45000, valueAdded:35000, note:'Only if significantly outdated' },
-  { id:'bathref',  name:'Primary Bath Refresh',                      costLo:5000,  costHi:10000, valueAdded:14000, note:'Grout, fixtures, vanity' },
-  { id:'bathremo', name:'Full Bath Remodel',                         costLo:15000, costHi:28000, valueAdded:22000, note:'Full gut and redo' },
-  { id:'flooring', name:'New Flooring (LVP whole home)',             costLo:8000,  costHi:14000, valueAdded:18000, note:'Major visual impact' },
-  { id:'carpet',   name:'Carpet Replacement',                        costLo:3500,  costHi:6500,  valueAdded:7500,  note:'Bedrooms only' },
-  { id:'extpaint', name:'Exterior Paint / Siding',                   costLo:6000,  costHi:12000, valueAdded:14000, note:'Major curb appeal' },
-  { id:'roof',     name:'Roof Replacement',                          costLo:10000, costHi:18000, valueAdded:15000, note:'Required for most financing' },
-  { id:'hvac',     name:'HVAC Replacement',                          costLo:8000,  costHi:14000, valueAdded:10000, note:'Kills deals if failed inspection' },
-  { id:'wh',       name:'Water Heater Replacement',                  costLo:1200,  costHi:2500,  valueAdded:3500,  note:'Often required' },
-  { id:'windows',  name:'Window Replacement',                        costLo:8000,  costHi:18000, valueAdded:12000, note:'Energy efficiency + aesthetics' },
-  { id:'garage',   name:'Garage Door Replacement',                   costLo:1200,  costHi:2500,  valueAdded:4500,  note:'Extremely high ROI' },
-  { id:'smart',    name:'Smart Home Upgrades',                       costLo:2000,  costHi:5000,  valueAdded:4000,  note:'Thermostat, locks, lights' },
-  { id:'deck',     name:'Deck / Patio Addition',                     costLo:8000,  costHi:20000, valueAdded:12000, note:'Outdoor living demand in ATL' },
-  { id:'basement', name:'Basement Finish (living, bed, bath)',       costLo:35000, costHi:75000, valueAdded:65000, note:'Adds livable sq ft — bedroom, full bath, living area. Highest absolute value add.' },
+  { id:'paint',    name:'Interior Paint (whole home)',               costLo:3500,  costHi:6000,  laborLo:2500,  laborHi:4500,  valueAdded:8500,  note:'Highest ROI per dollar' },
+  { id:'staging',  name:'Deep Clean + Staging',                      costLo:1500,  costHi:3000,  laborLo:1500,  laborHi:3000,  valueAdded:7000,  note:'Fastest turnaround' },
+  { id:'curb',     name:'Landscaping / Curb Appeal',                 costLo:2000,  costHi:5000,  laborLo:1200,  laborHi:3000,  valueAdded:9000,  note:'First impression' },
+  { id:'krefresh', name:'Kitchen Refresh (hardware, paint, fixtures)',costLo:4000,  costHi:8000,  laborLo:2000,  laborHi:4000,  valueAdded:12000, note:'Not a full remodel' },
+  { id:'kremodel', name:'Full Kitchen Remodel',                      costLo:25000, costHi:45000, laborLo:12000, laborHi:22000, valueAdded:35000, note:'Only if significantly outdated' },
+  { id:'bathref',  name:'Primary Bath Refresh',                      costLo:5000,  costHi:10000, laborLo:2500,  laborHi:5000,  valueAdded:14000, note:'Grout, fixtures, vanity' },
+  { id:'bathremo', name:'Full Bath Remodel',                         costLo:15000, costHi:28000, laborLo:7000,  laborHi:13000, valueAdded:22000, note:'Full gut and redo' },
+  { id:'flooring', name:'New Flooring (LVP whole home)',             costLo:8000,  costHi:14000, laborLo:3500,  laborHi:6000,  valueAdded:18000, note:'Major visual impact' },
+  { id:'carpet',   name:'Carpet Replacement',                        costLo:3500,  costHi:6500,  laborLo:1200,  laborHi:2500,  valueAdded:7500,  note:'Bedrooms only' },
+  { id:'extpaint', name:'Exterior Paint / Siding',                   costLo:6000,  costHi:12000, laborLo:4000,  laborHi:8000,  valueAdded:14000, note:'Major curb appeal' },
+  { id:'roof',     name:'Roof Replacement',                          costLo:10000, costHi:18000, laborLo:4000,  laborHi:7500,  valueAdded:15000, note:'Required for most financing' },
+  { id:'hvac',     name:'HVAC Replacement',                          costLo:8000,  costHi:14000, laborLo:2500,  laborHi:5000,  valueAdded:10000, note:'Kills deals if failed inspection' },
+  { id:'wh',       name:'Water Heater Replacement',                  costLo:1200,  costHi:2500,  laborLo:400,   laborHi:800,   valueAdded:3500,  note:'Often required' },
+  { id:'windows',  name:'Window Replacement',                        costLo:8000,  costHi:18000, laborLo:3000,  laborHi:7000,  valueAdded:12000, note:'Energy efficiency + aesthetics' },
+  { id:'garage',   name:'Garage Door Replacement',                   costLo:1200,  costHi:2500,  laborLo:400,   laborHi:800,   valueAdded:4500,  note:'Extremely high ROI' },
+  { id:'smart',    name:'Smart Home Upgrades',                       costLo:2000,  costHi:5000,  laborLo:800,   laborHi:2000,  valueAdded:4000,  note:'Thermostat, locks, lights' },
+  { id:'deck',     name:'Deck / Patio Addition',                     costLo:8000,  costHi:20000, laborLo:4000,  laborHi:10000, valueAdded:12000, note:'Outdoor living demand in ATL' },
+  { id:'basement', name:'Basement Finish (living, bed, bath)',       costLo:35000, costHi:75000, laborLo:18000, laborHi:38000, valueAdded:65000, note:'Adds livable sq ft — bedroom, full bath, living area. Highest absolute value add.' },
 ];
 
-// Compute mid cost and ROI for each reno
+// Compute mid cost and ROI for each reno — ROI based on labor cost (client covers materials)
 RENOS.forEach(r => {
-  r.midCost = (r.costLo + r.costHi) / 2;
+  r.midCost     = (r.laborLo + r.laborHi) / 2;   // what client pays Ironwood
+  r.midAllIn    = (r.costLo  + r.costHi)  / 2;   // reference only
   r.roi = Math.round((r.valueAdded / r.midCost) * 100);
   r.roiTier = r.roi > 80 ? 'high' : r.roi >= 50 ? 'mid' : 'low';
 });
@@ -511,8 +514,8 @@ function buildGrid() {
       </div>
       <div class="reno-card-stats">
         <div class="reno-mini-stat">
-          <div class="reno-mini-label">All-In Cost (materials + labor)</div>
-          <div class="reno-mini-value">$${(r.costLo/1000).toFixed(0)}k–$${(r.costHi/1000).toFixed(0)}k</div>
+          <div class="reno-mini-label">Labor Cost (you pay us)</div>
+          <div class="reno-mini-value">$${(r.laborLo/1000).toFixed(0)}k–$${(r.laborHi/1000).toFixed(0)}k</div>
         </div>
         <div class="reno-mini-stat">
           <div class="reno-mini-label">Value Added</div>
@@ -523,6 +526,7 @@ function buildGrid() {
           <div class="reno-mini-value ${r.valueAdded - r.midCost >= 0 ? 'roi-high' : 'roi-low'}">${fmt(r.valueAdded - r.midCost)}</div>
         </div>
       </div>
+      <div style="font-size:11px;color:var(--muted);margin-top:6px;">Materials supplied by homeowner &bull; Est. materials: $${((r.midAllIn - r.midCost)/1000).toFixed(0)}k</div>
       <div class="reno-toggle-row">
         <span class="reno-toggle-label ${isSelected ? 'active' : ''}">${isSelected ? 'In your plan' : 'Add to plan'}</span>
         <label class="iw-toggle" onclick="event.stopPropagation()">
