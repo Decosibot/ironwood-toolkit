@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ironwood Homes & Renovations LLC — System Guide</title>
+<style>
+  :root {
+    --black: #0a0a0a;
+    --surface: #111111;
+    --surface-2: #191919;
+    --surface-3: #222222;
+    --gold: #c9a84c;
+    --gold-dim: #a0832e;
+    --cream: #f5f0e8;
+    --muted: #888880;
+    --green: #4a9c6d;
+    --green-dim: #1a2a1f;
+    --green-bright: #7EC98A;
+    --blue: #4a7fc1;
+    --purple: #8a5fc1;
+    --hairline: #2a2a2a;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--black);
+    color: var(--cream);
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 15px;
+    line-height: 1.7;
+  }
+
+  /* ── TOP BAR ── */
+  header {
+    background: #0d0d0d;
+    border-bottom: 1px solid var(--hairline);
+    padding: 0 40px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .iw-box {
+    width: 40px;
+    height: 40px;
+    background: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0a0a0a;
+    letter-spacing: 1px;
+  }
+
+  .brand-text h1 {
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--cream);
+    text-transform: uppercase;
+  }
+
+  .brand-text p {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .doc-badge {
+    background: var(--gold);
+    color: #0a0a0a;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 2px;
+  }
+
+  /* ── LAYOUT ── */
+  .page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+  }
+
+  /* ── COVER ── */
+  .cover {
+    text-align: center;
+    padding: 60px 0 48px;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 56px;
+  }
+
+  .cover-eyebrow {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 16px;
+  }
+
+  .cover h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--cream);
+    line-height: 1.2;
+    margin-bottom: 16px;
+  }
+
+  .cover p {
+    color: var(--muted);
+    font-size: 14px;
+    max-width: 560px;
+    margin: 0 auto;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section {
+    margin-bottom: 52px;
+  }
+
+  .section-eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .section h2 {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .section h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 28px 0 10px;
+  }
+
+  p { margin-bottom: 14px; color: var(--cream); }
+
+  /* ── CARDS ── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+    margin: 20px 0;
+  }
+
+  .tool-card {
+    background: var(--surface-2);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 18px;
+  }
+
+  .tool-card.gold { border-top: 3px solid var(--gold); }
+  .tool-card.blue { border-top: 3px solid var(--blue); }
+  .tool-card.green { border-top: 3px solid var(--green); }
+  .tool-card.purple { border-top: 3px solid var(--purple); }
+
+  .tool-icon { font-size: 22px; margin-bottom: 8px; }
+  .tool-name { font-size: 13px; font-weight: 700; color: var(--cream); margin-bottom: 4px; letter-spacing: .5px; }
+  .tool-desc { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .tool-tag {
+    display: inline-block;
+    margin-top: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+  .tag-wired { background: #1a2a1f; color: var(--green-bright); }
+  .tag-standalone { background: #1a1a2e; color: #7a9fc1; }
+  .tag-doc { background: #1e1825; color: #a07fd4; }
+
+  /* ── FLOW DIAGRAM ── */
+  .flow {
+    background: var(--surface-2);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 28px 32px;
+    margin: 20px 0;
+  }
+
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+
+  .flow-box {
+    background: var(--surface-3);
+    border: 1px solid #333;
+    border-radius: 6px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--cream);
+    white-space: nowrap;
+  }
+
+  .flow-box.source { border-color: var(--green); color: var(--green-bright); }
+  .flow-box.reader { border-color: var(--gold); color: var(--gold); }
+  .flow-box.portal { border-color: var(--blue); color: #7aabf5; }
+  .flow-box.dash   { border-color: var(--purple); color: #b07af5; }
+
+  .flow-arrow {
+    color: var(--muted);
+    font-size: 18px;
+    padding: 0 10px;
+    flex-shrink: 0;
+  }
+
+  .flow-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: .5px;
+    margin-left: 4px;
+    align-self: flex-end;
+    padding-bottom: 2px;
+  }
+
+  /* ── STEP LIST ── */
+  .steps {
+    counter-reset: step;
+    list-style: none;
+    margin: 16px 0;
+  }
+
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    margin-bottom: 16px;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    background: var(--gold);
+    color: #0a0a0a;
+    font-size: 12px;
+    font-weight: 700;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .steps li .step-body { flex: 1; }
+  .steps li .step-title { font-weight: 700; color: var(--cream); margin-bottom: 4px; }
+  .steps li .step-detail { font-size: 13px; color: var(--muted); }
+
+  /* ── EXAMPLE SCENARIO ── */
+  .scenario {
+    background: var(--surface-2);
+    border-left: 4px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 24px 28px;
+    margin: 20px 0;
+  }
+
+  .scenario-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+
+  .scenario h4 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--cream);
+    margin-bottom: 14px;
+  }
+
+  .scenario-step {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 12px;
+    align-items: flex-start;
+    font-size: 13px;
+  }
+
+  .s-num {
+    background: var(--gold-dim);
+    color: #0a0a0a;
+    font-size: 11px;
+    font-weight: 700;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .s-body strong { color: var(--cream); }
+  .s-body { color: #bbb; line-height: 1.6; }
+
+  /* ── TABLE ── */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    margin: 16px 0;
+  }
+
+  thead tr {
+    background: var(--surface-3);
+    border-bottom: 1px solid var(--gold-dim);
+  }
+
+  thead th {
+    text-align: left;
+    padding: 10px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  tbody tr { border-bottom: 1px solid #1e1e1e; }
+  tbody tr:hover { background: var(--surface-2); }
+  tbody td { padding: 10px 14px; color: var(--cream); vertical-align: top; }
+  tbody td.muted { color: var(--muted); }
+
+  /* ── GREEN BAR CALLOUT ── */
+  .green-bar {
+    background: #1a2a1f;
+    border: 1px solid #2d4a35;
+    border-radius: 8px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+
+  .green-bar .gb-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--green-bright);
+    white-space: nowrap;
+  }
+
+  .green-bar .gb-select {
+    background: #0f1f14;
+    border: 1px solid #2d4a35;
+    color: #e8f5e9;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    min-width: 220px;
+  }
+
+  .green-bar .gb-badge {
+    background: #2d4a35;
+    color: var(--green-bright);
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+
+  .green-bar .gb-link {
+    margin-left: auto;
+    color: var(--green-bright);
+    font-size: 12px;
+    opacity: .7;
+  }
+
+  /* ── FAQ ── */
+  .faq-item {
+    border-bottom: 1px solid var(--hairline);
+    padding: 18px 0;
+  }
+
+  .faq-q {
+    font-weight: 700;
+    color: var(--gold);
+    margin-bottom: 8px;
+    font-size: 14px;
+  }
+
+  .faq-a {
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  /* ── DIVIDER ── */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--hairline);
+    margin: 48px 0;
+  }
+
+  /* ── PRINT ── */
+  @media print {
+    header { position: static; }
+    body { background: #fff; color: #111; }
+    .tool-card, .flow, .scenario, .green-bar { border-color: #ccc; background: #f9f9f9; }
+    .cover h2, .section h2, .tool-name, .steps li .step-title { color: #111; }
+    p, tbody td { color: #333; }
+    .tool-desc, .faq-a, .s-body, .steps li .step-detail { color: #555; }
+    .tool-card.gold { border-top-color: #b8860b; }
+    .tool-card.blue { border-top-color: #2255aa; }
+    .tool-card.green { border-top-color: #2a6e3f; }
+    .tool-card.purple { border-top-color: #5a2d8a; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="iw-box">IW</div>
+    <div class="brand-text">
+      <h1>Ironwood Homes & Renovations LLC</h1>
+      <p>Internal System Guide</p>
+    </div>
+  </div>
+  <div class="doc-badge">Training Doc</div>
+</header>
+
+<div class="page">
+
+  <!-- COVER -->
+  <div class="cover">
+    <div class="cover-eyebrow">Internal Operations</div>
+    <h2>How the Ironwood Toolkit Works Together</h2>
+    <p>A plain-language guide to every tool, how data flows between them, and a step-by-step example from first lead to closed deal.</p>
+  </div>
+
+  <!-- SECTION 1: THE BIG PICTURE -->
+  <div class="section">
+    <div class="section-eyebrow">Section 1</div>
+    <h2>The Big Picture</h2>
+
+    <p>The Ironwood toolkit is a set of connected HTML tools that all live in one folder (or on GitHub Pages). Every tool is self-contained — no internet connection, no login, no subscription. All data is saved in your browser's <strong>localStorage</strong>, which means it stays on your device and is instantly available across every tool on the same browser.</p>
+
+    <p>Think of it like a shared whiteboard. When you add a deal in the <strong>Property Pipeline</strong>, every other tool can see it. When you fill in details in the <strong>Remodel Estimator</strong>, the same numbers can be pulled into the <strong>Profit Waterfall</strong>, the <strong>MAO Calculator</strong>, the <strong>Change Order Form</strong>, and more — without retyping anything.</p>
+
+    <h3>The Two Data Stores</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Store Key</th>
+          <th>Written By</th>
+          <th>Read By</th>
+          <th>What It Holds</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code style="color:var(--green-bright)">ironwood_deals</code></td>
+          <td>Property Pipeline</td>
+          <td>MAO Calculator, Remodel Estimator, Profit Waterfall, Scope of Work, Account Allocator, Change Order Form, Deal Summary Tearsheet, Dashboard</td>
+          <td>All active deals — address, ARV, purchase price, rehab budget, deal type, stage, client info</td>
+        </tr>
+        <tr>
+          <td><code style="color:#7aabf5">ironwood_jobs</code></td>
+          <td>Client Portal</td>
+          <td>Dashboard</td>
+          <td>All active jobs — contract value, phase payment status, collected/outstanding amounts</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 2: THE LOAD DEAL BAR -->
+  <div class="section">
+    <div class="section-eyebrow">Section 2</div>
+    <h2>The Load Deal Bar</h2>
+
+    <p>Every wired tool has a green bar at the very top of the page. This is the <strong>Load Deal bar</strong>. It reads all deals from the Property Pipeline and lets you select one from a dropdown — instantly filling in the relevant fields so you never retype an address, ARV, or client name.</p>
+
+    <!-- Visual mockup of the bar -->
+    <div class="green-bar">
+      <span class="gb-label">Load Deal</span>
+      <select class="gb-select"><option>123 Oak St, Atlanta GA · Active</option></select>
+      <span class="gb-badge">123 Oak St, Atlanta</span>
+      <span class="gb-link">Open Pipeline →</span>
+    </div>
+
+    <h3>What Gets Filled In Per Tool</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Tool</th>
+          <th>Fields Auto-Filled from Pipeline</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>MAO Calculator</td>
+          <td>ARV, rehab budget, rent target, carrying costs, refi loan estimate</td>
+        </tr>
+        <tr>
+          <td>Remodel Estimator</td>
+          <td>Property address, deal type, ARV, purchase price</td>
+        </tr>
+        <tr>
+          <td>Profit Waterfall</td>
+          <td>Address, ARV, purchase price, rehab budget, deal type, phase (hourly rates)</td>
+        </tr>
+        <tr>
+          <td>Scope of Work</td>
+          <td>Property address, client name, deal type</td>
+        </tr>
+        <tr>
+          <td>Account Allocator</td>
+          <td>Deal address, gross revenue</td>
+        </tr>
+        <tr>
+          <td>Change Order Form</td>
+          <td>Job address, client name, phone, email</td>
+        </tr>
+        <tr>
+          <td>Deal Summary Tearsheet</td>
+          <td>Property address, deal type, purchase price, rehab budget, ARV — auto-recalculates waterfall</td>
+        </tr>
+        <tr>
+          <td>Client Portal</td>
+          <td>Property address, deal type, client info (from Pipeline dropdown)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 3: ALL TOOLS -->
+  <div class="section">
+    <div class="section-eyebrow">Section 3</div>
+    <h2>Every Tool & What It Does</h2>
+
+    <h3>Calculators</h3>
+    <div class="card-grid">
+      <div class="tool-card gold">
+        <div class="tool-icon">🧮</div>
+        <div class="tool-name">Remodel Estimator</div>
+        <div class="tool-desc">Full job estimate with line items, labor, materials, and a live profit waterfall. Starting point for any renovation job.</div>
+        <span class="tool-tag tag-wired">Load Deal Wired</span>
+      </div>
+      <div class="tool-card gold">
+        <div class="tool-icon">💧</div>
+        <div class="tool-name">Profit Waterfall</div>
+        <div class="tool-desc">Runs the 35/30/35 profit split after hard costs and salaries. Shows exact payout to Jeff, Ty, and Ironwood H&R per deal.</div>
+        <span class="tool-tag tag-wired">Load Deal Wired</span>
+      </div>
+      <div class="tool-card gold">
+        <div class="tool-icon">🎯</div>
+        <div class="tool-name">MAO Calculator</div>
+        <div class="tool-desc">Max Allowable Offer using 65% ARV rule. Factors in rehab, carrying costs, and target profit. BRRRR deal analyzer built in.</div>
+        <span class="tool-tag tag-wired">Load Deal Wired</span>
+      </div>
+      <div class="tool-card gold">
+        <div class="tool-icon">📄</div>
+        <div class="tool-name">Deal Summary Tearsheet</div>
+        <div class="tool-desc">Printable one-page deal overview with full waterfall breakdown. Use for lender meetings or internal review.</div>
+        <span class="tool-tag tag-wired">Load Deal Wired</span>
+      </div>
+    </div>
+
+    <h3>Operations</h3>
+    <div class="card-grid">
+      <div class="tool-card blue">
+        <div class="tool-icon">🏗️</div>
+        <div class="tool-name">Property Pipeline</div>
+        <div class="tool-desc">The master deal board. Add a deal here and it becomes available in every other tool. Kanban stages from Lead → Closed.</div>
+        <span class="tool-tag tag-wired">Source of Truth</span>
+      </div>
+      <div class="tool-card blue">
+        <div class="tool-icon">📋</div>
+        <div class="tool-name">Scope of Work</div>
+        <div class="tool-desc">Builds a detailed written scope for subs and clients. Room-by-room task list with checkboxes and notes.</div>
+        <span class="tool-tag tag-wired">Load Deal Wired</span>
+      </div>
+      <div class="tool-card blue">
+        <div class="tool-icon">💰</div>
+        <div class="tool-name">Account Allocator</div>
+        <div class="tool-desc">Splits incoming project revenue across Profit First accounts (Income, Operations, Payroll, Tax, Profit/Reinvest).</div>
+        <span class="tool-tag tag-wired">Load Deal Wired</span>
+      </div>
+      <div class="tool-card blue">
+        <div class="tool-icon">🔄</div>
+        <div class="tool-name">Change Order Form</div>
+        <div class="tool-desc">Creates formal change orders when scope changes. Saves history, calculates new contract total, printable.</div>
+        <span class="tool-tag tag-wired">Load Deal Wired</span>
+      </div>
+      <div class="tool-card blue">
+        <div class="tool-icon">📊</div>
+        <div class="tool-name">Operational Costs Tracker</div>
+        <div class="tool-desc">Monthly fixed expenses plus Jeff and Ty labor hour logs. Tracks burn rate vs. revenue thresholds.</div>
+        <span class="tool-tag tag-standalone">Standalone</span>
+      </div>
+      <div class="tool-card blue">
+        <div class="tool-icon">🏠</div>
+        <div class="tool-name">Rental Dashboard</div>
+        <div class="tool-desc">Long-term and short-term rental portfolio tracker. NOI, vacancy, cap rate, cash-on-cash return per property.</div>
+        <span class="tool-tag tag-standalone">Standalone</span>
+      </div>
+    </div>
+
+    <h3>Client Documents</h3>
+    <div class="card-grid">
+      <div class="tool-card green">
+        <div class="tool-icon">👤</div>
+        <div class="tool-name">Client Portal</div>
+        <div class="tool-desc">Admin view to manage jobs and phase payment schedules. Client view shows branded project page with Pay Now button.</div>
+        <span class="tool-tag tag-wired">Feeds Dashboard</span>
+      </div>
+      <div class="tool-card green">
+        <div class="tool-icon">📝</div>
+        <div class="tool-name">Client Service Agreement</div>
+        <div class="tool-desc">Homeowner contract with scope, payment terms, and signatures. Numbered CSA-XXXX for tracking.</div>
+        <span class="tool-tag tag-standalone">Standalone</span>
+      </div>
+      <div class="tool-card green">
+        <div class="tool-icon">🧾</div>
+        <div class="tool-name">Invoice Template</div>
+        <div class="tool-desc">Deposit, progress, and final invoice generator. Ties to CSA number and project address.</div>
+        <span class="tool-tag tag-standalone">Standalone</span>
+      </div>
+      <div class="tool-card green">
+        <div class="tool-icon">🔏</div>
+        <div class="tool-name">Lien Waiver</div>
+        <div class="tool-desc">4-variant lien waiver (conditional/unconditional × progress/final). Auto-fills sub and project details.</div>
+        <span class="tool-tag tag-standalone">Standalone</span>
+      </div>
+      <div class="tool-card green">
+        <div class="tool-icon">🤝</div>
+        <div class="tool-name">Referral Agreement</div>
+        <div class="tool-desc">Licensed agent referral fee agreement for deals sourced through real estate agents.</div>
+        <span class="tool-tag tag-standalone">Standalone</span>
+      </div>
+    </div>
+
+    <h3>Partnership & Strategy</h3>
+    <div class="card-grid">
+      <div class="tool-card purple">
+        <div class="tool-icon">🏛️</div>
+        <div class="tool-name">Partnership Proposal</div>
+        <div class="tool-desc">Full 23-section founding document. Pay structure, ownership, entity formation, GC roadmap, and operational costs.</div>
+        <span class="tool-tag tag-doc">Reference Doc</span>
+      </div>
+      <div class="tool-card purple">
+        <div class="tool-icon">⚖️</div>
+        <div class="tool-name">Operating Agreement</div>
+        <div class="tool-desc">Delaware LLC operating agreement. Governs distributions, voting, buyouts, and member obligations.</div>
+        <span class="tool-tag tag-doc">Reference Doc</span>
+      </div>
+      <div class="tool-card purple">
+        <div class="tool-icon">🗺️</div>
+        <div class="tool-name">Evolution Map</div>
+        <div class="tool-desc">5-phase company growth roadmap from Phase 1 Foundation through Phase 5 Capital Access.</div>
+        <span class="tool-tag tag-doc">Reference Doc</span>
+      </div>
+      <div class="tool-card purple">
+        <div class="tool-icon">💼</div>
+        <div class="tool-name">Lender Pitch Deck</div>
+        <div class="tool-desc">Lender and investor-facing pitch with deal history, team bios, and capital ask structure.</div>
+        <span class="tool-tag tag-doc">Reference Doc</span>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 4: DATA FLOW DIAGRAM -->
+  <div class="section">
+    <div class="section-eyebrow">Section 4</div>
+    <h2>How Data Flows</h2>
+
+    <p>Every wired tool reads from the same source — the <code style="color:var(--green-bright)">ironwood_deals</code> store written by Property Pipeline. The Dashboard reads from both stores and shows live totals with no refresh needed.</p>
+
+    <div class="flow">
+      <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:20px;">Data Flow Map</div>
+
+      <div class="flow-row" style="margin-bottom:20px;">
+        <div class="flow-box source">Property Pipeline</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="color:var(--green-bright);border-color:var(--green);">ironwood_deals store</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box reader">MAO Calculator</div>
+        <div class="flow-arrow" style="color:#333">·</div>
+        <div class="flow-box reader">Remodel Estimator</div>
+        <div class="flow-arrow" style="color:#333">·</div>
+        <div class="flow-box reader">Profit Waterfall</div>
+      </div>
+
+      <div class="flow-row" style="margin-bottom:20px;padding-left:200px;">
+        <div class="flow-arrow" style="color:#333">↳</div>
+        <div class="flow-box reader" style="margin-left:8px;">Scope of Work</div>
+        <div class="flow-arrow" style="color:#333">·</div>
+        <div class="flow-box reader">Account Allocator</div>
+        <div class="flow-arrow" style="color:#333">·</div>
+        <div class="flow-box reader">Change Order</div>
+        <div class="flow-arrow" style="color:#333">·</div>
+        <div class="flow-box reader">Tearsheet</div>
+      </div>
+
+      <div class="flow-row" style="margin-bottom:20px;">
+        <div class="flow-box portal">Client Portal</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box" style="color:#7aabf5;border-color:var(--blue);">ironwood_jobs store</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box dash">Dashboard (live)</div>
+      </div>
+
+      <div class="flow-row">
+        <div class="flow-box" style="color:var(--green-bright);border-color:var(--green);">ironwood_deals</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box dash">Dashboard (live)</div>
+        <div class="flow-label">— active deals, ARV, deployed capital, monthly rev</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 5: STEP-BY-STEP EXAMPLE -->
+  <div class="section">
+    <div class="section-eyebrow">Section 5</div>
+    <h2>Full Example — From Lead to Close</h2>
+
+    <div class="scenario">
+      <div class="scenario-label">Example Deal</div>
+      <h4>123 Oak Street, Atlanta GA — Flip / Rehab</h4>
+
+      <div class="scenario-step">
+        <div class="s-num">1</div>
+        <div class="s-body"><strong>Ty gets a seller lead.</strong> He opens <strong>Property Pipeline</strong> and clicks "Add Deal." He enters: Address = 123 Oak St, Atlanta GA | ARV = $185,000 | Purchase Price = $95,000 | Rehab Budget = $42,000 | Deal Type = Flip | Stage = Under Contract. He saves it. The deal is now in <code style="color:var(--green-bright)">ironwood_deals</code>.</div>
+      </div>
+
+      <div class="scenario-step">
+        <div class="s-num">2</div>
+        <div class="s-body"><strong>Ty checks the offer.</strong> He opens the <strong>MAO Calculator</strong>. The green Load Deal bar shows "123 Oak St, Atlanta GA · Under Contract." He selects it. ARV fills as $185,000, rehab as $42,000 automatically. The calculator confirms $78,250 is the max offer — $95K is tight but the numbers work at 65% ARV.</div>
+      </div>
+
+      <div class="scenario-step">
+        <div class="s-num">3</div>
+        <div class="s-body"><strong>Jeff builds the estimate.</strong> He opens the <strong>Remodel Estimator</strong>, loads the deal from the green bar, and adds line items room by room — demo, framing, electrical, plumbing, flooring, kitchen, bathrooms, paint, exterior. The tool shows a $41,800 estimate. He saves it.</div>
+      </div>
+
+      <div class="scenario-step">
+        <div class="s-num">4</div>
+        <div class="s-body"><strong>Jeff creates the scope.</strong> In the <strong>Scope of Work</strong> tool, he loads 123 Oak St and generates a written task list to share with the general contractor and any subs. It auto-fills the address and deal type.</div>
+      </div>
+
+      <div class="scenario-step">
+        <div class="s-num">5</div>
+        <div class="s-body"><strong>Jordan sets up the client job.</strong> She opens the <strong>Client Portal</strong>, creates a new job for 123 Oak St, sets the contract value at $41,800, and creates a 3-phase payment schedule: Phase 1 (33%) = $13,794 due at contract signing · Phase 2 (33%) = $13,794 due at rough-in complete · Phase 3 (34%) = $14,212 due at project close. She saves the job. It writes to <code style="color:#7aabf5">ironwood_jobs</code>.</div>
+      </div>
+
+      <div class="scenario-step">
+        <div class="s-num">6</div>
+        <div class="s-body"><strong>Dashboard updates instantly.</strong> The <strong>Command Center Dashboard</strong> now shows: Active Jobs +1, Contract Value +$41,800, Outstanding +$41,800. No refresh needed — it reads live from both stores.</div>
+      </div>
+
+      <div class="scenario-step">
+        <div class="s-num">7</div>
+        <div class="s-body"><strong>Scope changes mid-project.</strong> Client wants to add a deck. Jeff opens the <strong>Change Order Form</strong>, loads 123 Oak St from the green bar — client name and address fill in automatically. He adds the deck line item ($6,200), saves the CO. New contract total = $48,000.</div>
+      </div>
+
+      <div class="scenario-step">
+        <div class="s-num">8</div>
+        <div class="s-body"><strong>Project closes.</strong> Ty runs the <strong>Profit Waterfall</strong>. He loads 123 Oak St — purchase price, ARV, and rehab auto-fill. Final net income = $42,000 after all costs. The tool splits it: <strong>$14,700 → Landon Renovations (Jeff) · $12,600 → Anchor Pro Solutions (Ty) · $14,700 → Ironwood H&R (reinvest)</strong>.</div>
+      </div>
+
+      <div class="scenario-step">
+        <div class="s-num">9</div>
+        <div class="s-body"><strong>Print the tearsheet.</strong> For records or lender files, Ty opens the <strong>Deal Summary Tearsheet</strong>, loads 123 Oak St, and prints a clean one-page summary with the full waterfall breakdown.</div>
+      </div>
+
+      <div class="scenario-step">
+        <div class="s-num">10</div>
+        <div class="s-body"><strong>Ty moves the deal to Closed.</strong> Back in the <strong>Property Pipeline</strong>, he drags the card to "Closed." The Dashboard updates: Exited Deals +1, Monthly Revenue +$42,000.</div>
+      </div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 6: WHO USES WHAT -->
+  <div class="section">
+    <div class="section-eyebrow">Section 6</div>
+    <h2>Who Uses What</h2>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Team Member</th>
+          <th>Primary Tools</th>
+          <th>Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Ty Jackson</strong></td>
+          <td>Property Pipeline, MAO Calculator, Deal Summary Tearsheet, Profit Waterfall, Lender Pitch Deck, Dashboard</td>
+          <td class="muted">Managing Member — deal sourcing, underwriting, capital, business dev</td>
+        </tr>
+        <tr>
+          <td><strong>Jeff Sarabia</strong></td>
+          <td>Remodel Estimator, Scope of Work, Change Order Form, Operational Costs Tracker</td>
+          <td class="muted">Field Operations — estimates, scopes, change orders, labor tracking</td>
+        </tr>
+        <tr>
+          <td><strong>Jordan Sarabia</strong></td>
+          <td>Client Portal, Client Service Agreement, Invoice Template, Lien Waiver, Dashboard</td>
+          <td class="muted">Office Operations Manager — client comms, contracts, invoicing, job tracking</td>
+        </tr>
+        <tr>
+          <td><strong>All Three</strong></td>
+          <td>Dashboard, Partnership Proposal, Evolution Map</td>
+          <td class="muted">Company-wide visibility and strategic reference</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <hr class="divider">
+
+  <!-- SECTION 7: FAQ -->
+  <div class="section">
+    <div class="section-eyebrow">Section 7</div>
+    <h2>Common Questions</h2>
+
+    <div class="faq-item">
+      <div class="faq-q">Why doesn't my deal show up in the Load Deal dropdown?</div>
+      <div class="faq-a">The deal must be saved in the <strong>Property Pipeline</strong> first. Open Property Pipeline, make sure the deal has an address entered, and save it. Then refresh the tool you're working in — the dropdown will populate automatically.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Does data sync across different devices or browsers?</div>
+      <div class="faq-a">No — localStorage is browser-specific. Data saved in Chrome on your laptop won't appear in Safari on your phone. For now, all team members should use the same browser on the same machine, or export/import deal data using the JSON export buttons in each tool.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What happens if I clear my browser cache?</div>
+      <div class="faq-a">All localStorage data will be wiped. Use the <strong>Export JSON</strong> button in the Property Pipeline regularly to back up your deals. This takes 5 seconds and saves a file you can reimport anytime.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What is the 65% ARV rule?</div>
+      <div class="faq-a">Ironwood's max purchase price formula: <strong>(ARV × 65%) − Rehab Costs = Max Offer</strong>. This leaves enough margin for hard costs, carrying costs, and the profit split. Example: ARV $185K × 65% = $120,250 − $42K rehab = $78,250 max offer.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How does the 35/30/35 split work?</div>
+      <div class="faq-a">After hard costs (materials, subs, ad spend, carrying costs) and W-2 salaries are deducted, the remaining net income is split: <strong>35% to Landon Renovations (Jeff) · 30% to Anchor Pro Solutions (Ty) · 35% reinvested into Ironwood Homes & Renovations LLC</strong>. In Phase 1, hourly rates for Jeff ($50/hr) and Ty ($30/hr) are also deducted before the split.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">When do salaries kick in?</div>
+      <div class="faq-a">All three salaries (Jeff $5K/mo, Ty $5K/mo, Jordan $3K–$4.5K/mo) begin once the company hits <strong>$15,000/mo gross revenue for 2 consecutive months</strong> and maintains a $10,000 operating reserve. Once triggered, salaries are paid regardless of deal volume.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">What is the Client Portal used for?</div>
+      <div class="faq-a">It's Ironwood's internal job management and client payment tool. Jordan uses the Admin view to create jobs and set payment phase schedules. Clients see a clean branded page showing their project progress and a Pay Now button (Stripe integration pending). All active job data feeds the Dashboard live.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">How do I access all the tools?</div>
+      <div class="faq-a">Open <strong>index.html</strong> (the main hub) or the <strong>Ironwood Dashboard</strong> (Command Center). Every tool is linked from either page. You can also open tools directly from the GitHub Pages URL once it's live.</div>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <!-- FOOTER -->
+  <div style="text-align:center;color:var(--muted);font-size:12px;padding:16px 0 0;">
+    Ironwood Homes & Renovations LLC &mdash; Internal Use Only &mdash; <span id="doc-year"></span>
+  </div>
+
+</div>
+
+<script>
+  document.getElementById('doc-year').textContent = new Date().getFullYear();
+</script>
+
+</body>
+</html>
