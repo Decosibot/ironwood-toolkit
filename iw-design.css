@@ -48,11 +48,15 @@
   --sans:  'Geist', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
-html { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color-scheme: light;
+}
 
 body {
-  background: var(--bg);
-  color: var(--ink);
+  background: #EEF2F1;
+  color: #414545;
   font-family: var(--sans);
   font-size: 15px;
   line-height: 1.5;
@@ -62,8 +66,8 @@ body {
 
 /* ── GLOBAL HEADER ── */
 .iw-header {
-  background: var(--surface);
-  border-bottom: 1px solid var(--hairline);
+  background: #F5F7F7;
+  border-bottom: 1px solid #D8E0DF;
   padding: 18px 40px;
   display: flex;
   align-items: center;
@@ -89,7 +93,7 @@ body {
   font-family: var(--serif);
   font-size: 18px;
   font-weight: 400;
-  color: var(--ink);
+  color: #414545;
   letter-spacing: -0.01em;
   line-height: 1;
 }
@@ -171,13 +175,13 @@ body {
 /* ── SECTION LABEL ── */
 .iw-section-label {
   font-size: 10px;
-  color: var(--bronze);
+  color: #6F848B;
   text-transform: uppercase;
   letter-spacing: 0.2em;
   font-weight: 600;
   margin: 44px 0 16px;
   padding-bottom: 10px;
-  border-bottom: 1px solid var(--hairline);
+  border-bottom: 1px solid #D8E0DF;
   font-family: var(--sans);
 }
 .iw-section-label:first-child { margin-top: 0; }
@@ -199,12 +203,12 @@ body {
 
 /* ── NAV CARDS (toolkit index) ── */
 .iw-nav-card {
-  background: var(--surface);
-  border: 1px solid var(--hairline);
+  background: #F5F7F7;
+  border: 1px solid #D8E0DF;
   border-radius: var(--radius);
   padding: 20px 22px;
   text-decoration: none;
-  color: var(--ink);
+  color: #414545;
   transition: border-color .2s, transform .2s, box-shadow .2s;
   display: block;
 }
@@ -225,14 +229,14 @@ body {
   font-family: var(--serif);
   font-size: 19px;
   font-weight: 400;
-  color: var(--ink);
+  color: #414545;
   letter-spacing: -0.01em;
   margin-bottom: 6px;
   line-height: 1.2;
 }
 .iw-nav-card-desc {
   font-size: 13px;
-  color: var(--muted);
+  color: #949294;
   line-height: 1.55;
 }
 
