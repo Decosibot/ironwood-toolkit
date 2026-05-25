@@ -1,0 +1,301 @@
+/*
+ * iw-print.css — Ironwood Homes & Renovations LLC
+ * Shared print stylesheet: letterhead, tables, signature blocks, footer.
+ * Version 1.0 — 2026-05-25
+ */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   1. UNIVERSAL PRINT RESET
+───────────────────────────────────────────────────────────────────────────── */
+
+@media print {
+
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+
+  @page {
+    margin: 0.75in 0.85in;
+    size: letter;
+  }
+
+  body {
+    background: #ffffff;
+    color: #1a1a1a;
+    font-family: 'Georgia', serif;
+    font-size: 11pt;
+    margin: 0;
+  }
+
+  /* Hide screen-only chrome */
+  .iw-deal-bar,
+  #iw-deal-bar,
+  .toolbar,
+  #toolbar,
+  #topbar,
+  .topbar,
+  .no-print,
+  .btn,
+  button:not(.print-keep),
+  nav,
+  .iw-header,
+  .print-hide {
+    display: none !important;
+  }
+
+  /* ── Letterhead: visible on print ── */
+  .iw-letterhead {
+    display: flex !important;
+  }
+
+  .iw-lh-bar {
+    display: block !important;
+  }
+
+  /* ── Doc meta: visible on print ── */
+  .iw-doc-meta {
+    display: flex !important;
+  }
+
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   2. LETTERHEAD HEADER  (.iw-letterhead)
+   Hidden on screen — shows only when printing.
+───────────────────────────────────────────────────────────────────────────── */
+
+/* Screen: hide */
+.iw-letterhead {
+  display: none;
+}
+
+/* Print: show */
+@media print {
+  .iw-letterhead {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}
+
+.iw-lh-left {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.iw-lh-logo {
+  width: 36px;
+  height: 36px;
+  background: #c9a84c;
+  color: #0a0a0a;
+  font-weight: 700;
+  font-size: 14pt;
+  font-family: 'Georgia', serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.iw-lh-brand {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.iw-lh-name {
+  font-family: 'Georgia', serif;
+  font-size: 18pt;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.1;
+}
+
+.iw-lh-sub {
+  font-family: 'Georgia', serif;
+  font-size: 9pt;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #666666;
+  margin-top: 3px;
+}
+
+.iw-lh-right {
+  text-align: right;
+  font-family: 'Georgia', serif;
+  font-size: 9pt;
+  color: #666666;
+  line-height: 1.6;
+}
+
+/* Gold gradient bar below the letterhead */
+.iw-lh-bar {
+  display: none; /* hidden on screen */
+  height: 3px;
+  background: linear-gradient(90deg, #c9a84c, #e8c96a, transparent);
+  margin-top: 10px;
+  margin-bottom: 20px;
+  border: none;
+}
+
+@media print {
+  .iw-lh-bar {
+    display: block !important;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   3. DOCUMENT META BLOCK  (.iw-doc-meta)
+   Date, doc number, client name row — print only.
+───────────────────────────────────────────────────────────────────────────── */
+
+.iw-doc-meta {
+  display: none; /* hidden on screen */
+}
+
+@media print {
+  .iw-doc-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'Georgia', serif;
+    font-size: 9pt;
+    color: #666666;
+    margin-bottom: 16px;
+  }
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   4. PRINT TABLE STYLES
+───────────────────────────────────────────────────────────────────────────── */
+
+@media print {
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 10pt;
+  }
+
+  thead th {
+    background: #1a1a1a;
+    color: #ffffff;
+    padding: 7px 10px;
+    text-align: left;
+    font-size: 9pt;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  tbody td {
+    padding: 7px 10px;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  tbody tr:nth-child(even) td {
+    background: #f9f9f9;
+  }
+
+  .totals-table td {
+    padding: 6px 10px;
+    font-size: 10pt;
+  }
+
+  .totals-table tr:last-child td {
+    font-weight: 700;
+    font-size: 12pt;
+    border-top: 2px solid #c9a84c;
+  }
+
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   5. SECTION HEADING  (.iw-print-section)
+───────────────────────────────────────────────────────────────────────────── */
+
+@media print {
+
+  .iw-print-section {
+    font-size: 9pt;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 4px;
+    margin: 20px 0 10px;
+  }
+
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   6. SIGNATURE BLOCK  (.iw-sig-block)
+───────────────────────────────────────────────────────────────────────────── */
+
+@media print {
+
+  .iw-sig-block {
+    display: flex;
+    gap: 60px;
+    margin-top: 40px;
+  }
+
+  .iw-sig-block .iw-sig-col {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .iw-sig-block .iw-sig-line {
+    width: 180px;
+    border-bottom: 1px solid #1a1a1a;
+    margin-bottom: 6px;
+    height: 28px;
+  }
+
+  .iw-sig-block .iw-sig-name {
+    font-family: 'Georgia', serif;
+    font-size: 10pt;
+    color: #1a1a1a;
+    font-weight: 600;
+  }
+
+  .iw-sig-block .iw-sig-title {
+    font-family: 'Georgia', serif;
+    font-size: 8pt;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #666666;
+    margin-top: 2px;
+  }
+
+}
+
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   7. PRINT FOOTER  (.iw-print-footer)
+───────────────────────────────────────────────────────────────────────────── */
+
+.iw-print-footer {
+  display: none; /* hidden on screen */
+}
+
+@media print {
+
+  .iw-print-footer {
+    display: block;
+    text-align: center;
+    font-family: 'Georgia', serif;
+    font-size: 8pt;
+    color: #666666;
+    border-top: 1px solid #c9a84c;
+    padding-top: 8px;
+    margin-top: 40px;
+  }
+
+}
