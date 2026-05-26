@@ -416,6 +416,163 @@
       .breakdown-item { background: #fff; border-color: #d4cfc0; }
       .formula-trace { background: #f5f0e0; color: #2a2a2a; }
     }
+
+    /* ── BUILD COST ESTIMATOR SECTION ── */
+    .bce-mode-toggle {
+      display: flex;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .bce-mode-btn {
+      flex: 1;
+      padding: 11px 14px;
+      background: var(--bg);
+      color: #b8b0a0;
+      border: none;
+      cursor: pointer;
+      font-size: 13px;
+      font-family: 'Arial', sans-serif;
+      transition: all 0.2s;
+      text-align: center;
+    }
+
+    .bce-mode-btn.active {
+      background: #1a1410;
+      color: #c9a84c;
+      font-weight: bold;
+    }
+
+    .bce-panel { display: none; }
+    .bce-panel.visible { display: block; }
+
+    .bce-selector-row {
+      display: grid;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .bce-selector-row.cols-3 { grid-template-columns: repeat(3, 1fr); }
+    .bce-selector-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+    .bce-sel-btn {
+      padding: 10px 8px;
+      background: #080808;
+      border: 1px solid #2a2a2a;
+      border-radius: 6px;
+      color: #b8b0a0;
+      font-size: 12px;
+      font-family: 'Arial', sans-serif;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      line-height: 1.3;
+    }
+
+    .bce-sel-btn .bsl { display: block; font-weight: 700; font-size: 12px; color: #f5f0e8; margin-bottom: 2px; }
+    .bce-sel-btn .bss { display: block; font-size: 10px; color: #6b6560; }
+    .bce-sel-btn:hover { border-color: #555; }
+    .bce-sel-btn.active { background: #1a1410; border-color: #c9a84c; }
+    .bce-sel-btn.active .bsl { color: #c9a84c; }
+    .bce-sel-btn.active .bss { color: #b8b0a0; }
+
+    .bce-section-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #6b6560;
+      margin-bottom: 8px;
+      margin-top: 2px;
+    }
+
+    .bce-breakdown {
+      background: #080808;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin: 14px 0;
+      display: none;
+    }
+
+    .bce-breakdown.visible { display: block; }
+
+    .bce-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: #b8b0a0;
+      padding: 5px 0;
+      border-bottom: 1px solid #1a1a1a;
+    }
+
+    .bce-row:last-child { border-bottom: none; }
+    .bce-row .bce-val { color: #f5f0e8; font-weight: 600; font-size: 13px; }
+    .bce-row .bce-val.gold { color: #c9a84c; }
+    .bce-row .bce-val.warn { color: #c9843a; }
+
+    .bce-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #c9a84c;
+      padding: 10px 0 0;
+      border-top: 1px solid rgba(201,168,76,0.3);
+      margin-top: 6px;
+    }
+
+    .bce-apply-btn {
+      width: 100%;
+      padding: 11px;
+      background: transparent;
+      border: 1px solid #c9a84c;
+      color: #c9a84c;
+      border-radius: 6px;
+      font-size: 12px;
+      font-family: 'Arial', sans-serif;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 10px;
+    }
+
+    .bce-apply-btn:hover { background: rgba(201,168,76,0.12); }
+
+    .bce-data-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: rgba(201,168,76,0.08);
+      border: 1px solid rgba(201,168,76,0.25);
+      color: #a0832e;
+      font-size: 10px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      border-radius: 3px;
+      margin-bottom: 14px;
+    }
+
+    .reno-rate-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 0;
+      border-bottom: 1px solid #1a1a1a;
+      cursor: pointer;
+      transition: background 0.15s;
+      border-radius: 4px;
+    }
+
+    .reno-rate-row:last-child { border-bottom: none; }
+    .reno-rate-row:hover { background: #111; }
+    .reno-rate-row .rr-name { font-size: 13px; color: #f5f0e8; }
+    .reno-rate-row .rr-range { font-size: 11px; color: #b8b0a0; }
+    .reno-rate-row .rr-apply { font-size: 11px; color: #c9a84c; font-weight: 700; letter-spacing: 1px; }
   </style>
 </head>
 <body>
@@ -434,6 +591,115 @@
   <div class="brand">Ironwood Homes and Renovations</div>
   <h1>MAO Calculator</h1>
   <p>Maximum Allowable Offer — BRRRR Deal Analyzer</p>
+</div>
+
+<!-- BUILD COST ESTIMATOR CARD -->
+<div class="card" id="bce-card">
+  <div class="card-title" style="color:#c9a84c;border-color:rgba(201,168,76,0.3);">Build Cost Estimator</div>
+  <div class="bce-data-badge">Based on 5 Completed Dogwood Builds &mdash; Real Numbers</div>
+
+  <!-- MODE TOGGLE -->
+  <div class="bce-mode-toggle">
+    <button class="bce-mode-btn active" id="bce-btn-reno" onclick="setBceMode('reno')">
+      Renovation
+    </button>
+    <button class="bce-mode-btn" id="bce-btn-new" onclick="setBceMode('new')">
+      New Construction
+    </button>
+  </div>
+
+  <!-- RENOVATION PANEL -->
+  <div class="bce-panel visible" id="bce-panel-reno">
+    <div class="bce-section-label">Quick Cost Estimate — Renovation Scope</div>
+    <div style="background:#080808;border:1px solid #2a2a2a;border-radius:8px;padding:14px 16px;margin-bottom:12px;">
+      <div class="reno-rate-row" onclick="applyRenoRate(55, 'Full Gut Renovation')">
+        <div>
+          <div class="rr-name">Full Gut Renovation</div>
+          <div class="rr-range">Interior only, no site/foundation &mdash; $45&ndash;$65/sqft</div>
+        </div>
+        <span class="rr-apply">USE $55 &rarr;</span>
+      </div>
+      <div class="reno-rate-row" onclick="applyRenoRate(32, 'Kitchen + Baths + Floors + Paint')">
+        <div>
+          <div class="rr-name">Kitchen + Baths + Floors + Paint</div>
+          <div class="rr-range">Mid-level renovation &mdash; $25&ndash;$40/sqft</div>
+        </div>
+        <span class="rr-apply">USE $32 &rarr;</span>
+      </div>
+      <div class="reno-rate-row" onclick="applyRenoRate(20, 'Cosmetic Renovation')">
+        <div>
+          <div class="rr-name">Cosmetic Renovation</div>
+          <div class="rr-range">Paint + floors + fixtures &mdash; $15&ndash;$25/sqft</div>
+        </div>
+        <span class="rr-apply">USE $20 &rarr;</span>
+      </div>
+    </div>
+    <div style="font-size:11px;color:#6b6560;margin-bottom:12px;font-style:italic;">Click a scope above to auto-calculate rehab cost from the sqft field. Rates derived from Dogwood renovation data.</div>
+  </div>
+
+  <!-- NEW CONSTRUCTION PANEL -->
+  <div class="bce-panel" id="bce-panel-new">
+    <div class="bce-section-label">Square Footage</div>
+    <div class="input-group" style="margin-bottom:14px;">
+      <label>Heated SqFt (main floor)</label>
+      <div class="input-row">
+        <input type="number" id="bce-sqft" placeholder="2,668" min="500" step="50" oninput="bceCalc()">
+        <span style="padding:0 12px;color:#6b6560;font-size:12px;">sqft</span>
+      </div>
+    </div>
+
+    <div class="bce-section-label">Lot / Site Conditions</div>
+    <div class="bce-selector-row cols-3">
+      <button class="bce-sel-btn active" id="bce-lot-flat" onclick="setBceLot('flat',this)">
+        <span class="bsl">Flat / Clear</span>
+        <span class="bss">~$18K grading</span>
+      </button>
+      <button class="bce-sel-btn" id="bce-lot-mod" onclick="setBceLot('moderate',this)">
+        <span class="bsl">Moderate Grade</span>
+        <span class="bss">~$28K</span>
+      </button>
+      <button class="bce-sel-btn" id="bce-lot-heavy" onclick="setBceLot('heavy',this)">
+        <span class="bsl">Heavy / Wooded</span>
+        <span class="bss">~$45K</span>
+      </button>
+    </div>
+
+    <div class="bce-section-label">Interior Finish Level</div>
+    <div class="bce-selector-row cols-3">
+      <button class="bce-sel-btn active" id="bce-fin-std" onclick="setBceFin('standard',this)">
+        <span class="bsl">Standard</span>
+        <span class="bss">Base rates</span>
+      </button>
+      <button class="bce-sel-btn" id="bce-fin-upg" onclick="setBceFin('upgraded',this)">
+        <span class="bsl">Upgraded</span>
+        <span class="bss">+20% interior</span>
+      </button>
+      <button class="bce-sel-btn" id="bce-fin-prem" onclick="setBceFin('premium',this)">
+        <span class="bsl">Premium</span>
+        <span class="bss">+40% interior</span>
+      </button>
+    </div>
+
+    <div class="bce-breakdown" id="bce-breakdown">
+      <div class="bce-row"><span>Soft Costs / Permits</span><span class="bce-val" id="bce-r-soft">—</span></div>
+      <div class="bce-row"><span>Site / Grading</span><span class="bce-val warn" id="bce-r-site">—</span></div>
+      <div class="bce-row"><span>Foundation</span><span class="bce-val" id="bce-r-found">—</span></div>
+      <div class="bce-row"><span>Mechanicals Rough (P+E+HVAC)</span><span class="bce-val" id="bce-r-mech">—</span></div>
+      <div class="bce-row"><span>Framing</span><span class="bce-val" id="bce-r-frame">—</span></div>
+      <div class="bce-row"><span>Exterior Shell</span><span class="bce-val" id="bce-r-ext">—</span></div>
+      <div class="bce-row"><span>Drywall + Insulation</span><span class="bce-val" id="bce-r-dw">—</span></div>
+      <div class="bce-row"><span>Interior Finishes</span><span class="bce-val" id="bce-r-int">—</span></div>
+      <div class="bce-row"><span>Exterior Finishes</span><span class="bce-val" id="bce-r-extfin">—</span></div>
+      <div class="bce-row"><span>Cleaning</span><span class="bce-val" id="bce-r-clean">—</span></div>
+      <div class="bce-total-row">
+        <span>ESTIMATED BUILD COST</span>
+        <span id="bce-r-total">—</span>
+      </div>
+      <div style="font-size:11px;color:#6b6560;margin-top:8px;">$<span id="bce-r-sqft-rate">—</span>/sqft heated &mdash; Site/grading is highest variance ($17K&ndash;$48K range)</div>
+    </div>
+
+    <button class="bce-apply-btn" onclick="bceApplyToRehab()">USE THIS AS REHAB / BUILD COST &rarr;</button>
+  </div>
 </div>
 
 <!-- INPUT CARD -->
@@ -904,6 +1170,105 @@
   // Initialize slider labels
   updateSliderLabel('closing-pct', 'closing-pct-label', '%');
   updateSliderLabel('rehab-months', 'rehab-months-label', ' months');
+
+  // ── BUILD COST ESTIMATOR ──────────────────────────────────────────────
+  let bceMode = 'reno';
+  let bceLot  = 'flat';
+  let bceFin  = 'standard';
+
+  const BCE_REF_SQFT = 2668;
+
+  function setBceMode(mode) {
+    bceMode = mode;
+    document.getElementById('bce-btn-reno').classList.toggle('active', mode === 'reno');
+    document.getElementById('bce-btn-new').classList.toggle('active', mode === 'new');
+    document.getElementById('bce-panel-reno').classList.toggle('visible', mode === 'reno');
+    document.getElementById('bce-panel-new').classList.toggle('visible', mode === 'new');
+  }
+
+  function setBceLot(v, btn) {
+    bceLot = v;
+    document.querySelectorAll('#bce-lot-flat,#bce-lot-mod,#bce-lot-heavy').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    bceCalc();
+  }
+
+  function setBceFin(v, btn) {
+    bceFin = v;
+    document.querySelectorAll('#bce-fin-std,#bce-fin-upg,#bce-fin-prem').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    bceCalc();
+  }
+
+  function bceCalc() {
+    const sqft = parseFloat(document.getElementById('bce-sqft').value) || 0;
+    if (sqft < 100) return;
+
+    const ratio = sqft / BCE_REF_SQFT;
+
+    // Per-sqft rates from 5 Dogwood builds
+    const softCost      = Math.round(8495 * Math.min(ratio, 1.5));
+    const siteCost      = bceLot === 'flat' ? 18000 : bceLot === 'moderate' ? 28000 : 45000;
+    const foundCost     = Math.round(17.53 * sqft);
+    const mechCost      = Math.round(8.87  * sqft);
+    const frameCost     = Math.round(16.34 * sqft);
+    const extShell      = Math.round(19.59 * sqft);
+    const drywallCost   = Math.round(13.69 * sqft);
+    const intMult       = bceFin === 'standard' ? 1.0 : bceFin === 'upgraded' ? 1.2 : 1.4;
+    const intCost       = Math.round(28.48 * sqft * intMult);
+    const extFinCost    = Math.round(47372 * ratio);
+    const cleanCost     = Math.round(1.46  * sqft);
+
+    const total = softCost + siteCost + foundCost + mechCost + frameCost +
+                  extShell + drywallCost + intCost + extFinCost + cleanCost;
+
+    function f(n) { return '$' + Math.round(n).toLocaleString(); }
+
+    document.getElementById('bce-r-soft').textContent   = f(softCost);
+    document.getElementById('bce-r-site').textContent   = f(siteCost);
+    document.getElementById('bce-r-found').textContent  = f(foundCost);
+    document.getElementById('bce-r-mech').textContent   = f(mechCost);
+    document.getElementById('bce-r-frame').textContent  = f(frameCost);
+    document.getElementById('bce-r-ext').textContent    = f(extShell);
+    document.getElementById('bce-r-dw').textContent     = f(drywallCost);
+    document.getElementById('bce-r-int').textContent    = f(intCost);
+    document.getElementById('bce-r-extfin').textContent = f(extFinCost);
+    document.getElementById('bce-r-clean').textContent  = f(cleanCost);
+    document.getElementById('bce-r-total').textContent  = f(total);
+    document.getElementById('bce-r-sqft-rate').textContent = (total / sqft).toFixed(2);
+
+    document.getElementById('bce-breakdown').classList.add('visible');
+  }
+
+  function bceApplyToRehab() {
+    const sqft = parseFloat(document.getElementById('bce-sqft').value) || 0;
+    if (sqft < 100) { alert('Enter a valid sqft first.'); return; }
+
+    const ratio = sqft / BCE_REF_SQFT;
+    const siteCost   = bceLot === 'flat' ? 18000 : bceLot === 'moderate' ? 28000 : 45000;
+    const intMult    = bceFin === 'standard' ? 1.0 : bceFin === 'upgraded' ? 1.2 : 1.4;
+    const total = Math.round(8495 * Math.min(ratio,1.5))
+                + siteCost
+                + Math.round(17.53*sqft) + Math.round(8.87*sqft) + Math.round(16.34*sqft)
+                + Math.round(19.59*sqft) + Math.round(13.69*sqft)
+                + Math.round(28.48*sqft*intMult) + Math.round(47372*ratio)
+                + Math.round(1.46*sqft);
+
+    document.getElementById('rehab').value = total;
+    liveCalc();
+    document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function applyRenoRate(ratePerSqft, label) {
+    const sqft = parseFloat(document.getElementById('sqft').value) || 0;
+    if (sqft > 0) {
+      const cost = Math.round(sqft * ratePerSqft / 500) * 500;
+      document.getElementById('rehab').value = cost;
+      liveCalc();
+    } else {
+      alert('Enter property sqft in the Deal Inputs section first, then click a renovation scope.');
+    }
+  }
 </script>
 
 </body>

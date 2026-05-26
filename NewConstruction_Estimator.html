@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Construction Estimator — Ironwood Homes & Renovations</title>
+<link rel="stylesheet" href="iw-print.css">
+<style>
+  :root {
+    --black: #0a0a0a;
+    --surface: #111111;
+    --surface-2: #181818;
+    --surface-3: #222222;
+    --gold: #c9a84c;
+    --gold-dim: #a0832e;
+    --gold-light: #e8c96a;
+    --text: #f5f0e8;
+    --muted: #b8b0a0;
+    --muted-2: #6b6560;
+    --hairline: #2a2a2a;
+    --green: #5a8a5a;
+    --green-bg: #0d1e0d;
+    --orange: #c9843a;
+    --red: #8a3a3a;
+    --blue: #4a7fc1;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Arial', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* TOP BAR */
+  #topbar {
+    background: #0d0d0d;
+    border-bottom: 1px solid #222;
+    padding: 0 32px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo-group {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-text h1 {
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    color: var(--text);
+    text-transform: uppercase;
+    line-height: 1.2;
+  }
+
+  .logo-text p {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+
+  .topbar-right {
+    text-align: right;
+  }
+
+  .topbar-right .tool-label {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+
+  .topbar-right .back-link {
+    font-size: 11px;
+    color: var(--muted);
+    text-decoration: none;
+    letter-spacing: 1px;
+    margin-top: 2px;
+    display: block;
+  }
+
+  .topbar-right .back-link:hover { color: var(--gold); }
+
+  /* MAIN */
+  main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 36px 24px 80px;
+  }
+
+  /* PAGE HEADER */
+  .page-header {
+    margin-bottom: 36px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .page-header .eyebrow {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+  }
+
+  .page-header h2 {
+    font-family: 'Georgia', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.5px;
+  }
+
+  .page-header p {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.6;
+    max-width: 640px;
+  }
+
+  .data-badge {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 5px 14px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.3);
+    color: var(--gold);
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border-radius: 3px;
+  }
+
+  /* CARD */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 10px;
+    padding: 26px 28px;
+    margin-bottom: 20px;
+  }
+
+  .card-title {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .card-title.gold { color: var(--gold); border-color: rgba(201,168,76,0.3); }
+
+  /* INPUT GROUPS */
+  .input-group {
+    margin-bottom: 18px;
+  }
+
+  .input-group label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+  }
+
+  .input-group label .hint {
+    font-size: 11px;
+    color: var(--muted-2);
+    font-style: italic;
+  }
+
+  .input-row {
+    display: flex;
+    align-items: center;
+    background: var(--black);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .input-row:focus-within { border-color: var(--gold); }
+
+  .input-prefix {
+    padding: 11px 14px;
+    color: var(--muted);
+    font-size: 14px;
+    font-weight: bold;
+    background: #080808;
+    border-right: 1px solid var(--hairline);
+    flex-shrink: 0;
+  }
+
+  .input-row input, .input-row select {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text);
+    font-size: 15px;
+    font-family: 'Arial', sans-serif;
+    padding: 11px 14px;
+  }
+
+  .input-row input::placeholder { color: var(--muted-2); }
+
+  /* SELECTOR ROW */
+  .selector-row {
+    display: grid;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .selector-row.cols-3 { grid-template-columns: repeat(3, 1fr); }
+  .selector-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
+
+  .selector-btn {
+    padding: 12px 10px;
+    background: var(--black);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'Arial', sans-serif;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.2s;
+    line-height: 1.4;
+  }
+
+  .selector-btn .sb-label {
+    display: block;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  .selector-btn .sb-sub {
+    display: block;
+    font-size: 10px;
+    color: var(--muted-2);
+  }
+
+  .selector-btn:hover { border-color: #555; }
+  .selector-btn.active { background: rgba(201,168,76,0.12); border-color: var(--gold); }
+  .selector-btn.active .sb-label { color: var(--gold); }
+  .selector-btn.active .sb-sub { color: var(--muted); }
+
+  .section-label-sm {
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: 10px;
+    margin-top: 4px;
+  }
+
+  /* CALC BUTTON */
+  .calc-btn {
+    width: 100%;
+    padding: 15px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: #0a0a0a;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    font-family: 'Arial', sans-serif;
+    cursor: pointer;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    transition: opacity 0.2s;
+    margin-top: 8px;
+  }
+
+  .calc-btn:hover { opacity: 0.9; }
+
+  /* RESULTS */
+  #results { display: none; }
+  #results.visible { display: block; }
+
+  /* SUMMARY BAR */
+  .summary-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .sum-card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 16px 18px;
+    text-align: center;
+  }
+
+  .sum-card.gold-border { border-color: rgba(201,168,76,0.4); background: rgba(201,168,76,0.06); }
+  .sum-card.green-border { border-color: rgba(90,138,90,0.4); background: rgba(90,138,90,0.06); }
+
+  .sum-label {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    margin-bottom: 8px;
+  }
+
+  .sum-value {
+    font-size: 22px;
+    font-weight: 700;
+    font-family: 'Georgia', serif;
+    color: var(--text);
+    letter-spacing: -0.3px;
+  }
+
+  .sum-value.gold { color: var(--gold); }
+  .sum-value.green { color: var(--green); }
+
+  .sum-sub {
+    font-size: 11px;
+    color: var(--muted-2);
+    margin-top: 4px;
+  }
+
+  /* TRADE TABLE */
+  .trade-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+  }
+
+  .trade-table thead tr {
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+
+  .trade-table th {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 600;
+  }
+
+  .trade-table th.right { text-align: right; }
+
+  .trade-table td {
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--text);
+    border-bottom: 1px solid #1c1c1c;
+    vertical-align: middle;
+  }
+
+  .trade-table td.right { text-align: right; }
+  .trade-table td.muted { color: var(--muted); }
+  .trade-table td.dim { color: var(--muted-2); font-size: 12px; }
+
+  .trade-table tr.total-row td {
+    border-top: 2px solid rgba(201,168,76,0.3);
+    border-bottom: none;
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--gold);
+    padding-top: 14px;
+  }
+
+  .trade-table tr.sub-total td {
+    border-top: 1px solid var(--hairline);
+    font-weight: 700;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .variance-note {
+    font-size: 10px;
+    color: var(--muted-2);
+    font-style: italic;
+    padding: 0 12px 8px;
+  }
+
+  /* PRICE TABLE */
+  .price-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .price-table th {
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted-2);
+    padding: 8px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .price-table th.right { text-align: right; }
+
+  .price-table td {
+    padding: 12px 14px;
+    font-size: 13px;
+    color: var(--text);
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .price-table td.right { text-align: right; }
+
+  .price-table tr.highlight td {
+    background: rgba(201,168,76,0.07);
+    color: var(--gold);
+    font-weight: 700;
+  }
+
+  .price-table tr:last-child td { border-bottom: none; }
+
+  /* RATE CARD */
+  .rate-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .rate-item {
+    background: var(--black);
+    border: 1px solid var(--hairline);
+    border-radius: 6px;
+    padding: 12px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .rate-item .ri-name {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .rate-item .ri-val {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold);
+  }
+
+  /* SCALE CHECK */
+  .scale-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .scale-col {
+    background: var(--black);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 18px;
+  }
+
+  .scale-col h4 {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .scale-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    padding: 5px 0;
+    border-bottom: 1px solid #1a1a1a;
+  }
+
+  .scale-row:last-child { border-bottom: none; }
+  .scale-row .sr-val { color: var(--text); font-weight: 600; }
+  .scale-row .sr-val.green { color: var(--green); }
+  .scale-row .sr-val.gold { color: var(--gold); }
+
+  /* INFO BOX */
+  .info-box {
+    background: rgba(201,168,76,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-top: 14px;
+  }
+
+  .info-box strong { color: var(--gold); }
+
+  /* PRINT LETTERHEAD */
+  .print-letterhead {
+    display: none;
+    text-align: center;
+    padding: 20px 0 16px;
+    border-bottom: 2px solid #c9a84c;
+    margin-bottom: 20px;
+  }
+
+  .print-letterhead h1 {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  .print-letterhead p {
+    font-size: 11px;
+    color: #555;
+    margin-top: 4px;
+    letter-spacing: 1px;
+  }
+
+  .print-btn {
+    width: 100%;
+    padding: 13px;
+    background: transparent;
+    color: var(--muted);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    font-size: 13px;
+    font-family: 'Arial', sans-serif;
+    cursor: pointer;
+    margin-top: 14px;
+    letter-spacing: 1px;
+    transition: all 0.2s;
+  }
+
+  .print-btn:hover { background: var(--surface); }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: var(--hairline);
+    margin: 16px 0;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 700px) {
+    .summary-bar { grid-template-columns: repeat(2, 1fr); }
+    .selector-row.cols-3 { grid-template-columns: 1fr 1fr; }
+    .rate-card-grid { grid-template-columns: 1fr; }
+    .scale-grid { grid-template-columns: 1fr; }
+    #topbar { padding: 0 16px; }
+    main { padding: 24px 16px 60px; }
+    .card { padding: 20px 16px; }
+  }
+
+  @media print {
+    #topbar, .calc-btn, .print-btn, .page-header { display: none !important; }
+    .print-letterhead { display: block !important; }
+    body { background: #fff; color: #000; }
+    .card { background: #f9f7f2; border-color: #ddd; }
+    .sum-card { background: #f5f3ee; border-color: #ccc; }
+    main { padding: 0; max-width: 100%; }
+    .sum-value, .sum-value.gold, .sum-value.green { color: #1a1410; }
+    .trade-table td, .trade-table th { color: #1a1410; }
+    .price-table td, .price-table th { color: #1a1410; }
+    #results { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<header id="topbar">
+  <div class="logo-group">
+    <img src="ihr-logo.png" alt="IHR Logo" style="width:44px;height:44px;object-fit:contain;flex-shrink:0;">
+    <div class="logo-text">
+      <h1>Ironwood Homes &amp; Renovations LLC</h1>
+      <p>Anchor Pro Solutions &times; Landon Renovations</p>
+    </div>
+  </div>
+  <div class="topbar-right">
+    <div class="tool-label">New Construction Estimator</div>
+    <a class="back-link" href="Ironwood_Dashboard.html">&larr; Back to Dashboard</a>
+  </div>
+</header>
+
+<!-- PRINT LETTERHEAD -->
+<div class="print-letterhead">
+  <h1>Ironwood Homes &amp; Renovations LLC</h1>
+  <p>New Construction Estimator &mdash; Internal Use Only</p>
+</div>
+
+<main>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="eyebrow">Internal Tool</div>
+    <h2>New Construction Estimator</h2>
+    <p>Trade-by-trade cost projections for ground-up residential builds. All rates are calibrated to 5 completed Dogwood builds (avg. 2,668 sqft, sub-contract model, ~5-month timeline). Use this for go/no-go decisions and sub bids.</p>
+    <div class="data-badge">Based on 5 Completed Dogwood Builds &mdash; Real Numbers</div>
+  </div>
+
+  <!-- INPUT CARD -->
+  <div class="card">
+    <div class="card-title">Build Parameters</div>
+
+    <!-- Square Footage -->
+    <div class="section-label-sm">Square Footage</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:18px;">
+      <div class="input-group" style="margin-bottom:0;">
+        <label>Heated SqFt (main floor)</label>
+        <div class="input-row">
+          <input type="number" id="sqft-main" placeholder="2,668" min="500" step="50" oninput="onInputChange()">
+          <span style="padding:0 12px;color:var(--muted-2);font-size:12px;">sqft</span>
+        </div>
+      </div>
+      <div class="input-group" style="margin-bottom:0;">
+        <label>Bonus Room SqFt <span class="hint">optional</span></label>
+        <div class="input-row">
+          <input type="number" id="sqft-bonus" placeholder="0" min="0" step="50" oninput="onInputChange()">
+          <span style="padding:0 12px;color:var(--muted-2);font-size:12px;">sqft</span>
+        </div>
+      </div>
+      <div class="input-group" style="margin-bottom:0;">
+        <label>Garage SqFt <span class="hint">optional</span></label>
+        <div class="input-row">
+          <input type="number" id="sqft-garage" placeholder="0" min="0" step="50" oninput="onInputChange()">
+          <span style="padding:0 12px;color:var(--muted-2);font-size:12px;">sqft</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lot Type -->
+    <div class="section-label-sm">Lot / Site Conditions</div>
+    <div class="selector-row cols-3">
+      <button class="selector-btn active" id="lot-flat" onclick="setLot('flat',this)">
+        <span class="sb-label">Flat / Clear</span>
+        <span class="sb-sub">~$18K site &amp; grading</span>
+      </button>
+      <button class="selector-btn" id="lot-moderate" onclick="setLot('moderate',this)">
+        <span class="sb-label">Moderate Grade</span>
+        <span class="sb-sub">Some clearing ~$28K</span>
+      </button>
+      <button class="selector-btn" id="lot-heavy" onclick="setLot('heavy',this)">
+        <span class="sb-label">Heavy Grade / Wooded</span>
+        <span class="sb-sub">Full clearing ~$45K</span>
+      </button>
+    </div>
+
+    <!-- Finish Level -->
+    <div class="section-label-sm">Interior Finish Level</div>
+    <div class="selector-row cols-3">
+      <button class="selector-btn active" id="fin-standard" onclick="setFinish('standard',this)">
+        <span class="sb-label">Standard</span>
+        <span class="sb-sub">Base Dogwood rates</span>
+      </button>
+      <button class="selector-btn" id="fin-upgraded" onclick="setFinish('upgraded',this)">
+        <span class="sb-label">Upgraded</span>
+        <span class="sb-sub">Cabinets/counters/floors +20%</span>
+      </button>
+      <button class="selector-btn" id="fin-premium" onclick="setFinish('premium',this)">
+        <span class="sb-label">Premium</span>
+        <span class="sb-sub">Full upgrade package +40%</span>
+      </button>
+    </div>
+
+    <!-- Exterior Type -->
+    <div class="section-label-sm">Exterior Type</div>
+    <div class="selector-row cols-3">
+      <button class="selector-btn active" id="ext-siding" onclick="setExterior('siding',this)">
+        <span class="sb-label">Siding Only</span>
+        <span class="sb-sub">Base exterior cost</span>
+      </button>
+      <button class="selector-btn" id="ext-mix" onclick="setExterior('mix',this)">
+        <span class="sb-label">Mix Siding + Brick</span>
+        <span class="sb-sub">+$8,000</span>
+      </button>
+      <button class="selector-btn" id="ext-brick" onclick="setExterior('brick',this)">
+        <span class="sb-label">Full Brick</span>
+        <span class="sb-sub">+$18,000</span>
+      </button>
+    </div>
+
+    <!-- Financing -->
+    <div class="section-label-sm">Financing Structure</div>
+    <div class="selector-row cols-2">
+      <button class="selector-btn active" id="fin-cash" onclick="setFinancing('cash',this)">
+        <span class="sb-label">Cash Deal</span>
+        <span class="sb-sub">No interest carry cost</span>
+      </button>
+      <button class="selector-btn" id="fin-hml" onclick="setFinancing('hml',this)">
+        <span class="sb-label">Hard Money (5-month)</span>
+        <span class="sb-sub">12% on 70% of build cost (~+$12K)</span>
+      </button>
+    </div>
+
+    <button class="calc-btn" onclick="calculate()">CALCULATE BUILD ESTIMATE</button>
+  </div>
+
+  <!-- RESULTS -->
+  <div id="results">
+
+    <!-- SUMMARY BAR -->
+    <div class="summary-bar">
+      <div class="sum-card gold-border">
+        <div class="sum-label">Total Build Cost</div>
+        <div class="sum-value gold" id="r-build-cost">—</div>
+        <div class="sum-sub" id="r-per-sqft">— /sqft</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-label">Heated SqFt</div>
+        <div class="sum-value" id="r-sqft">—</div>
+        <div class="sum-sub">main heated area</div>
+      </div>
+      <div class="sum-card">
+        <div class="sum-label">Min Sale Price (65%)</div>
+        <div class="sum-value" id="r-min-sale">—</div>
+        <div class="sum-sub">build / 0.65</div>
+      </div>
+      <div class="sum-card green-border">
+        <div class="sum-label">Profit @ Min Sale</div>
+        <div class="sum-value green" id="r-min-profit">—</div>
+        <div class="sum-sub" id="r-min-margin">— margin</div>
+      </div>
+    </div>
+
+    <!-- TRADE BREAKDOWN -->
+    <div class="card">
+      <div class="card-title gold">Trade-by-Trade Cost Breakdown — Internal View</div>
+      <table class="trade-table">
+        <thead>
+          <tr>
+            <th>Trade / Category</th>
+            <th class="right">Cost</th>
+            <th class="right">$/SqFt</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody id="trade-tbody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+      <div class="variance-note" id="variance-note"></div>
+
+      <div class="info-box">
+        <strong>Key Variance Drivers:</strong> Site/grading is the single largest variable ($17K–$48K range across Dogwood builds). Interior finish level (cabinets, counters, flooring) and exterior type (siding vs brick) are the two adjustable levers. Foundation, mechanicals, framing, and drywall are highly consistent — use base numbers with confidence.
+      </div>
+    </div>
+
+    <!-- SALE PRICE SCENARIOS -->
+    <div class="card">
+      <div class="card-title gold">Sale Price Scenarios &amp; Profit Analysis</div>
+      <table class="price-table">
+        <thead>
+          <tr>
+            <th>Margin Target</th>
+            <th class="right">Sale Price</th>
+            <th class="right">Build Cost</th>
+            <th class="right">Closing/Exit Costs</th>
+            <th class="right">Net Profit</th>
+            <th class="right">Margin</th>
+          </tr>
+        </thead>
+        <tbody id="price-tbody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+      <div class="info-box" style="margin-top:12px;">
+        <strong>Dogwood Avg Reference:</strong> 5-build avg sale $502,006 &middot; Avg build cost $358,452 &middot; Avg profit $143,554 (28.6% net margin). Commissions avg $27,116. Settlement/closing avg $50,418. Interest (if financed) $0&ndash;$14,568.
+      </div>
+    </div>
+
+    <!-- SUB RATE CARD -->
+    <div class="card">
+      <div class="card-title gold">Sub-Contract Rate Card — What to Pay Each Trade</div>
+      <div class="rate-card-grid" id="rate-card-grid">
+        <!-- Populated by JS -->
+      </div>
+      <div class="info-box">
+        These rates are derived from actual Dogwood sub invoices at 2,668 sqft. Scale linearly for size. Site/grading is the most variable — get 3 bids on every lot. Interior finish rates shift up with upgraded/premium selections.
+      </div>
+    </div>
+
+    <!-- SCALE CHECK -->
+    <div class="card">
+      <div class="card-title gold">Scale Check — Time &amp; Cost Impact</div>
+      <div class="scale-grid">
+        <div class="scale-col">
+          <h4>Jeff Manages Only</h4>
+          <div class="scale-row">
+            <span>Jeff's Time on Build</span>
+            <span class="sr-val">~80 hrs / build</span>
+          </div>
+          <div class="scale-row">
+            <span>Jeff's Cost (@ $50/hr)</span>
+            <span class="sr-val gold" id="sc-jeff-manage-cost">—</span>
+          </div>
+          <div class="scale-row">
+            <span>Builds/Year Capacity</span>
+            <span class="sr-val green">3–4 simultaneous</span>
+          </div>
+          <div class="scale-row">
+            <span>Overhead Freed Up</span>
+            <span class="sr-val green">High — sub model</span>
+          </div>
+        </div>
+        <div class="scale-col">
+          <h4>Jeff Builds (Self-Performs)</h4>
+          <div class="scale-row">
+            <span>Jeff's Time on Build</span>
+            <span class="sr-val">~500 hrs / build</span>
+          </div>
+          <div class="scale-row">
+            <span>Jeff's Cost (@ $50/hr)</span>
+            <span class="sr-val" id="sc-jeff-build-cost">—</span>
+          </div>
+          <div class="scale-row">
+            <span>Framing Labor Saved</span>
+            <span class="sr-val green" id="sc-framing-saved">—</span>
+          </div>
+          <div class="scale-row">
+            <span>Net Difference vs Sub-Out</span>
+            <span class="sr-val" id="sc-net-diff">—</span>
+          </div>
+          <div class="scale-row">
+            <span>Builds/Year Capacity</span>
+            <span class="sr-val" style="color:var(--orange);">1–2 max (time-locked)</span>
+          </div>
+        </div>
+      </div>
+      <div class="info-box">
+        <strong>Bottom line:</strong> At the sub-contract model, Jeff manages 3–4 builds simultaneously. Self-performing framing saves ~$15K–$20K per build but consumes ~420 additional hours — the equivalent of managing 5+ builds. <strong>Scale wins on volume, not self-performance.</strong>
+      </div>
+    </div>
+
+    <button class="print-btn" onclick="window.print()">PRINT / SAVE AS PDF</button>
+
+  </div><!-- end #results -->
+
+</main>
+
+<script>
+// ── STATE ─────────────────────────────────────────────────────────────
+let lotType = 'flat';
+let finishLevel = 'standard';
+let exteriorType = 'siding';
+let financingType = 'cash';
+
+// ── SELECTORS ─────────────────────────────────────────────────────────
+function setLot(v, btn) {
+  lotType = v;
+  document.querySelectorAll('#lot-flat,#lot-moderate,#lot-heavy').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setFinish(v, btn) {
+  finishLevel = v;
+  document.querySelectorAll('#fin-standard,#fin-upgraded,#fin-premium').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setExterior(v, btn) {
+  exteriorType = v;
+  document.querySelectorAll('#ext-siding,#ext-mix,#ext-brick').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setFinancing(v, btn) {
+  financingType = v;
+  document.querySelectorAll('#fin-cash,#fin-hml').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function onInputChange() {
+  // Live preview can go here if needed
+}
+
+// ── FORMATTING ────────────────────────────────────────────────────────
+function fmt(n) {
+  if (n === null || n === undefined || isNaN(n)) return '—';
+  return '$' + Math.round(n).toLocaleString();
+}
+function fmtPct(n) { return (n * 100).toFixed(1) + '%'; }
+
+// ── BASE RATES — 5 Dogwood builds, calibrated to 2,668 sqft ──────────
+// All per-sqft rates are anchored to heated sqft
+const BASE = {
+  softCosts:       { perSqft: 3.18,  total: 8495,   label: 'Soft Costs / Permits',                 variance: 'low',     note: 'Varies by county — budget $8–12K' },
+  siteGrading:     { perSqft: 26.94, total: 71872,   label: 'Site Prep / Grading / Utility Hook-up', variance: 'HIGH',   note: 'Range $17K–$48K — get 3 bids on every lot' },
+  foundation:      { perSqft: 17.53, total: 46771,   label: 'Foundation (slab or crawl)',            variance: 'low',    note: 'Very consistent — use base number confidently' },
+  mechanicals:     { perSqft: 8.87,  total: 23680,   label: 'Mechanicals Rough (Plumbing + Electric + HVAC)', variance: 'low', note: 'Very consistent across builds' },
+  framing:         { perSqft: 16.34, total: 43598,   label: 'Framing (Labor + Material + Trusses)',  variance: 'low',    note: 'Consistent — scale with sqft' },
+  exteriorShell:   { perSqft: 19.59, total: 52279,   label: 'Exterior Shell (Roof + Siding + Windows + Doors)', variance: 'medium', note: 'Brick upgrade adds $8K–$18K' },
+  drywallInsul:    { perSqft: 13.69, total: 36527,   label: 'Drywall + Insulation',                  variance: 'low',    note: 'Very consistent — use base number' },
+  interiorFinishes:{ perSqft: 28.48, total: 75976,   label: 'Interior Finishes (Paint + Cabinets + Counters + Tile + Floors + Trim)', variance: 'medium', note: 'Upgraded +20%, Premium +40%' },
+  exteriorFinishes:{ perSqft: 17.75, total: 47372,   label: 'Exterior Finishes (Gutters + Driveway + Landscaping)', variance: 'medium', note: 'Can be value-engineered' },
+  cleaning:        { perSqft: 1.46,  total: 3888,    label: 'Final Cleaning',                        variance: 'low',    note: 'Fixed rate — minimal variance' },
+};
+
+const REFERENCE_SQFT = 2668;
+
+// ── CALCULATE ─────────────────────────────────────────────────────────
+function calculate() {
+  const sqftMain  = parseFloat(document.getElementById('sqft-main').value) || 0;
+  const sqftBonus = parseFloat(document.getElementById('sqft-bonus').value) || 0;
+  const sqftGarage= parseFloat(document.getElementById('sqft-garage').value) || 0;
+
+  if (sqftMain < 500) {
+    alert('Please enter a valid heated sqft (minimum 500).');
+    return;
+  }
+
+  // Effective sqft for costing: bonus at 0.6x, garage at 0.25x
+  const sqftEff = sqftMain + (sqftBonus * 0.6) + (sqftGarage * 0.25);
+  const sqftRatio = sqftEff / REFERENCE_SQFT;
+
+  // ── LOT / SITE ──
+  let siteCost;
+  if (lotType === 'flat')     siteCost = 18000;
+  else if (lotType === 'moderate') siteCost = 28000;
+  else                              siteCost = 45000;
+
+  // ── SOFT COSTS (county-based, slight sqft scale) ──
+  const softCost = Math.round(BASE.softCosts.total * Math.min(sqftRatio, 1.5));
+
+  // ── FOUNDATION ──
+  const foundationCost = Math.round(BASE.foundation.perSqft * sqftEff);
+
+  // ── MECHANICALS ──
+  const mechanicalsCost = Math.round(BASE.mechanicals.perSqft * sqftMain);
+
+  // ── FRAMING ──
+  const framingCost = Math.round(BASE.framing.perSqft * sqftEff);
+
+  // ── EXTERIOR SHELL (base + brick premium) ──
+  let exteriorShellCost = Math.round(BASE.exteriorShell.perSqft * sqftEff);
+  if (exteriorType === 'mix')   exteriorShellCost += 8000;
+  if (exteriorType === 'brick') exteriorShellCost += 18000;
+
+  // ── DRYWALL + INSULATION ──
+  const drywallCost = Math.round(BASE.drywallInsul.perSqft * sqftMain);
+
+  // ── INTERIOR FINISHES (finish level multiplier) ──
+  let interiorMult = 1.0;
+  if (finishLevel === 'upgraded') interiorMult = 1.20;
+  if (finishLevel === 'premium')  interiorMult = 1.40;
+  const interiorCost = Math.round(BASE.interiorFinishes.perSqft * sqftMain * interiorMult);
+
+  // ── EXTERIOR FINISHES ──
+  const exteriorFinCost = Math.round(BASE.exteriorFinishes.perSqft * sqftRatio * REFERENCE_SQFT);
+
+  // ── CLEANING ──
+  const cleaningCost = Math.round(BASE.cleaning.perSqft * sqftEff);
+
+  // ── INTEREST (HML) ──
+  const subtotalPreInterest = softCost + siteCost + foundationCost + mechanicalsCost
+    + framingCost + exteriorShellCost + drywallCost + interiorCost + exteriorFinCost + cleaningCost;
+
+  let interestCost = 0;
+  if (financingType === 'hml') {
+    // 12% annual on 70% of build cost for 5/12 year
+    interestCost = Math.round(subtotalPreInterest * 0.70 * 0.12 * (5/12));
+  }
+
+  const totalBuildCost = subtotalPreInterest + interestCost;
+  const perSqft = totalBuildCost / sqftMain;
+
+  // ── CLOSING/EXIT COST ESTIMATE (scaled from Dogwood avg) ──
+  // Commissions (5.5% of sale), settlement (~10% of sale for full close)
+  // We'll compute exit costs at each price scenario
+
+  // ── SALE PRICE SCENARIOS ──
+  // Margin = (salePrice - buildCost - exitCosts) / salePrice
+  // exitCosts ≈ commissions(5.5%) + settlement(~$6K fixed + 1.5% of sale)
+  function saleScenario(marginTarget) {
+    // solve: margin = (sp - bc - 0.055*sp - 6000 - 0.015*sp) / sp
+    // margin * sp = sp - bc - 0.07*sp - 6000
+    // margin * sp = sp*(1 - 0.07) - bc - 6000
+    // sp * (margin - 1 + 0.07) = -bc - 6000
+    // sp = (bc + 6000) / (1 - 0.07 - margin)
+    const exitFixed = 6000;
+    const exitPct = 0.07; // 5.5% commissions + 1.5% settlement
+    const salePrice = (totalBuildCost + exitFixed) / (1 - exitPct - marginTarget);
+    const exitCosts = salePrice * exitPct + exitFixed;
+    const profit = salePrice - totalBuildCost - exitCosts;
+    const actualMargin = profit / salePrice;
+    return { salePrice, exitCosts, profit, actualMargin };
+  }
+
+  const s65 = saleScenario(0.25); // ~25% net → sale/build ratio ~1.35
+  const s70 = saleScenario(0.28);
+  const s75 = saleScenario(0.32);
+
+  // ── SCALE CHECK ──
+  const jeffManageCost = 80 * 50;  // 80 hrs at $50
+  const jeffBuildCost  = 500 * 50; // 500 hrs at $50
+  const framingLaborSaved = Math.round(framingCost * 0.45); // ~45% of framing is labor
+  const netDiff = jeffBuildCost - framingLaborSaved;
+
+  // ── BUILD TRADE TABLE ──
+  const trades = [
+    { label: 'Soft Costs / Permits',          cost: softCost,          note: 'County fees, drawings, inspections', variance: 'LOW' },
+    { label: 'Site Prep / Grading / Utilities',cost: siteCost,          note: lotTypeNote(),                       variance: 'HIGH' },
+    { label: 'Foundation',                     cost: foundationCost,    note: 'Slab or crawl — consistent',         variance: 'LOW' },
+    { label: 'Mechanicals Rough (P + E + HVAC)',cost: mechanicalsCost,  note: 'All 3 trades rough-in',             variance: 'LOW' },
+    { label: 'Framing (Labor + Material + Trusses)', cost: framingCost, note: 'Full stick frame + roof trusses',   variance: 'LOW' },
+    { label: 'Exterior Shell',                 cost: exteriorShellCost, note: extNote(),                           variance: 'MED' },
+    { label: 'Drywall + Insulation',           cost: drywallCost,       note: 'Consistent — board + hang + finish',variance: 'LOW' },
+    { label: 'Interior Finishes',              cost: interiorCost,      note: finishNote(),                        variance: 'MED' },
+    { label: 'Exterior Finishes',              cost: exteriorFinCost,   note: 'Gutters + driveway + landscaping',  variance: 'MED' },
+    { label: 'Final Cleaning',                 cost: cleaningCost,      note: 'Post-construction clean',           variance: 'LOW' },
+  ];
+
+  if (financingType === 'hml') {
+    trades.push({ label: 'HML Interest (5-month, 12%)', cost: interestCost, note: '70% of build cost × 12% × 5/12 yr', variance: 'VAR' });
+  }
+
+  // ── POPULATE DOM ──
+  document.getElementById('r-build-cost').textContent = fmt(totalBuildCost);
+  document.getElementById('r-per-sqft').textContent = '$' + perSqft.toFixed(2) + '/sqft';
+  document.getElementById('r-sqft').textContent = sqftMain.toLocaleString() + (sqftBonus ? ' + ' + sqftBonus + ' bonus' : '') + (sqftGarage ? ' + ' + sqftGarage + ' gar' : '');
+  document.getElementById('r-min-sale').textContent = fmt(s65.salePrice);
+  document.getElementById('r-min-profit').textContent = fmt(s65.profit);
+  document.getElementById('r-min-margin').textContent = fmtPct(s65.actualMargin) + ' net margin';
+
+  // Trade table
+  const tbody = document.getElementById('trade-tbody');
+  tbody.innerHTML = '';
+  let runningTotal = 0;
+  trades.forEach(t => {
+    runningTotal += t.cost;
+    const varColor = t.variance === 'HIGH' ? 'color:#c9843a' : t.variance === 'MED' ? 'color:#b8b0a0' : 'color:#4a8a4a';
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td>${t.label}</td>
+      <td class="right" style="font-weight:600;">${fmt(t.cost)}</td>
+      <td class="right dim">$${(t.cost / sqftMain).toFixed(2)}</td>
+      <td class="dim" style="font-size:11px;">${t.note} <span style="${varColor};font-size:10px;font-weight:700;margin-left:4px;">${t.variance}</span></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  const totalRow = document.createElement('tr');
+  totalRow.className = 'total-row';
+  totalRow.innerHTML = `
+    <td>TOTAL BUILD COST</td>
+    <td class="right">${fmt(totalBuildCost)}</td>
+    <td class="right">$${perSqft.toFixed(2)}/sqft</td>
+    <td></td>
+  `;
+  tbody.appendChild(totalRow);
+
+  document.getElementById('variance-note').textContent =
+    'Variance key: LOW = use base number confidently | MED = moderate variance | HIGH = get 3 bids, huge lot-to-lot swing';
+
+  // Price table
+  const pbody = document.getElementById('price-tbody');
+  pbody.innerHTML = '';
+  [
+    { label: 'Conservative (65% target)', data: s65, highlight: false },
+    { label: 'Target (70% target)',        data: s70, highlight: true  },
+    { label: 'Stretch (75% target)',       data: s75, highlight: false },
+  ].forEach(row => {
+    const tr = document.createElement('tr');
+    if (row.highlight) tr.className = 'highlight';
+    tr.innerHTML = `
+      <td>${row.label}</td>
+      <td class="right">${fmt(row.data.salePrice)}</td>
+      <td class="right">${fmt(totalBuildCost)}</td>
+      <td class="right">${fmt(row.data.exitCosts)}</td>
+      <td class="right" style="font-weight:700;">${fmt(row.data.profit)}</td>
+      <td class="right">${fmtPct(row.data.actualMargin)}</td>
+    `;
+    pbody.appendChild(tr);
+  });
+
+  // Rate card
+  const rateGrid = document.getElementById('rate-card-grid');
+  rateGrid.innerHTML = '';
+  const rateItems = [
+    { name: 'Site / Grading',         val: fmt(siteCost) + ' (lot-specific)' },
+    { name: 'Foundation',             val: fmt(foundationCost) },
+    { name: 'Framing (full)',         val: fmt(framingCost) },
+    { name: 'Plumbing Rough',         val: fmt(Math.round(mechanicalsCost * 0.38)) },
+    { name: 'Electrical Rough',       val: fmt(Math.round(mechanicalsCost * 0.34)) },
+    { name: 'HVAC Rough',             val: fmt(Math.round(mechanicalsCost * 0.28)) },
+    { name: 'Roofing',                val: fmt(Math.round(exteriorShellCost * 0.25)) },
+    { name: 'Siding / Ext. Shell',    val: fmt(Math.round(exteriorShellCost * 0.45)) },
+    { name: 'Windows + Doors',        val: fmt(Math.round(exteriorShellCost * 0.30)) },
+    { name: 'Drywall + Insulation',   val: fmt(drywallCost) },
+    { name: 'Cabinets + Counters',    val: fmt(Math.round(interiorCost * 0.35)) },
+    { name: 'Flooring (all)',         val: fmt(Math.round(interiorCost * 0.22)) },
+    { name: 'Paint (int. + ext.)',    val: fmt(Math.round(interiorCost * 0.12)) },
+    { name: 'Tile Work',              val: fmt(Math.round(interiorCost * 0.08)) },
+    { name: 'Trim + Interior Doors',  val: fmt(Math.round(interiorCost * 0.08)) },
+    { name: 'Plumbing Trim',          val: fmt(Math.round(interiorCost * 0.07)) },
+    { name: 'Electrical Trim',        val: fmt(Math.round(interiorCost * 0.04)) },
+    { name: 'Appliances',             val: fmt(Math.round(interiorCost * 0.04)) },
+    { name: 'Gutters',                val: fmt(Math.round(exteriorFinCost * 0.12)) },
+    { name: 'Driveway / Concrete',    val: fmt(Math.round(exteriorFinCost * 0.38)) },
+    { name: 'Landscaping / Sod',      val: fmt(Math.round(exteriorFinCost * 0.50)) },
+    { name: 'Permits / Soft Costs',   val: fmt(softCost) },
+  ];
+
+  rateItems.forEach(item => {
+    const div = document.createElement('div');
+    div.className = 'rate-item';
+    div.innerHTML = `<span class="ri-name">${item.name}</span><span class="ri-val">${item.val}</span>`;
+    rateGrid.appendChild(div);
+  });
+
+  // Scale check
+  document.getElementById('sc-jeff-manage-cost').textContent = fmt(jeffManageCost) + ' (80 hrs)';
+  document.getElementById('sc-jeff-build-cost').textContent  = fmt(jeffBuildCost)  + ' (500 hrs)';
+  document.getElementById('sc-framing-saved').textContent    = fmt(framingLaborSaved);
+  const netEl = document.getElementById('sc-net-diff');
+  netEl.textContent = (netDiff > 0 ? '+' : '') + fmt(netDiff) + ' additional cost';
+  netEl.className = 'sr-val ' + (netDiff > 0 ? '' : 'green');
+
+  // Show results
+  document.getElementById('results').classList.add('visible');
+  document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  // Save to localStorage
+  saveEstimate(sqftMain, sqftBonus, sqftGarage, totalBuildCost, perSqft, s65, s70, s75);
+}
+
+function lotTypeNote() {
+  if (lotType === 'flat')     return 'Flat/clear lot selected — low end';
+  if (lotType === 'moderate') return 'Moderate slope/clearing selected';
+  return 'Heavy grade/wooded selected — high end';
+}
+
+function extNote() {
+  if (exteriorType === 'siding') return 'Siding only — base cost';
+  if (exteriorType === 'mix')    return 'Mix siding + brick — +$8K';
+  return 'Full brick — +$18K';
+}
+
+function finishNote() {
+  if (finishLevel === 'standard') return 'Standard finishes — base Dogwood rate';
+  if (finishLevel === 'upgraded') return 'Upgraded cabinets/counters/floors — +20%';
+  return 'Premium finish package — +40%';
+}
+
+function saveEstimate(sqftMain, sqftBonus, sqftGarage, totalBuild, perSqft, s65, s70, s75) {
+  try {
+    const data = {
+      savedAt: new Date().toISOString(),
+      inputs: { sqftMain, sqftBonus, sqftGarage, lotType, finishLevel, exteriorType, financingType },
+      outputs: {
+        totalBuildCost: totalBuild,
+        perSqft: perSqft,
+        salePrices: {
+          conservative: { salePrice: s65.salePrice, profit: s65.profit, margin: s65.actualMargin },
+          target:       { salePrice: s70.salePrice, profit: s70.profit, margin: s70.actualMargin },
+          stretch:      { salePrice: s75.salePrice, profit: s75.profit, margin: s75.actualMargin },
+        }
+      }
+    };
+    localStorage.setItem('ironwood_newbuild_estimate', JSON.stringify(data));
+  } catch(e) {}
+}
+</script>
+
+</body>
+</html>
