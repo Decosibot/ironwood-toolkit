@@ -970,6 +970,11 @@ function toggleRoom(el, val) {
 
 function calcEstimate() {
   validateStep1();
+  // Pull material estimate from Material Calculator if available
+  const matEst = (() => {
+    try { return JSON.parse(localStorage.getItem('ironwood_material_estimate') || 'null'); } catch(e) { return null; }
+  })();
+
   const sqft = parseFloat(document.getElementById('sqft').value) || 0;
   const cond = document.getElementById('condition').value;
   if (!cond) return;
@@ -998,8 +1003,21 @@ function calcEstimate() {
   low  = Math.max(low,  2500);
   high = Math.max(high, 5000);
 
+  // If a material estimate exists from the Material Calculator, blend it in.
+  // Materials represent ~40% of total cost; replace that portion with the
+  // calculator's low/high while keeping the labor/overhead formula-based.
+  if (matEst && matEst.total > 0) {
+    const laborLow  = low  * 0.60;
+    const laborHigh = high * 0.60;
+    low  = Math.round((laborLow  + matEst.low)  / 500) * 500;
+    high = Math.round((laborHigh + matEst.high) / 500) * 500;
+    low  = Math.max(low,  2500);
+    high = Math.max(high, 5000);
+  }
+
   state.lowEst  = low;
   state.highEst = high;
+  state._matEst = matEst; // stash for display
 
   // Large project flag: estimate over threshold OR complex/historic + large sqft
   const isLarge = high >= LARGE_PROJECT_THRESHOLD ||
@@ -1076,14 +1094,30 @@ function updateEstimateDisplay() {
   const workCount = state.workTypes.length;
   const isLarge = state.isLargeProject;
   const hasSqft = state.sqft > 0;
+  const matEst = state._matEst;
 
   document.getElementById('estimateBox').classList.remove('hidden');
+
+  // Material Calculator badge
+  const existingBadge = document.getElementById('matEstBadge');
+  if (existingBadge) existingBadge.remove();
+  if (matEst && matEst.total > 0) {
+    const dateStr = matEst.date ? new Date(matEst.date).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' }) : '';
+    const badge = document.createElement('div');
+    badge.id = 'matEstBadge';
+    badge.style.cssText = 'background:var(--ok-bg);border:1px solid var(--ok);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--ok);margin-bottom:12px;text-align:left;';
+    badge.innerHTML = '&#x1F4D0; <strong>Material estimate loaded</strong> — ' + fmt(matEst.low) + '–' + fmt(matEst.high) + ' from your Material Calculator' + (dateStr ? ' (' + dateStr + ')' : '');
+    const estBox = document.getElementById('estimateBox');
+    estBox.insertBefore(badge, estBox.firstChild);
+  }
 
   if (hasSqft) {
     document.getElementById('estRange').textContent = fmt(state.lowEst) + ' – ' + fmt(state.highEst);
     document.getElementById('estSub').textContent = isLarge
       ? 'This is a larger project - someone from our team will reach out to walk through the details and give you a firm number.'
-      : 'Based on your project scope. Final pricing confirmed after free site visit.';
+      : (matEst && matEst.total > 0
+          ? 'Materials estimate from your Material Calculator has been factored in. Final pricing confirmed after free site visit.'
+          : 'Based on your project scope. Final pricing confirmed after free site visit.');
   } else {
     document.getElementById('estRange').textContent = 'We\'ll price it on site';
     document.getElementById('estSub').textContent = 'No square footage entered - our team will measure and quote during the free site visit.';

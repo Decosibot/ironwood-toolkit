@@ -327,6 +327,101 @@
   margin: 24px 0;
 }
 
+/* ── MATERIAL SECTIONS ── */
+.mat-section-card {
+  border: 1.5px solid var(--hairline);
+  border-radius: var(--radius);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.mat-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface-2);
+  padding: 12px 16px;
+  cursor: pointer;
+  user-select: none;
+  gap: 10px;
+}
+.mat-section-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+.mat-section-icon { font-size: 20px; }
+.mat-section-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  margin-left: 4px;
+}
+.mat-section-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 18px;
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: color .15s, background .15s;
+}
+.mat-section-remove:hover { color: var(--err); background: var(--err-bg); }
+.mat-section-body {
+  padding: 16px 16px 4px;
+  border-top: 1px solid var(--hairline);
+}
+.mat-section-body.collapsed { display: none; }
+
+.add-section-btn {
+  width: 100%;
+  padding: 13px;
+  border: 1.5px dashed var(--bronze);
+  border-radius: var(--radius);
+  background: var(--bronze-wash);
+  color: var(--bronze);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: border-color .18s, background .18s;
+  margin-top: 6px;
+}
+.add-section-btn:hover { background: var(--bronze-wash); opacity: .85; }
+
+/* ── COMBINED TOTAL BAR ── */
+.combined-total-bar {
+  background: rgba(255,255,255,.13);
+  border: 1px solid rgba(255,255,255,.22);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  margin-top: 22px;
+}
+.combined-total-title {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  color: rgba(255,255,255,.55);
+  margin-bottom: 12px;
+}
+.combined-total-range {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.combined-total-range-label { font-size: 13px; color: rgba(255,255,255,.7); }
+.combined-total-range-value { font-size: 18px; font-weight: 700; color: #fff; }
+.combined-total-sub {
+  font-size: 11px;
+  color: rgba(255,255,255,.4);
+  margin-top: 6px;
+}
+
 @media print {
   .iw-header, .iw-hero, .add-room-btn, .print-btn,
   .proj-selector-card, .step-label, .view-toggle,
@@ -403,41 +498,41 @@
   <!-- LEFT: INPUTS -->
   <div>
 
-    <!-- STEP 1: PROJECT TYPE -->
+    <!-- STEP 1: ADD MATERIAL TYPES -->
     <div class="iw-card iw-gap-lg proj-selector-card">
-      <div class="step-label">Step 1 — Choose Project Type</div>
+      <div class="step-label">Step 1 — Add Material Types</div>
       <div class="project-grid" id="projectGrid">
-        <div class="proj-btn active" data-type="paint" onclick="selectProject('paint')">
+        <div class="proj-btn" data-type="paint" onclick="addSection('paint')">
           <div class="proj-btn-icon">🖌️</div>
           <div class="proj-btn-label">Paint</div>
           <div class="proj-btn-sub">Interior walls</div>
         </div>
-        <div class="proj-btn" data-type="flooring" onclick="selectProject('flooring')">
+        <div class="proj-btn" data-type="flooring" onclick="addSection('flooring')">
           <div class="proj-btn-icon">🪵</div>
           <div class="proj-btn-label">Flooring</div>
           <div class="proj-btn-sub">LVP / hardwood</div>
         </div>
-        <div class="proj-btn" data-type="carpet" onclick="selectProject('carpet')">
+        <div class="proj-btn" data-type="carpet" onclick="addSection('carpet')">
           <div class="proj-btn-icon">🏠</div>
           <div class="proj-btn-label">Carpet</div>
           <div class="proj-btn-sub">Bedrooms</div>
         </div>
-        <div class="proj-btn" data-type="tile" onclick="selectProject('tile')">
+        <div class="proj-btn" data-type="tile" onclick="addSection('tile')">
           <div class="proj-btn-icon">🔲</div>
           <div class="proj-btn-label">Tile</div>
           <div class="proj-btn-sub">Bath / kitchen</div>
         </div>
-        <div class="proj-btn" data-type="drywall" onclick="selectProject('drywall')">
+        <div class="proj-btn" data-type="drywall" onclick="addSection('drywall')">
           <div class="proj-btn-icon">🧱</div>
           <div class="proj-btn-label">Drywall</div>
           <div class="proj-btn-sub">Walls + ceiling</div>
         </div>
-        <div class="proj-btn" data-type="deck" onclick="selectProject('deck')">
+        <div class="proj-btn" data-type="deck" onclick="addSection('deck')">
           <div class="proj-btn-icon">🌿</div>
           <div class="proj-btn-label">Deck / Patio</div>
           <div class="proj-btn-sub">Outdoor build</div>
         </div>
-        <div class="proj-btn" data-type="basement" onclick="selectProject('basement')">
+        <div class="proj-btn" data-type="basement" onclick="addSection('basement')">
           <div class="proj-btn-icon">🏗️</div>
           <div class="proj-btn-label">Basement</div>
           <div class="proj-btn-sub">Full finish</div>
@@ -445,11 +540,11 @@
       </div>
     </div>
 
-    <!-- STEP 2: ROOMS -->
+    <!-- STEP 2: SECTIONS / ROOMS -->
     <div class="iw-card iw-gap-lg" style="margin-top:16px;">
       <div class="step-label">Step 2 — Add Rooms / Areas</div>
-      <div id="roomsContainer"></div>
-      <button class="add-room-btn" onclick="addRoom()">+ Add Another Room</button>
+      <div id="sectionsContainer"></div>
+      <button class="add-section-btn" onclick="showProjectGrid()">+ Add Another Material Type</button>
     </div>
 
   </div>
@@ -473,8 +568,8 @@
 
 <script>
 // ── STATE ──
-let projectType = 'paint';
-let rooms = [];
+let sections = [];       // [{ id, type, rooms:[] }]
+let sectionCounter = 0;
 let roomCounter = 0;
 let viewMode = 'split'; // 'split' | 'client'
 
@@ -549,120 +644,198 @@ const FIELD_META = {
   windows: { label:'Windows',      placeholder:'0', min:0, max:20 },
 };
 
-// ── SELECT PROJECT ──
-function selectProject(type) {
-  projectType = type;
-  document.querySelectorAll('.proj-btn').forEach(b => b.classList.remove('active'));
-  document.querySelector(`[data-type="${type}"]`).classList.add('active');
-  rooms = [];
-  roomCounter = 0;
-  renderRooms();
-  addRoom();
+// ── ADD SECTION ──
+function addSection(type) {
+  const cfg = PROJECT_CONFIG[type];
+  const sectionId = ++sectionCounter;
+  const section = { id: sectionId, type, rooms: [] };
+  sections.push(section);
+  // Add first room automatically
+  addRoomToSection(sectionId);
+  renderSections();
+  // Scroll to new section
+  setTimeout(() => {
+    const el = document.getElementById('section-' + sectionId);
+    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 50);
+}
+
+function removeSection(sectionId) {
+  sections = sections.filter(s => s.id !== sectionId);
+  renderSections();
+  recalc();
 }
 
 // ── ADD ROOM ──
-function addRoom() {
-  const cfg = PROJECT_CONFIG[projectType];
+function addRoomToSection(sectionId) {
+  const section = sections.find(s => s.id === sectionId);
+  if (!section) return;
+  const cfg = PROJECT_CONFIG[section.type];
   const id = ++roomCounter;
   const defaults = {};
   cfg.fields.forEach(f => defaults[f] = '');
-  const optDefaults = { ...cfg.optionDefaults };
-  rooms.push({ id, fields: defaults, options: { ...optDefaults } });
-  renderRooms();
+  section.rooms.push({ id, fields: defaults, options: { ...cfg.optionDefaults } });
+  renderSections();
   recalc();
 }
 
-function removeRoom(id) {
-  rooms = rooms.filter(r => r.id !== id);
+function removeRoom(sectionId, roomId) {
+  const section = sections.find(s => s.id === sectionId);
+  if (!section) return;
+  section.rooms = section.rooms.filter(r => r.id !== roomId);
+  renderSections();
   recalc();
-  renderRooms();
 }
 
-function updateField(id, field, val) {
-  const room = rooms.find(r => r.id === id);
+function updateField(sectionId, roomId, field, val) {
+  const section = sections.find(s => s.id === sectionId);
+  if (!section) return;
+  const room = section.rooms.find(r => r.id === roomId);
   if (room) { room.fields[field] = parseFloat(val) || 0; recalc(); }
 }
 
-function updateOption(id, opt, val) {
-  const room = rooms.find(r => r.id === id);
+function updateOption(sectionId, roomId, opt, val) {
+  const section = sections.find(s => s.id === sectionId);
+  if (!section) return;
+  const room = section.rooms.find(r => r.id === roomId);
   if (room) { room.options[opt] = val; recalc(); }
 }
 
-// ── RENDER ROOMS ──
-function renderRooms() {
-  const cfg = PROJECT_CONFIG[projectType];
-  const container = document.getElementById('roomsContainer');
+// ── SHOW PROJECT GRID (scroll to top of selector) ──
+function showProjectGrid() {
+  const card = document.querySelector('.proj-selector-card');
+  if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ── RENDER SECTIONS ──
+const SECTION_ICONS = { paint:'🖌️', flooring:'🪵', carpet:'🏠', tile:'🔲', drywall:'🧱', deck:'🌿', basement:'🏗️' };
+
+function renderSections() {
+  const container = document.getElementById('sectionsContainer');
   container.innerHTML = '';
 
-  if (rooms.length === 0) { addRoom(); return; }
+  if (sections.length === 0) {
+    container.innerHTML = '<div style="text-align:center;padding:24px;color:var(--muted);font-size:13px;">Click a material type above to get started.</div>';
+    return;
+  }
 
-  rooms.forEach((room, idx) => {
-    const colClass = cfg.fields.length >= 4 ? 'dim-grid-4' : cfg.fields.length === 3 ? 'dim-grid-3' : 'dim-grid-2';
-    const fieldsHTML = cfg.fields.map(f => {
-      const meta = FIELD_META[f];
-      return `
-        <div>
-          <label class="iw-label">${meta.label}</label>
-          <input class="iw-input" type="number" min="${meta.min}" max="${meta.max}"
-            placeholder="${meta.placeholder}"
-            value="${room.fields[f] || ''}"
-            oninput="updateField(${room.id}, '${f}', this.value)"/>
+  sections.forEach(section => {
+    const cfg = PROJECT_CONFIG[section.type];
+    const icon = SECTION_ICONS[section.type] || '📦';
+    const roomCount = section.rooms.length;
+
+    const sectionDiv = document.createElement('div');
+    sectionDiv.className = 'mat-section-card';
+    sectionDiv.id = 'section-' + section.id;
+
+    // Build room cards HTML
+    let roomsHTML = '';
+    section.rooms.forEach((room, idx) => {
+      const colClass = cfg.fields.length >= 4 ? 'dim-grid-4' : cfg.fields.length === 3 ? 'dim-grid-3' : 'dim-grid-2';
+      const fieldsHTML = cfg.fields.map(f => {
+        const meta = FIELD_META[f];
+        return `
+          <div>
+            <label class="iw-label">${meta.label}</label>
+            <input class="iw-input" type="number" min="${meta.min}" max="${meta.max}"
+              placeholder="${meta.placeholder}"
+              value="${room.fields[f] || ''}"
+              oninput="updateField(${section.id}, ${room.id}, '${f}', this.value)"/>
+          </div>`;
+      }).join('');
+
+      const optionsHTML = cfg.options.map(opt => `
+        <label class="opt-check">
+          <input type="checkbox" ${room.options[opt] ? 'checked' : ''}
+            onchange="updateOption(${section.id}, ${room.id}, '${opt}', this.checked)"/>
+          ${cfg.optionLabels[opt]}
+        </label>`).join('');
+
+      roomsHTML += `
+        <div class="room-card">
+          <div class="room-card-header">
+            <div class="room-label">
+              <div class="room-number">${idx + 1}</div>
+              ${cfg.roomLabel} ${idx + 1}
+            </div>
+            ${section.rooms.length > 1 ? `<button class="remove-room" onclick="removeRoom(${section.id}, ${room.id})" title="Remove">×</button>` : ''}
+          </div>
+          <div class="dim-grid ${colClass}">${fieldsHTML}</div>
+          ${cfg.options.length ? `<div class="room-options">${optionsHTML}</div>` : ''}
         </div>`;
-    }).join('');
+    });
 
-    const optionsHTML = cfg.options.map(opt => `
-      <label class="opt-check">
-        <input type="checkbox" ${room.options[opt] ? 'checked' : ''}
-          onchange="updateOption(${room.id}, '${opt}', this.checked)"/>
-        ${cfg.optionLabels[opt]}
-      </label>`).join('');
-
-    const div = document.createElement('div');
-    div.className = 'room-card';
-    div.innerHTML = `
-      <div class="room-card-header">
-        <div class="room-label">
-          <div class="room-number">${idx + 1}</div>
-          ${cfg.roomLabel} ${idx + 1}
+    sectionDiv.innerHTML = `
+      <div class="mat-section-header" onclick="toggleSection(${section.id})">
+        <div class="mat-section-header-left">
+          <span class="mat-section-icon">${icon}</span>
+          ${cfg.label}
+          <span class="mat-section-count">(${roomCount} ${roomCount === 1 ? cfg.roomLabel.toLowerCase() : cfg.roomLabel.toLowerCase() + 's'})</span>
         </div>
-        ${rooms.length > 1 ? `<button class="remove-room" onclick="removeRoom(${room.id})" title="Remove">×</button>` : ''}
+        <button class="mat-section-remove" onclick="event.stopPropagation();removeSection(${section.id})" title="Remove section">×</button>
       </div>
-      <div class="dim-grid ${colClass}">${fieldsHTML}</div>
-      ${cfg.options.length ? `<div class="room-options">${optionsHTML}</div>` : ''}
-    `;
-    container.appendChild(div);
+      <div class="mat-section-body" id="section-body-${section.id}">
+        ${roomsHTML}
+        <button class="add-room-btn" onclick="addRoomToSection(${section.id})">+ Add ${cfg.roomLabel}</button>
+      </div>`;
+
+    container.appendChild(sectionDiv);
   });
+}
+
+function toggleSection(sectionId) {
+  const body = document.getElementById('section-body-' + sectionId);
+  if (body) body.classList.toggle('collapsed');
 }
 
 // ── CALCULATE ──
 const WASTE = 1.20; // 20% waste factor
 
 function recalc() {
-  const lines = [];
+  const allLines = []; // flat array of all section lines for rendering
+  const sectionTotals = []; // [{ type, label, yourCost, clientCost }]
   let hasData = false;
 
-  rooms.forEach((room, idx) => {
-    const f = room.fields;
-    const o = room.options;
-    const l = parseFloat(f.length) || 0;
-    const w = parseFloat(f.width)  || 0;
-    const h = parseFloat(f.height) || 0;
-    const doors   = parseInt(f.doors)   || 0;
-    const windows = parseInt(f.windows) || 0;
-    if (!l || !w) return;
-    hasData = true;
-    const roomLabel = `${PROJECT_CONFIG[projectType].roomLabel} ${idx + 1}`;
+  sections.forEach(section => {
+    const cfg = PROJECT_CONFIG[section.type];
+    const sectionLines = [];
+    let sectionHasData = false;
 
-    if (projectType === 'paint') calcPaint(lines, roomLabel, l, w, h, doors, windows, o);
-    if (projectType === 'flooring') calcFlooring(lines, roomLabel, l, w, o);
-    if (projectType === 'carpet') calcCarpet(lines, roomLabel, l, w, o);
-    if (projectType === 'tile') calcTile(lines, roomLabel, l, w, o);
-    if (projectType === 'drywall') calcDrywall(lines, roomLabel, l, w, h, doors, windows, o);
-    if (projectType === 'deck') calcDeck(lines, roomLabel, l, w, o);
-    if (projectType === 'basement') calcBasement(lines, roomLabel, l, w, h, doors, windows, o);
+    section.rooms.forEach((room, idx) => {
+      const f = room.fields;
+      const o = room.options;
+      const l = parseFloat(f.length) || 0;
+      const w = parseFloat(f.width)  || 0;
+      const h = parseFloat(f.height) || 0;
+      const doors   = parseInt(f.doors)   || 0;
+      const windows = parseInt(f.windows) || 0;
+      if (!l || !w) return;
+      sectionHasData = true;
+      hasData = true;
+      const roomLabel = `${cfg.roomLabel} ${idx + 1}`;
+
+      if (section.type === 'paint')    calcPaint(sectionLines, roomLabel, l, w, h, doors, windows, o);
+      if (section.type === 'flooring') calcFlooring(sectionLines, roomLabel, l, w, o);
+      if (section.type === 'carpet')   calcCarpet(sectionLines, roomLabel, l, w, o);
+      if (section.type === 'tile')     calcTile(sectionLines, roomLabel, l, w, o);
+      if (section.type === 'drywall')  calcDrywall(sectionLines, roomLabel, l, w, h, doors, windows, o);
+      if (section.type === 'deck')     calcDeck(sectionLines, roomLabel, l, w, o);
+      if (section.type === 'basement') calcBasement(sectionLines, roomLabel, l, w, h, doors, windows, o);
+    });
+
+    if (sectionHasData && sectionLines.length > 0) {
+      // Prepend section header marker
+      allLines.push({ sectionHeader: cfg.label, sectionId: section.id });
+      allLines.push(...sectionLines);
+
+      const matLines = sectionLines.filter(l => l.total !== undefined);
+      const yourCost   = matLines.reduce((s, l) => s + l.total, 0);
+      const clientCost = matLines.reduce((s, l) => s + Math.round(l.total * MARKUP), 0);
+      sectionTotals.push({ type: section.type, label: cfg.label, yourCost, clientCost });
+    }
   });
 
-  renderResults(lines, hasData);
+  renderResults(allLines, hasData, sectionTotals);
 }
 
 // ── PAINT ──
@@ -1041,22 +1214,40 @@ function setView(mode) {
 }
 
 // ── RENDER RESULTS ──
-function renderResults(lines, hasData) {
+function renderResults(lines, hasData, sectionTotals) {
   const body = document.getElementById('resultsBody');
   const subtitle = document.getElementById('resultsSubtitle');
 
   if (!hasData || lines.length === 0) {
-    subtitle.textContent = 'Select a project type and add room dimensions.';
-    body.innerHTML = `<div class="empty-results"><div class="empty-results-icon">📋</div>Add at least one room to generate your materials list.</div>`;
+    subtitle.textContent = 'Add a material type and room dimensions to get started.';
+    body.innerHTML = `<div class="empty-results"><div class="empty-results-icon">📋</div>Add at least one material type and room to generate your list.</div>`;
     return;
   }
 
-  subtitle.textContent = `${PROJECT_CONFIG[projectType].label} — ${rooms.length} room${rooms.length !== 1 ? 's' : ''} — 20% waste factor included`;
+  const totalRooms = sections.reduce((s, sec) => s + sec.rooms.length, 0);
+  const typeCount  = sectionTotals.length;
+  subtitle.textContent = `${typeCount} material type${typeCount !== 1 ? 's' : ''} — ${totalRooms} room${totalRooms !== 1 ? 's' : ''} — 20% waste factor included`;
 
-  const matLines = lines.filter(l => l.total !== undefined);
+  const matLines    = lines.filter(l => l.total !== undefined);
   const totalYour   = matLines.reduce((s, l) => s + l.total, 0);
   const totalClient = matLines.reduce((s, l) => s + Math.round(l.total * MARKUP), 0);
   const totalMargin = totalClient - totalYour;
+
+  // Combined estimate range
+  const lowEst  = Math.round(totalClient * 0.85);
+  const highEst = Math.round(totalClient * 1.15);
+
+  // Save to localStorage for Public Estimator
+  const sectionSummary = sectionTotals.map(s => ({ type: s.type, label: s.label, yourCost: s.yourCost, clientCost: s.clientCost }));
+  try {
+    localStorage.setItem('ironwood_material_estimate', JSON.stringify({
+      low: lowEst,
+      high: highEst,
+      total: totalClient,
+      sections: sectionSummary,
+      date: new Date().toISOString()
+    }));
+  } catch(e) { /* storage unavailable */ }
 
   // View toggle
   const toggleHTML = `
@@ -1082,6 +1273,13 @@ function renderResults(lines, hasData) {
   let tableOpen = false;
 
   lines.forEach(line => {
+    // Section group header (top-level material type divider)
+    if (line.sectionHeader !== undefined) {
+      if (tableOpen) { html += '</tbody></table>'; tableOpen = false; }
+      html += `<div class="results-section-label" style="margin-top:22px;padding-top:10px;border-top:1px solid rgba(255,255,255,.1);">${line.sectionHeader}</div>`;
+      return;
+    }
+    // Room sub-header
     if (line.section !== undefined) {
       if (tableOpen) { html += '</tbody></table>'; tableOpen = false; }
       html += `<div class="results-section-label">${line.section}</div>`;
@@ -1116,10 +1314,23 @@ function renderResults(lines, hasData) {
 
   if (tableOpen) html += '</tbody></table>';
 
-  // Totals
+  // Per-type subtotals (split view only)
+  if (viewMode === 'split' && sectionTotals.length > 1) {
+    html += `<div class="results-section-label" style="margin-top:22px;">Per-Type Summary</div>`;
+    html += `<div class="totals-grid internal-only" style="grid-template-columns:1fr 1fr;margin-top:6px;">`;
+    sectionTotals.forEach(s => {
+      html += `<div class="totals-cell" style="text-align:left;">
+        <div class="totals-cell-label">${s.label}</div>
+        <div class="totals-cell-value" style="font-size:14px;">${fmtMoney(s.clientCost)}</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Grand totals
   if (viewMode === 'split') {
     html += `
-      <div class="totals-grid internal-only">
+      <div class="totals-grid internal-only" style="margin-top:12px;">
         <div class="totals-cell">
           <div class="totals-cell-label">Your Cost</div>
           <div class="totals-cell-value">${fmtMoney(totalYour)}</div>
@@ -1143,6 +1354,21 @@ function renderResults(lines, hasData) {
       </div>`;
   }
 
+  // Combined total bar (shown in both views)
+  html += `
+    <div class="combined-total-bar">
+      <div class="combined-total-title">Combined Estimate Range</div>
+      <div class="combined-total-range">
+        <span class="combined-total-range-label">Low estimate</span>
+        <span class="combined-total-range-value">${fmtMoney(lowEst)}</span>
+      </div>
+      <div class="combined-total-range">
+        <span class="combined-total-range-label">High estimate</span>
+        <span class="combined-total-range-value">${fmtMoney(highEst)}</span>
+      </div>
+      <div class="combined-total-sub">Low = client price &times; 0.85 &nbsp;|&nbsp; High = client price &times; 1.15 &nbsp;|&nbsp; Saved for Public Estimator</div>
+    </div>`;
+
   html += `
     <div class="waste-note" style="margin-top:12px;">All quantities include 20% waste factor. Mid-range material pricing.</div>
     <button class="print-btn" onclick="window.print()">Print Client Sheet (PDF)</button>`;
@@ -1155,7 +1381,7 @@ function fmtMoney(n) {
 }
 
 // ── INIT ──
-addRoom();
+renderSections(); // show empty state prompt
 </script>
 </body>
 </html>
