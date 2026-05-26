@@ -1631,7 +1631,9 @@ function buildScopeDraft() {
   const sorted = Object.keys(EST_KW_MAP).sort((a,b) => b.length - a.length);
   sorted.forEach(kw => {
     if (kw.startsWith('_')) return;
-    if (lower.includes(kw)) EST_KW_MAP[kw].forEach(idx => directMatched.set(idx, true));
+    const esc = kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const re = new RegExp('(?<![a-z])' + esc + '(?:s|es|ing|ed|er)?(?![a-z])', 'i');
+    if (re.test(lower)) EST_KW_MAP[kw].forEach(idx => directMatched.set(idx, true));
   });
 
   if (directMatched.size === 0) {

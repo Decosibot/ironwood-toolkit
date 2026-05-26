@@ -2067,11 +2067,10 @@ function runSmartScope() {
   // Sort keywords longest-first so "tile floor" matches before "tile"
   const sorted = Object.keys(SCOPE_KEYWORD_MAP).sort((a,b) => b.length - a.length);
   sorted.forEach(kw => {
-    // Skip internal dependency keywords (prefixed with _)
     if (kw.startsWith('_')) return;
-    if (lower.includes(kw)) {
-      SCOPE_KEYWORD_MAP[kw].forEach(idx => directMatched.set(idx, true));
-    }
+    const esc = kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+    const re = new RegExp('(?<![a-z])' + esc + '(?:s|es|ing|ed|er)?(?![a-z])', 'i');
+    if (re.test(lower)) SCOPE_KEYWORD_MAP[kw].forEach(idx => directMatched.set(idx, true));
   });
 
   if (directMatched.size === 0) {
