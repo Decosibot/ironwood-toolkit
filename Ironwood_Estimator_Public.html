@@ -1024,6 +1024,21 @@ function calcEstimate() {
     (sqft >= 2000 && ['complex','historic'].includes(state.difficulty)) ||
     (sqft >= 3000 && ['poor','gut'].includes(cond));
   state.isLargeProject = isLarge;
+
+  // Save context for Material Calculator two-way sync
+  try {
+    localStorage.setItem('ironwood_estimate_context', JSON.stringify({
+      projectType:  state.projectType,
+      projectLabel: state.projectLabel,
+      workTypes:    state.workTypes,
+      rooms:        state.rooms,
+      sqft:         sqft,
+      condition:    cond,
+      lowEst:       low,
+      highEst:      high,
+      date:         new Date().toISOString()
+    }));
+  } catch(e) {}
 }
 
 function updateVisualization() {
@@ -1126,6 +1141,18 @@ function updateEstimateDisplay() {
   document.getElementById('estType').textContent  = state.projectLabel || '-';
   document.getElementById('estSqft').textContent  = hasSqft ? state.sqft.toLocaleString() + ' sqft' : 'Not provided';
   document.getElementById('estScope').textContent = workCount ? workCount + ' trade' + (workCount>1?'s':'') : (state.rooms.length ? state.rooms.length + ' rooms' : '-');
+
+  // Material Calc link — show if no material estimate loaded yet
+  const existingMatLink = document.getElementById('matCalcLink');
+  if (existingMatLink) existingMatLink.remove();
+  if (!matEst || matEst.total === 0) {
+    const link = document.createElement('a');
+    link.id = 'matCalcLink';
+    link.href = 'IPG_MaterialCalc.html';
+    link.style.cssText = 'display:block;margin-top:12px;padding:10px 14px;background:var(--bronze-wash);border:1px solid var(--bronze-border);border-radius:6px;font-size:12px;color:var(--bronze-deep);text-decoration:none;text-align:center;font-weight:600;letter-spacing:.03em;';
+    link.innerHTML = '📐 Get a detailed material breakdown → Material Calculator';
+    document.getElementById('estimateBox').appendChild(link);
+  }
 
   updateVisualization();
 }

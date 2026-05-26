@@ -1380,8 +1380,101 @@ function fmtMoney(n) {
   return '$' + Math.round(n).toLocaleString();
 }
 
+// ── ESTIMATE → MATERIAL CALC SYNC ──
+// Maps Free Estimate project types and work types to material section types
+const ESTIMATE_TYPE_MAP = {
+  full_rehab:  ['paint','flooring','tile','drywall'],
+  kitchen:     ['tile','paint'],
+  bathroom:    ['tile','paint'],
+  addition:    ['drywall','paint','flooring'],
+  flooring:    ['flooring'],
+  paint:       ['paint'],
+  exterior:    ['paint','deck'],
+  multi:       ['paint','flooring'],
+};
+const WORK_TYPE_MAP = {
+  'Paint':             'paint',
+  'Flooring':          'flooring',
+  'Tile / Backsplash': 'tile',
+  'Drywall / Ceilings':'drywall',
+  'Cabinets':          null,
+  'Countertops':       null,
+  'Plumbing':          null,
+  'Electrical':        null,
+  'HVAC':              null,
+  'Windows / Doors':   null,
+  'Roofing':           null,
+  'Landscaping':       null,
+};
+
+function loadFromEstimate() {
+  try {
+    const ctx = JSON.parse(localStorage.getItem('ironwood_estimate_context') || 'null');
+    if (!ctx || !ctx.projectType) return;
+
+    // Determine which section types to add
+    const typesToAdd = new Set();
+
+    // From work types (more specific — prefer these)
+    if (ctx.workTypes && ctx.workTypes.length > 0) {
+      ctx.workTypes.forEach(w => {
+        const mapped = WORK_TYPE_MAP[w];
+        if (mapped) typesToAdd.add(mapped);
+      });
+    }
+    // Fill from project type if work types gave nothing mappable
+    if (typesToAdd.size === 0) {
+      (ESTIMATE_TYPE_MAP[ctx.projectType] || ['paint']).forEach(t => typesToAdd.add(t));
+    }
+
+    if (typesToAdd.size === 0) return;
+
+    // Estimate a room size from sqft: sqrt gives rough side length, min 10ft
+    const sqft = ctx.sqft || 0;
+    const side = sqft > 0 ? Math.round(Math.sqrt(sqft / Math.max(ctx.rooms ? ctx.rooms.length : 1, 1))) : 14;
+    const roomL = Math.max(side, 10);
+    const roomW = Math.max(Math.round(roomL * 0.75), 10);
+
+    // Add sections
+    typesToAdd.forEach(type => {
+      if (!PROJECT_CONFIG[type]) return;
+      const sectionId = ++sectionCounter;
+      const section = { id: sectionId, type, rooms: [] };
+      sections.push(section);
+      // Add one room with estimated dimensions
+      const roomId = ++roomCounter;
+      const cfg = PROJECT_CONFIG[type];
+      const fields = {};
+      cfg.fields.forEach(f => { fields[f] = ''; });
+      fields.length = roomL;
+      fields.width  = roomW;
+      if (fields.height !== undefined) fields.height = 9;
+      const options = {};
+      if (cfg.options) cfg.options.forEach(o => { options[o] = cfg.optionDefaults ? (cfg.optionDefaults[o] ?? false) : false; });
+      section.rooms.push({ id: roomId, fields, options });
+    });
+
+    renderSections();
+    recalc();
+
+    // Show sync banner
+    const banner = document.createElement('div');
+    banner.id = 'est-sync-banner';
+    const projLabel = ctx.projectLabel || ctx.projectType;
+    const dateStr = ctx.date ? new Date(ctx.date).toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '';
+    banner.style.cssText = 'background:#1a2a1f;border:1px solid #2d4a35;border-radius:8px;padding:12px 18px;margin-bottom:16px;font-size:13px;color:#7EC98A;display:flex;align-items:center;gap:10px;';
+    banner.innerHTML = `<span style="font-size:18px;">📐</span><span><strong>Loaded from Free Estimate</strong> — ${projLabel}${ctx.sqft ? ', ' + ctx.sqft.toLocaleString() + ' sqft' : ''}${dateStr ? ' (' + dateStr + ')' : ''}. Dimensions are estimated — adjust rooms for accuracy.</span><a href="Ironwood_Estimator_Public.html" style="margin-left:auto;color:#7EC98A;font-size:12px;white-space:nowrap;text-decoration:none;opacity:.8;">← Back to Estimate</a>`;
+
+    const container = document.getElementById('sectionsContainer');
+    if (container && container.parentNode) {
+      container.parentNode.insertBefore(banner, container);
+    }
+  } catch(e) {}
+}
+
 // ── INIT ──
-renderSections(); // show empty state prompt
+loadFromEstimate(); // pre-populate from Free Estimate if available
+if (sections.length === 0) renderSections(); // show empty state if nothing loaded
 </script>
 </body>
 </html>
