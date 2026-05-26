@@ -396,8 +396,30 @@ function initAutocomplete() {
       <div class="upload-previews" id="uploadPreviews"></div>
       <div class="upload-file-list" id="uploadFileList"></div>
 
-      <label class="iw-label" style="margin-top:22px;">Approximate square footage of the project area <span style="font-weight:400;color:var(--muted);">- optional</span></label>
-      <input class="iw-input" type="number" id="sqft" placeholder="e.g. 1200 - skip if you're not sure" min="100" max="10000" oninput="calcEstimate()"/>
+      <label class="iw-label" style="margin-top:22px;">Project square footage <span style="font-weight:400;color:var(--muted);">- optional but improves accuracy</span></label>
+
+      <!-- sqft toggle -->
+      <div style="display:flex;gap:8px;margin-bottom:12px;">
+        <button id="sqft-tab-know" onclick="setSqftMode('know')" style="flex:1;padding:8px;border-radius:6px;border:1px solid var(--hairline);background:var(--bronze);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);">I know my sqft</button>
+        <button id="sqft-tab-measure" onclick="setSqftMode('measure')" style="flex:1;padding:8px;border-radius:6px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-soft);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);">Calculate from rooms</button>
+      </div>
+
+      <!-- mode: know sqft -->
+      <div id="sqft-mode-know">
+        <input class="iw-input" type="number" id="sqft-direct" placeholder="e.g. 1200 - skip if you're not sure" min="100" max="10000" oninput="calcEstimate()"/>
+      </div>
+
+      <!-- mode: measure rooms -->
+      <div id="sqft-mode-measure" style="display:none;">
+        <div id="sqft-rooms-list"></div>
+        <button onclick="addSqftRoom()" style="width:100%;margin-top:8px;padding:9px;border:1px dashed var(--hairline);border-radius:6px;background:transparent;color:var(--bronze);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);">+ Add Room / Area</button>
+        <div style="margin-top:10px;padding:10px 14px;background:var(--surface);border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-size:12px;color:var(--ink-soft);font-family:var(--sans);">Total calculated sqft</span>
+          <span id="sqft-calc-total" style="font-size:18px;font-weight:700;color:var(--bronze-deep);font-family:var(--sans);">—</span>
+        </div>
+      </div>
+      <!-- unified sqft value read by calcEstimate -->
+      <input type="hidden" id="sqft" value=""/>
 
       <label class="iw-label">Project condition - <span style="font-weight:400;color:var(--muted);">pick the one that best describes the space <em>today</em></span></label>
       <div class="diff-grid" id="condGrid" style="grid-template-columns:1fr 1fr;">
@@ -659,6 +681,117 @@ function initAutocomplete() {
 </footer>
 
 <script>
+// ── SQFT ROOM BUILDER ──
+let sqftMode = 'know';
+let sqftRooms = [];
+let sqftRoomCounter = 0;
+
+const ROOM_PRESETS = [
+  { label:'Living Room',    l:18, w:14 },
+  { label:'Kitchen',        l:14, w:12 },
+  { label:'Primary Bedroom',l:16, w:14 },
+  { label:'Bedroom',        l:12, w:11 },
+  { label:'Bathroom',       l:9,  w:7  },
+  { label:'Dining Room',    l:13, w:11 },
+  { label:'Hallway',        l:20, w:4  },
+  { label:'Basement',       l:30, w:25 },
+];
+
+function setSqftMode(mode) {
+  sqftMode = mode;
+  document.getElementById('sqft-mode-know').style.display    = mode === 'know'    ? '' : 'none';
+  document.getElementById('sqft-mode-measure').style.display = mode === 'measure' ? '' : 'none';
+  const btnKnow    = document.getElementById('sqft-tab-know');
+  const btnMeasure = document.getElementById('sqft-tab-measure');
+  btnKnow.style.background    = mode === 'know'    ? 'var(--bronze)' : 'var(--surface)';
+  btnKnow.style.color         = mode === 'know'    ? '#fff'          : 'var(--ink-soft)';
+  btnMeasure.style.background = mode === 'measure' ? 'var(--bronze)' : 'var(--surface)';
+  btnMeasure.style.color      = mode === 'measure' ? '#fff'          : 'var(--ink-soft)';
+  recalcSqft();
+}
+
+function addSqftRoom(preset) {
+  const id = ++sqftRoomCounter;
+  sqftRooms.push({ id, label: preset ? preset.label : 'Room ' + id, l: preset ? preset.l : '', w: preset ? preset.w : '', h: '' });
+  renderSqftRooms();
+  recalcSqft();
+}
+
+function removeSqftRoom(id) {
+  sqftRooms = sqftRooms.filter(r => r.id !== id);
+  renderSqftRooms();
+  recalcSqft();
+}
+
+function updateSqftRoom(id, field, val) {
+  const r = sqftRooms.find(r => r.id === id);
+  if (r) { r[field] = parseFloat(val) || ''; recalcSqft(); }
+}
+
+function updateSqftRoomLabel(id, val) {
+  const r = sqftRooms.find(r => r.id === id);
+  if (r) r.label = val;
+}
+
+function renderSqftRooms() {
+  const list = document.getElementById('sqft-rooms-list');
+  if (!list) return;
+  if (sqftRooms.length === 0) {
+    list.innerHTML = `
+      <div style="margin-bottom:10px;">
+        <div style="font-size:11px;color:var(--muted);font-family:var(--sans);margin-bottom:8px;letter-spacing:.03em;">Quick add a common room:</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          ${ROOM_PRESETS.map(p => `<button onclick="addSqftRoom(${JSON.stringify(p).replace(/"/g,"'")})" style="padding:5px 10px;border-radius:20px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-soft);font-size:11px;cursor:pointer;font-family:var(--sans);">${p.label}</button>`).join('')}
+        </div>
+      </div>`;
+    return;
+  }
+  list.innerHTML = sqftRooms.map(r => `
+    <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:8px;padding:12px 14px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <input value="${r.label}" onchange="updateSqftRoomLabel(${r.id},this.value)" style="flex:1;border:none;border-bottom:1px solid var(--hairline);background:transparent;font-size:13px;font-weight:600;color:var(--ink);font-family:var(--sans);padding:2px 0;outline:none;">
+        <button onclick="removeSqftRoom(${r.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:0 4px;">&times;</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+        <div>
+          <div style="font-size:10px;color:var(--muted);font-family:var(--sans);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em;">Length (ft)</div>
+          <input type="number" value="${r.l}" placeholder="e.g. 14" min="2" max="200" oninput="updateSqftRoom(${r.id},'l',this.value)" style="width:100%;border:1px solid var(--hairline);border-radius:4px;padding:6px 8px;font-size:13px;background:var(--surface-2);color:var(--ink);font-family:var(--sans);outline:none;">
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--muted);font-family:var(--sans);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em;">Width (ft)</div>
+          <input type="number" value="${r.w}" placeholder="e.g. 12" min="2" max="200" oninput="updateSqftRoom(${r.id},'w',this.value)" style="width:100%;border:1px solid var(--hairline);border-radius:4px;padding:6px 8px;font-size:13px;background:var(--surface-2);color:var(--ink);font-family:var(--sans);outline:none;">
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--muted);font-family:var(--sans);margin-bottom:3px;text-transform:uppercase;letter-spacing:.05em;">Height (ft) <span style="font-weight:400;opacity:.6;">opt.</span></div>
+          <input type="number" value="${r.h}" placeholder="e.g. 9" min="6" max="20" oninput="updateSqftRoom(${r.id},'h',this.value)" style="width:100%;border:1px solid var(--hairline);border-radius:4px;padding:6px 8px;font-size:13px;background:var(--surface-2);color:var(--ink);font-family:var(--sans);outline:none;">
+        </div>
+      </div>
+      ${r.l && r.w ? `<div style="margin-top:6px;font-size:11px;color:var(--bronze);font-family:var(--sans);">= ${Math.round(r.l * r.w).toLocaleString()} sqft</div>` : ''}
+    </div>`).join('') +
+    `<div style="margin-top:4px;">
+      <div style="font-size:11px;color:var(--muted);font-family:var(--sans);margin-bottom:6px;">Quick add:</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;">
+        ${ROOM_PRESETS.map(p => `<button onclick="addSqftRoom(${JSON.stringify(p).replace(/"/g,"'")})" style="padding:4px 9px;border-radius:20px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-soft);font-size:11px;cursor:pointer;font-family:var(--sans);">${p.label}</button>`).join('')}
+      </div>
+    </div>`;
+}
+
+function recalcSqft() {
+  let total = 0;
+  if (sqftMode === 'know') {
+    total = parseFloat(document.getElementById('sqft-direct')?.value) || 0;
+  } else {
+    sqftRooms.forEach(r => { total += (parseFloat(r.l) || 0) * (parseFloat(r.w) || 0); });
+    const totalEl = document.getElementById('sqft-calc-total');
+    if (totalEl) totalEl.textContent = total > 0 ? total.toLocaleString() + ' sqft' : '—';
+  }
+  document.getElementById('sqft').value = total || '';
+  calcEstimate();
+}
+
+// Init sqft mode
+setSqftMode('know');
+
 const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
 const CALENDLY_URL    = 'YOUR_CALENDLY_OR_GHL_CALENDAR_LINK';
 const PHONE_NUMBER    = '+1XXXXXXXXXX';
@@ -1033,6 +1166,7 @@ function calcEstimate() {
       workTypes:    state.workTypes,
       rooms:        state.rooms,
       sqft:         sqft,
+      sqftRooms:    (typeof sqftRooms !== 'undefined' && sqftRooms.length > 0) ? sqftRooms : [],
       condition:    cond,
       lowEst:       low,
       highEst:      high,
