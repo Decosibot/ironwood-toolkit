@@ -418,6 +418,26 @@
       <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#b8b0a0;padding:6px 4px 8px;border-bottom:1px solid #2a2a2a;margin-bottom:7px;">Categories</div>
     </div>
     <div id="budget-main">
+
+      <!-- ── SMART SCOPE PARSER ── -->
+      <div class="card" id="smart-scope-card" style="margin-bottom:16px;border:1px solid #c9a84c22;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <div>
+            <div class="card-title" style="margin-bottom:2px;">📝 Smart Scope Builder</div>
+            <div style="font-size:11px;color:#b8b0a0;">Describe the work in plain English — we'll add the line items with Atlanta Metro pricing.</div>
+          </div>
+          <button type="button" onclick="toggleSmartScope()" id="smart-scope-toggle" style="background:none;border:1px solid #2a2a2a;color:#b8b0a0;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">Hide</button>
+        </div>
+        <div id="smart-scope-body">
+          <textarea id="smart-scope-input" rows="3" placeholder="e.g. redo the floors, new backsplash, remove a wall, replace fixtures, new kitchen cabinets and countertops, paint throughout…" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:#f5f0e8;padding:10px 12px;border-radius:6px;font-size:13px;font-family:inherit;resize:vertical;outline:none;line-height:1.6;"></textarea>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
+            <button type="button" onclick="runSmartScope()" style="background:#c9a84c;color:#0a0a0a;border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.04em;">Add Line Items →</button>
+            <button type="button" onclick="document.getElementById('smart-scope-input').value=''" style="background:none;border:1px solid #2a2a2a;color:#b8b0a0;padding:8px 14px;border-radius:4px;font-size:12px;cursor:pointer;">Clear</button>
+          </div>
+          <div id="smart-scope-results" style="margin-top:12px;"></div>
+        </div>
+      </div>
+
       <!-- section cards injected by JS before #conting-wrap -->
       <div id="conting-wrap">
         <div class="card" style="padding:0;overflow:hidden;">
@@ -1453,6 +1473,292 @@ document.addEventListener('DOMContentLoaded',()=>{
   reinitAll();
   initDragDrop();
 });
+
+// ══════════════════════════════════════════════════════════════════════
+//  SMART SCOPE PARSER — Atlanta Metro mid-range pricing (2024-2025)
+//  labor: what Ironwood pays subs/labor
+//  materials: mid-range material cost (before markup)
+//  All prices per unit noted in desc. Ranges = [low, high].
+// ══════════════════════════════════════════════════════════════════════
+
+const PRICE_DB = [
+  // ── FLOORING ──
+  { keywords:['floor','flooring','lvp','vinyl plank','luxury vinyl','hardwood','wood floor','laminate'],
+    section:'flooring', desc:'LVP / Hardwood Flooring — Labor & Materials',
+    labor:[2.50,3.50], materials:[2.00,4.50], unit:'per sqft', note:'Includes underlayment, transitions' },
+  { keywords:['carpet','carpeting'],
+    section:'flooring', desc:'Carpet — Labor & Materials',
+    labor:[1.00,1.50], materials:[1.50,3.00], unit:'per sqft', note:'Includes pad, tack strips' },
+  { keywords:['tile floor','floor tile','tile the floor','retile floor'],
+    section:'flooring', desc:'Tile Flooring — Labor & Materials',
+    labor:[5.00,8.00], materials:[3.00,6.00], unit:'per sqft', note:'Includes backer board, mortar, grout' },
+  { keywords:['refinish floor','sand floor','refinish hardwood'],
+    section:'flooring', desc:'Hardwood Floor Refinishing',
+    labor:[2.50,3.50], materials:[0.50,1.00], unit:'per sqft', note:'Sand, stain, 2 coats poly' },
+
+  // ── PAINT ──
+  { keywords:['paint','repaint','painting','paint throughout','paint walls','interior paint'],
+    section:'interior', desc:'Interior Paint — Labor & Materials',
+    labor:[1.50,2.50], materials:[0.40,0.80], unit:'per sqft (wall area)', note:'2 coats, includes ceiling; primer extra if needed' },
+  { keywords:['exterior paint','paint outside','paint exterior'],
+    section:'exterior', desc:'Exterior Paint — Labor & Materials',
+    labor:[1.50,2.50], materials:[0.50,1.00], unit:'per sqft (surface area)', note:'Includes primer coat, caulking' },
+  { keywords:['prime','primer','paint primer'],
+    section:'interior', desc:'Primer Coat — Labor & Materials',
+    labor:[0.60,1.00], materials:[0.20,0.35], unit:'per sqft', note:'Water-based PVA or shellac primer' },
+
+  // ── KITCHEN ──
+  { keywords:['kitchen cabinet','cabinets','new cabinet','replace cabinet','cabinet install'],
+    section:'interior', desc:'Kitchen Cabinets — Supply & Install',
+    labor:[1500,2500], materials:[4000,12000], unit:'per kitchen (avg)', note:'RTA to semi-custom; does not include countertops' },
+  { keywords:['countertop','counter top','quartz','granite','marble counter'],
+    section:'interior', desc:'Countertops — Supply & Install',
+    labor:[400,700], materials:[2500,5500], unit:'per kitchen (avg 40 sqft)', note:'Quartz mid-range; granite similar; marble higher' },
+  { keywords:['backsplash','tile backsplash','new backsplash','kitchen tile'],
+    section:'interior', desc:'Backsplash Tile — Labor & Materials',
+    labor:[8,14], materials:[5,18], unit:'per sqft', note:'Subway or mosaic tile; includes thin-set, grout' },
+  { keywords:['kitchen sink','new sink','replace sink','sink install'],
+    section:'interior', desc:'Kitchen Sink — Supply & Install',
+    labor:[150,300], materials:[250,600], unit:'each', note:'Undermount preferred; includes shutoffs if needed' },
+  { keywords:['appliance','appliances','stove','refrigerator','dishwasher','range','oven'],
+    section:'interior', desc:'Appliance Package — Supply & Install',
+    labor:[200,400], materials:[2500,5500], unit:'package (4-pc)', note:'Stainless mid-range: range, fridge, DW, microwave' },
+  { keywords:['garbage disposal','disposal'],
+    section:'interior', desc:'Garbage Disposal — Supply & Install',
+    labor:[100,175], materials:[150,300], unit:'each', note:'InSinkErator or Moen mid-range' },
+
+  // ── BATHROOM ──
+  { keywords:['bathroom','bath remodel','redo bathroom','renovate bathroom','full bath'],
+    section:'interior', desc:'Full Bathroom Remodel — Labor & Materials',
+    labor:[3000,5500], materials:[4000,8000], unit:'per bath', note:'Tile, vanity, toilet, fixtures, drywall; excludes plumbing rough-in' },
+  { keywords:['vanity','bathroom vanity','new vanity'],
+    section:'interior', desc:'Bathroom Vanity — Supply & Install',
+    labor:[200,400], materials:[400,1200], unit:'each', note:'36–48" single vanity, mid-range' },
+  { keywords:['shower tile','retile shower','shower walls','tile shower'],
+    section:'interior', desc:'Shower Tile — Labor & Materials',
+    labor:[8,14], materials:[5,15], unit:'per sqft', note:'Includes backer board, waterproofing membrane, grout' },
+  { keywords:['toilet','replace toilet','new toilet'],
+    section:'interior', desc:'Toilet — Supply & Install',
+    labor:[150,250], materials:[200,450], unit:'each', note:'Elongated comfort height, mid-range brand' },
+  { keywords:['fixture','fixtures','replace fixtures','light fixture','bathroom fixture'],
+    section:'interior', desc:'Bathroom Fixtures — Supply & Install',
+    labor:[75,150], materials:[150,500], unit:'per fixture set', note:'Faucet, towel bar, TP holder, robe hook' },
+  { keywords:['soaking tub','tub','bathtub','freestanding tub'],
+    section:'interior', desc:'Soaking Tub — Supply & Install',
+    labor:[400,800], materials:[800,2500], unit:'each', note:'Freestanding or alcove; plumbing tie-in extra' },
+
+  // ── WALLS / STRUCTURE ──
+  { keywords:['remove wall','demo wall','knock down wall','open concept','open floor plan','tear down wall'],
+    section:'demolition', desc:'Non-Load-Bearing Wall Removal',
+    labor:[800,1800], materials:[50,200], unit:'each', note:'Includes drywall patch, texture, paint on both sides; structural wall 2x–3x' },
+  { keywords:['load bearing wall','load-bearing','structural wall','beam','steel beam','LVL'],
+    section:'structure', desc:'Load-Bearing Wall Removal w/ Beam',
+    labor:[2500,5000], materials:[1500,4000], unit:'each', note:'Includes engineer, permit, LVL/steel beam, temporary shoring, patch' },
+  { keywords:['drywall','sheetrock','new drywall','hang drywall','replace drywall'],
+    section:'interior', desc:'Drywall — Hang, Tape, Mud, Finish',
+    labor:[2.00,3.50], materials:[0.60,1.00], unit:'per sqft', note:'Level 4 finish standard; level 5 for high-gloss paint extra' },
+  { keywords:['insulation','insulate','insulating'],
+    section:'interior', desc:'Insulation — Batt or Blown',
+    labor:[0.50,1.25], materials:[0.40,1.00], unit:'per sqft', note:'Batt = walls/floors; blown-in = attic; spray foam 3x–4x' },
+
+  // ── ELECTRICAL ──
+  { keywords:['electrical','rewire','wiring','electric panel','panel upgrade','breaker box'],
+    section:'mechanicals', desc:'Electrical — Panel Upgrade / Rewire',
+    labor:[2500,6000], materials:[800,2000], unit:'per job', note:'200A service upgrade; full rewire on larger homes is higher' },
+  { keywords:['outlet','outlets','gfci','add outlet','new outlet'],
+    section:'mechanicals', desc:'Electrical Outlets — Install / Replace',
+    labor:[80,150], materials:[15,40], unit:'each', note:'GFCI required in kitchen/bath/garage' },
+  { keywords:['recessed light','can light','pot light','recessed lighting'],
+    section:'mechanicals', desc:'Recessed Lighting — Install',
+    labor:[100,175], materials:[25,60], unit:'each', note:'6" LED wafer preferred; includes switch if new circuit' },
+  { keywords:['ceiling fan','fan install'],
+    section:'mechanicals', desc:'Ceiling Fan — Supply & Install',
+    labor:[100,200], materials:[100,350], unit:'each', note:'Includes remote/wall control; existing box must be fan-rated' },
+  { keywords:['smoke detector','smoke alarm','co detector','carbon monoxide'],
+    section:'mechanicals', desc:'Smoke / CO Detectors',
+    labor:[60,100], materials:[25,60], unit:'each', note:'Hardwired interconnected preferred for new construction' },
+
+  // ── PLUMBING ──
+  { keywords:['plumbing','replumb','repipe','water heater','hot water heater'],
+    section:'mechanicals', desc:'Plumbing — Rough-in & Trim',
+    labor:[3500,7000], materials:[1500,3500], unit:'per job', note:'Full repipe on older homes; new construction per fixture' },
+  { keywords:['water heater','hot water','tankless water heater'],
+    section:'mechanicals', desc:'Water Heater — Supply & Install',
+    labor:[250,450], materials:[600,1800], unit:'each', note:'50-gal standard or tankless; tankless requires gas line or 240V' },
+  { keywords:['faucet','replace faucet','new faucet'],
+    section:'mechanicals', desc:'Faucet — Supply & Install',
+    labor:[100,200], materials:[150,450], unit:'each', note:'Kitchen or bath; includes shutoffs if corroded' },
+
+  // ── HVAC ──
+  { keywords:['hvac','ac','air conditioning','heat pump','furnace','new hvac','replace hvac'],
+    section:'mechanicals', desc:'HVAC System — Supply & Install',
+    labor:[2000,4000], materials:[3500,8000], unit:'per system (3-ton avg)', note:'Split system; ductwork replacement extra; 2-zone higher' },
+  { keywords:['ductwork','duct','ducts','new ducts'],
+    section:'mechanicals', desc:'Ductwork — Replace / New Install',
+    labor:[2000,4000], materials:[1500,3000], unit:'per job', note:'Flex duct avg home; rigid sheet metal extra' },
+
+  // ── ROOFING ──
+  { keywords:['roof','new roof','replace roof','roofing','shingles'],
+    section:'exterior', desc:'Roof Replacement — Shingles',
+    labor:[2500,4500], materials:[4000,7500], unit:'per job (avg 30 squares)', note:'Architectural shingles, felt, ridge vent, flashing' },
+  { keywords:['gutter','gutters','new gutters'],
+    section:'exterior', desc:'Gutters — Supply & Install',
+    labor:[400,700], materials:[500,1200], unit:'per job', note:'5" K-style aluminum w/ downspouts; guards extra' },
+
+  // ── EXTERIOR ──
+  { keywords:['siding','new siding','replace siding','vinyl siding','hardie','fiber cement'],
+    section:'exterior', desc:'Siding — Supply & Install',
+    labor:[2.50,4.00], materials:[3.00,7.00], unit:'per sqft', note:'Vinyl = lower end; Hardie = higher; includes wrap/fasteners' },
+  { keywords:['front door','exterior door','new door','replace door','entry door'],
+    section:'exterior', desc:'Exterior Door — Supply & Install',
+    labor:[200,400], materials:[400,1200], unit:'each', note:'Pre-hung, includes hardware; sidelights extra' },
+  { keywords:['window','windows','new window','replace window','window replacement'],
+    section:'structure', desc:'Windows — Supply & Install',
+    labor:[150,300], materials:[300,800], unit:'each', note:'Double-hung, double-pane, vinyl frame; bay windows extra' },
+  { keywords:['deck','porch','patio','new deck','add deck','build deck'],
+    section:'exterior', desc:'Deck / Porch — Labor & Materials',
+    labor:[20,35], materials:[15,30], unit:'per sqft', note:'Pressure-treated frame; composite or PT decking; permit req.' },
+  { keywords:['fence','new fence','privacy fence'],
+    section:'exterior', desc:'Fence — Supply & Install',
+    labor:[15,25], materials:[20,40], unit:'per linear ft', note:'6" privacy wood; vinyl or aluminum similar; includes posts' },
+  { keywords:['landscaping','sod','lawn','yard','grass'],
+    section:'exterior', desc:'Landscaping / Sod',
+    labor:[1500,3000], materials:[2000,5000], unit:'per job', note:'Sod front, seed sides/back, 2–3 shrubs, grading if needed' },
+  { keywords:['driveway','new driveway','concrete driveway','asphalt driveway'],
+    section:'exterior', desc:'Driveway — Concrete or Asphalt',
+    labor:[3,6], materials:[4,9], unit:'per sqft', note:'4" concrete standard; asphalt slightly less; base prep included' },
+  { keywords:['garage door','replace garage door'],
+    section:'exterior', desc:'Garage Door — Supply & Install',
+    labor:[150,300], materials:[700,2000], unit:'each', note:'Insulated steel 16x7; w/ opener; smart opener extra' },
+
+  // ── INTERIOR FINISH ──
+  { keywords:['trim','baseboard','crown molding','door casing','window trim','molding'],
+    section:'interior', desc:'Trim & Molding — Labor & Materials',
+    labor:[2.50,4.00], materials:[1.50,3.50], unit:'per linear ft', note:'Painted MDF baseboard; crown adds $1–2/lf; casing per opening' },
+  { keywords:['interior door','new door','replace interior door','door installation'],
+    section:'interior', desc:'Interior Door — Supply & Install',
+    labor:[150,300], materials:[150,400], unit:'each', note:'Pre-hung solid core; barn door hardware extra' },
+  { keywords:['closet','closet system','built-in closet','walk-in closet'],
+    section:'interior', desc:'Closet System — Supply & Install',
+    labor:[300,600], materials:[500,2000], unit:'each', note:'Wire shelving = low; custom built-in = high' },
+  { keywords:['stair','stairs','staircase','handrail','railing'],
+    section:'interior', desc:'Stairs / Railings — Labor & Materials',
+    labor:[2000,5000], materials:[1500,4000], unit:'per flight', note:'Treads, risers, balusters, handrail; open concept adds cost' },
+  { keywords:['fireplace','new fireplace','gas fireplace','electric fireplace'],
+    section:'interior', desc:'Fireplace — Supply & Install',
+    labor:[800,2000], materials:[1500,4000], unit:'each', note:'Gas insert or direct vent; masonry is 3x–5x; surround/mantle extra' },
+
+  // ── DEMO / MISC ──
+  { keywords:['dumpster','trash removal','haul away','junk removal','debris','clean out'],
+    section:'demolition', desc:'Dumpster / Debris Removal',
+    labor:[0,0], materials:[400,800], unit:'per pull (15-yd)', note:'15-yd roll-off standard; 30-yd for larger jobs or full gut' },
+  { keywords:['demolition','demo','tear out','rip out','gut','gut job'],
+    section:'demolition', desc:'Demolition — Interior',
+    labor:[1.50,3.00], materials:[0,0], unit:'per sqft', note:'Selective demo; full gut = higher; hazmat (asbestos/lead) extra' },
+  { keywords:['permit','building permit','pull permit'],
+    section:'pre-construction', desc:'Building Permit',
+    labor:[0,0], materials:[200,800], unit:'each', note:'Varies by county; Atlanta/Fulton avg; expedite adds time/cost' },
+  { keywords:['cleaning','final clean','post construction clean'],
+    section:'final-misc', desc:'Post-Construction Cleaning',
+    labor:[400,900], materials:[0,0], unit:'per job', note:'Construction clean standard; deep clean for client turnover' },
+];
+
+// keyword → PRICE_DB index map (built once)
+const SCOPE_KEYWORD_MAP = (() => {
+  const map = {};
+  PRICE_DB.forEach((item, idx) => {
+    item.keywords.forEach(kw => {
+      if (!map[kw]) map[kw] = [];
+      map[kw].push(idx);
+    });
+  });
+  return map;
+})();
+
+function runSmartScope() {
+  const input = document.getElementById('smart-scope-input').value.trim();
+  if (!input) return;
+  const lower = input.toLowerCase();
+  const matched = new Map(); // idx → true (dedup)
+
+  // Sort keywords longest-first so "tile floor" matches before "tile"
+  const sorted = Object.keys(SCOPE_KEYWORD_MAP).sort((a,b) => b.length - a.length);
+  sorted.forEach(kw => {
+    if (lower.includes(kw)) {
+      SCOPE_KEYWORD_MAP[kw].forEach(idx => matched.set(idx, true));
+    }
+  });
+
+  if (matched.size === 0) {
+    document.getElementById('smart-scope-results').innerHTML =
+      '<div style="color:#b8b0a0;font-size:12px;padding:8px 0;">No items recognized. Try describing specific work: "new floors", "paint", "replace fixtures", "remove wall".</div>';
+    return;
+  }
+
+  const items = [...matched.keys()].map(i => PRICE_DB[i]);
+  let added = 0;
+
+  items.forEach(item => {
+    // Find the section in S.budget
+    const secIdx = S.budget.findIndex(s => s.id === item.section);
+    if (secIdx === -1) return;
+    const sec = S.budget[secIdx];
+
+    // Build description with price range
+    const laborRange = item.labor[1] > 0
+      ? `Labor: $${item.labor[0].toLocaleString()}–$${item.labor[1].toLocaleString()} ${item.unit}`
+      : '';
+    const matRange = item.materials[1] > 0
+      ? `Materials: $${item.materials[0].toLocaleString()}–$${item.materials[1].toLocaleString()} ${item.unit}`
+      : '';
+    const priceNote = [laborRange, matRange].filter(Boolean).join(' | ');
+    const fullDesc = item.desc + (item.note ? ` [${item.note}]` : '');
+
+    // Generate line item number
+    const prefix = sec.items.length > 0
+      ? sec.items[sec.items.length-1].num.split('-')[0]
+      : (secIdx + 1) * 1000;
+    const nextNum = `${prefix}-${sec.items.length + 1}`;
+
+    // Mid-point labor + materials as initial budget estimate
+    const laborMid  = item.labor[1]  > 0 ? (item.labor[0]  + item.labor[1])  / 2 : 0;
+    const matMid    = item.materials[1] > 0 ? (item.materials[0] + item.materials[1]) / 2 : 0;
+
+    sec.items.push({
+      num:    nextNum,
+      desc:   fullDesc,
+      budget: Math.round(laborMid + matMid),
+      actual: 0,
+      notes:  priceNote,
+      _smartAdded: true,
+    });
+    added++;
+  });
+
+  autoSave();
+  buildBudgetUI();
+  recalcSummary();
+
+  // Show summary
+  const resultEl = document.getElementById('smart-scope-results');
+  resultEl.innerHTML = `
+    <div style="background:#1a2a1a;border:1px solid #2d4a2d;border-radius:6px;padding:10px 14px;font-size:12px;color:#7EC98A;">
+      ✓ Added <strong>${added} line item${added !== 1 ? 's' : ''}</strong> across ${[...new Set(items.map(i=>i.section))].length} section${[...new Set(items.map(i=>i.section))].length !== 1 ? 's' : ''}.
+      Prices are Atlanta Metro mid-range estimates — update amounts as bids come in.
+      <div style="margin-top:8px;color:#b8b0a0;">Items added: ${items.map(i=>i.desc).join(' · ')}</div>
+    </div>`;
+
+  // Scroll to budget
+  document.getElementById('budget-main').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function toggleSmartScope() {
+  const body = document.getElementById('smart-scope-body');
+  const btn  = document.getElementById('smart-scope-toggle');
+  const collapsed = body.style.display === 'none';
+  body.style.display = collapsed ? '' : 'none';
+  btn.textContent = collapsed ? 'Hide' : 'Show';
+}
 </script>
 </body>
 </html>
