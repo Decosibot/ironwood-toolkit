@@ -809,7 +809,16 @@ function recalcSqft() {
 // Init sqft mode
 setSqftMode('know');
 
+// ── Lead notification endpoints ──────────────────────────────────────────────
+// Formspree: instant email to Ty on every submission (free, no backend).
+// Sign up at https://formspree.io → New Form → copy the endpoint ID below.
+// Replace 'YOUR_FORMSPREE_ID' with your form ID (looks like: xyzabcde).
+const FORMSPREE_URL   = 'https://formspree.io/f/YOUR_FORMSPREE_ID';
+
+// Go High Level CRM webhook — activate when ready to add auto-text/pipeline.
+// Paste your GHL webhook URL here; leave as-is until then.
 const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+
 const CALENDLY_URL    = 'YOUR_CALENDLY_OR_GHL_CALENDAR_LINK';
 const PHONE_NUMBER    = '+1XXXXXXXXXX';
 
@@ -1372,9 +1381,43 @@ async function submitForm() {
     pageUrl:         window.location.href,
     submittedAt:     new Date().toISOString()
   };
-  try {
-    await fetch(GHL_WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
-  } catch(e) { console.warn('Webhook error:', e); }
+  // ── Send lead notifications ──────────────────────────────────────────────
+  // 1. Formspree — immediate email to Ty (tysellshomes96@gmail.com)
+  const formspreeActive = FORMSPREE_URL && !FORMSPREE_URL.includes('YOUR_FORMSPREE_ID');
+  if (formspreeActive) {
+    try {
+      const emailPayload = {
+        _replyto:    payload.email,
+        _subject:    '🔔 New Ironwood Lead: ' + payload.firstName + ' ' + payload.lastName + ' — ' + payload.estimateRange,
+        name:        payload.firstName + ' ' + payload.lastName,
+        phone:       payload.phone,
+        email:       payload.email,
+        address:     payload.address,
+        project:     payload.projectLabel,
+        sqft:        payload.sqft ? payload.sqft.toLocaleString() + ' sqft' : '—',
+        estimate:    payload.estimateRange,
+        rooms:       payload.rooms || '—',
+        work_types:  payload.workTypes || '—',
+        timeline:    payload.timeline || '—',
+        notes:       payload.notes || '—',
+        lead_source: payload.leadSource,
+        submitted:   new Date(payload.submittedAt).toLocaleString('en-US', { timeZone:'America/New_York' })
+      };
+      await fetch(FORMSPREE_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(emailPayload)
+      });
+    } catch(e) { console.warn('Formspree error:', e); }
+  }
+
+  // 2. Go High Level — activate when CRM is set up
+  const ghlActive = GHL_WEBHOOK_URL && !GHL_WEBHOOK_URL.includes('YOUR_GHL_WEBHOOK_URL');
+  if (ghlActive) {
+    try {
+      await fetch(GHL_WEBHOOK_URL, { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    } catch(e) { console.warn('GHL webhook error:', e); }
+  }
 
   // Confirmation summary rows
   const summaryRows = [
