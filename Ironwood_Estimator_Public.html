@@ -400,8 +400,8 @@ function initAutocomplete() {
 
       <!-- sqft toggle -->
       <div style="display:flex;gap:8px;margin-bottom:12px;">
-        <button id="sqft-tab-know" onclick="setSqftMode('know')" style="flex:1;padding:8px;border-radius:6px;border:1px solid var(--hairline);background:var(--bronze);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);">I know my sqft</button>
-        <button id="sqft-tab-measure" onclick="setSqftMode('measure')" style="flex:1;padding:8px;border-radius:6px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-soft);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);">Calculate from rooms</button>
+        <button type="button" id="sqft-tab-know" onclick="setSqftMode('know')" style="flex:1;padding:8px;border-radius:6px;border:1px solid var(--hairline);background:var(--bronze);color:#fff;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);">I know my sqft</button>
+        <button type="button" id="sqft-tab-measure" onclick="setSqftMode('measure')" style="flex:1;padding:8px;border-radius:6px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-soft);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);">Calculate from rooms</button>
       </div>
 
       <!-- mode: know sqft -->
@@ -412,7 +412,7 @@ function initAutocomplete() {
       <!-- mode: measure rooms -->
       <div id="sqft-mode-measure" style="display:none;">
         <div id="sqft-rooms-list"></div>
-        <button onclick="addSqftRoom()" style="width:100%;margin-top:8px;padding:9px;border:1px dashed var(--hairline);border-radius:6px;background:transparent;color:var(--bronze);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);">+ Add Room / Area</button>
+        <button type="button" onclick="addSqftRoom()" style="width:100%;margin-top:8px;padding:9px;border:1px dashed var(--hairline);border-radius:6px;background:transparent;color:var(--bronze);font-size:12px;font-weight:600;cursor:pointer;font-family:var(--sans);">+ Add Room / Area</button>
         <div style="margin-top:10px;padding:10px 14px;background:var(--surface);border-radius:6px;display:flex;justify-content:space-between;align-items:center;">
           <span style="font-size:12px;color:var(--ink-soft);font-family:var(--sans);">Total calculated sqft</span>
           <span id="sqft-calc-total" style="font-size:18px;font-weight:700;color:var(--bronze-deep);font-family:var(--sans);">—</span>
@@ -741,7 +741,7 @@ function renderSqftRooms() {
       <div style="margin-bottom:10px;">
         <div style="font-size:11px;color:var(--muted);font-family:var(--sans);margin-bottom:8px;letter-spacing:.03em;">Quick add a common room:</div>
         <div style="display:flex;flex-wrap:wrap;gap:6px;">
-          ${ROOM_PRESETS.map(p => `<button onclick="addSqftRoom(${JSON.stringify(p).replace(/"/g,"'")})" style="padding:5px 10px;border-radius:20px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-soft);font-size:11px;cursor:pointer;font-family:var(--sans);">${p.label}</button>`).join('')}
+          ${ROOM_PRESETS.map(p => `<button type="button" onclick="addSqftRoom(${JSON.stringify(p).replace(/"/g,"'")})" style="padding:5px 10px;border-radius:20px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-soft);font-size:11px;cursor:pointer;font-family:var(--sans);">${p.label}</button>`).join('')}
         </div>
       </div>`;
     return;
@@ -750,7 +750,7 @@ function renderSqftRooms() {
     <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:8px;padding:12px 14px;margin-bottom:8px;">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
         <input value="${r.label}" onchange="updateSqftRoomLabel(${r.id},this.value)" style="flex:1;border:none;border-bottom:1px solid var(--hairline);background:transparent;font-size:13px;font-weight:600;color:var(--ink);font-family:var(--sans);padding:2px 0;outline:none;">
-        <button onclick="removeSqftRoom(${r.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:0 4px;">&times;</button>
+        <button type="button" onclick="removeSqftRoom(${r.id})" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px;line-height:1;padding:0 4px;">&times;</button>
       </div>
       <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
         <div>
@@ -771,7 +771,7 @@ function renderSqftRooms() {
     `<div style="margin-top:4px;">
       <div style="font-size:11px;color:var(--muted);font-family:var(--sans);margin-bottom:6px;">Quick add:</div>
       <div style="display:flex;flex-wrap:wrap;gap:5px;">
-        ${ROOM_PRESETS.map(p => `<button onclick="addSqftRoom(${JSON.stringify(p).replace(/"/g,"'")})" style="padding:4px 9px;border-radius:20px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-soft);font-size:11px;cursor:pointer;font-family:var(--sans);">${p.label}</button>`).join('')}
+        ${ROOM_PRESETS.map(p => `<button type="button" onclick="addSqftRoom(${JSON.stringify(p).replace(/"/g,"'")})" style="padding:4px 9px;border-radius:20px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-soft);font-size:11px;cursor:pointer;font-family:var(--sans);">${p.label}</button>`).join('')}
       </div>
     </div>`;
 }
