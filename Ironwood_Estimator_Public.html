@@ -660,6 +660,23 @@ function initAutocomplete() {
       <div class="booking-sub">No automated texts, no call center. Someone from our team will call directly to hear what you've got going on, answer questions, and set up a free walkthrough at a time that works for you.</div>
     </div>
 
+    <!-- ══ SCOPE DESCRIPTION CARD ══ -->
+    <div class="booking-card" id="scopeDraftCard" style="margin-top:12px;border-color:var(--bronze-border);">
+      <div class="booking-title" style="font-size:17px;">Tell Us What You Want Done</div>
+      <div class="booking-sub" style="margin-bottom:14px;">Describe the work in plain English — we'll turn it into a line-item scope so Jeff can price it the moment he opens the job. Nothing formal, just tell us what you're thinking.</div>
+      <textarea id="scopeDraftInput" rows="3"
+        placeholder="e.g. replace the tile in both bathrooms, new floors throughout, paint the whole inside, update the kitchen cabinets and countertops..."
+        style="width:100%;box-sizing:border-box;padding:12px 14px;border:1.5px solid var(--hairline-2);border-radius:var(--radius);background:var(--surface-2);font-family:var(--sans);font-size:14px;color:var(--ink);resize:vertical;min-height:80px;outline:none;transition:border-color .2s;"
+        onfocus="this.style.borderColor='var(--bronze)'" onblur="this.style.borderColor='var(--hairline-2)'"
+      ></textarea>
+      <button type="button" id="scopeDraftBtn" onclick="buildScopeDraft()"
+        style="margin-top:10px;width:100%;padding:13px;background:var(--bronze);color:var(--surface);border:none;border-radius:var(--radius);font-family:var(--sans);font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.03em;transition:opacity .2s;"
+        onmouseover="this.style.opacity='.85'" onmouseout="this.style.opacity='1'">
+        Build My Scope Draft →
+      </button>
+      <div id="scopeDraftResult" style="margin-top:12px;"></div>
+    </div>
+
     <div class="proof-row" style="margin-top:24px;">
       <div class="proof-card">
         <div class="proof-stars">★★★★★</div>
@@ -1395,6 +1412,300 @@ async function submitForm() {
       + '&a1=' + encodeURIComponent(payload.address);
   }
   goStep(3);
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+//  SCOPE DRAFT — shared price database + dependency resolver
+//  Mirrors PRICE_DB in ScopeOfWork_Tool.html. Keep in sync when updating.
+// ─────────────────────────────────────────────────────────────────────────────
+const EST_PRICE_DB = [
+  // shared dep items
+  { keywords:['_tile_demo'],       section:'demolition', desc:'Tile Removal — Demo & Haul Off',           labor:[1.50,3.00], materials:[0,0],         unit:'per sqft' },
+  { keywords:['_backer_board'],    section:'interior',   desc:'Cement Backer Board — Supply & Install',   labor:[1.00,1.75], materials:[0.80,1.50],    unit:'per sqft' },
+  { keywords:['_waterproofing'],   section:'interior',   desc:'Waterproofing Membrane',                   labor:[0.75,1.25], materials:[0.50,1.00],    unit:'per sqft' },
+  { keywords:['_thinset'],         section:'interior',   desc:'Thinset Mortar',                           labor:[0,0],       materials:[0.20,0.40],    unit:'per sqft' },
+  { keywords:['_grout'],           section:'interior',   desc:'Grout & Grout Sealer',                     labor:[0,0],       materials:[0.30,0.60],    unit:'per sqft' },
+  { keywords:['_caulk'],           section:'interior',   desc:'Silicone Caulk — Corners & Transitions',   labor:[0,0],       materials:[0.10,0.20],    unit:'per lf' },
+  { keywords:['_transition_strip'],section:'flooring',   desc:'Transition Strips',                        labor:[30,60],     materials:[20,50],        unit:'per opening' },
+  { keywords:['_floor_prep'],      section:'flooring',   desc:'Floor Prep — Level & Clean Subfloor',      labor:[0.50,1.50], materials:[0.20,0.50],    unit:'per sqft' },
+  { keywords:['_drywall_patch'],   section:'interior',   desc:'Drywall Patch & Finish',                   labor:[200,600],   materials:[50,150],       unit:'per area' },
+  { keywords:['_paint_finish'],    section:'interior',   desc:'Paint — Finish Coat After Patch',          labor:[300,700],   materials:[100,250],      unit:'per area' },
+  { keywords:['_shutoffs'],        section:'mechanicals',desc:'Supply Line Shutoff Valves',               labor:[60,120],    materials:[20,60],        unit:'per pair' },
+  { keywords:['_p_trap'],          section:'mechanicals',desc:'P-Trap & Drain Assembly',                  labor:[80,150],    materials:[30,80],        unit:'each' },
+  { keywords:['_wax_ring'],        section:'mechanicals',desc:'Wax Ring & Closet Bolts',                  labor:[0,0],       materials:[15,30],        unit:'each' },
+  { keywords:['_permit_bath'],     section:'soft-costs', desc:'Plumbing / Electrical Permit — Bathroom',  labor:[0,0],       materials:[150,400],      unit:'each' },
+  { keywords:['_permit_electrical'],section:'soft-costs',desc:'Electrical Permit',                        labor:[0,0],       materials:[100,350],      unit:'each' },
+  { keywords:['_debris_haul'],     section:'demolition', desc:'Debris Haul-Off',                          labor:[200,400],   materials:[0,0],          unit:'per load' },
+  { keywords:['_baseboard_off_on'],section:'interior',   desc:'Baseboard — Remove & Reset',               labor:[1.50,2.50], materials:[0,0],          unit:'per lf' },
+  { keywords:['_paint_primer'],    section:'interior',   desc:'Primer Coat',                              labor:[0.40,0.70], materials:[0.15,0.30],    unit:'per sqft' },
+  { keywords:['_underlayment'],    section:'flooring',   desc:'Flooring Underlayment',                    labor:[0,0],       materials:[0.20,0.50],    unit:'per sqft' },
+  { keywords:['_tack_strips'],     section:'flooring',   desc:'Carpet Tack Strips',                       labor:[0,0],       materials:[0.10,0.25],    unit:'per lf' },
+  { keywords:['_subfloor_repair'], section:'structure',  desc:'Subfloor Repair / Sheathing',              labor:[3.00,6.00], materials:[2.00,4.00],    unit:'per sqft' },
+  // flooring
+  { keywords:['floor','flooring','lvp','vinyl plank','luxury vinyl','hardwood','wood floor','laminate'],
+    section:'flooring', desc:'LVP / Hardwood Flooring — Labor & Materials', labor:[2.50,3.50], materials:[2.00,4.50], unit:'per sqft',
+    requires:['_underlayment','_transition_strip','_floor_prep','_baseboard_off_on','_debris_haul'] },
+  { keywords:['carpet','carpeting'],
+    section:'flooring', desc:'Carpet — Labor & Materials', labor:[1.00,1.50], materials:[1.50,3.00], unit:'per sqft',
+    requires:['_tack_strips','_debris_haul'] },
+  { keywords:['tile floor','floor tile','tile the floor','retile floor'],
+    section:'flooring', desc:'Tile Flooring — Labor & Materials', labor:[5.00,8.00], materials:[3.00,6.00], unit:'per sqft',
+    requires:['_tile_demo','_floor_prep','_backer_board','_thinset','_grout','_caulk','_transition_strip','_debris_haul'],
+    absorbs:['_tile_demo','_backer_board','_thinset','_grout','_caulk'] },
+  { keywords:['refinish floor','sand floor','refinish hardwood'],
+    section:'flooring', desc:'Hardwood Floor Refinishing', labor:[2.50,3.50], materials:[0.50,1.00], unit:'per sqft',
+    requires:['_debris_haul'] },
+  // paint
+  { keywords:['paint','repaint','painting','paint throughout','paint walls','interior paint'],
+    section:'interior', desc:'Interior Paint — Labor & Materials', labor:[1.50,2.50], materials:[0.40,0.80], unit:'per sqft',
+    requires:['_paint_primer'] },
+  { keywords:['exterior paint','paint outside','paint exterior'],
+    section:'exterior', desc:'Exterior Paint — Labor & Materials', labor:[1.50,2.50], materials:[0.50,1.00], unit:'per sqft' },
+  // kitchen
+  { keywords:['kitchen cabinet','cabinets','new cabinet','replace cabinet','cabinet install'],
+    section:'interior', desc:'Kitchen Cabinets — Supply & Install', labor:[1500,2500], materials:[4000,12000], unit:'per kitchen',
+    requires:['_debris_haul','_paint_finish'] },
+  { keywords:['countertop','counter top','quartz','granite','marble counter'],
+    section:'interior', desc:'Countertops — Supply & Install', labor:[400,700], materials:[2500,5500], unit:'per kitchen',
+    requires:['_shutoffs'] },
+  { keywords:['backsplash','tile backsplash','new backsplash','kitchen tile'],
+    section:'interior', desc:'Backsplash Tile — Labor & Materials', labor:[8,14], materials:[5,18], unit:'per sqft',
+    requires:['_thinset','_grout','_caulk'], absorbs:['_thinset','_grout','_caulk'] },
+  { keywords:['kitchen sink','new sink','replace sink','sink install'],
+    section:'interior', desc:'Kitchen Sink — Supply & Install', labor:[150,300], materials:[250,600], unit:'each',
+    requires:['_shutoffs','_p_trap'] },
+  { keywords:['appliance','appliances','stove','refrigerator','dishwasher','range','oven'],
+    section:'interior', desc:'Appliance Package — Supply & Install', labor:[200,400], materials:[2500,5500], unit:'package (4-pc)' },
+  { keywords:['garbage disposal','disposal'],
+    section:'interior', desc:'Garbage Disposal — Supply & Install', labor:[100,175], materials:[150,300], unit:'each',
+    requires:['_shutoffs'] },
+  // bathroom
+  { keywords:['bathroom','bath remodel','redo bathroom','renovate bathroom','full bath','remodel bathroom'],
+    section:'interior', desc:'Full Bathroom Remodel', labor:[3000,5500], materials:[4000,8000], unit:'per bath',
+    requires:['_tile_demo','_backer_board','_waterproofing','_thinset','_grout','_caulk','_drywall_patch','_paint_primer','_paint_finish','_shutoffs','_p_trap','_wax_ring','_permit_bath','_debris_haul'],
+    absorbs:['shower tile','retile shower','shower walls','tile shower','tile floor','floor tile','tile the floor','retile floor',
+             'vanity','bathroom vanity','new vanity','toilet','replace toilet','new toilet',
+             'fixture','fixtures','replace fixtures','bathroom fixture',
+             '_tile_demo','_backer_board','_waterproofing','_thinset','_grout','_caulk','_drywall_patch','_paint_primer','_paint_finish','_shutoffs','_p_trap','_wax_ring'] },
+  { keywords:['vanity','bathroom vanity','new vanity'],
+    section:'interior', desc:'Bathroom Vanity — Supply & Install', labor:[200,400], materials:[400,1200], unit:'each',
+    requires:['_shutoffs','_p_trap','_debris_haul'] },
+  { keywords:['shower tile','retile shower','shower walls','tile shower','replace tile','tile bathroom','bathroom tile'],
+    section:'interior', desc:'Shower / Bathroom Tile — Labor & Materials', labor:[8,14], materials:[5,15], unit:'per sqft',
+    requires:['_tile_demo','_backer_board','_waterproofing','_thinset','_grout','_caulk','_drywall_patch','_paint_finish','_debris_haul'],
+    absorbs:['_tile_demo','_backer_board','_waterproofing','_thinset','_grout','_caulk'] },
+  { keywords:['toilet','replace toilet','new toilet'],
+    section:'interior', desc:'Toilet — Supply & Install', labor:[150,250], materials:[200,450], unit:'each',
+    requires:['_wax_ring','_shutoffs'] },
+  { keywords:['fixture','fixtures','replace fixtures','bathroom fixture','plumbing fixture'],
+    section:'interior', desc:'Bathroom Fixtures — Supply & Install', labor:[75,150], materials:[150,500], unit:'per set',
+    requires:['_shutoffs'] },
+  { keywords:['soaking tub','tub','bathtub','freestanding tub'],
+    section:'interior', desc:'Soaking Tub — Supply & Install', labor:[400,800], materials:[800,2500], unit:'each',
+    requires:['_backer_board','_waterproofing','_p_trap','_shutoffs','_permit_bath','_debris_haul'] },
+  { keywords:['shower door','glass door','frameless shower','shower enclosure'],
+    section:'interior', desc:'Shower Door / Glass Enclosure — Supply & Install', labor:[300,600], materials:[600,2000], unit:'each' },
+  // walls
+  { keywords:['remove wall','demo wall','knock down wall','open concept','open floor plan','tear down wall'],
+    section:'demolition', desc:'Wall Removal — Demo, Drywall Patch & Paint', labor:[800,1800], materials:[50,200], unit:'each',
+    requires:['_drywall_patch','_paint_primer','_paint_finish','_debris_haul'],
+    absorbs:['drywall','sheetrock','new drywall','hang drywall','replace drywall','paint','repaint','painting','paint throughout','paint walls','interior paint','_drywall_patch','_paint_primer','_paint_finish'] },
+  { keywords:['load bearing wall','load-bearing','structural wall','beam','steel beam','LVL'],
+    section:'structure', desc:'Load-Bearing Wall Removal w/ Beam', labor:[2500,5000], materials:[1500,4000], unit:'each',
+    requires:['_drywall_patch','_paint_primer','_paint_finish','_permit_electrical','_debris_haul'],
+    absorbs:['drywall','sheetrock','new drywall','hang drywall','replace drywall','paint','repaint','painting','paint throughout','paint walls','interior paint','_drywall_patch','_paint_primer','_paint_finish'] },
+  { keywords:['drywall','sheetrock','new drywall','hang drywall','replace drywall'],
+    section:'interior', desc:'Drywall — Hang, Tape, Mud, Finish', labor:[2.00,3.50], materials:[0.60,1.00], unit:'per sqft',
+    requires:['_paint_primer','_paint_finish','_debris_haul'] },
+  { keywords:['insulation','insulate','insulating'],
+    section:'interior', desc:'Insulation — Batt or Blown', labor:[0.50,1.25], materials:[0.40,1.00], unit:'per sqft' },
+  // electrical
+  { keywords:['electrical','rewire','wiring','electric panel','panel upgrade','breaker box'],
+    section:'mechanicals', desc:'Electrical — Panel Upgrade / Rewire', labor:[2500,6000], materials:[800,2000], unit:'per job',
+    requires:['_permit_electrical','_drywall_patch','_paint_finish'] },
+  { keywords:['outlet','outlets','gfci','add outlet','new outlet'],
+    section:'mechanicals', desc:'Electrical Outlets — Install / Replace', labor:[80,150], materials:[15,40], unit:'each' },
+  { keywords:['recessed light','can light','pot light','recessed lighting'],
+    section:'mechanicals', desc:'Recessed Lighting — Install', labor:[100,175], materials:[25,60], unit:'each' },
+  { keywords:['ceiling fan','fan install'],
+    section:'mechanicals', desc:'Ceiling Fan — Supply & Install', labor:[100,200], materials:[100,350], unit:'each' },
+  { keywords:['smoke detector','smoke alarm','co detector','carbon monoxide'],
+    section:'mechanicals', desc:'Smoke / CO Detectors', labor:[60,100], materials:[25,60], unit:'each' },
+  // plumbing
+  { keywords:['plumbing','replumb','repipe'],
+    section:'mechanicals', desc:'Plumbing — Rough-in & Trim', labor:[3500,7000], materials:[1500,3500], unit:'per job',
+    requires:['_permit_bath','_drywall_patch','_paint_finish'] },
+  { keywords:['water heater','hot water heater','tankless water heater','replace water heater'],
+    section:'mechanicals', desc:'Water Heater — Supply & Install', labor:[250,450], materials:[600,1800], unit:'each',
+    requires:['_shutoffs'] },
+  { keywords:['faucet','replace faucet','new faucet'],
+    section:'mechanicals', desc:'Faucet — Supply & Install', labor:[100,200], materials:[150,450], unit:'each',
+    requires:['_shutoffs','_p_trap'] },
+  // hvac
+  { keywords:['hvac','ac','air conditioning','heat pump','furnace','new hvac','replace hvac'],
+    section:'mechanicals', desc:'HVAC System — Supply & Install', labor:[2000,4000], materials:[3500,8000], unit:'per system' },
+  { keywords:['ductwork','duct','ducts','new ducts'],
+    section:'mechanicals', desc:'Ductwork — Replace / New Install', labor:[2000,4000], materials:[1500,3000], unit:'per job' },
+  // roofing
+  { keywords:['roof','new roof','replace roof','roofing','shingles'],
+    section:'exterior', desc:'Roof Replacement — Architectural Shingles', labor:[2500,4500], materials:[4000,7500], unit:'per job',
+    requires:['_debris_haul'] },
+  { keywords:['gutter','gutters','new gutters'],
+    section:'exterior', desc:'Gutters — Supply & Install', labor:[400,700], materials:[500,1200], unit:'per job' },
+  // exterior
+  { keywords:['siding','new siding','replace siding','vinyl siding','hardie','fiber cement'],
+    section:'exterior', desc:'Siding — Supply & Install', labor:[2.50,4.00], materials:[3.00,7.00], unit:'per sqft',
+    requires:['_debris_haul'] },
+  { keywords:['front door','exterior door','new door','replace door','entry door'],
+    section:'exterior', desc:'Exterior Door — Supply & Install', labor:[200,400], materials:[400,1200], unit:'each' },
+  { keywords:['window','windows','new window','replace window','window replacement'],
+    section:'structure', desc:'Windows — Supply & Install', labor:[150,300], materials:[300,800], unit:'each',
+    requires:['_drywall_patch','_paint_finish','_caulk'] },
+  { keywords:['deck','porch','patio','new deck','add deck','build deck'],
+    section:'exterior', desc:'Deck / Porch — Labor & Materials', labor:[20,35], materials:[15,30], unit:'per sqft' },
+  { keywords:['fence','new fence','privacy fence'],
+    section:'exterior', desc:'Fence — Supply & Install', labor:[15,25], materials:[20,40], unit:'per linear ft' },
+  { keywords:['landscaping','sod','lawn','yard','grass'],
+    section:'exterior', desc:'Landscaping / Sod', labor:[1500,3000], materials:[2000,5000], unit:'per job' },
+  { keywords:['driveway','new driveway','concrete driveway','asphalt driveway'],
+    section:'exterior', desc:'Driveway — Concrete or Asphalt', labor:[3,6], materials:[4,9], unit:'per sqft' },
+  { keywords:['garage door','replace garage door'],
+    section:'exterior', desc:'Garage Door — Supply & Install', labor:[150,300], materials:[700,2000], unit:'each' },
+  // interior finish
+  { keywords:['trim','baseboard','crown molding','door casing','window trim','molding'],
+    section:'interior', desc:'Trim & Molding — Labor & Materials', labor:[2.50,4.00], materials:[1.50,3.50], unit:'per lf',
+    requires:['_paint_finish'] },
+  { keywords:['interior door','replace interior door','door installation'],
+    section:'interior', desc:'Interior Door — Supply & Install', labor:[150,300], materials:[150,400], unit:'each',
+    requires:['_drywall_patch','_paint_finish'] },
+  { keywords:['closet','closet system','built-in closet','walk-in closet'],
+    section:'interior', desc:'Closet System — Supply & Install', labor:[300,600], materials:[500,2000], unit:'each' },
+  { keywords:['stair','stairs','staircase','handrail','railing'],
+    section:'interior', desc:'Stairs / Railings — Labor & Materials', labor:[2000,5000], materials:[1500,4000], unit:'per flight',
+    requires:['_paint_finish'] },
+  { keywords:['fireplace','new fireplace','gas fireplace','electric fireplace'],
+    section:'interior', desc:'Fireplace — Supply & Install', labor:[800,2000], materials:[1500,4000], unit:'each',
+    requires:['_drywall_patch','_paint_finish','_permit_electrical'] },
+  // demo/misc
+  { keywords:['dumpster','trash removal','haul away','junk removal','debris','clean out'],
+    section:'demolition', desc:'Dumpster / Debris Removal', labor:[0,0], materials:[400,800], unit:'per pull' },
+  { keywords:['demolition','demo','tear out','rip out','gut','gut job'],
+    section:'demolition', desc:'Demolition — Interior', labor:[1.50,3.00], materials:[0,0], unit:'per sqft',
+    requires:['_debris_haul'] },
+  { keywords:['permit','building permit','pull permit'],
+    section:'soft-costs', desc:'Building Permit', labor:[0,0], materials:[200,800], unit:'each' },
+  { keywords:['cleaning','final clean','post construction clean'],
+    section:'final-misc', desc:'Post-Construction Cleaning', labor:[400,900], materials:[0,0], unit:'per job' },
+];
+
+const EST_KW_MAP = (() => {
+  const map = {};
+  EST_PRICE_DB.forEach((item, idx) => {
+    item.keywords.forEach(kw => { if (!map[kw]) map[kw] = []; map[kw].push(idx); });
+  });
+  return map;
+})();
+
+function _estKwToIdx(kw) { const a = EST_KW_MAP[kw]; return a && a.length ? a[0] : -1; }
+
+function _estResolve(seedIdxs) {
+  const resolved = new Set();
+  const q = [...seedIdxs];
+  while (q.length) {
+    const idx = q.shift();
+    if (resolved.has(idx)) continue;
+    resolved.add(idx);
+    const item = EST_PRICE_DB[idx];
+    if (item.requires) item.requires.forEach(kw => { const d = _estKwToIdx(kw); if (d !== -1 && !resolved.has(d)) q.push(d); });
+  }
+  return resolved;
+}
+
+function buildScopeDraft() {
+  const input = document.getElementById('scopeDraftInput').value.trim();
+  const resultEl = document.getElementById('scopeDraftResult');
+  if (!input) return;
+
+  const lower = input.toLowerCase();
+  const directMatched = new Map();
+  const sorted = Object.keys(EST_KW_MAP).sort((a,b) => b.length - a.length);
+  sorted.forEach(kw => {
+    if (kw.startsWith('_')) return;
+    if (lower.includes(kw)) EST_KW_MAP[kw].forEach(idx => directMatched.set(idx, true));
+  });
+
+  if (directMatched.size === 0) {
+    resultEl.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:8px 0;">Nothing recognized — try words like "tile", "floors", "paint", "kitchen cabinets", or "bathroom".</div>';
+    return;
+  }
+
+  // absorb pass
+  const absorbed = new Set();
+  [...directMatched.keys()].forEach(idx => { const item = EST_PRICE_DB[idx]; if (item.absorbs) item.absorbs.forEach(kw => absorbed.add(kw)); });
+  const filteredDirect = [...directMatched.keys()].filter(idx => !EST_PRICE_DB[idx].keywords.every(kw => absorbed.has(kw)));
+
+  // resolve deps
+  const allIdxs = _estResolve(filteredDirect);
+
+  // re-absorb after dep resolution
+  const finalAbsorbed = new Set();
+  allIdxs.forEach(idx => { const item = EST_PRICE_DB[idx]; if (item.absorbs) item.absorbs.forEach(kw => finalAbsorbed.add(kw)); });
+  const finalIdxs = [...allIdxs].filter(idx => !EST_PRICE_DB[idx].keywords.every(kw => finalAbsorbed.has(kw)));
+
+  const directSet = new Set(filteredDirect);
+  finalIdxs.sort((a,b) => (directSet.has(a)?0:1) - (directSet.has(b)?0:1));
+
+  const items = finalIdxs.map(i => EST_PRICE_DB[i]);
+  const primaryItems = filteredDirect.map(i => EST_PRICE_DB[i]);
+  const depCount = items.length - primaryItems.length;
+
+  // Build scope draft rows (internal format matching S.budget structure)
+  const draftRows = items.map(item => {
+    const lMid = item.labor[1]  > 0 ? (item.labor[0]  + item.labor[1])  / 2 : 0;
+    const mMid = item.materials[1] > 0 ? (item.materials[0] + item.materials[1]) / 2 : 0;
+    return { section: item.section, desc: item.desc, matBudget: Math.round(mMid), labBudget: Math.round(lMid) };
+  });
+
+  // Save to localStorage for Scope of Work to pick up
+  const ctx = JSON.parse(localStorage.getItem('ironwood_estimate_context') || '{}');
+  localStorage.setItem('ironwood_scope_draft', JSON.stringify({
+    inputText: input,
+    rows: draftRows,
+    primaryDescs: primaryItems.map(i => i.desc),
+    depCount,
+    totalItems: items.length,
+    estimateContext: {
+      projectType:  ctx.projectType  || state.projectType,
+      projectLabel: ctx.projectLabel || state.projectLabel,
+      sqft:         ctx.sqft         || state.sqft,
+      lowEst:       ctx.lowEst       || state.lowEst,
+      highEst:      ctx.highEst      || state.highEst,
+    },
+    date: new Date().toISOString(),
+  }));
+
+  // Show success
+  const fmt = n => '$' + n.toLocaleString();
+  const totalLow  = draftRows.reduce((s,r) => s + r.matBudget + r.labBudget, 0);
+
+  resultEl.innerHTML = `
+    <div style="background:var(--ok-bg);border:1.5px solid var(--ok);border-radius:var(--radius);padding:14px 16px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#4F7A4A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span style="font-family:var(--sans);font-size:13px;font-weight:700;color:var(--ok);">Scope draft saved — ${items.length} line items ready for Jeff</span>
+      </div>
+      <div style="font-family:var(--sans);font-size:12px;color:var(--ink-soft);line-height:1.6;">
+        <strong>Primary work:</strong> ${primaryItems.map(i=>i.desc).join(', ')}<br>
+        <strong>Auto-added:</strong> ${depCount} supporting item${depCount!==1?'s':''} (demo, waterproofing, permits, patch & paint, etc.)<br>
+        <span style="color:var(--muted);font-size:11px;">When Jeff opens Scope of Work and loads this deal, these line items will be waiting for him.</span>
+      </div>
+    </div>`;
+
+  // Update button to reflect saved state
+  const btn = document.getElementById('scopeDraftBtn');
+  btn.textContent = '✓ Saved — Update Draft';
+  btn.style.background = 'var(--ok)';
+  setTimeout(() => { btn.textContent = 'Build My Scope Draft →'; btn.style.background = 'var(--bronze)'; }, 3000);
 }
 </script>
 

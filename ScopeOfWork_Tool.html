@@ -345,6 +345,26 @@
 <!-- ═══════════════════ TAB 1: CONSTRUCTION BUDGET ═══════════════════ -->
 <div class="tab-panel active" id="tab0">
 
+  <!-- Scope draft banner — shown when Free Estimate has a pending draft -->
+  <div id="scope-draft-banner" style="display:none;margin-bottom:16px;background:#1a1a0a;border:1.5px solid #c9a84c;border-radius:10px;padding:14px 18px;">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:200px;">
+        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;margin-bottom:5px;">Scope Draft Ready</div>
+        <div id="scope-draft-msg" style="font-size:13px;color:#f5f0e8;line-height:1.5;"></div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
+        <button type="button" onclick="applyDraftScope()"
+          style="background:#c9a84c;color:#0a0a0a;border:none;padding:9px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">
+          Load Line Items →
+        </button>
+        <button type="button" onclick="dismissDraftBanner()"
+          style="background:transparent;color:#b8b0a0;border:1px solid #333;padding:9px 12px;border-radius:6px;font-size:12px;cursor:pointer;">
+          Dismiss
+        </button>
+      </div>
+    </div>
+  </div>
+
   <div class="card">
     <div class="card-title">Property Information</div>
     <div class="form-grid">
@@ -1468,10 +1488,74 @@ function reinitAll(){
   recalcSummary();
 }
 
+function checkDraftScope() {
+  const raw = localStorage.getItem('ironwood_scope_draft');
+  if (!raw) return;
+  try {
+    const draft = JSON.parse(raw);
+    if (!draft.rows || !draft.rows.length) return;
+    const banner = document.getElementById('scope-draft-banner');
+    const msg    = document.getElementById('scope-draft-msg');
+    const date   = draft.date ? new Date(draft.date).toLocaleDateString('en-US',{month:'short',day:'numeric',hour:'numeric',minute:'2-digit'}) : '';
+    const primary = (draft.primaryDescs||[]).slice(0,3).join(', ') + (draft.primaryDescs&&draft.primaryDescs.length>3?' + more':'');
+    msg.innerHTML = `<strong>${draft.totalItems} line items</strong> from the Free Estimate${date?' ('+date+')':''}<br>
+      <span style="color:#b8b0a0;font-size:12px;">${primary}</span>`;
+    banner.style.display = 'block';
+  } catch(e) {}
+}
+
+function applyDraftScope() {
+  const raw = localStorage.getItem('ironwood_scope_draft');
+  if (!raw) return;
+  try {
+    const draft = JSON.parse(raw);
+    const CATEGORIES_MAP = {};
+    CATEGORIES.forEach(c => CATEGORIES_MAP[c.id] = c);
+    let added = 0;
+    (draft.rows || []).forEach(row => {
+      const rows = S.budget[row.section];
+      if (!rows) return;
+      const cat = CATEGORIES.find(c => c.id === row.section);
+      const prefix = cat ? (CATEGORIES.indexOf(cat) + 1) * 1000 : 9000;
+      rows.push({
+        num:       `${prefix}-${rows.length + 1}`,
+        desc:      row.desc,
+        matBudget: row.matBudget || 0,
+        labBudget: row.labBudget || 0,
+        matActual: '',
+        labActual: '',
+        compDate:  '',
+      });
+      added++;
+    });
+    autoSave();
+    buildBudgetUI();
+    recalcSummary();
+    localStorage.removeItem('ironwood_scope_draft');
+    const banner = document.getElementById('scope-draft-banner');
+    banner.innerHTML = `<div style="display:flex;align-items:center;gap:10px;color:#7EC98A;font-size:13px;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="#7EC98A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span><strong>${added} line items loaded</strong> from Free Estimate — review the Budget tab and update amounts with real bids.</span>
+    </div>`;
+    banner.style.borderColor = '#2d4a2d';
+    banner.style.background  = '#1a2a1a';
+    setTimeout(() => { banner.style.display = 'none'; }, 5000);
+    // Switch to budget tab
+    document.querySelectorAll('.tab-panel').forEach((p,i) => p.classList.toggle('active', i===1));
+    document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.toggle('active', i===1));
+  } catch(e) { alert('Could not load draft: ' + e.message); }
+}
+
+function dismissDraftBanner() {
+  document.getElementById('scope-draft-banner').style.display = 'none';
+  localStorage.removeItem('ironwood_scope_draft');
+}
+
 document.addEventListener('DOMContentLoaded',()=>{
   loadFromStorage();
   reinitAll();
   initDragDrop();
+  checkDraftScope();
 });
 
 // ══════════════════════════════════════════════════════════════════════
