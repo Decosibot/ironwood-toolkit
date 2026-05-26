@@ -1549,11 +1549,13 @@ const PRICE_DB = [
 
   // ── WALLS / STRUCTURE ──
   { keywords:['remove wall','demo wall','knock down wall','open concept','open floor plan','tear down wall'],
-    section:'demolition', desc:'Non-Load-Bearing Wall Removal',
-    labor:[800,1800], materials:[50,200], unit:'each', note:'Includes drywall patch, texture, paint on both sides; structural wall 2x–3x' },
+    section:'demolition', desc:'Wall Removal — Demo, Drywall Patch & Paint',
+    labor:[800,1800], materials:[50,200], unit:'each', note:'Non-LB: demo, drywall patch both sides, texture, paint included',
+    absorbs:['drywall','sheetrock','new drywall','hang drywall','replace drywall','paint','repaint','painting','paint throughout','paint walls','interior paint'] },
   { keywords:['load bearing wall','load-bearing','structural wall','beam','steel beam','LVL'],
-    section:'structure', desc:'Load-Bearing Wall Removal w/ Beam',
-    labor:[2500,5000], materials:[1500,4000], unit:'each', note:'Includes engineer, permit, LVL/steel beam, temporary shoring, patch' },
+    section:'structure', desc:'Load-Bearing Wall Removal w/ Beam, Drywall & Paint',
+    labor:[2500,5000], materials:[1500,4000], unit:'each', note:'Includes engineer, permit, LVL/steel beam, shoring, drywall patch, paint',
+    absorbs:['drywall','sheetrock','new drywall','hang drywall','replace drywall','paint','repaint','painting','paint throughout','paint walls','interior paint'] },
   { keywords:['drywall','sheetrock','new drywall','hang drywall','replace drywall'],
     section:'interior', desc:'Drywall — Hang, Tape, Mud, Finish',
     labor:[2.00,3.50], materials:[0.60,1.00], unit:'per sqft', note:'Level 4 finish standard; level 5 for high-gloss paint extra' },
@@ -1695,42 +1697,54 @@ function runSmartScope() {
     return;
   }
 
-  const items = [...matched.keys()].map(i => PRICE_DB[i]);
+  // Collect absorbed keywords from any matched item that has absorbs[]
+  const absorbedKeywords = new Set();
+  [...matched.keys()].forEach(idx => {
+    const item = PRICE_DB[idx];
+    if (item.absorbs) item.absorbs.forEach(kw => absorbedKeywords.add(kw));
+  });
+
+  // Remove any matched item whose keywords are fully covered by an absorbing item
+  const filteredIdxs = [...matched.keys()].filter(idx => {
+    const item = PRICE_DB[idx];
+    return !item.keywords.every(kw => absorbedKeywords.has(kw));
+  });
+
+  const items = filteredIdxs.map(i => PRICE_DB[i]);
   let added = 0;
 
   items.forEach(item => {
-    // Find the section in S.budget
-    const secIdx = S.budget.findIndex(s => s.id === item.section);
-    if (secIdx === -1) return;
-    const sec = S.budget[secIdx];
+    // S.budget is keyed by section id (e.g. 'flooring', 'interior')
+    const rows = S.budget[item.section];
+    if (!rows) return;
 
-    // Build description with price range
+    // Internal-only price note — stored only in our state, never rendered to client
     const laborRange = item.labor[1] > 0
       ? `Labor: $${item.labor[0].toLocaleString()}–$${item.labor[1].toLocaleString()} ${item.unit}`
       : '';
     const matRange = item.materials[1] > 0
-      ? `Materials: $${item.materials[0].toLocaleString()}–$${item.materials[1].toLocaleString()} ${item.unit}`
+      ? `Mats: $${item.materials[0].toLocaleString()}–$${item.materials[1].toLocaleString()} ${item.unit}`
       : '';
-    const priceNote = [laborRange, matRange].filter(Boolean).join(' | ');
-    const fullDesc = item.desc + (item.note ? ` [${item.note}]` : '');
+    const internalNote = [laborRange, matRange].filter(Boolean).join(' | ');
 
-    // Generate line item number
-    const prefix = sec.items.length > 0
-      ? sec.items[sec.items.length-1].num.split('-')[0]
-      : (secIdx + 1) * 1000;
-    const nextNum = `${prefix}-${sec.items.length + 1}`;
+    // Generate line item number from category prefix
+    const cat = CATEGORIES.find(c => c.id === item.section);
+    const prefix = cat ? (CATEGORIES.indexOf(cat) + 1) * 1000 : 9000;
+    const nextNum = `${prefix}-${rows.length + 1}`;
 
-    // Mid-point labor + materials as initial budget estimate
-    const laborMid  = item.labor[1]  > 0 ? (item.labor[0]  + item.labor[1])  / 2 : 0;
-    const matMid    = item.materials[1] > 0 ? (item.materials[0] + item.materials[1]) / 2 : 0;
+    // Mid-point split: 60% labor, 40% materials as starting estimate
+    const laborMid = item.labor[1]  > 0 ? (item.labor[0]  + item.labor[1])  / 2 : 0;
+    const matMid   = item.materials[1] > 0 ? (item.materials[0] + item.materials[1]) / 2 : 0;
 
-    sec.items.push({
-      num:    nextNum,
-      desc:   fullDesc,
-      budget: Math.round(laborMid + matMid),
-      actual: 0,
-      notes:  priceNote,
-      _smartAdded: true,
+    rows.push({
+      num:       nextNum,
+      desc:      item.desc,       // clean client-safe description only
+      matBudget: Math.round(matMid),
+      labBudget: Math.round(laborMid),
+      matActual: '',
+      labActual: '',
+      compDate:  '',
+      _internalNote: internalNote, // internal reference, never rendered
     });
     added++;
   });
