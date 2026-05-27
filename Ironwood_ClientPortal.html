@@ -4,17 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ironwood Client Portal</title>
+<link rel="stylesheet" href="iw-design.css"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --bg: #0a0a0a;
     --bg2: #111;
     --card: #1a1a1a;
-    --border: #222;
-    --gold: #c9a84c;
+    --border: var(--hairline);
+    --gold: var(--bronze);
     --gold-hover: #dbb85e;
-    --text: #f5f0e8;
+    --text: var(--ink);
     --text-muted: #9a9080;
     --green: #4caf50;
     --green-bg: #2d6a2d;
@@ -26,15 +26,15 @@
 
   body {
     background: var(--bg);
-    color: var(--text);
-    font-family: Arial, Helvetica, sans-serif;
+    color: var(--ink);
+    font-family: var(--sans);
     font-size: 14px;
     line-height: 1.5;
     min-height: 100vh;
   }
 
   h1, h2, h3, h4 {
-    font-family: Georgia, 'Times New Roman', serif;
+    font-family: var(--serif);
     font-weight: normal;
     letter-spacing: 0.04em;
   }
@@ -53,7 +53,7 @@
   .btn {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 8px 16px; border-radius: 4px; border: none;
-    cursor: pointer; font-size: 13px; font-family: Arial, sans-serif;
+    cursor: pointer; font-size: 13px; font-family: var(--sans);
     transition: background 0.15s, opacity 0.15s;
     white-space: nowrap;
   }
@@ -79,7 +79,7 @@
   .form-control {
     width: 100%; background: #0f0f0f; border: 1px solid var(--border);
     color: var(--text); padding: 8px 10px; border-radius: 4px;
-    font-size: 13px; font-family: Arial, sans-serif;
+    font-size: 13px; font-family: var(--sans);
     transition: border-color 0.15s;
   }
   .form-control:focus { outline: none; border-color: var(--gold); }
@@ -116,7 +116,7 @@
   }
   #admin-topbar .logo-area { flex: 0 0 auto; }
   #admin-topbar .logo-area .wordmark {
-    font-family: Georgia, serif; font-size: 18px; letter-spacing: 0.14em;
+    font-family: var(--serif); font-size: 18px; letter-spacing: 0.14em;
     color: var(--gold); line-height: 1;
   }
   #admin-topbar .logo-area .sub {
@@ -145,7 +145,7 @@
     font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);
   }
   .dash-stat .ds-value {
-    font-size: 22px; font-family: Georgia, serif; color: var(--gold); line-height: 1.1; margin-top: 2px;
+    font-size: 22px; font-family: var(--serif); color: var(--gold); line-height: 1.1; margin-top: 2px;
   }
   .dash-stat .ds-value.white { color: var(--text); }
   .dash-stat .ds-value.green { color: var(--green); }
@@ -173,7 +173,7 @@
   }
   .job-card:hover { border-color: #333; background: #1e1e1e; }
   .job-card.selected { border-color: var(--gold); background: #1e1c14; }
-  .job-card .jc-name { font-family: Georgia, serif; font-size: 14px; margin-bottom: 3px; }
+  .job-card .jc-name { font-family: var(--serif); font-size: 14px; margin-bottom: 3px; }
   .job-card .jc-addr { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .job-card .jc-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
   .job-card .jc-price { font-size: 13px; color: var(--gold); font-weight: bold; }
@@ -238,7 +238,7 @@
   .phase-table input[type="text"],
   .phase-table input[type="number"] {
     background: #0f0f0f; border: 1px solid var(--border); color: var(--text);
-    padding: 6px 8px; border-radius: 3px; font-size: 12px; font-family: Arial, sans-serif;
+    padding: 6px 8px; border-radius: 3px; font-size: 12px; font-family: var(--sans);
     width: 100%;
   }
   .phase-table input:focus { outline: none; border-color: var(--gold); }
@@ -273,7 +273,7 @@
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
   }
   #client-topbar .ct-wordmark {
-    font-family: Georgia, serif; font-size: 22px; letter-spacing: 0.16em;
+    font-family: var(--serif); font-size: 22px; letter-spacing: 0.16em;
     color: var(--gold); line-height: 1;
   }
   #client-topbar .ct-sub {
@@ -294,7 +294,7 @@
     background: var(--card); border: 1px solid var(--border); border-radius: 8px;
     padding: 18px 20px; margin-bottom: 20px;
   }
-  .client-info-bar .cib-name { font-family: Georgia, serif; font-size: 20px; margin-bottom: 4px; }
+  .client-info-bar .cib-name { font-family: var(--serif); font-size: 20px; margin-bottom: 4px; }
   .client-info-bar .cib-addr { color: var(--text-muted); font-size: 13px; }
 
   .status-banner {
@@ -305,7 +305,7 @@
   .status-banner.complete { background: #0a1a0a; border-color: var(--green); }
   .status-banner.draft { background: #141414; border-color: #444; }
   .status-pill {
-    font-family: Georgia, serif; font-size: 14px; letter-spacing: 0.08em;
+    font-family: var(--serif); font-size: 14px; letter-spacing: 0.08em;
     padding: 6px 16px; border-radius: 20px; font-weight: normal;
   }
   .pill-active { background: var(--amber); color: #0a0a0a; }
@@ -375,8 +375,8 @@
   .pi-card-upcoming { opacity: 0.7; }
 
   .pi-card .pic-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
-  .pi-card .pic-name { font-family: Georgia, serif; font-size: 16px; }
-  .pi-card .pic-amount { font-size: 20px; font-family: Georgia, serif; color: var(--gold); }
+  .pi-card .pic-name { font-family: var(--serif); font-size: 16px; }
+  .pi-card .pic-amount { font-size: 20px; font-family: var(--serif); color: var(--gold); }
   .pi-card .pic-trigger { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
   .pi-card .pic-status { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .pic-status-paid {
@@ -430,7 +430,7 @@
     padding: 28px; max-width: 420px; width: 100%; text-align: center;
   }
   .modal-box .modal-icon { font-size: 36px; margin-bottom: 12px; }
-  .modal-box h3 { font-family: Georgia, serif; font-size: 18px; color: var(--gold); margin-bottom: 10px; }
+  .modal-box h3 { font-family: var(--serif); font-size: 18px; color: var(--gold); margin-bottom: 10px; }
   .modal-box p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
   .modal-box .modal-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 

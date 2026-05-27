@@ -4,25 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Company Name Options — Ironwood Partnership</title>
+<link rel="stylesheet" href="iw-design.css"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --black:  #0a0a0a;
-    --cream:  #f5f0e8;
-    --gold:   #c9a84c;
+    --black:  var(--bg);
+    --cream:  var(--bg);
+    --gold:   var(--bronze);
     --gold-lt: #e8d48a;
-    --border: #d0c8b8;
+    --border: var(--hairline);
     --muted:  #777;
     --light:  #faf7f2;
-    --ink:    #1a1208;
+    --ink:    var(--ink);
   }
 
   body {
-    background: #e8e4dc;
-    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    font-family: var(--serif);
     font-size: 13px;
     color: var(--ink);
+
     min-height: 100vh;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -41,7 +43,7 @@
     z-index: 100;
   }
   .toolbar-brand {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 13px;
     font-weight: 700;
     letter-spacing: .06em;
@@ -52,7 +54,7 @@
     border: none;
     cursor: pointer;
     padding: 8px 20px;
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 11px;
     font-weight: 700;
     letter-spacing: 1px;
@@ -96,7 +98,7 @@
   }
 
   .brand-block .brand-name {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 18px;
     font-weight: 900;
     letter-spacing: .08em;
@@ -106,7 +108,7 @@
   }
 
   .brand-block .brand-sub {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 9px;
     color: var(--muted);
     letter-spacing: .1em;
@@ -116,7 +118,7 @@
 
   .doc-meta {
     text-align: right;
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 10px;
     color: var(--muted);
     line-height: 1.8;
@@ -128,7 +130,7 @@
   }
 
   .doc-title h1 {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 22px;
     font-weight: 900;
     letter-spacing: .1em;
@@ -138,7 +140,7 @@
 
   .doc-subtitle {
     text-align: center;
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 10px;
     color: var(--muted);
     letter-spacing: .08em;
@@ -162,7 +164,7 @@
   }
 
   .tier-label {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 9px;
     font-weight: 900;
     letter-spacing: .18em;
@@ -174,7 +176,7 @@
   }
 
   .tier-title {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 11px;
     font-weight: 700;
     color: var(--muted);
@@ -193,7 +195,7 @@
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 8px;
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
   }
 
   .name-table thead tr {
@@ -233,7 +235,7 @@
     font-size: 10px;
     font-weight: 700;
     color: var(--muted);
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
   }
 
   .name-main {
@@ -241,14 +243,14 @@
     font-weight: 900;
     color: var(--black);
     letter-spacing: .02em;
-    font-family: 'Georgia', serif;
+    font-family: var(--serif);
   }
 
   .name-sub {
     font-size: 10px;
     color: var(--muted);
     margin-top: 2px;
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
   }
 
   .layer-cell {
@@ -273,7 +275,7 @@
   }
 
   .picks-title {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 9px;
     font-weight: 900;
     letter-spacing: .18em;
@@ -296,7 +298,7 @@
   }
 
   .pick-rank {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 9px;
     font-weight: 700;
     letter-spacing: .12em;
@@ -306,7 +308,7 @@
   }
 
   .pick-name {
-    font-family: 'Georgia', serif;
+    font-family: var(--serif);
     font-size: 20px;
     font-weight: 700;
     color: var(--black);
@@ -315,7 +317,7 @@
   }
 
   .pick-why {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 11px;
     color: #3a3020;
     line-height: 1.65;
@@ -330,7 +332,7 @@
   }
 
   .selection-title {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 9px;
     font-weight: 900;
     letter-spacing: .18em;
@@ -346,7 +348,7 @@
   }
 
   .sig-field {
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
   }
 
   .sig-label {
@@ -374,7 +376,7 @@
     margin-top: 32px;
     padding-top: 10px;
     border-top: 1px solid var(--border);
-    font-family: 'Arial', sans-serif;
+    font-family: var(--sans);
     font-size: 9px;
     color: var(--muted);
     text-align: center;
@@ -427,7 +429,7 @@
   <div class="gold-bar"></div>
 
   <!-- CONTEXT NOTE -->
-  <p style="font-family:'Arial',sans-serif;font-size:11.5px;color:#3a3020;line-height:1.75;margin-bottom:28px;">
+  <p style="font-family:var(--sans);font-size:11.5px;color:#3a3020;line-height:1.75;margin-bottom:28px;">
     Each name is evaluated across three brand layers: the <strong>legal entity</strong> (LLC), the <strong>investor-facing brand</strong> (Holdings), and the <strong>consumer-facing renovation brand</strong> (Renovations). The selected name should be strong across all three, available for Georgia LLC registration and domain registration, and scalable as the portfolio grows.
   </p>
 
@@ -634,15 +636,15 @@
   <!-- SELECTION BOX -->
   <div class="selection-section" style="margin-top:32px;">
     <div class="selection-title">Partner Selection — Sign Off on Chosen Name</div>
-    <div style="font-family:'Arial',sans-serif;font-size:11px;color:#3a3020;line-height:1.7;margin-bottom:20px;">
+    <div style="font-family:var(--sans);font-size:11px;color:#3a3020;line-height:1.7;margin-bottom:20px;">
       Once a name is selected, verify availability at the <strong>Georgia Secretary of State</strong> (sos.ga.gov) and check domain availability before filing. Both partners initial below to confirm the selection.
     </div>
 
     <div style="background:#fff;border:1px solid var(--border);padding:14px 18px;margin-bottom:20px;">
-      <div style="font-family:'Arial',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Selected Name</div>
+      <div style="font-family:var(--sans);font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">Selected Name</div>
       <div style="display:flex;align-items:center;gap:16px;">
         <div style="font-family:'Georgia',serif;font-size:22px;font-weight:700;color:var(--black);border-bottom:1px solid #aaa;min-width:280px;height:36px;padding-bottom:4px;"></div>
-        <div style="font-family:'Arial',sans-serif;font-size:10px;color:var(--muted);">Write selected name above</div>
+        <div style="font-family:var(--sans);font-size:10px;color:var(--muted);">Write selected name above</div>
       </div>
     </div>
 
@@ -661,7 +663,7 @@
   </div>
 
   <!-- NEXT STEPS -->
-  <div style="margin-top:28px; font-family:'Arial',sans-serif;">
+  <div style="margin-top:28px; font-family:var(--sans);">
     <div style="font-size:9px;font-weight:900;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);margin-bottom:12px;">Next Steps After Selection</div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px 24px;">
       <div style="display:flex;align-items:flex-start;gap:8px;font-size:11px;color:#3a3020;line-height:1.5;"><span class="cb"></span>Check name availability — Georgia SOS (sos.ga.gov)</div>

@@ -4,19 +4,20 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ironwood Homes and Renovations — Seller Intake</title>
+<link rel="stylesheet" href="iw-design.css"/>
 <style>
 /* ===== VARIABLES ===== */
 :root {
-  --black: #0a0a0a;
-  --cream: #EEF2F1;
-  --gold: #c9a84c;
+  --black: var(--bg);
+  --cream: var(--bg);
+  --gold: var(--bronze);
   --gold-dark: #a8893a;
   --gold-light: #e2c97a;
   --mid: #2a2520;
-  --border: #d4c9b0;
+  --border: var(--hairline);
   --section-bg: #faf7f2;
   --internal-bg: #1a1208;
-  --internal-border: #c9a84c;
+  --internal-border: var(--bronze);
   --red: #c0392b;
   --green: #27ae60;
   --orange: #e67e22;
@@ -27,9 +28,9 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 15px; }
 body {
-  font-family: 'Georgia', 'Times New Roman', serif;
-  background: #e8e2d6;
-  color: var(--black);
+  font-family: var(--serif);
+  background: var(--bg);
+  color: var(--ink);
   min-height: 100vh;
 }
 
@@ -48,7 +49,7 @@ body {
   flex-wrap: wrap;
 }
 #toolbar .brand {
-  font-family: 'Georgia', serif;
+  font-family: var(--serif);
   color: var(--bronze);
   font-size: 1rem;
   font-weight: bold;
@@ -72,7 +73,7 @@ body {
   padding: 8px 16px;
   border: none;
   border-radius: 4px;
-  font-family: 'Georgia', serif;
+  font-family: var(--serif);
   font-size: 0.82rem;
   font-weight: bold;
   cursor: pointer;
@@ -267,7 +268,7 @@ body {
   background: #fff;
   color: var(--black);
   font-size: 0.9rem;
-  font-family: 'Georgia', serif;
+  font-family: var(--serif);
   outline: none;
   transition: border-color 0.15s;
 }
