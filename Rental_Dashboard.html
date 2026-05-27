@@ -4,31 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rental Property Dashboard — Anchor Pro Solutions</title>
+<link rel="stylesheet" href="iw-design.css"/>
 <style>
   :root {
-    --bg: #EEF2F1;
-    --bg2: #111111;
-    --bg3: #1a1a1a;
-    --bg4: #222222;
-    --cream: #EEF2F1;
-    --cream2: #e8e0d0;
-    --gold: #c9a84c;
-    --gold2: #a8883c;
-    --gold3: #e8c87a;
-    --red: #e05555;
-    --green: #4caf6e;
-    --yellow: #e0c040;
+    --bg2: var(--surface);
+    --bg3: var(--surface);
+    --bg4: var(--surface-2);
+    --cream: var(--bg);
+    --cream2: var(--hairline);
+    --gold: var(--bronze);
+    --gold2: var(--bronze-deep);
+    --gold3: var(--bronze-tint);
+    --red: var(--err);
+    --green: var(--ok);
+    --yellow: var(--warn);
     --orange: #e0883a;
     --blue: #5588cc;
     --teal: #3aabab;
-    --hairline: #D8E0DF;
-    --border2: #333333;
-    --text: #f5f0e8;
-    --text2: #b0a898;
-    --text3: #7a7268;
+    --border2: var(--hairline);
+    --text: var(--ink);
+    --text2: var(--muted);
+    --text3: var(--ink-soft);
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+  body { background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 14px; min-height: 100vh; }
 
   /* TOPBAR */
   #topbar {

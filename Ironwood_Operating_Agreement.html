@@ -4,13 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ironwood LLC — Operating Agreement</title>
+<link rel="stylesheet" href="iw-design.css"/>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  :root {
+    --gold: var(--bronze);
+    --text: var(--ink);
+  }
+
   body {
     background: var(--bg);
-    color: #f5f0e8;
-    font-family: 'Georgia', serif;
+    color: var(--ink);
+    font-family: var(--serif);
     min-height: 100vh;
   }
 
@@ -20,7 +26,7 @@
     top: 0; left: 0; right: 0;
     z-index: 100;
     background: #0f0f0f;
-    border-bottom: 2px solid #c9a84c;
+    border-bottom: 2px solid var(--bronze);
     display: flex;
     align-items: center;
     padding: 0 24px;
@@ -29,10 +35,10 @@
   }
   .logo-badge {
     width: 38px; height: 38px;
-    background: #c9a84c;
+    background: var(--bronze);
     border-radius: 6px;
     display: flex; align-items: center; justify-content: center;
-    font-family: 'Georgia', serif;
+    font-family: var(--serif);
     font-size: 20px;
     font-weight: bold;
     color: #0a0a0a;
@@ -47,24 +53,24 @@
   }
   .topbar-sub {
     font-size: 11px;
-    color: #c9a84c;
+    color: var(--bronze);
     letter-spacing: 0.08em;
     text-transform: uppercase;
   }
   .topbar-btns { display: flex; gap: 10px; }
   .topbar-btn {
     background: transparent;
-    border: 1px solid #c9a84c;
-    color: #c9a84c;
+    border: 1px solid var(--bronze);
+    color: var(--bronze);
     padding: 7px 16px;
     font-size: 12px;
     letter-spacing: 0.06em;
     cursor: pointer;
     border-radius: 4px;
-    font-family: 'Georgia', serif;
+    font-family: var(--serif);
     transition: background 0.2s, color 0.2s;
   }
-  .topbar-btn:hover { background: #c9a84c; color: #0a0a0a; }
+  .topbar-btn:hover { background: var(--bronze); color: #0a0a0a; }
 
   /* PAGE WRAPPER */
   .page-wrapper {
@@ -83,7 +89,7 @@
     max-width: 860px;
     padding: 72px 80px;
     box-shadow: 0 8px 60px rgba(0,0,0,0.7);
-    font-family: 'Georgia', serif;
+    font-family: var(--serif);
     font-size: 13.5px;
     line-height: 1.75;
   }
@@ -150,14 +156,14 @@
   }
   .article-header {
     background: #1a1a1a;
-    color: #c9a84c;
+    color: var(--bronze);
     padding: 10px 18px;
     font-size: 13px;
     font-weight: bold;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     margin-bottom: 14px;
-    border-left: 5px solid #c9a84c;
+    border-left: 5px solid var(--bronze);
   }
   .article-header span {
     color: #f5f0e8;
@@ -317,7 +323,7 @@
       font-size: 12px;
     }
     .plain-box { background: #e8eef5 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-    .article-header { background: #1a1a1a !important; color: #c9a84c !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .article-header { background: #1a1a1a !important; color: var(--bronze) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
     .article { page-break-inside: avoid; }
     .sig-block { page-break-inside: avoid; }
     .sig-page { page-break-before: always; }
@@ -556,7 +562,7 @@
       <div class="notice-box">
         <table style="width:100%; border-collapse:collapse; font-size:12px;">
           <thead>
-            <tr style="background:#1a1a1a; color:#c9a84c;">
+            <tr style="background:#1a1a1a; color:var(--bronze);">
               <th style="padding:8px 10px; text-align:left; border:1px solid #555;">Member</th>
               <th style="padding:8px 10px; text-align:left; border:1px solid #555;">Role</th>
               <th style="padding:8px 10px; text-align:center; border:1px solid #555;">Interest</th>

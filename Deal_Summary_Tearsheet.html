@@ -4,28 +4,29 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ironwood Holdings — Deal Summary</title>
+<link rel="stylesheet" href="iw-design.css"/>
 <style>
   /* ── Reset & Variables ─────────────────────────────────────── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   :root {
-    --black:  #0a0a0a;
-    --cream:  #f5f0e8;
-    --gold:   #c9a84c;
-    --gold-lt:#e2c97e;
-    --red:    #c0392b;
-    --green:  #1a7a3f;
-    --border: #d4cbb8;
-    --muted:  #7a7060;
+    --black:  var(--bg);
+    --cream:  var(--ink);
+    --gold:   var(--bronze);
+    --gold-lt: var(--bronze-tint);
+    --red:    var(--err);
+    --green:  var(--ok);
+    --border: var(--hairline);
+    --muted:  var(--muted, #949294);
     --page-w: 8.5in;
   }
 
   /* ── Screen Chrome ─────────────────────────────────────────── */
   body {
-    background: var(--black);
-    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    font-family: var(--serif);
     font-size: 11pt;
-    color: var(--black);
+    color: var(--ink);
     min-height: 100vh;
     padding: 0;
   }

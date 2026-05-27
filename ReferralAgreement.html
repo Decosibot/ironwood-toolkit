@@ -4,26 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ironwood — Referral Fee Agreement</title>
+<link rel="stylesheet" href="iw-design.css"/>
 <style>
   /* ─── Google Fonts fallback (self-contained: uses system serif stack) ─── */
   @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Cinzel:wght@400;600;700&display=swap');
 
   :root {
-    --black:  #0a0a0a;
-    --cream:  #f5f0e8;
-    --gold:   #c9a84c;
-    --gold-light: #e8d48a;
-    --gold-dark:  #9a7a2e;
-    --white:  #ffffff;
-    --rule:   1px solid #c9a84c;
+    --black:  var(--bg);
+    --cream:  var(--surface);
+    --gold:   var(--bronze);
+    --gold-light: var(--bronze-tint);
+    --gold-dark:  var(--bronze-deep);
+    --white:  var(--surface-2);
+    --rule:   1px solid var(--bronze);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--cream);
-    color: var(--black);
-    font-family: 'EB Garamond', 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
     font-size: 11pt;
     line-height: 1.6;
   }

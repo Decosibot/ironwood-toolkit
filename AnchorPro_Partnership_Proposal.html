@@ -4,13 +4,22 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Ironwood Homes & Renovations — Partnership Proposal</title>
+  <link rel="stylesheet" href="iw-design.css"/>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
+    :root {
+      --black: var(--bg);
+      --cream: var(--ink);
+      --gold: var(--bronze);
+      --text: var(--ink);
+      --muted-color: var(--muted);
+    }
+
     body {
-      font-family: 'Georgia', serif;
-      color: #1a1a1a;
-      background: #faf8f4;
+      font-family: var(--serif);
+      color: var(--ink);
+      background: var(--bg);
       font-size: 13px;
       line-height: 1.7;
     }
@@ -23,7 +32,7 @@
       align-items: center;
       height: 100vh;
       min-height: 700px;
-      background: linear-gradient(160deg, #0a0a0a 0%, #1a1410 60%, #2a1f0a 100%);
+      background: linear-gradient(160deg, var(--bg) 0%, #1a1410 60%, #2a1f0a 100%);
       color: #fff;
       text-align: center;
       padding: 60px 40px;
@@ -37,7 +46,7 @@
       letter-spacing: 6px;
       font-size: 11px;
       text-transform: uppercase;
-      color: #f5f0e8;
+      color: var(--ink);
     }
 
     .cover h1 {
@@ -51,7 +60,7 @@
     .cover h2 {
       font-size: 18px;
       font-weight: normal;
-      color: #f5f0e8;
+      color: var(--ink);
       margin-bottom: 50px;
       letter-spacing: 1px;
     }
@@ -59,13 +68,13 @@
     .cover .divider {
       width: 60px;
       height: 3px;
-      background: #c9a84c;
+      background: var(--bronze);
       margin: 0 auto 40px;
     }
 
     .cover .meta {
       font-size: 12px;
-      color: #b8b0a0;
+      color: var(--muted);
       line-height: 2.2;
       letter-spacing: 0.5px;
     }
@@ -100,14 +109,14 @@
       font-size: 9px;
       letter-spacing: 4px;
       text-transform: uppercase;
-      color: #c9a84c;
+      color: var(--bronze);
       margin-bottom: 8px;
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
     }
 
     h2.section-title {
       font-size: 26px;
-      color: #0a0a0a;
+      color: var(--bg);
       margin-bottom: 6px;
       font-weight: bold;
     }
@@ -115,23 +124,23 @@
     .title-rule {
       width: 50px;
       height: 3px;
-      background: #c9a84c;
+      background: var(--bronze);
       margin-bottom: 30px;
     }
 
     h3.sub-title {
       font-size: 14px;
-      color: #0a0a0a;
+      color: var(--bg);
       margin: 28px 0 10px;
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
       font-weight: bold;
-      border-left: 3px solid #c9a84c;
+      border-left: 3px solid var(--bronze);
       padding-left: 10px;
     }
 
     p {
       margin-bottom: 14px;
-      color: #2a2a2a;
+      color: var(--hairline);
     }
 
     /* TABLE OF CONTENTS */
@@ -141,14 +150,14 @@
       align-items: flex-end;
       padding: 10px 0;
       border-bottom: 1px dotted #ddd;
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
     }
 
     .toc-item:last-child { border-bottom: none; }
 
     .toc-num {
       font-size: 10px;
-      color: #c9a84c;
+      color: var(--bronze);
       letter-spacing: 2px;
       margin-right: 14px;
       font-weight: bold;
@@ -160,27 +169,27 @@
     /* CARDS / BOXES */
     .card {
       background: #f5f0e0;
-      border-left: 4px solid #c9a84c;
+      border-left: 4px solid var(--bronze);
       padding: 18px 22px;
       margin: 18px 0;
       border-radius: 0 4px 4px 0;
     }
 
     .card-dark {
-      background: #0a0a0a;
-      color: #f5f0e8;
-      border-left: 4px solid #c9a84c;
+      background: var(--bg);
+      color: var(--ink);
+      border-left: 4px solid var(--bronze);
       padding: 22px 28px;
       margin: 18px 0;
       border-radius: 0 4px 4px 0;
     }
 
-    .card-dark p, .card-dark li { color: #f5f0e8; }
-    .card-dark h4 { color: #fff; margin-bottom: 10px; font-family: 'Arial', sans-serif; }
+    .card-dark p, .card-dark li { color: var(--ink); }
+    .card-dark h4 { color: #fff; margin-bottom: 10px; font-family: var(--sans); }
 
     .highlight-box {
       background: #f5f0e0;
-      border: 1px solid #c9a84c;
+      border: 1px solid var(--bronze);
       border-radius: 4px;
       padding: 16px 20px;
       margin: 16px 0;
@@ -201,13 +210,13 @@
       width: 100%;
       border-collapse: collapse;
       margin: 18px 0;
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
       font-size: 12px;
     }
 
     thead tr {
-      background: #0a0a0a;
-      color: #f5f0e8;
+      background: var(--bg);
+      color: var(--ink);
     }
 
     thead th {
@@ -223,22 +232,22 @@
 
     tbody td {
       padding: 10px 14px;
-      color: #2a2a2a;
+      color: var(--hairline);
       vertical-align: top;
     }
 
     tr[style*="background:#1"] td,
-    tr[style*="background:#0a0a0a"] td {
-      color: #f5f0e8 !important;
+    tr[style*="background:var(--bg)"] td {
+      color: var(--ink) !important;
     }
 
-    td.label { font-weight: bold; color: #0a0a0a; width: 35%; }
-    td.value { color: #c9a84c; font-weight: bold; }
+    td.label { font-weight: bold; color: var(--bg); width: 35%; }
+    td.value { color: var(--bronze); font-weight: bold; }
 
     /* CODE / FORMULA BLOCKS */
     .formula {
       background: #080808;
-      color: #b8b0a0;
+      color: var(--muted);
       font-family: 'Courier New', monospace;
       font-size: 11.5px;
       padding: 20px 24px;
@@ -249,7 +258,7 @@
 
     .formula .comment { color: #6b6560; }
     .formula .highlight { color: #c9843a; font-weight: bold; }
-    .formula .positive { color: #c9a84c; }
+    .formula .positive { color: var(--bronze); }
     .formula .negative { color: #8a3a3a; }
     .formula .separator {
       border-top: 1px solid #6b6560;
@@ -267,7 +276,7 @@
 
     .team-card {
       background: #f5f0e0;
-      border-top: 4px solid #c9a84c;
+      border-top: 4px solid var(--bronze);
       padding: 18px 16px;
       border-radius: 0 0 4px 4px;
       text-align: center;
@@ -276,14 +285,14 @@
     .team-card .initials {
       width: 52px;
       height: 52px;
-      background: #0a0a0a;
-      color: #f5f0e8;
+      background: var(--bg);
+      color: var(--ink);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 18px;
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
       font-weight: bold;
       margin: 0 auto 12px;
     }
@@ -291,8 +300,8 @@
     .team-card .name {
       font-weight: bold;
       font-size: 13px;
-      color: #0a0a0a;
-      font-family: 'Arial', sans-serif;
+      color: var(--bg);
+      font-family: var(--sans);
       margin-bottom: 4px;
     }
 
@@ -300,8 +309,8 @@
       font-size: 10px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #c9a84c;
-      font-family: 'Arial', sans-serif;
+      color: var(--bronze);
+      font-family: var(--sans);
       margin-bottom: 10px;
     }
 
@@ -314,7 +323,7 @@
 
     .team-card ul li::before {
       content: '→ ';
-      color: #c9a84c;
+      color: var(--bronze);
     }
 
     /* CHECKLIST */
@@ -323,9 +332,9 @@
     .checklist li {
       padding: 8px 0;
       border-bottom: 1px solid #eee;
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
       font-size: 12px;
-      color: #2a2a2a;
+      color: var(--hairline);
       display: flex;
       align-items: flex-start;
       gap: 10px;
@@ -336,7 +345,7 @@
     .check-box {
       width: 16px;
       height: 16px;
-      border: 2px solid #c9a84c;
+      border: 2px solid var(--bronze);
       border-radius: 3px;
       flex-shrink: 0;
       margin-top: 1px;
@@ -346,8 +355,8 @@
       font-size: 10px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #c9a84c;
-      font-family: 'Arial', sans-serif;
+      color: var(--bronze);
+      font-family: var(--sans);
       margin: 20px 0 8px;
       font-weight: bold;
     }
@@ -362,25 +371,25 @@
     }
 
     .eq-a {
-      background: #0a0a0a;
+      background: var(--bg);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
       font-size: 11px;
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
       font-weight: bold;
       width: 50%;
     }
 
     .eq-b {
-      background: #c9a84c;
+      background: var(--bronze);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
       font-size: 11px;
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
       font-weight: bold;
       width: 50%;
     }
@@ -399,21 +408,21 @@
       flex-shrink: 0;
       width: 36px;
       height: 36px;
-      background: #0a0a0a;
-      color: #f5f0e8;
+      background: var(--bg);
+      color: var(--ink);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
       font-size: 11px;
       font-weight: bold;
     }
 
     .timeline-content h4 {
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
       font-size: 13px;
-      color: #0a0a0a;
+      color: var(--bg);
       margin-bottom: 4px;
     }
 
@@ -431,8 +440,8 @@
 
     .sig-block .sig-name {
       font-size: 12px;
-      font-family: 'Arial', sans-serif;
-      color: #0a0a0a;
+      font-family: var(--sans);
+      color: var(--bg);
       font-weight: bold;
     }
 
@@ -462,7 +471,7 @@
       text-align: center;
       font-size: 10px;
       color: #aaa;
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
       padding-top: 40px;
       border-top: 1px solid #eee;
       margin-top: 40px;
@@ -474,7 +483,7 @@
       text-align: right;
       font-size: 10px;
       color: #bbb;
-      font-family: 'Arial', sans-serif;
+      font-family: var(--sans);
       margin-bottom: -20px;
     }
 
@@ -486,8 +495,8 @@
     }
 
     .stat-block {
-      background: #0a0a0a;
-      color: #f5f0e8;
+      background: var(--bg);
+      color: var(--ink);
       padding: 20px;
       border-radius: 4px;
       text-align: center;
@@ -496,16 +505,16 @@
     .stat-block .stat-num {
       font-size: 28px;
       font-weight: bold;
-      color: #c9a84c;
-      font-family: 'Arial', sans-serif;
+      color: var(--bronze);
+      font-family: var(--sans);
     }
 
     .stat-block .stat-label {
       font-size: 10px;
       letter-spacing: 2px;
       text-transform: uppercase;
-      color: #b8b0a0;
-      font-family: 'Arial', sans-serif;
+      color: var(--muted);
+      font-family: var(--sans);
       margin-top: 4px;
     }
   </style>
@@ -916,7 +925,7 @@
     <br/>
     <div class="two-col">
       <div>
-        <strong style="color:#c9a84c;">Leverage Instruments</strong>
+        <strong style="color:var(--bronze);">Leverage Instruments</strong>
         <ul style="font-size:13px; line-height:2; margin-top:6px;">
           <li>DSCR rental loans (per property)</li>
           <li>Portfolio blanket mortgages (multiple properties)</li>
@@ -926,7 +935,7 @@
         </ul>
       </div>
       <div>
-        <strong style="color:#c9a84c;">Growth Cycle</strong>
+        <strong style="color:var(--bronze);">Growth Cycle</strong>
         <ul style="font-size:13px; line-height:2; margin-top:6px;">
           <li>Acquire → Renovate → Rent → Stabilize</li>
           <li>Refinance at ARV → extract equity</li>
@@ -1435,7 +1444,7 @@
       </div>
     </div>
     <div class="timeline-item">
-      <div class="timeline-marker" style="background:#c9a84c;">4</div>
+      <div class="timeline-marker" style="background:var(--bronze);">4</div>
       <div class="timeline-content">
         <h4>Phase 4 — Quadplex or Second Triplex (Months 16–24)</h4>
         <p>Recycled capital from phases 1–3 plus investor capital funds a quadplex. On a quadplex: one unit covers the full note. Three units are income. Maximum vacancy protection. Portfolio reaches 9–10 doors and crosses the $1M valuation threshold.</p>
@@ -1510,7 +1519,7 @@
         <td><strong>$753,750</strong></td>
         <td><strong>$158,750 recycled</strong></td>
         <td><strong>$11,100/mo gross</strong></td>
-        <td style="color:#c9a84c;"><strong>$3,225/mo net</strong></td>
+        <td style="color:var(--bronze);"><strong>$3,225/mo net</strong></td>
         <td><strong>10 doors</strong></td>
       </tr>
     </tbody>
@@ -1524,33 +1533,33 @@
         <td>Single Family</td>
         <td>$850</td>
         <td>$1,200</td>
-        <td style="color:#c9a84c;font-weight:bold;">✓ Yes — $350 surplus</td>
-        <td style="color:#c9a84c;">+$110/mo</td>
+        <td style="color:var(--bronze);font-weight:bold;">✓ Yes — $350 surplus</td>
+        <td style="color:var(--bronze);">+$110/mo</td>
         <td style="color:#c9843a;">−$130/mo (manageable)</td>
       </tr>
       <tr>
         <td>Duplex (2 units)</td>
         <td>$1,150</td>
         <td>$1,100/unit</td>
-        <td style="color:#c9a84c;font-weight:bold;">✓ Yes — $950 surplus</td>
-        <td style="color:#c9a84c;">+$610/mo</td>
-        <td style="color:#c9a84c;">+$210/mo</td>
+        <td style="color:var(--bronze);font-weight:bold;">✓ Yes — $950 surplus</td>
+        <td style="color:var(--bronze);">+$610/mo</td>
+        <td style="color:var(--bronze);">+$210/mo</td>
       </tr>
       <tr>
         <td>Triplex (3 units)</td>
         <td>$1,450</td>
         <td>$1,100/unit</td>
-        <td style="color:#c9a84c;font-weight:bold;">✓ Yes — $1,850 surplus</td>
-        <td style="color:#c9a84c;">+$1,190/mo</td>
-        <td style="color:#c9a84c;">+$530/mo</td>
+        <td style="color:var(--bronze);font-weight:bold;">✓ Yes — $1,850 surplus</td>
+        <td style="color:var(--bronze);">+$1,190/mo</td>
+        <td style="color:var(--bronze);">+$530/mo</td>
       </tr>
       <tr>
         <td>Quadplex (4 units)</td>
         <td>$1,800</td>
         <td>$1,100/unit</td>
-        <td style="color:#c9a84c;font-weight:bold;">✓ Yes — $2,600 surplus</td>
-        <td style="color:#c9a84c;">+$1,720/mo</td>
-        <td style="color:#c9a84c;">+$840/mo</td>
+        <td style="color:var(--bronze);font-weight:bold;">✓ Yes — $2,600 surplus</td>
+        <td style="color:var(--bronze);">+$1,720/mo</td>
+        <td style="color:var(--bronze);">+$840/mo</td>
       </tr>
     </tbody>
   </table>
@@ -2593,10 +2602,10 @@
   <h2 class="section-title">Company Name — Confirmed</h2>
   <div class="title-rule"></div>
 
-  <div style="background:#1a1a14; border:2px solid #c9a84c; border-radius:8px; padding:24px 28px; margin-bottom:24px;">
+  <div style="background:#1a1a14; border:2px solid var(--bronze); border-radius:8px; padding:24px 28px; margin-bottom:24px;">
     <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px;">
       <span style="font-size:22px;">✔</span>
-      <span style="font-size:13px; font-weight:700; color:#c9a84c; text-transform:uppercase; letter-spacing:.08em;">Name Selected &amp; Confirmed</span>
+      <span style="font-size:13px; font-weight:700; color:var(--bronze); text-transform:uppercase; letter-spacing:.08em;">Name Selected &amp; Confirmed</span>
     </div>
     <div style="font-size:28px; font-weight:900; color:#0a0a0a; margin:10px 0 4px;">Ironwood Homes &amp; Renovations LLC</div>
     <div style="font-size:13px; color:#555;">Delaware LLC · Foreign-qualified in Georgia · S-Corp election</div>

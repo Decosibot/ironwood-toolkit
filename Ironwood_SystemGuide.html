@@ -4,30 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ironwood Homes & Renovations LLC — System Guide</title>
+<link rel="stylesheet" href="iw-design.css"/>
 <style>
   :root {
-    --black: #0a0a0a;
-    --surface: #111111;
-    --surface-2: #191919;
-    --surface-3: #222222;
-    --gold: #c9a84c;
-    --gold-dim: #a0832e;
-    --cream: #f5f0e8;
-    --muted: #888880;
-    --green: #4a9c6d;
-    --green-dim: #1a2a1f;
+    --black: var(--bg);
+    --gold: var(--bronze);
+    --gold-dim: var(--bronze-deep);
+    --cream: var(--ink);
+    --green: var(--ok);
+    --green-dim: var(--ok-bg);
     --green-bright: #7EC98A;
     --blue: #4a7fc1;
     --purple: #8a5fc1;
-    --hairline: #2a2a2a;
   }
 
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    background: var(--black);
-    color: var(--cream);
-    font-family: 'Georgia', 'Times New Roman', serif;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--serif);
     font-size: 15px;
     line-height: 1.7;
   }
@@ -61,7 +57,7 @@
     justify-content: center;
     font-size: 15px;
     font-weight: 700;
-    color: #0a0a0a;
+    color: var(--ink);
     letter-spacing: 1px;
   }
 
@@ -82,7 +78,7 @@
 
   .doc-badge {
     background: var(--gold);
-    color: #0a0a0a;
+    color: var(--ink);
     font-size: 10px;
     font-weight: 700;
     letter-spacing: 1.5px;
@@ -266,7 +262,7 @@
   .steps li::before {
     content: counter(step);
     background: var(--gold);
-    color: #0a0a0a;
+    color: var(--ink);
     font-size: 12px;
     font-weight: 700;
     width: 26px;
@@ -318,7 +314,7 @@
 
   .s-num {
     background: var(--gold-dim);
-    color: #0a0a0a;
+    color: var(--ink);
     font-size: 11px;
     font-weight: 700;
     width: 22px;

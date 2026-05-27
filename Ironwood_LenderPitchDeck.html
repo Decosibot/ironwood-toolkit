@@ -4,30 +4,28 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ironwood Holdings — Lender &amp; Investor One-Pager</title>
+  <link rel="stylesheet" href="iw-design.css"/>
   <style>
     /* ── Reset & Base ─────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --black:  #0a0a0a;
-      --cream:  #f5f0e8;
-      --gold:   #c9a84c;
-      --gold2:  #e8c96a;
-      --dark:   #111111;
-      --mid:    #1e1e1e;
-      --muted:  #6b6355;
-      --border: #d4c9a8;
-      --text:   #1a1612;
-      --serif:  'Georgia', 'Times New Roman', serif;
-      --sans:   'Helvetica Neue', Arial, sans-serif;
+      --black:  var(--bg);
+      --cream:  var(--surface);
+      --gold:   var(--bronze);
+      --gold2:  var(--bronze-tint);
+      --dark:   var(--surface);
+      --mid:    var(--surface);
+      --border: var(--hairline);
+      --text:   var(--ink);
     }
 
     html { font-size: 15px; }
 
     body {
       font-family: var(--sans);
-      background: var(--black);
-      color: var(--text);
+      background: var(--bg);
+      color: var(--ink);
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }

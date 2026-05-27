@@ -4,28 +4,25 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ironwood Homes and Renovations · Homeowner One-Pager</title>
+  <link rel="stylesheet" href="iw-design.css"/>
   <style>
     /* ── Variables ─────────────────────────────────────────────── */
     :root {
-      --black:  #0a0a0a;
-      --cream:  #f5f0e8;
-      --gold:   #c9a84c;
-      --gold-lt: #dfc06e;
-      --white:  #ffffff;
-      --text:   #1a1a1a;
-      --muted:  #5a5040;
-      --rule:   #d6ccb4;
-
-      --serif: Georgia, 'Times New Roman', serif;
-      --sans:  'Helvetica Neue', Arial, sans-serif;
+      --black:  var(--bg);
+      --cream:  var(--surface);
+      --gold:   var(--bronze);
+      --gold-lt: var(--bronze-tint);
+      --white:  var(--surface-2);
+      --text:   var(--ink);
+      --rule:   var(--hairline);
     }
 
     /* ── Reset ─────────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: #e8e3d8;
+      background: var(--bg);
       font-family: var(--sans);
-      color: var(--text);
+      color: var(--ink);
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
@@ -39,8 +36,8 @@
       align-items: center;
       justify-content: space-between;
       padding: 10px 24px;
-      background: var(--black);
-      border-bottom: 2px solid var(--gold);
+      background: var(--surface);
+      border-bottom: 2px solid var(--bronze);
       box-shadow: 0 2px 12px rgba(0,0,0,0.45);
     }
     #toolbar .brand {

@@ -4,33 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Change Order Form — Landon Renovations</title>
+<link rel="stylesheet" href="iw-design.css"/>
 <style>
   :root {
-    --bg: #EEF2F1;
-    --cream: #EEF2F1;
-    --gold: #c9a84c;
-    --gold-dark: #a8893a;
-    --gold-light: #e0c06a;
-    --surface: #F5F7F7;
-    --surface-2: #FFFFFF;
-    --surface3: #2a2a2a;
-    --border: #2e2e2e;
-    --text: #f5f0e8;
-    --text-muted: #888;
-    --red: #c0392b;
-    --red-bg: rgba(192,57,43,0.12);
-    --green: #27ae60;
-    --green-bg: rgba(39,174,96,0.12);
-    --radius: 8px;
-    --radius-sm: 4px;
+    --bg: var(--bg, #EEF2F1);
+    --cream: var(--bg);
+    --gold: var(--bronze);
+    --gold-dark: var(--bronze-deep);
+    --gold-light: var(--bronze-tint);
+    --surface3: var(--hairline);
+    --border: var(--hairline);
+    --text: var(--ink);
+    --text-muted: var(--muted);
+    --red: var(--err);
+    --red-bg: var(--err-bg);
+    --green: var(--ok);
+    --green-bg: var(--ok-bg);
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
   body {
-    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    font-family: var(--sans);
     background: var(--bg);
-    color: var(--text);
+    color: var(--ink);
     min-height: 100vh;
     font-size: 14px;
   }
@@ -380,7 +377,7 @@
     transition: border-color 0.15s;
   }
   .history-item:hover { border-color: var(--bronze); }
-  .history-item.active { border-color: var(--bronze); background: rgba(201,168,76,0.08); }
+  .history-item.active { border-color: var(--bronze); background: var(--bronze-wash); }
   .history-item .hi-co { font-size: 11px; font-weight: 700; color: var(--bronze); }
   .history-item .hi-date { font-size: 11px; color: var(--text-muted); }
   .history-item .hi-amount { font-size: 13px; font-weight: 700; color: var(--ink); }
@@ -549,7 +546,7 @@
 
   .print-financials {
     background: #f7f4ee;
-    border: 2px solid var(--gold);
+    border: 2px solid var(--bronze);
     border-radius: 6px;
     overflow: hidden;
     margin-bottom: 24px;
@@ -573,7 +570,7 @@
 
   .print-schedule-note {
     background: #f7f4ee;
-    border-left: 4px solid var(--gold);
+    border-left: 4px solid var(--bronze);
     padding: 10px 14px;
     font-size: 13px;
     color: #444;
@@ -621,7 +618,7 @@
   .status-select:focus { border-color: var(--bronze); }
   .save-btn {
     background: var(--bronze);
-    border: 1px solid var(--gold);
+    border: 1px solid var(--bronze);
     color: var(--bg);
     padding: 7px 14px;
     border-radius: var(--radius-sm);
@@ -631,7 +628,7 @@
     transition: background 0.15s;
     white-space: nowrap;
   }
-  .save-btn:hover { background: var(--gold-light); }
+  .save-btn:hover { background: var(--bronze-tint); }
 
   .new-co-btn {
     background: var(--surface3);
@@ -1437,7 +1434,7 @@
     if (!toast) {
       toast = document.createElement('div');
       toast.id = 'toast';
-      toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--gold);color:var(--bg);padding:10px 18px;border-radius:6px;font-size:13px;font-weight:700;z-index:9999;opacity:0;transition:opacity 0.2s;pointer-events:none;';
+      toast.style.cssText = 'position:fixed;bottom:24px;right:24px;background:var(--bronze);color:var(--bg);padding:10px 18px;border-radius:6px;font-size:13px;font-weight:700;z-index:9999;opacity:0;transition:opacity 0.2s;pointer-events:none;';
       document.body.appendChild(toast);
     }
     toast.textContent = msg;
