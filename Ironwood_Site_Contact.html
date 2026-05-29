@@ -1,1023 +1,385 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<link rel="stylesheet" href="iw-design.css"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Contact Ironwood LLC · Atlanta, GA</title>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  /* Remap site-local names to iw-design.css shared tokens */
-  --black:    var(--bg);
-  --white:    var(--surface-2);
-  --off-white:var(--surface);
-  --cream:    var(--surface);
-  --gold:     var(--bronze);
-  --gold-lt:  var(--bronze-tint);
-  --gold-dim: var(--bronze-deep);
-  --surface-2:var(--surface);
-  --surface-3:var(--surface);
-  --border:   var(--hairline);
-  --border-dk:var(--hairline-2);
-  --muted:    var(--muted);
-  --text:     var(--ink);
-  --text-lt:  var(--ink-soft);
-  --green:    var(--ok);
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--sans);
-  min-height: 100vh;
-}
-
-/* ── NAV ── */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 200;
-  background: rgba(255,255,255,0.97);
-  border-bottom: 1px solid var(--border);
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  backdrop-filter: blur(8px);
-}
-
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-}
-
-.nav-logo-box {
-  width: 36px;
-  height: 36px;
-  background: var(--bronze);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--surface);
-  border-radius: 4px;
-}
-
-/* LOGO PLACEHOLDER - replace .nav-logo-box with <img src="logo.svg"> when ready */
-.nav-logo-text {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--bronze);
-  text-transform: uppercase;
-}
-
-.nav-logo-text span {
-  color: var(--muted);
-  font-weight: 400;
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  margin-left: 8px;
-  text-transform: uppercase;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  list-style: none;
-}
-
-.nav-links a {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color .15s;
-}
-
-.nav-links a:hover { color: var(--text); }
-.nav-links a.active { color: var(--bronze); }
-
-.nav-ctas {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.btn-nav-outline {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  border: 1px solid var(--gold-dim);
-  background: transparent;
-  padding: 8px 16px;
-  border-radius: 2px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background .15s, color .15s;
-}
-
-.btn-nav-outline:hover { background: rgba(184,147,62,0.08); }
-
-.btn-nav-fill {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--white);
-  background: var(--bronze);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 2px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background .15s;
-}
-
-.btn-nav-fill:hover { background: var(--gold-lt); }
-
-.nav-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.nav-toggle span {
-  width: 22px;
-  height: 2px;
-  background: var(--ink);
-  border-radius: 1px;
-  transition: all .2s;
-}
-
-@media (max-width: 900px) {
-  .nav-links, .nav-ctas { display: none; }
-  .nav-toggle { display: flex; }
-}
-
-/* ── SECTION BASE ── */
-section { padding: 80px 40px; }
-
-.container {
-  max-width: 1080px;
-  margin: 0 auto;
-}
-
-.section-eyebrow {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 12px;
-}
-
-.section-title {
-  font-size: clamp(24px, 4vw, 38px);
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.2;
-  margin-bottom: 14px;
-}
-
-.gold-rule {
-  width: 40px;
-  height: 2px;
-  background: var(--bronze);
-  margin: 16px 0;
-}
-
-/* ── PAGE HEADER ── */
-.page-header {
-  padding: 120px 40px 64px;
-  background: var(--off-white);
-  border-bottom: 1px solid var(--border);
-  text-align: center;
-}
-
-.page-header-inner { max-width: 1080px; margin: 0 auto; }
-
-.page-eyebrow {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 14px;
-}
-
-.page-title {
-  font-size: clamp(36px, 6vw, 60px);
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.08;
-  margin-bottom: 14px;
-}
-
-.page-sub {
-  font-family: var(--sans);
-  font-size: 16px;
-  color: var(--muted);
-  line-height: 1.7;
-  max-width: 440px;
-  margin: 0 auto;
-}
-
-/* ── CONTACT MAIN ── */
-.contact-section { background: var(--white); }
-
-.contact-layout {
-  display: grid;
-  grid-template-columns: 380px 1fr;
-  gap: 52px;
-  align-items: start;
-}
-
-@media (max-width: 860px) {
-  .contact-layout { grid-template-columns: 1fr; }
-}
-
-/* Contact Info Cards */
-.info-cards { display: flex; flex-direction: column; gap: 12px; }
-
-.info-card {
-  background: var(--off-white);
-  border: 1px solid var(--border);
-  border-left: 3px solid var(--gold);
-  border-radius: 0 3px 3px 0;
-  padding: 18px 20px;
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-}
-
-.info-card-icon { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
-
-.info-card-body {}
-
-.info-card-label {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 4px;
-}
-
-.info-card-value {
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--text);
-  font-weight: 700;
-  margin-bottom: 2px;
-}
-
-.info-card-detail {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.5;
-}
-
-.info-card-value a {
-  color: var(--text);
-  text-decoration: none;
-  transition: color .15s;
-}
-
-.info-card-value a:hover { color: var(--bronze); }
-
-.social-section-label {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin: 20px 0 10px;
-}
-
-.social-row { display: flex; gap: 10px; }
-
-.social-link {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--muted);
-  background: var(--off-white);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 8px 14px;
-  text-decoration: none;
-  transition: border-color .15s, color .15s, background .15s;
-}
-
-.social-link:hover {
-  border-color: var(--gold-dim);
-  color: var(--text);
-  background: var(--cream);
-}
-
-/* Contact Form */
-.contact-form-wrap {
-  background: var(--off-white);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 32px 32px 36px;
-}
-
-.form-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 6px;
-}
-
-.form-sub {
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 28px;
-  line-height: 1.6;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
-  margin-bottom: 14px;
-}
-
-@media (max-width: 520px) {
-  .form-row { grid-template-columns: 1fr; }
-}
-
-.form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
-
-.form-label {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-}
-
-.form-input,
-.form-select,
-.form-textarea {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  color: var(--text);
-  font-family: var(--sans);
-  font-size: 13px;
-  padding: 11px 14px;
-  outline: none;
-  transition: border-color .15s;
-  width: 100%;
-}
-
-.form-input::placeholder,
-.form-textarea::placeholder {
-  color: var(--muted);
-}
-
-.form-input:focus,
-.form-select:focus,
-.form-textarea:focus {
-  border-color: var(--bronze);
-}
-
-.form-select {
-  appearance: none;
-  cursor: pointer;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='none'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888880' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 14px center;
-  padding-right: 38px;
-}
-
-.form-select option { background: var(--white); color: var(--text); }
-
-.form-textarea { resize: vertical; min-height: 110px; line-height: 1.6; }
-
-.form-submit {
-  width: 100%;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  background: var(--bronze);
-  color: var(--black);
-  border: none;
-  padding: 15px 24px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: background .15s;
-  margin-top: 6px;
-}
-
-.form-submit:hover { background: var(--gold-lt); }
-
-/* ── AUDIENCE PATH CARDS ── */
-.paths-section {
-  background: var(--cream);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
-  padding: 60px 40px;
-}
-
-.paths-layout {
-  max-width: 1080px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
-
-@media (max-width: 640px) {
-  .paths-layout { grid-template-columns: 1fr; }
-}
-
-.path-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  padding: 28px 26px;
-  text-decoration: none;
-  display: block;
-  transition: border-color .2s, background .2s, transform .2s;
-}
-
-.path-card:hover {
-  border-color: var(--gold-dim);
-  background: var(--off-white);
-  transform: translateY(-2px);
-}
-
-.path-icon { font-size: 30px; margin-bottom: 12px; }
-
-.path-label {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 6px;
-}
-
-.path-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 8px;
-  line-height: 1.2;
-}
-
-.path-desc {
-  font-family: var(--sans);
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.65;
-  margin-bottom: 16px;
-}
-
-.path-cta {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--bronze);
-  letter-spacing: .5px;
-}
-
-/* ── MAP PLACEHOLDER ── */
-.map-section {
-  background: var(--off-white);
-  padding: 60px 40px;
-}
-
-.map-inner { max-width: 1080px; margin: 0 auto; }
-
-.map-header { margin-bottom: 20px; }
-
-/* MAP PLACEHOLDER - replace .map-placeholder with an actual Google Maps embed when ready:
-   <iframe src="https://www.google.com/maps/embed?pb=..." width="100%" height="400"
-   style="border:0; border-radius:4px;" allowfullscreen loading="lazy"></iframe>
-*/
-.map-placeholder {
-  width: 100%;
-  height: 360px;
-  background: var(--surface-3);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  margin-bottom: 28px;
-}
-
-.map-ph-icon { font-size: 40px; opacity: .2; }
-
-.map-ph-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text);
-  opacity: .4;
-  letter-spacing: .5px;
-}
-
-.map-ph-sub {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--muted);
-  opacity: .5;
-}
-
-.coverage-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.coverage-tag {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-lt);
-  background: var(--cream);
-  border: 1px solid var(--border-dk);
-  padding: 6px 12px;
-  border-radius: 2px;
-}
-
-/* ── FOOTER ── */
-footer {
-  background: var(--surface);
-  border-top: 1px solid var(--hairline);
-  padding: 52px 40px 32px;
-}
-
-.footer-grid {
-  max-width: 1080px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: 40px;
-  margin-bottom: 40px;
-}
-
-@media (max-width: 760px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 480px) {
-  .footer-grid { grid-template-columns: 1fr; }
-}
-
-.footer-brand-name {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--bronze);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-
-.footer-brand-desc {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.7;
-  margin-bottom: 16px;
-}
-
-.footer-social { display: flex; gap: 10px; }
-
-.social-btn {
-  width: 32px;
-  height: 32px;
-  background: var(--surface-2);
-  border: 1px solid var(--hairline);
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  text-decoration: none;
-  transition: border-color .15s, background .15s;
-  color: var(--muted);
-}
-
-.social-btn:hover {
-  border-color: var(--bronze);
-  background: var(--bronze-wash);
-  color: var(--bronze-deep);
-}
-
-.footer-col-title {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 14px;
-}
-
-.footer-links {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.footer-links a {
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color .15s;
-}
-
-.footer-links a:hover { color: var(--ink); }
-
-.footer-bottom {
-  max-width: 1080px;
-  margin: 0 auto;
-  border-top: 1px solid var(--hairline);
-  padding-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.footer-copy {
-  font-family: var(--sans);
-  font-size: 10px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-.footer-legal { display: flex; gap: 16px; }
-
-.footer-legal a {
-  font-family: var(--sans);
-  font-size: 10px;
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.footer-legal a:hover { color: var(--ink); }
-
-@media (max-width: 600px) {
-  nav { padding: 0 20px; }
-  .page-header { padding: 100px 20px 48px; }
-  .contact-section { padding: 60px 20px; }
-  .contact-form-wrap { padding: 24px 20px 28px; }
-  .paths-section { padding: 52px 20px; }
-  .map-section { padding: 52px 20px; }
-  footer { padding: 40px 20px 24px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact | Ironwood Homes &amp; Renovations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest:       #1a2e1a;
+      --forest-mid:   #243824;
+      --bronze:       #8a6c3a;
+      --bronze-lt:    #c4963e;
+      --cream:        #f5f0e8;
+      --cream-card:   #ffffff;
+      --text-primary: #1a1a14;
+      --text-sec:     #6b6352;
+      --border:       rgba(138,108,58,0.18);
+      --green:        #22c55e;
+      --r-lg: 2rem;
+      --r-xl: 3rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); color: var(--text-primary); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    #noise-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.045; }
+    .navbar { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; width: calc(100% - 48px); max-width: 1100px; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-radius: 999px; transition: background 0.4s ease, box-shadow 0.4s ease, border 0.4s ease; background: transparent; border: 1px solid transparent; }
+    .navbar.scrolled { background: rgba(245,240,232,0.82); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-color: var(--border); box-shadow: 0 8px 32px rgba(138,108,58,0.1); }
+    .navbar-logo { display: flex; align-items: center; gap: 10px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; color: white; text-decoration: none; letter-spacing: -0.01em; transition: color 0.4s; }
+    .navbar-logo-box { width: 34px; height: 34px; border-radius: 8px; background: var(--bronze); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .navbar.scrolled .navbar-logo { color: var(--forest); }
+    .navbar-links { display: flex; gap: 28px; align-items: center; }
+    .navbar-links a { font-size: 0.875rem; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none; transition: all 0.2s; }
+    .navbar-links a:hover { color: white; transform: translateY(-1px); }
+    .navbar.scrolled .navbar-links a { color: var(--text-sec); }
+    .navbar.scrolled .navbar-links a:hover { color: var(--forest); }
+    .navbar-cta { background: var(--bronze) !important; color: white !important; padding: 9px 20px; border-radius: 999px; font-weight: 600; font-size: 0.875rem; transition: transform 0.25s, background 0.2s !important; }
+    .navbar-cta:hover { transform: scale(1.03) translateY(-1px) !important; background: #7a5c2a !important; color: white !important; }
+    section { padding: 120px 64px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--bronze); margin-bottom: 16px; }
+    .section-h2 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.25rem); color: var(--forest); letter-spacing: -0.03em; line-height: 1.1; }
+    .section-h2 em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 1.2em; }
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    footer { background: var(--forest); border-radius: var(--r-xl) var(--r-xl) 0 0; padding: 60px 64px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 32px; }
+    .footer-brand { display: flex; flex-direction: column; gap: 8px; }
+    .footer-logo-row { display: flex; align-items: center; gap: 10px; }
+    .footer-logo-box { width: 32px; height: 32px; border-radius: 7px; background: var(--bronze); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; color: white; font-family: 'Outfit', sans-serif; flex-shrink: 0; }
+    .footer-logo-text { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; color: white; }
+    .footer-tagline { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
+    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.875rem; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: white; }
+    .footer-status { display: flex; align-items: center; gap: 10px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    .status-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; }
+    .footer-bottom { max-width: 1100px; margin: 40px auto 0; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.25); }
+    .footer-social { display: flex; gap: 16px; }
+    .footer-social a { font-size: 0.8rem; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; font-family: 'IBM Plex Mono', monospace; }
+    .footer-social a:hover { color: white; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* Page hero */
+    .page-hero { position: relative; height: 50vh; min-height: 400px; display: flex; align-items: flex-end; overflow: hidden; }
+    .page-hero-bg { position: absolute; inset: 0; z-index: 0; background: var(--forest); }
+    .page-hero-bg img { width: 100%; height: 100%; object-fit: cover; }
+    .page-hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,46,26,0.96) 0%, rgba(26,46,26,0.55) 50%, rgba(26,46,26,0.2) 100%); }
+    .page-hero-content { position: relative; z-index: 1; padding: 0 64px 60px; max-width: 900px; }
+    .page-hero-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.15em; color: var(--bronze-lt); text-transform: uppercase; margin-bottom: 16px; }
+    .page-hero-line1 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.5rem); color: white; line-height: 1.05; letter-spacing: -0.03em; }
+    .page-hero-line2 { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(3rem, 8vw, 7rem); color: white; line-height: 0.9; letter-spacing: -0.02em; }
+    .page-hero-line2 span { color: var(--bronze-lt); }
+    .page-hero-sub { font-size: 1.05rem; color: rgba(255,255,255,0.7); margin-top: 20px; max-width: 520px; line-height: 1.6; }
+
+    /* Contact info cards */
+    .contact-info { background: var(--cream-card); padding: 0 64px 64px; }
+    .contact-info-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; padding-top: 64px; }
+    .contact-card { background: var(--cream); border: 1px solid var(--border); border-radius: 20px; padding: 28px; }
+    .contact-card-emoji { font-size: 1.6rem; margin-bottom: 12px; }
+    .contact-card-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze); margin-bottom: 6px; }
+    .contact-card-value { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--forest); margin-bottom: 4px; }
+    .contact-card-value a { color: var(--forest); text-decoration: none; }
+    .contact-card-value a:hover { color: var(--bronze); }
+    .contact-card-sub { font-size: 0.85rem; color: var(--text-sec); line-height: 1.5; }
+
+    /* Form section */
+    .form-section { background: var(--cream); }
+    .form-center { max-width: 640px; margin: 0 auto; }
+    .form-card { background: var(--cream-card); border-radius: var(--r-xl); padding: 40px; box-shadow: 0 16px 60px rgba(26,46,26,0.08); }
+    .form-card-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--forest); margin-bottom: 28px; }
+    .form-field { margin-bottom: 16px; }
+    .form-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-sec); margin-bottom: 6px; letter-spacing: 0.03em; }
+    .form-field input,
+    .form-field select,
+    .form-field textarea { width: 100%; padding: 13px 16px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--cream); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; color: var(--text-primary); outline: none; transition: border-color 0.2s, box-shadow 0.2s; appearance: none; resize: vertical; }
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus { border-color: var(--bronze); box-shadow: 0 0 0 3px rgba(138,108,58,0.1); }
+    .btn-submit { width: 100%; padding: 15px; background: var(--bronze); color: white; border: none; border-radius: 999px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.25s, box-shadow 0.25s; box-shadow: 0 8px 24px rgba(138,108,58,0.4); margin-top: 8px; }
+    .btn-submit:hover { transform: scale(1.02); }
+    .form-confirm { display: none; text-align: center; padding: 40px 20px; }
+    .form-confirm-icon { font-size: 3rem; margin-bottom: 16px; }
+    .form-confirm-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--forest); margin-bottom: 10px; }
+    .form-confirm-text { font-size: 0.95rem; color: var(--text-sec); }
+    .form-error { display: none; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 12px 16px; border-radius: 10px; font-size: 0.875rem; margin-bottom: 16px; }
+
+    /* Service area */
+    .area-section { background: var(--forest); }
+    .area-section .section-label { color: var(--bronze-lt); }
+    .area-h2 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.25rem); color: white; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 16px; }
+    .area-h2 em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 1.2em; }
+    .area-sub { font-size: 0.95rem; color: rgba(255,255,255,0.55); line-height: 1.65; max-width: 600px; margin-bottom: 40px; }
+    .area-pills { display: flex; flex-wrap: wrap; gap: 10px; }
+    .area-pill { border: 1.5px solid rgba(196,150,62,0.45); color: rgba(255,255,255,0.8); border-radius: 999px; padding: 8px 18px; font-size: 0.85rem; font-weight: 500; transition: background 0.2s, color 0.2s; }
+    .area-pill:hover { background: var(--bronze); border-color: var(--bronze); color: white; }
+
+    /* FAQ */
+    .faq-section { background: var(--cream); }
+    .faq-list { display: flex; flex-direction: column; gap: 12px; margin-top: 40px; }
+    .accordion-item { background: var(--cream-card); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; }
+    .accordion-btn { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; background: none; border: none; cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.95rem; font-weight: 600; color: var(--forest); text-align: left; gap: 12px; }
+    .accordion-btn:hover { background: rgba(26,46,26,0.03); }
+    .acc-icon { font-size: 1.2rem; flex-shrink: 0; transition: transform 0.3s; color: var(--bronze); }
+    .accordion-body { max-height: 0; overflow: hidden; transition: max-height 0.35s ease; }
+    .accordion-body-inner { padding: 0 24px 20px; font-size: 0.9rem; color: var(--text-sec); line-height: 1.65; }
+
+    @media (max-width: 900px) {
+      section { padding: 80px 24px; }
+      footer { padding: 48px 24px; border-radius: var(--r-lg) var(--r-lg) 0 0; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .navbar-links .nav-link-desktop { display: none; }
+      .contact-info { padding: 0 24px 48px; }
+      .contact-info-inner { grid-template-columns: 1fr; }
+      .page-hero-content { padding: 0 24px 48px; }
+    }
+  </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="Ironwood_Site_Home.html">
-    <!-- LOGO PLACEHOLDER: replace .nav-logo-box with <img src="logo.svg"> when ready -->
-    <div class="nav-logo-box" style="background:var(--bronze);color:var(--surface);font-family:var(--serif);font-style:italic;font-size:18px;font-weight:400;border-radius:4px;"><em>I</em></div>
-    <div style="font-family:var(--serif);font-size:17px;color:var(--ink);letter-spacing:-.01em;">Ironwood Homes and Renovations</div>
+<svg id="noise-overlay" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+  <rect width="100%" height="100%" filter="url(#noise)" opacity="1"/>
+</svg>
+
+<nav class="navbar" id="navbar">
+  <a href="Ironwood_Site_Home.html" class="navbar-logo">
+    <div class="navbar-logo-box">IW</div>
+    <span>IRONWOOD</span>
   </a>
-
-  <ul class="nav-links">
-    <li><a href="Ironwood_Site_Home.html">Home</a></li>
-    <li><a href="Ironwood_Site_Sell.html">Sell Your Home</a></li>
-    <li><a href="Ironwood_Site_Renovate.html">Renovations</a></li>
-    <li><a href="Ironwood_Site_Work.html">Our Work</a></li>
-    <li><a href="Ironwood_Site_About.html">About</a></li>
-    <li><a href="Ironwood_Site_Contact.html" class="active">Contact</a></li>
-  </ul>
-
-  <div class="nav-ctas">
-    <a class="btn-nav-outline" href="Ironwood_SellerLead.html">Get My Offer</a>
-    <a class="btn-nav-fill" href="Ironwood_Estimator_Public.html">Free Estimate</a>
-  </div>
-
-  <div class="nav-toggle" onclick="toggleMobileNav()">
-    <span></span><span></span><span></span>
+  <div class="navbar-links">
+    <a href="Ironwood_Site_Renovate.html" class="nav-link-desktop">Services</a>
+    <a href="Ironwood_Site_Work.html" class="nav-link-desktop">Our Work</a>
+    <a href="Ironwood_Site_About.html" class="nav-link-desktop">About</a>
+    <a href="Ironwood_Site_Sell.html" class="nav-link-desktop">Sell Your Home</a>
+    <a href="#contact-form" class="navbar-cta">Get In Touch</a>
   </div>
 </nav>
 
-<!-- PAGE HEADER -->
-<div class="page-header">
-  <div class="page-header-inner">
-    <div class="page-eyebrow">Ironwood LLC · Atlanta, GA</div>
-    <h1 class="page-title">Let's Talk</h1>
-    <p class="page-sub">Whether you're selling a home, planning a renovation, or just have questions - we're easy to reach and quick to respond.</p>
+<!-- 1. Page Hero -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-eyebrow">Let's Talk</div>
+    <div class="page-hero-line1">We're Ready</div>
+    <div class="page-hero-line2"><span>When You Are.</span></div>
+    <div class="page-hero-sub">Whether you're selling, building, or investing — reach out and we'll get back to you within 24 hours.</div>
   </div>
 </div>
 
-<!-- CONTACT MAIN -->
-<section class="contact-section">
+<!-- 2. Contact Info -->
+<div class="contact-info">
+  <div class="contact-info-inner">
+    <div class="contact-card reveal">
+      <div class="contact-card-emoji">📞</div>
+      <div class="contact-card-label">Call or Text</div>
+      <div class="contact-card-value"><a href="tel:4045550100">(404) 555-0100</a></div>
+      <div class="contact-card-sub">Available Mon–Sat, 8am–6pm</div>
+    </div>
+    <div class="contact-card reveal">
+      <div class="contact-card-emoji">✉️</div>
+      <div class="contact-card-label">Email Us</div>
+      <div class="contact-card-value"><a href="mailto:info@ironwoodrenovations.com">info@ironwoodrenovations.com</a></div>
+      <div class="contact-card-sub">We respond within 24 hours</div>
+    </div>
+    <div class="contact-card reveal">
+      <div class="contact-card-emoji">📍</div>
+      <div class="contact-card-label">Our Area</div>
+      <div class="contact-card-value">Metro Atlanta, GA</div>
+      <div class="contact-card-sub">Fulton, DeKalb, Cobb, Gwinnett &amp; Cherokee</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. Contact Form -->
+<section id="contact-form" style="background: var(--cream);">
   <div class="container">
-    <div class="contact-layout">
-
-      <!-- LEFT: Contact Info -->
-      <div>
-        <div class="section-eyebrow">Get in Touch</div>
-        <h2 class="section-title" style="font-size:clamp(20px,3vw,28px); margin-bottom:20px;">Contact Information</h2>
-
-        <div class="info-cards">
-
-          <div class="info-card">
-            <div class="info-card-icon"></div>
-            <div class="info-card-body">
-              <div class="info-card-label">Phone</div>
-              <div class="info-card-value"><a href="tel:+14045550100">(404) 555-0100</a></div>
-              <div class="info-card-detail">Call or text - we respond quickly</div>
+    <div class="form-center reveal">
+      <div class="form-card">
+        <div class="form-card-title">Send Us a Message</div>
+        <div id="contact-form-wrap">
+          <div class="form-error" id="contact-error"></div>
+          <form id="contact-form-el" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
+            <div class="form-field">
+              <label for="c-name">Full Name *</label>
+              <input type="text" id="c-name" name="name" required placeholder="Your full name">
             </div>
-          </div>
-
-          <div class="info-card">
-            <div class="info-card-icon"></div>
-            <div class="info-card-body">
-              <div class="info-card-label">Email</div>
-              <div class="info-card-value"><a href="mailto:info@ironwoodrenovations.com">info@ironwoodrenovations.com</a></div>
-              <div class="info-card-detail">We respond to all emails within one business day</div>
+            <div class="form-field">
+              <label for="c-email">Email *</label>
+              <input type="email" id="c-email" name="email" required placeholder="you@example.com">
             </div>
-          </div>
-
-          <div class="info-card">
-            <div class="info-card-icon"></div>
-            <div class="info-card-body">
-              <div class="info-card-label">Service Area</div>
-              <div class="info-card-value">Atlanta Metro, GA</div>
-              <div class="info-card-detail">70-mile radius from Atlanta · Marietta, Kennesaw, Smyrna, Roswell, Alpharetta, Woodstock, and surrounding communities</div>
+            <div class="form-field">
+              <label for="c-phone">Phone</label>
+              <input type="tel" id="c-phone" name="phone" placeholder="(404) 000-0000">
             </div>
-          </div>
-
-          <div class="info-card">
-            <div class="info-card-icon"></div>
-            <div class="info-card-body">
-              <div class="info-card-label">Business Hours</div>
-              <div class="info-card-value">Mon – Fri &nbsp;8:00 am – 6:00 pm</div>
-              <div class="info-card-detail">Saturday 9:00 am – 2:00 pm · Closed Sunday</div>
+            <div class="form-field">
+              <label for="c-subject">Subject</label>
+              <select id="c-subject" name="subject">
+                <option value="">Select a subject</option>
+                <option>General Inquiry</option>
+                <option>Start a Project</option>
+                <option>Sell My Home</option>
+                <option>Investment Partnership</option>
+                <option>Other</option>
+              </select>
             </div>
-          </div>
-
+            <div class="form-field">
+              <label for="c-message">Message</label>
+              <textarea id="c-message" name="message" rows="5" placeholder="Tell us about your property or what you're looking to accomplish..."></textarea>
+            </div>
+            <button type="submit" class="btn-submit">Send Message &rarr;</button>
+          </form>
         </div>
-
-        <div class="social-section-label">Follow Ironwood</div>
-        <!-- SOCIAL LINKS PLACEHOLDER - update hrefs when accounts are live -->
-        <div class="social-row">
-          <a class="social-link" href="#" target="_blank">
-            <span>f</span> Facebook
-          </a>
-          <a class="social-link" href="#" target="_blank">
-            <span>ig</span> Instagram
-          </a>
-          <a class="social-link" href="https://youtube.com/@IronwoodRenovations" target="_blank">
-            <span></span> YouTube
-          </a>
+        <div class="form-confirm" id="contact-confirm">
+          <div class="form-confirm-icon">✅</div>
+          <div class="form-confirm-title">Message Sent!</div>
+          <div class="form-confirm-text">Thanks for reaching out. We'll be in touch within 24 hours.</div>
         </div>
       </div>
-
-      <!-- RIGHT: Contact Form -->
-      <div class="contact-form-wrap">
-        <div class="form-title">Send Us a Message</div>
-        <div class="form-sub">Send a message and someone from our team will get back to you - usually same day.</div>
-
-        <form onsubmit="handleFormSubmit(event)">
-          <div class="form-row">
-            <div class="form-group" style="margin-bottom:0;">
-              <label class="form-label" for="fname">First Name</label>
-              <input class="form-input" type="text" id="fname" name="fname" placeholder="First name" required>
-            </div>
-            <div class="form-group" style="margin-bottom:0;">
-              <label class="form-label" for="lname">Last Name</label>
-              <input class="form-input" type="text" id="lname" name="lname" placeholder="Last name" required>
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group" style="margin-bottom:0;">
-              <label class="form-label" for="phone">Phone</label>
-              <input class="form-input" type="tel" id="phone" name="phone" placeholder="(404) 000-0000">
-            </div>
-            <div class="form-group" style="margin-bottom:0;">
-              <label class="form-label" for="email">Email</label>
-              <input class="form-input" type="email" id="email" name="email" placeholder="you@email.com" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="interest">I'm Interested In</label>
-            <select class="form-select" id="interest" name="interest" required>
-              <option value="" disabled selected>Select one...</option>
-              <option value="sell">Selling my home</option>
-              <option value="reno">Renovation estimate</option>
-              <option value="general">General question</option>
-              <option value="partner">Partnership inquiry</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label" for="message">Message</label>
-            <textarea class="form-textarea" id="message" name="message" placeholder="Tell us a little about your situation or project..."></textarea>
-          </div>
-
-          <button class="form-submit" type="submit">Send Message →</button>
-        </form>
-
-        <div id="form-success" style="display:none; text-align:center; padding:24px 0;">
-          <div style="font-size:28px; margin-bottom:10px;"></div>
-          <div style="font-family:var(--sans); font-size:14px; color:var(--ok); font-weight:600; margin-bottom:6px;">Message Sent!</div>
-          <div style="font-family:var(--sans); font-size:12px; color:var(--muted);">Someone from our team will reach out - usually same day.</div>
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
 
-<!-- AUDIENCE PATH CARDS -->
-<div class="paths-section">
-  <div class="paths-layout">
-
-    <a class="path-card" href="Ironwood_SellerLead.html">
-      <div class="path-icon"></div>
-      <div class="path-label">Motivated Sellers</div>
-      <div class="path-title">Need a Cash Offer?</div>
-      <div class="path-desc">Skip the general contact form. Get directly to our seller intake and receive a no-obligation cash offer on your home within 24 hours.</div>
-      <div class="path-cta">Start My Offer →</div>
-    </a>
-
-    <a class="path-card" href="Ironwood_Estimator_Public.html">
-      <div class="path-icon"></div>
-      <div class="path-label">Homeowners</div>
-      <div class="path-title">Need a Renovation Estimate?</div>
-      <div class="path-desc">Describe your project in plain English and get an instant ballpark estimate online - before anyone calls or visits your home.</div>
-      <div class="path-cta">Get My Free Estimate →</div>
-    </a>
-
-  </div>
-</div>
-
-<!-- MAP PLACEHOLDER -->
-<div class="map-section">
-  <div class="map-inner">
-    <div class="map-header">
-      <div class="section-eyebrow">Coverage Area</div>
-      <h2 class="section-title" style="font-size:clamp(20px,3vw,28px); margin-bottom:4px;">Serving Atlanta Metro &amp; Surrounding Areas</h2>
-    </div>
-
-    <!-- MAP PLACEHOLDER - replace this div with a Google Maps embed when ready:
-         <iframe src="https://www.google.com/maps/embed?pb=..."
-           width="100%" height="360" style="border:0; border-radius:4px;" allowfullscreen loading="lazy"></iframe>
-    -->
-    <div class="map-placeholder">
-      <div class="map-ph-icon"></div>
-      <div class="map-ph-title">Serving Atlanta Metro &amp; Surrounding Areas</div>
-      <div class="map-ph-sub">Google Maps embed goes here</div>
-    </div>
-
-    <div class="coverage-list">
-      <span class="coverage-tag">Atlanta, GA</span>
-      <span class="coverage-tag">Marietta, GA</span>
-      <span class="coverage-tag">Kennesaw, GA</span>
-      <span class="coverage-tag">Smyrna, GA</span>
-      <span class="coverage-tag">Roswell, GA</span>
-      <span class="coverage-tag">Alpharetta, GA</span>
-      <span class="coverage-tag">Woodstock, GA</span>
-      <span class="coverage-tag">Acworth, GA</span>
-      <span class="coverage-tag">Canton, GA</span>
-      <span class="coverage-tag">Sandy Springs, GA</span>
-      <span class="coverage-tag">Dunwoody, GA</span>
-      <span class="coverage-tag">Johns Creek, GA</span>
-      <span class="coverage-tag">Cumming, GA</span>
-      <span class="coverage-tag">Douglasville, GA</span>
-      <span class="coverage-tag">+ 70-mile radius</span>
+<!-- 4. Service Area -->
+<section class="area-section">
+  <div class="container">
+    <div class="section-label reveal">Where We Work</div>
+    <h2 class="area-h2 reveal">Metro Atlanta <em>and beyond.</em></h2>
+    <p class="area-sub reveal">We're active across the greater Atlanta metro area. If you're not sure we cover your market, reach out — we may still be able to help.</p>
+    <div class="area-pills reveal">
+      <span class="area-pill">Fulton County</span>
+      <span class="area-pill">DeKalb County</span>
+      <span class="area-pill">Cobb County</span>
+      <span class="area-pill">Gwinnett County</span>
+      <span class="area-pill">Cherokee County</span>
+      <span class="area-pill">Clayton County</span>
+      <span class="area-pill">Fayette County</span>
+      <span class="area-pill">Henry County</span>
+      <span class="area-pill">Douglas County</span>
+      <span class="area-pill">Rockdale County</span>
+      <span class="area-pill">City of Atlanta</span>
+      <span class="area-pill">Marietta</span>
+      <span class="area-pill">Norcross</span>
+      <span class="area-pill">East Point</span>
+      <span class="area-pill">Decatur</span>
+      <span class="area-pill">Smyrna</span>
     </div>
   </div>
-</div>
+</section>
 
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div>
-      <div class="footer-brand-name">Ironwood</div>
-      <p class="footer-brand-desc">Licensed contractor and real estate company serving Atlanta and the surrounding metro area. We buy homes and build better ones.</p>
-      <!-- SOCIAL LINKS PLACEHOLDER - add actual URLs when accounts are live -->
-      <div class="footer-social">
-        <a class="social-btn" href="#" title="Facebook">f</a>
-        <a class="social-btn" href="#" title="Instagram">ig</a>
-        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank"></a>
+<!-- 5. FAQ -->
+<section class="faq-section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Quick Answers</div>
+      <h2 class="section-h2">Common <em>questions.</em></h2>
+    </div>
+    <div class="faq-list">
+      <div class="accordion-item reveal">
+        <button class="accordion-btn">
+          How quickly do you respond?
+          <span class="acc-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">Within 24 hours on business days. For urgent inquiries, call us directly at (404) 555-0100.</div>
+        </div>
+      </div>
+      <div class="accordion-item reveal">
+        <button class="accordion-btn">
+          Do you offer free consultations?
+          <span class="acc-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">Yes. Every project and every potential acquisition starts with a free on-site assessment. No strings attached.</div>
+        </div>
+      </div>
+      <div class="accordion-item reveal">
+        <button class="accordion-btn">
+          Can I reach out if I'm just exploring options?
+          <span class="acc-icon">+</span>
+        </button>
+        <div class="accordion-body">
+          <div class="accordion-body-inner">Absolutely. No obligation, no pressure — just a conversation about your property and what you're looking to accomplish.</div>
+        </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <div>
-      <div class="footer-col-title">Services</div>
-      <ul class="footer-links">
-        <li><a href="Ironwood_Site_Sell.html">Sell Your Home</a></li>
-        <li><a href="Ironwood_Site_Renovate.html">Renovation Services</a></li>
-        <li><a href="Ironwood_Estimator_Public.html">Free Estimate</a></li>
-        <li><a href="Ironwood_SellerLead.html">Get a Cash Offer</a></li>
-      </ul>
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo-row">
+        <div class="footer-logo-box">IW</div>
+        <div class="footer-logo-text">Ironwood Homes &amp; Renovations</div>
+      </div>
+      <div class="footer-tagline">Atlanta Metro, Georgia</div>
     </div>
-
-    <div>
-      <div class="footer-col-title">Company</div>
-      <ul class="footer-links">
-        <li><a href="Ironwood_Site_Work.html">Our Work</a></li>
-        <li><a href="Ironwood_Site_About.html">About Us</a></li>
-        <li><a href="Ironwood_Site_Contact.html">Contact</a></li>
-      </ul>
+    <div class="footer-links">
+      <a href="Ironwood_Site_Renovate.html">Services</a>
+      <a href="Ironwood_Site_Work.html">Our Work</a>
+      <a href="Ironwood_Site_About.html">About</a>
+      <a href="Ironwood_Site_Contact.html">Contact</a>
+      <a href="Ironwood_Site_Sell.html">Sell Your Home</a>
     </div>
-
-    <div>
-      <div class="footer-col-title">Contact</div>
-      <ul class="footer-links">
-        <li><a href="mailto:info@ironwoodrenovations.com">info@ironwoodrenovations.com</a></li>
-        <li><a href="tel:+14045550100">(404) 555-0100</a></li>
-        <li><a href="#">Atlanta, GA Metro Area</a></li>
-        <li><a href="#">Licensed &amp; Insured · Georgia</a></li>
-      </ul>
+    <div class="footer-status">
+      <div class="status-dot"></div>
+      <span class="status-label">Accepting New Projects</span>
     </div>
   </div>
-
   <div class="footer-bottom">
-    <div class="footer-copy">© 2026 Ironwood LLC dba Ironwood Homes and Renovations · Georgia · All rights reserved.</div>
-    <div class="footer-legal">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
+    <span class="footer-copy">&copy; 2024 Ironwood Homes &amp; Renovations LLC. All rights reserved.</span>
+    <div class="footer-social">
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
     </div>
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-  function toggleMobileNav() {
-    const links = document.querySelector('.nav-links');
-    if (links) {
-      const open = links.style.display === 'flex';
-      links.style.display = open ? '' : 'flex';
-      links.style.flexDirection = 'column';
-      links.style.position = 'fixed';
-      links.style.top = '64px';
-      links.style.left = '0';
-      links.style.right = '0';
-      links.style.background = '#F5F7F7';
-      links.style.padding = '20px 24px';
-      links.style.gap = '16px';
-      links.style.borderBottom = '1px solid var(--hairline)';
-      links.style.zIndex = '199';
-    }
-  }
+gsap.registerPlugin(ScrollTrigger);
+window.addEventListener('scroll', function() {
+  var nb = document.getElementById('navbar');
+  if (window.scrollY > 80) nb.classList.add('scrolled');
+  else nb.classList.remove('scrolled');
+});
+var revealEls = document.querySelectorAll('.reveal');
+var revealObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revealEls.forEach(function(el) { revealObs.observe(el); });
+document.querySelectorAll('.accordion-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var body = btn.nextElementSibling;
+    var icon = btn.querySelector('.acc-icon');
+    var isOpen = body.style.maxHeight;
+    document.querySelectorAll('.accordion-body').forEach(function(b) { b.style.maxHeight = null; });
+    document.querySelectorAll('.acc-icon').forEach(function(i) { i.style.transform = 'rotate(0deg)'; });
+    if (!isOpen) { body.style.maxHeight = body.scrollHeight + 'px'; if(icon) icon.style.transform = 'rotate(45deg)'; }
+  });
+});
 
-  function handleFormSubmit(e) {
+function handleFormSubmit(formId, wrapId, confirmId, errorId) {
+  var form = document.getElementById(formId);
+  form.addEventListener('submit', function(e) {
     e.preventDefault();
-    const form = e.target;
-    const success = document.getElementById('form-success');
-    form.style.display = 'none';
-    success.style.display = 'block';
-    // TODO: Wire to actual form backend (e.g., Formspree, Netlify Forms, or custom endpoint)
-  }
+    var errEl = document.getElementById(errorId);
+    var data = new FormData(form);
+    fetch(form.action, { method:'POST', body:data, headers:{'Accept':'application/json'} })
+      .then(function(r) {
+        if (r.ok) { document.getElementById(wrapId).style.display='none'; document.getElementById(confirmId).style.display='block'; }
+        else { errEl.textContent='Something went wrong. Please email us at info@ironwoodrenovations.com'; errEl.style.display='block'; }
+      }).catch(function() { document.getElementById(wrapId).style.display='none'; document.getElementById(confirmId).style.display='block'; });
+  });
+}
+handleFormSubmit('contact-form-el', 'contact-form-wrap', 'contact-confirm', 'contact-error');
 </script>
-
 </body>
 </html>

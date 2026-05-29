@@ -1,1152 +1,471 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<link rel="stylesheet" href="iw-design.css"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Sell Your Home Fast - Ironwood LLC · Atlanta, GA</title>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  /* Remap site-local names to iw-design.css shared tokens */
-  --black:    var(--bg);
-  --white:    var(--surface-2);
-  --off-white:var(--surface);
-  --cream:    var(--surface);
-  --gold:     var(--bronze);
-  --gold-lt:  var(--bronze-tint);
-  --gold-dim: var(--bronze-deep);
-  --surface-2:var(--surface);
-  --surface-3:var(--surface);
-  --border:   var(--hairline);
-  --border-dk:var(--hairline-2);
-  --muted:    var(--muted);
-  --text:     var(--ink);
-  --text-lt:  var(--ink-soft);
-  --green:    var(--ok);
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--sans);
-  min-height: 100vh;
-}
-
-/* ── NAV ── */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 200;
-  background: rgba(255,255,255,0.97);
-  border-bottom: 1px solid var(--border);
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  backdrop-filter: blur(8px);
-}
-
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-}
-
-.nav-logo-box {
-  width: 36px;
-  height: 36px;
-  background: var(--bronze);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--surface);
-  border-radius: 4px;
-}
-
-/* LOGO PLACEHOLDER - replace .nav-logo-box with <img src="logo.svg"> when ready */
-.nav-logo-text {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--bronze);
-  text-transform: uppercase;
-}
-
-.nav-logo-text span {
-  color: var(--muted);
-  font-weight: 400;
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  margin-left: 8px;
-  text-transform: uppercase;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  list-style: none;
-}
-
-.nav-links a {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color .15s;
-}
-
-.nav-links a:hover { color: var(--text); }
-.nav-links a.active { color: var(--bronze); }
-
-.nav-ctas {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.btn-nav-outline {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  border: 1px solid var(--gold-dim);
-  background: transparent;
-  padding: 8px 16px;
-  border-radius: 2px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background .15s, color .15s;
-}
-
-.btn-nav-outline:hover { background: rgba(184,147,62,0.08); }
-
-.btn-nav-fill {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--white);
-  background: var(--bronze);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 2px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background .15s;
-}
-
-.btn-nav-fill:hover { background: var(--gold-lt); }
-
-.nav-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.nav-toggle span {
-  width: 22px;
-  height: 2px;
-  background: var(--ink);
-  border-radius: 1px;
-  transition: all .2s;
-}
-
-@media (max-width: 900px) {
-  .nav-links, .nav-ctas { display: none; }
-  .nav-toggle { display: flex; }
-}
-
-/* ── SECTION BASE ── */
-section { padding: 80px 40px; }
-
-.container {
-  max-width: 1080px;
-  margin: 0 auto;
-}
-
-.section-eyebrow {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 12px;
-}
-
-.section-title {
-  font-size: clamp(24px, 4vw, 38px);
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.2;
-  margin-bottom: 14px;
-}
-
-.section-sub {
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.75;
-  max-width: 520px;
-}
-
-.section-header { margin-bottom: 44px; }
-
-.section-header.centered {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.gold-rule {
-  width: 40px;
-  height: 2px;
-  background: var(--bronze);
-  margin: 16px 0;
-}
-
-.section-header.centered .gold-rule { margin: 16px auto; }
-
-/* ── HERO ── */
-.hero {
-  min-height: 90vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  padding: 100px 40px 80px;
-  text-align: center;
-}
-
-/* PHOTO PLACEHOLDER - replace .hero-bg background with actual background-image when photo ready */
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background: var(--cream);
-  z-index: 0;
-}
-
-.hero-bg-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to bottom, rgba(245,240,232,0.0) 0%, rgba(245,240,232,0.4) 100%);
-  z-index: 1;
-}
-
-.hero-grid-line {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(184,147,62,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(184,147,62,0.06) 1px, transparent 1px);
-  background-size: 60px 60px;
-  z-index: 1;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 820px;
-  margin: 0 auto;
-}
-
-.hero-eyebrow {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 20px;
-}
-
-.hero h1 {
-  font-size: clamp(34px, 6.5vw, 68px);
-  font-weight: 700;
-  line-height: 1.08;
-  letter-spacing: .5px;
-  color: var(--text);
-  margin-bottom: 20px;
-}
-
-.hero h1 em {
-  font-style: normal;
-  color: var(--bronze);
-}
-
-.hero-sub {
-  font-family: var(--sans);
-  font-size: 16px;
-  color: var(--muted);
-  line-height: 1.75;
-  max-width: 540px;
-  margin: 0 auto 40px;
-}
-
-.hero-chips {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-bottom: 36px;
-}
-
-.hero-chip {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text);
-  background: rgba(255,255,255,0.7);
-  border: 1px solid var(--border);
-  border-radius: 2px;
-  padding: 8px 14px;
-  letter-spacing: .5px;
-}
-
-.hero-chip .chip-check {
-  color: var(--green);
-  font-size: 14px;
-}
-
-.hero-btn-wrap {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.btn-primary {
-  display: inline-block;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  background: var(--bronze);
-  color: var(--black);
-  padding: 15px 32px;
-  border-radius: 2px;
-  text-decoration: none;
-  transition: background .15s;
-}
-
-.btn-primary:hover { background: var(--gold-lt); }
-
-.btn-secondary {
-  display: inline-block;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--border-dk);
-  padding: 15px 32px;
-  border-radius: 2px;
-  text-decoration: none;
-  transition: border-color .15s;
-}
-
-.btn-secondary:hover { border-color: var(--text); }
-
-/* ── WHO WE HELP ── */
-.who-section { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
-.who-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-@media (max-width: 768px) {
-  .who-grid { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 480px) {
-  .who-grid { grid-template-columns: 1fr; }
-}
-
-.who-card {
-  background: var(--off-white);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 24px 22px;
-  transition: border-color .2s, background .2s;
-}
-
-.who-card:hover {
-  border-color: var(--gold-dim);
-  background: var(--cream);
-}
-
-.who-icon { font-size: 28px; margin-bottom: 12px; }
-
-.who-title {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 7px;
-  letter-spacing: .3px;
-}
-
-.who-desc {
-  font-family: var(--sans);
-  font-size: 11.5px;
-  color: var(--muted);
-  line-height: 1.6;
-}
-
-/* ── HOW IT WORKS ── */
-.process-section { background: var(--off-white); }
-
-.process-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
-}
-
-@media (max-width: 768px) {
-  .process-grid { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 480px) {
-  .process-grid { grid-template-columns: 1fr; }
-}
-
-.proc-card {
-  background: var(--white);
-  padding: 32px 28px;
-  border: 1px solid var(--border);
-  position: relative;
-}
-
-.proc-num {
-  font-family: var(--sans);
-  font-size: 48px;
-  font-weight: 900;
-  color: rgba(184,147,62,0.18);
-  line-height: 1;
-  margin-bottom: 14px;
-  letter-spacing: -2px;
-}
-
-.proc-title {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 8px;
-}
-
-.proc-desc {
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.6;
-}
-
-/* ── WHY IRONWOOD ── */
-.why-section { background: var(--cream); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
-.why-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-}
-
-@media (max-width: 768px) {
-  .why-grid { grid-template-columns: 1fr; }
-}
-
-.why-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-top: 3px solid var(--gold);
-  border-radius: 0 0 3px 3px;
-  padding: 28px 26px;
-}
-
-.why-icon { font-size: 30px; margin-bottom: 14px; }
-
-.why-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 10px;
-  line-height: 1.25;
-}
-
-.why-desc {
-  font-family: var(--sans);
-  font-size: 13px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-/* ── BEFORE/AFTER ── */
-.ba-section { background: var(--off-white); }
-
-.ba-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-.ba-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.ba-images {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-}
-
-/* PHOTO PLACEHOLDER - replace .ba-placeholder with <img> when photos ready */
-.ba-placeholder {
-  aspect-ratio: 4/3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-family: var(--sans);
-}
-
-.ba-placeholder.before {
-  background: #f0ece6;
-  border-right: 1px solid var(--border);
-  color: #bbb;
-}
-
-.ba-placeholder.after { background: #e8f0ec; color: #aaa; }
-
-.ba-placeholder-icon { font-size: 24px; opacity: .3; }
-
-.ba-placeholder-label {
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  opacity: .3;
-}
-
-.ba-label-strip {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-}
-
-.ba-label {
-  font-family: var(--sans);
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 6px 10px;
-  background: var(--surface-3);
-}
-
-.ba-label.before-lbl { color: var(--muted); }
-.ba-label.after-lbl { color: var(--green); }
-
-.ba-info {
-  padding: 14px 16px;
-  border-top: 1px solid var(--border);
-}
-
-.ba-project {
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 3px;
-}
-
-.ba-detail {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--muted);
-}
-
-/* ── TESTIMONIAL ── */
-.testi-section { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
-.testi-single {
-  max-width: 680px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.testi-stars {
-  color: var(--bronze);
-  font-size: 20px;
-  letter-spacing: 3px;
-  margin-bottom: 20px;
-}
-
-.testi-text {
-  font-size: 18px;
-  font-style: italic;
-  color: var(--text);
-  line-height: 1.75;
-  margin-bottom: 20px;
-}
-
-.testi-attr {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--muted);
-  letter-spacing: .5px;
-}
-
-/* ── CTA BAND ── */
-.cta-band {
-  background: var(--bronze);
-  padding: 72px 40px;
-  text-align: center;
-}
-
-.cta-band h2 {
-  font-size: clamp(24px, 4vw, 40px);
-  font-weight: 700;
-  color: var(--black);
-  margin-bottom: 12px;
-  line-height: 1.15;
-}
-
-.cta-band p {
-  font-family: var(--sans);
-  font-size: 15px;
-  color: rgba(10,10,10,0.65);
-  margin-bottom: 32px;
-}
-
-.btn-cta-dark {
-  display: inline-block;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  background: var(--black);
-  color: var(--bronze);
-  padding: 16px 36px;
-  border-radius: 2px;
-  text-decoration: none;
-  transition: background .15s;
-}
-
-.btn-cta-dark:hover { background: var(--ink); }
-
-/* ── FOOTER ── */
-footer {
-  background: var(--surface);
-  border-top: 1px solid var(--hairline);
-  padding: 52px 40px 32px;
-}
-
-.footer-grid {
-  max-width: 1080px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: 40px;
-  margin-bottom: 40px;
-}
-
-@media (max-width: 760px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 480px) {
-  .footer-grid { grid-template-columns: 1fr; }
-}
-
-.footer-brand-name {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--bronze);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-
-.footer-brand-desc {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.7;
-  margin-bottom: 16px;
-}
-
-.footer-social { display: flex; gap: 10px; }
-
-.social-btn {
-  width: 32px;
-  height: 32px;
-  background: var(--surface-2);
-  border: 1px solid var(--hairline);
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  text-decoration: none;
-  transition: border-color .15s, background .15s;
-  color: var(--muted);
-}
-
-.social-btn:hover {
-  border-color: var(--bronze);
-  background: var(--bronze-wash);
-  color: var(--bronze-deep);
-}
-
-.footer-col-title {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 14px;
-}
-
-.footer-links {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.footer-links a {
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color .15s;
-}
-
-.footer-links a:hover { color: var(--ink); }
-
-.footer-bottom {
-  max-width: 1080px;
-  margin: 0 auto;
-  border-top: 1px solid var(--hairline);
-  padding-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.footer-copy {
-  font-family: var(--sans);
-  font-size: 10px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-.footer-legal { display: flex; gap: 16px; }
-
-.footer-legal a {
-  font-family: var(--sans);
-  font-size: 10px;
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.footer-legal a:hover { color: var(--ink); }
-
-@media (max-width: 600px) {
-  nav { padding: 0 20px; }
-  .hero { padding: 100px 20px 60px; }
-  section { padding: 60px 20px; }
-  footer { padding: 40px 20px 24px; }
-  .cta-band { padding: 52px 20px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sell Your Home | Ironwood Homes &amp; Renovations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest:       #1a2e1a;
+      --forest-mid:   #243824;
+      --bronze:       #8a6c3a;
+      --bronze-lt:    #c4963e;
+      --cream:        #f5f0e8;
+      --cream-card:   #ffffff;
+      --text-primary: #1a1a14;
+      --text-sec:     #6b6352;
+      --border:       rgba(138,108,58,0.18);
+      --green:        #22c55e;
+      --r-lg: 2rem;
+      --r-xl: 3rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); color: var(--text-primary); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    #noise-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.045; }
+    .navbar { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; width: calc(100% - 48px); max-width: 1100px; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-radius: 999px; transition: background 0.4s ease, box-shadow 0.4s ease, border 0.4s ease; background: transparent; border: 1px solid transparent; }
+    .navbar.scrolled { background: rgba(245,240,232,0.82); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-color: var(--border); box-shadow: 0 8px 32px rgba(138,108,58,0.1); }
+    .navbar-logo { display: flex; align-items: center; gap: 10px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; color: white; text-decoration: none; letter-spacing: -0.01em; transition: color 0.4s; }
+    .navbar-logo-box { width: 34px; height: 34px; border-radius: 8px; background: var(--bronze); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .navbar.scrolled .navbar-logo { color: var(--forest); }
+    .navbar-links { display: flex; gap: 28px; align-items: center; }
+    .navbar-links a { font-size: 0.875rem; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none; transition: all 0.2s; }
+    .navbar-links a:hover { color: white; transform: translateY(-1px); }
+    .navbar.scrolled .navbar-links a { color: var(--text-sec); }
+    .navbar.scrolled .navbar-links a:hover { color: var(--forest); }
+    .navbar-cta { background: var(--bronze) !important; color: white !important; padding: 9px 20px; border-radius: 999px; font-weight: 600; font-size: 0.875rem; transition: transform 0.25s, background 0.2s !important; }
+    .navbar-cta:hover { transform: scale(1.03) translateY(-1px) !important; background: #7a5c2a !important; color: white !important; }
+    section { padding: 120px 64px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--bronze); margin-bottom: 16px; }
+    .section-h2 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.25rem); color: var(--forest); letter-spacing: -0.03em; line-height: 1.1; }
+    .section-h2 em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 1.2em; }
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    footer { background: var(--forest); border-radius: var(--r-xl) var(--r-xl) 0 0; padding: 60px 64px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 32px; }
+    .footer-brand { display: flex; flex-direction: column; gap: 8px; }
+    .footer-logo-row { display: flex; align-items: center; gap: 10px; }
+    .footer-logo-box { width: 32px; height: 32px; border-radius: 7px; background: var(--bronze); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; color: white; font-family: 'Outfit', sans-serif; flex-shrink: 0; }
+    .footer-logo-text { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; color: white; }
+    .footer-tagline { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
+    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.875rem; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: white; }
+    .footer-status { display: flex; align-items: center; gap: 10px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    .status-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; }
+    .footer-bottom { max-width: 1100px; margin: 40px auto 0; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.25); }
+    .footer-social { display: flex; gap: 16px; }
+    .footer-social a { font-size: 0.8rem; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; font-family: 'IBM Plex Mono', monospace; }
+    .footer-social a:hover { color: white; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* Page hero */
+    .page-hero { position: relative; height: 100dvh; min-height: 600px; display: flex; align-items: flex-end; overflow: hidden; }
+    .page-hero-bg { position: absolute; inset: 0; z-index: 0; background: var(--forest); }
+    .page-hero-bg img { width: 100%; height: 100%; object-fit: cover; }
+    .page-hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,46,26,0.96) 0%, rgba(26,46,26,0.55) 50%, rgba(26,46,26,0.2) 100%); }
+    .page-hero-content { position: relative; z-index: 1; padding: 0 64px 80px; max-width: 900px; }
+    .page-hero-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.15em; color: var(--bronze-lt); text-transform: uppercase; margin-bottom: 16px; }
+    .page-hero-line1 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.5rem); color: white; line-height: 1.05; letter-spacing: -0.03em; }
+    .page-hero-line2 { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(3rem, 8vw, 7rem); color: white; line-height: 0.9; letter-spacing: -0.02em; }
+    .page-hero-line2 span { color: var(--bronze-lt); }
+    .page-hero-sub { font-size: 1.05rem; color: rgba(255,255,255,0.7); margin-top: 20px; max-width: 540px; line-height: 1.6; }
+    .hero-ctas { display: flex; gap: 16px; margin-top: 28px; }
+    .btn-hero-primary { background: var(--bronze); color: white; padding: 14px 30px; border-radius: 999px; font-weight: 600; font-size: 0.95rem; text-decoration: none; border: none; cursor: pointer; transition: transform 0.25s, box-shadow 0.25s; box-shadow: 0 8px 24px rgba(138,108,58,0.4); }
+    .btn-hero-primary:hover { transform: scale(1.03); }
+    .btn-hero-sec { background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); color: white; padding: 14px 30px; border-radius: 999px; font-weight: 500; font-size: 0.95rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.28); transition: background 0.25s, transform 0.25s; }
+    .btn-hero-sec:hover { background: rgba(255,255,255,0.2); transform: scale(1.03); }
+
+    /* Compare strip */
+    .compare-wrap { background: var(--cream-card); padding: 32px 64px; }
+    .compare-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; transform: translateY(-50%); }
+    .compare-card { background: var(--cream); border: 1px solid var(--border); border-radius: 20px; padding: 28px; text-align: center; }
+    .compare-emoji { font-size: 1.8rem; margin-bottom: 10px; }
+    .compare-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; color: var(--forest); margin-bottom: 8px; }
+    .compare-desc { font-size: 0.875rem; color: var(--text-sec); line-height: 1.55; }
+
+    /* How it works */
+    .steps-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; margin-top: 48px; }
+    .step-block { background: var(--cream-card); border-radius: 20px; padding: 32px; border: 1px solid var(--border); }
+    .step-block-num { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 4rem; color: var(--bronze-lt); line-height: 1; margin-bottom: 12px; }
+    .step-block-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--forest); margin-bottom: 10px; }
+    .step-block-desc { font-size: 0.9rem; color: var(--text-sec); line-height: 1.6; }
+
+    /* Why section */
+    .why-section { background: var(--forest); }
+    .why-section .section-label { color: var(--bronze-lt); }
+    .why-h2 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.25rem); color: white; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 48px; }
+    .why-h2 em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 1.2em; }
+    .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .benefit-card { background: var(--cream-card); border-left: 4px solid var(--bronze); padding: 20px 24px; border-radius: 12px; }
+    .benefit-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--forest); margin-bottom: 6px; }
+    .benefit-desc { font-size: 0.875rem; color: var(--text-sec); line-height: 1.55; }
+
+    /* Form section */
+    .form-section { background: var(--cream); }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .form-left-label { margin-bottom: 16px; }
+    .form-left-h2 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(1.8rem, 3vw, 2.75rem); color: var(--forest); letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 20px; }
+    .form-left-h2 em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 1.2em; }
+    .form-left-desc { font-size: 0.95rem; color: var(--text-sec); line-height: 1.65; margin-bottom: 32px; }
+    .form-steps { display: flex; flex-direction: column; gap: 20px; }
+    .form-step { display: flex; gap: 16px; align-items: flex-start; }
+    .form-step-num { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 2rem; color: var(--bronze-lt); line-height: 1; flex-shrink: 0; width: 32px; }
+    .form-step-text strong { font-size: 0.95rem; color: var(--forest); display: block; margin-bottom: 4px; }
+    .form-step-text span { font-size: 0.85rem; color: var(--text-sec); }
+    .form-card { background: var(--cream-card); border-radius: var(--r-xl); padding: 40px; box-shadow: 0 16px 60px rgba(26,46,26,0.1); }
+    .form-card-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--forest); margin-bottom: 28px; }
+    .form-field { margin-bottom: 16px; }
+    .form-field label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--text-sec); margin-bottom: 6px; letter-spacing: 0.03em; }
+    .form-field input,
+    .form-field select,
+    .form-field textarea { width: 100%; padding: 13px 16px; border-radius: 12px; border: 1.5px solid var(--border); background: var(--cream); font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.9rem; color: var(--text-primary); outline: none; transition: border-color 0.2s, box-shadow 0.2s; appearance: none; }
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus { border-color: var(--bronze); box-shadow: 0 0 0 3px rgba(138,108,58,0.1); }
+    .form-divider { border: none; border-top: 1px solid var(--border); margin: 20px 0; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .btn-submit { width: 100%; padding: 15px; background: var(--bronze); color: white; border: none; border-radius: 999px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 700; font-size: 1rem; cursor: pointer; transition: transform 0.25s, box-shadow 0.25s; box-shadow: 0 8px 24px rgba(138,108,58,0.4); margin-top: 8px; }
+    .btn-submit:hover { transform: scale(1.02); }
+    .form-confirm { display: none; text-align: center; padding: 40px 20px; }
+    .form-confirm-icon { font-size: 3rem; margin-bottom: 16px; }
+    .form-confirm-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.4rem; color: var(--forest); margin-bottom: 10px; }
+    .form-confirm-text { font-size: 0.95rem; color: var(--text-sec); }
+    .form-error { display: none; background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 12px 16px; border-radius: 10px; font-size: 0.875rem; margin-bottom: 16px; }
+
+    @media (max-width: 900px) {
+      section { padding: 80px 24px; }
+      footer { padding: 48px 24px; border-radius: var(--r-lg) var(--r-lg) 0 0; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .navbar-links .nav-link-desktop { display: none; }
+      .compare-wrap { padding: 24px; }
+      .compare-inner { grid-template-columns: 1fr; transform: none; margin-top: 32px; }
+      .steps-grid { grid-template-columns: 1fr; }
+      .benefits-grid { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; gap: 40px; }
+      .form-row { grid-template-columns: 1fr; }
+      .page-hero-content { padding: 0 24px 60px; }
+    }
+    @media (max-width: 600px) { .hero-ctas { flex-direction: column; } }
+  </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="Ironwood_Site_Home.html">
-    <!-- LOGO PLACEHOLDER: replace .nav-logo-box with <img src="logo.svg"> when ready -->
-    <div class="nav-logo-box" style="background:var(--bronze);color:var(--surface);font-family:var(--serif);font-style:italic;font-size:18px;font-weight:400;border-radius:4px;"><em>I</em></div>
-    <div style="font-family:var(--serif);font-size:17px;color:var(--ink);letter-spacing:-.01em;">Ironwood Homes and Renovations</div>
+<svg id="noise-overlay" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+  <rect width="100%" height="100%" filter="url(#noise)" opacity="1"/>
+</svg>
+
+<nav class="navbar" id="navbar">
+  <a href="Ironwood_Site_Home.html" class="navbar-logo">
+    <div class="navbar-logo-box">IW</div>
+    <span>IRONWOOD</span>
   </a>
-
-  <ul class="nav-links">
-    <li><a href="Ironwood_Site_Home.html">Home</a></li>
-    <li><a href="Ironwood_Site_Sell.html" class="active">Sell Your Home</a></li>
-    <li><a href="Ironwood_Site_Renovate.html">Renovations</a></li>
-    <li><a href="Ironwood_Site_Work.html">Our Work</a></li>
-    <li><a href="Ironwood_Site_About.html">About</a></li>
-    <li><a href="Ironwood_Site_Contact.html">Contact</a></li>
-  </ul>
-
-  <div class="nav-ctas">
-    <a class="btn-nav-outline" href="Ironwood_SellerLead.html">Get My Offer</a>
-    <a class="btn-nav-fill" href="Ironwood_Estimator_Public.html">Free Estimate</a>
-  </div>
-
-  <div class="nav-toggle" onclick="toggleMobileNav()">
-    <span></span><span></span><span></span>
+  <div class="navbar-links">
+    <a href="Ironwood_Site_Renovate.html" class="nav-link-desktop">Services</a>
+    <a href="Ironwood_Site_Work.html" class="nav-link-desktop">Our Work</a>
+    <a href="Ironwood_Site_About.html" class="nav-link-desktop">About</a>
+    <a href="Ironwood_Site_Sell.html" class="nav-link-desktop" style="color:var(--bronze-lt)">Sell Your Home</a>
+    <a href="#sell-form" class="navbar-cta">Get My Offer</a>
   </div>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-bg"></div>
-  <!-- PHOTO PLACEHOLDER - replace .hero-bg background with: background-image: url('hero-sell.jpg'); background-size: cover; background-position: center; -->
-  <div class="hero-bg-overlay"></div>
-  <div class="hero-grid-line"></div>
-
-  <div class="hero-content">
-    <div class="hero-eyebrow">Ironwood · Cash Home Buyers · Atlanta, GA</div>
-    <h1>Sell Your Home Fast -<br/>Any Condition, <em>Any Situation</em></h1>
-    <p class="hero-sub">We make fair cash offers on homes throughout the Atlanta metro. No repairs, no commissions, no stress - just a straightforward process on your timeline.</p>
-
-    <div class="hero-chips">
-      <div class="hero-chip"><span class="chip-check"></span> No Repairs Needed</div>
-      <div class="hero-chip"><span class="chip-check"></span> No Commissions or Fees</div>
-      <div class="hero-chip"><span class="chip-check"></span> Close in as Little as 7 Days</div>
-      <div class="hero-chip"><span class="chip-check"></span> Cash Offer Within 24 Hours</div>
-    </div>
-
-    <div class="hero-btn-wrap">
-      <a class="btn-primary" href="Ironwood_SellerLead.html">Get My Cash Offer →</a>
-      <a class="btn-secondary" href="#how-it-works">See How It Works</a>
+<!-- 1. Page Hero -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-eyebrow">Skip the Showings</div>
+    <div class="page-hero-line1">Sell Your Home</div>
+    <div class="page-hero-line2"><span>Fast. As-Is.</span></div>
+    <div class="page-hero-sub">No repairs. No showings. No agent fees. We buy homes in any condition across Metro Atlanta — and we close on your timeline.</div>
+    <div class="hero-ctas">
+      <a href="#sell-form" class="btn-hero-primary">Get My Offer</a>
+      <a href="#how-it-works" class="btn-hero-sec">How It Works</a>
     </div>
   </div>
 </div>
 
-<!-- WHO WE HELP -->
-<section class="who-section">
-  <div class="container">
-    <div class="section-header centered">
-      <div class="section-eyebrow">Who We Help</div>
-      <h2 class="section-title">Every Situation Is Different - We Understand That</h2>
-      <div class="gold-rule"></div>
-      <p class="section-sub">Whether your situation is complicated or straightforward, Ironwood works with motivated sellers in all circumstances.</p>
+<!-- 2. Compare Strip -->
+<div class="compare-wrap">
+  <div class="compare-inner reveal">
+    <div class="compare-card">
+      <div class="compare-emoji">⏳</div>
+      <div class="compare-title">Traditional Sale</div>
+      <div class="compare-desc">Avg. 45–90 days &middot; Repairs required &middot; Agent commissions</div>
     </div>
+    <div class="compare-card" style="background: var(--forest); border-color: transparent;">
+      <div class="compare-emoji">⚡</div>
+      <div class="compare-title" style="color: white;">With Ironwood</div>
+      <div class="compare-desc" style="color: rgba(255,255,255,0.65);">Close in 14 days &middot; As-is condition &middot; No fees or commissions</div>
+    </div>
+    <div class="compare-card">
+      <div class="compare-emoji">💰</div>
+      <div class="compare-title">You Keep More</div>
+      <div class="compare-desc">No hidden fees &middot; No repair credits &middot; No last-minute surprises</div>
+    </div>
+  </div>
+</div>
 
-    <div class="who-grid">
-      <div class="who-card">
-        <div class="who-icon"></div>
-        <div class="who-title">Inherited Property</div>
-        <div class="who-desc">Inherited a home you don't want to manage or maintain? We handle probate-friendly purchases and make the process simple during a difficult time.</div>
+<!-- 3. How It Works -->
+<section id="how-it-works" style="background: var(--cream); padding-top: 0;">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">The Process</div>
+      <h2 class="section-h2">Four steps. <em>One easy close.</em></h2>
+    </div>
+    <div class="steps-grid">
+      <div class="step-block reveal">
+        <div class="step-block-num">01</div>
+        <div class="step-block-title">Tell Us About Your Property</div>
+        <div class="step-block-desc">Fill out the form with your address and basic info. No obligation, no pressure.</div>
       </div>
-
-      <div class="who-card">
-        <div class="who-icon"></div>
-        <div class="who-title">Behind on Payments</div>
-        <div class="who-desc">Facing foreclosure or falling behind on your mortgage? A fast cash sale can stop the clock and protect your credit before things escalate.</div>
+      <div class="step-block reveal">
+        <div class="step-block-num">02</div>
+        <div class="step-block-title">We Schedule a Walkthrough</div>
+        <div class="step-block-desc">One visit, usually within 48 hours. We assess the property exactly as it is.</div>
       </div>
-
-      <div class="who-card">
-        <div class="who-icon"></div>
-        <div class="who-title">Divorce / Life Change</div>
-        <div class="who-desc">When life changes quickly, a shared property can complicate things. We buy fast so both parties can move on cleanly and without delay.</div>
+      <div class="step-block reveal">
+        <div class="step-block-num">03</div>
+        <div class="step-block-title">You Get a Cash Offer</div>
+        <div class="step-block-desc">A fair, no-pressure offer within 24 hours of the walkthrough.</div>
       </div>
-
-      <div class="who-card">
-        <div class="who-icon"></div>
-        <div class="who-title">Relocating Quickly</div>
-        <div class="who-desc">Job transfer or out-of-state move coming up fast? Don't deal with showings and months on the market - we close on your schedule.</div>
-      </div>
-
-      <div class="who-card">
-        <div class="who-icon"></div>
-        <div class="who-title">Property Needs Major Repairs</div>
-        <div class="who-desc">Foundation issues, roof damage, fire or water damage - we buy homes exactly as they are. You don't spend a dollar before closing.</div>
-      </div>
-
-      <div class="who-card">
-        <div class="who-icon"></div>
-        <div class="who-title">Tired Landlord</div>
-        <div class="who-desc">Done dealing with tenants, maintenance calls, and vacancies? We purchase rental properties with or without tenants in place.</div>
+      <div class="step-block reveal">
+        <div class="step-block-num">04</div>
+        <div class="step-block-title">You Pick Your Close Date</div>
+        <div class="step-block-desc">Close in as little as 14 days, or take the time you need.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- HOW IT WORKS -->
-<section class="process-section" id="how-it-works">
-  <div class="container">
-    <div class="section-header centered">
-      <div class="section-eyebrow">The Process</div>
-      <h2 class="section-title">Simple from Start to Close</h2>
-      <div class="gold-rule"></div>
-      <p class="section-sub" style="text-align:center;">Four steps is all it takes. No guesswork, no delays, no surprises.</p>
-    </div>
-
-    <div class="process-grid">
-      <div class="proc-card">
-        <div class="proc-num">01</div>
-        <div class="proc-title">Submit Your Info Online</div>
-        <div class="proc-desc">Fill out our short property form at your pace. Provide basic details about the home - condition, situation, and your timeline. Takes about 3 minutes.</div>
-      </div>
-      <div class="proc-card">
-        <div class="proc-num">02</div>
-        <div class="proc-title">Cash Offer Within 24 Hours</div>
-        <div class="proc-desc">A member of the Ironwood team reviews your submission and contacts you with a no-obligation cash offer within one business day - no waiting, no runaround.</div>
-      </div>
-      <div class="proc-card">
-        <div class="proc-num">03</div>
-        <div class="proc-title">Choose Your Closing Date</div>
-        <div class="proc-desc">If you accept the offer, you pick the closing date. Need to close in 7 days? Done. Need 60 days to make arrangements? That works too. It's your call.</div>
-      </div>
-      <div class="proc-card">
-        <div class="proc-num">04</div>
-        <div class="proc-title">Close &amp; Get Paid</div>
-        <div class="proc-desc">We handle the paperwork. You show up, sign, and collect your funds. No commissions, no repair credits, no last-minute surprises. Just a clean close.</div>
-      </div>
-    </div>
-
-    <div style="text-align:center; margin-top:36px;">
-      <a class="btn-primary" href="Ironwood_SellerLead.html">Start My Offer →</a>
-    </div>
-  </div>
-</section>
-
-<!-- WHY IRONWOOD -->
+<!-- 4. Why Sell to Ironwood -->
 <section class="why-section">
   <div class="container">
-    <div class="section-header centered">
-      <div class="section-eyebrow">Why Ironwood</div>
-      <h2 class="section-title">The Ironwood Difference</h2>
-      <div class="gold-rule"></div>
-    </div>
-
-    <div class="why-grid">
-      <div class="why-card">
-        <div class="why-icon"></div>
-        <div class="why-title">No Fees or Commissions</div>
-        <div class="why-desc">Traditional real estate agents take 5–6% of your sale price in commissions alone. With Ironwood, what we offer is what you receive. Zero deductions on our end. No listing fees, no closing cost negotiations that drag on for weeks.</div>
+    <div class="section-label reveal">Why Ironwood</div>
+    <h2 class="why-h2 reveal">The easier <em>way to sell.</em></h2>
+    <div class="benefits-grid">
+      <div class="benefit-card reveal">
+        <div class="benefit-title">No Repairs Needed</div>
+        <div class="benefit-desc">Buy in any condition. Don't spend a dime before closing.</div>
       </div>
-
-      <div class="why-card">
-        <div class="why-icon"></div>
-        <div class="why-title">As-Is Purchase - No Repairs</div>
-        <div class="why-desc">We buy your home exactly as it sits today. Roof issues, outdated kitchens, foundation concerns, deferred maintenance - it doesn't matter. You don't lift a finger or spend a single dollar preparing the property for sale.</div>
+      <div class="benefit-card reveal">
+        <div class="benefit-title">No Agent Commissions</div>
+        <div class="benefit-desc">Keep the 5–6% you'd otherwise pay in fees.</div>
       </div>
-
-      <div class="why-card">
-        <div class="why-icon"></div>
-        <div class="why-title">You Pick the Closing Date</div>
-        <div class="why-desc">Our closing timeline is built around you, not us. We can move as fast as 7 days or give you the time you need to transition. Whether you need to arrange moving, settle affairs, or coordinate with family - we work on your schedule.</div>
+      <div class="benefit-card reveal">
+        <div class="benefit-title">Close on Your Timeline</div>
+        <div class="benefit-desc">14 days or 90 days — you decide what works.</div>
       </div>
-    </div>
-  </div>
-</section>
-
-<!-- HOMES WE'VE PURCHASED -->
-<section class="ba-section">
-  <div class="container">
-    <div class="section-header centered">
-      <div class="section-eyebrow">Past Purchases</div>
-      <h2 class="section-title">Homes We've Purchased</h2>
-      <div class="gold-rule"></div>
-      <p class="section-sub" style="text-align:center;">Real homes, real sellers, real closings across the Atlanta metro.</p>
-    </div>
-
-    <div class="ba-grid">
-      <!-- PHOTO PLACEHOLDER 1 - replace .ba-placeholder elements with <img src="..."> when photos ready -->
-      <div class="ba-card">
-        <div class="ba-images">
-          <div class="ba-placeholder before">
-            <div class="ba-placeholder-icon"></div>
-            <div class="ba-placeholder-label">Before</div>
-          </div>
-          <div class="ba-placeholder after">
-            <div class="ba-placeholder-icon"></div>
-            <div class="ba-placeholder-label">After</div>
-          </div>
-        </div>
-        <div class="ba-label-strip">
-          <div class="ba-label before-lbl">At Purchase</div>
-          <div class="ba-label after-lbl">Post-Reno</div>
-        </div>
-        <div class="ba-info">
-          <div class="ba-project">1842 Maple Creek Dr · Marietta, GA</div>
-          <div class="ba-detail">3 bed / 2 bath · Deferred maintenance · Closed in 11 days</div>
-        </div>
+      <div class="benefit-card reveal">
+        <div class="benefit-title">No Showings</div>
+        <div class="benefit-desc">One walkthrough with us, then done.</div>
       </div>
-
-      <!-- PHOTO PLACEHOLDER 2 - replace .ba-placeholder elements with <img src="..."> when photos ready -->
-      <div class="ba-card">
-        <div class="ba-images">
-          <div class="ba-placeholder before">
-            <div class="ba-placeholder-icon"></div>
-            <div class="ba-placeholder-label">Before</div>
-          </div>
-          <div class="ba-placeholder after">
-            <div class="ba-placeholder-icon"></div>
-            <div class="ba-placeholder-label">After</div>
-          </div>
-        </div>
-        <div class="ba-label-strip">
-          <div class="ba-label before-lbl">At Purchase</div>
-          <div class="ba-label after-lbl">Post-Reno</div>
-        </div>
-        <div class="ba-info">
-          <div class="ba-project">574 Ridgeline Pl · Kennesaw, GA</div>
-          <div class="ba-detail">4 bed / 2.5 bath · Inherited estate · Closed in 9 days</div>
-        </div>
+      <div class="benefit-card reveal">
+        <div class="benefit-title">Guaranteed Offer</div>
+        <div class="benefit-desc">No falling through, no financing contingencies.</div>
       </div>
-
-      <!-- PHOTO PLACEHOLDER 3 - replace .ba-placeholder elements with <img src="..."> when photos ready -->
-      <div class="ba-card">
-        <div class="ba-images">
-          <div class="ba-placeholder before">
-            <div class="ba-placeholder-icon"></div>
-            <div class="ba-placeholder-label">Before</div>
-          </div>
-          <div class="ba-placeholder after">
-            <div class="ba-placeholder-icon"></div>
-            <div class="ba-placeholder-label">After</div>
-          </div>
-        </div>
-        <div class="ba-label-strip">
-          <div class="ba-label before-lbl">At Purchase</div>
-          <div class="ba-label after-lbl">Post-Reno</div>
-        </div>
-        <div class="ba-info">
-          <div class="ba-project">309 Thornbriar Ct · Smyrna, GA</div>
-          <div class="ba-detail">3 bed / 1 bath · Tired landlord · Tenant-occupied · Closed in 14 days</div>
-        </div>
+      <div class="benefit-card reveal">
+        <div class="benefit-title">Cash Buyers</div>
+        <div class="benefit-desc">We close with cash. No lender delays.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- TESTIMONIAL -->
-<section class="testi-section">
+<!-- 5. Sell Form -->
+<section id="sell-form" class="form-section">
   <div class="container">
-    <div class="testi-single">
-      <div class="testi-stars"></div>
-      <p class="testi-text">"I needed to sell my dad's house after he passed, and I had no idea where to start. Ironwood made the whole thing easy - they explained the process, gave me a fair offer, and we closed in 9 days. I didn't have to fix a thing. I'd tell anyone in that situation to call them first."</p>
-      <div class="testi-attr">- Marcus T. &nbsp;·&nbsp; Kennesaw, GA &nbsp;·&nbsp; Inherited Property Sale</div>
+    <div class="form-grid">
+      <div class="reveal">
+        <div class="section-label form-left-label">Get Your Offer</div>
+        <h2 class="form-left-h2">Tell us about <em>your property.</em></h2>
+        <p class="form-left-desc">Fill out the form and we'll follow up within 24 hours with next steps. No obligation, no pressure — just a straightforward conversation about your home.</p>
+        <div class="form-steps">
+          <div class="form-step">
+            <div class="form-step-num">01</div>
+            <div class="form-step-text">
+              <strong>Submit your info</strong>
+              <span>Takes less than 2 minutes</span>
+            </div>
+          </div>
+          <div class="form-step">
+            <div class="form-step-num">02</div>
+            <div class="form-step-text">
+              <strong>We schedule a walkthrough</strong>
+              <span>Usually within 48 hours</span>
+            </div>
+          </div>
+          <div class="form-step">
+            <div class="form-step-num">03</div>
+            <div class="form-step-text">
+              <strong>You receive a cash offer</strong>
+              <span>Within 24 hours of the visit</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="form-card">
+          <div class="form-card-title">Request My Offer</div>
+          <div id="sell-form-wrap">
+            <div class="form-error" id="sell-error"></div>
+            <form id="sell-form-el" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
+              <div class="form-field">
+                <label for="s-name">Full Name *</label>
+                <input type="text" id="s-name" name="name" required placeholder="Your full name">
+              </div>
+              <div class="form-field">
+                <label for="s-email">Email *</label>
+                <input type="email" id="s-email" name="email" required placeholder="you@example.com">
+              </div>
+              <div class="form-field">
+                <label for="s-phone">Phone</label>
+                <input type="tel" id="s-phone" name="phone" placeholder="(404) 000-0000">
+              </div>
+              <div class="form-field">
+                <label for="s-address">Property Address</label>
+                <input type="text" id="s-address" name="address" placeholder="123 Main St, Atlanta, GA 30301">
+              </div>
+              <hr class="form-divider">
+              <div class="form-row">
+                <div class="form-field">
+                  <label for="s-beds">Bedrooms</label>
+                  <select id="s-beds" name="bedrooms">
+                    <option value="">Select</option>
+                    <option>1</option>
+                    <option>2</option>
+                    <option>3</option>
+                    <option>4</option>
+                    <option>5+</option>
+                  </select>
+                </div>
+                <div class="form-field">
+                  <label for="s-baths">Bathrooms</label>
+                  <select id="s-baths" name="bathrooms">
+                    <option value="">Select</option>
+                    <option>1</option>
+                    <option>1.5</option>
+                    <option>2</option>
+                    <option>2.5</option>
+                    <option>3</option>
+                    <option>3.5</option>
+                    <option>4+</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-field">
+                <label for="s-condition">Property Condition</label>
+                <select id="s-condition" name="condition">
+                  <option value="">Select condition</option>
+                  <option>Move-In Ready</option>
+                  <option>Needs Some Work</option>
+                  <option>Major Repairs Needed</option>
+                  <option>Uninhabitable</option>
+                </select>
+              </div>
+              <div class="form-field">
+                <label for="s-price">Asking Price</label>
+                <input type="text" id="s-price" name="asking_price" placeholder="e.g. $180,000 — or leave blank for our assessment">
+              </div>
+              <div class="form-field">
+                <label for="s-timeline">How Soon to Close?</label>
+                <select id="s-timeline" name="timeline">
+                  <option value="">Select timeline</option>
+                  <option>ASAP — Under 30 Days</option>
+                  <option>1–3 Months</option>
+                  <option>3–6 Months</option>
+                  <option>No Rush</option>
+                </select>
+              </div>
+              <button type="submit" class="btn-submit">Request My Offer &rarr;</button>
+            </form>
+          </div>
+          <div class="form-confirm" id="sell-confirm">
+            <div class="form-confirm-icon">✅</div>
+            <div class="form-confirm-title">Request Received!</div>
+            <div class="form-confirm-text">We'll be in touch within 24 hours to discuss your property and schedule a walkthrough.</div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- CTA BAND -->
-<div class="cta-band">
-  <div class="container">
-    <h2>Ready to Get Your Offer?</h2>
-    <p>Fill out the short form and someone from our team will reach out with a real offer - usually same day. No repairs, no commissions, no runaround.</p>
-    <a class="btn-cta-dark" href="Ironwood_SellerLead.html">Get My Cash Offer →</a>
-  </div>
-</div>
-
-<!-- FOOTER -->
 <footer>
-  <div class="footer-grid">
-    <div>
-      <div class="footer-brand-name">Ironwood</div>
-      <p class="footer-brand-desc">Licensed contractor and real estate company serving Atlanta and the surrounding metro area. We buy homes and build better ones.</p>
-      <!-- SOCIAL LINKS PLACEHOLDER - add actual URLs when accounts are live -->
-      <div class="footer-social">
-        <a class="social-btn" href="#" title="Facebook">f</a>
-        <a class="social-btn" href="#" title="Instagram">ig</a>
-        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank"></a>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo-row">
+        <div class="footer-logo-box">IW</div>
+        <div class="footer-logo-text">Ironwood Homes &amp; Renovations</div>
       </div>
+      <div class="footer-tagline">Atlanta Metro, Georgia</div>
     </div>
-
-    <div>
-      <div class="footer-col-title">Services</div>
-      <ul class="footer-links">
-        <li><a href="Ironwood_Site_Sell.html">Sell Your Home</a></li>
-        <li><a href="Ironwood_Site_Renovate.html">Renovation Services</a></li>
-        <li><a href="Ironwood_Estimator_Public.html">Free Estimate</a></li>
-        <li><a href="Ironwood_SellerLead.html">Get a Cash Offer</a></li>
-      </ul>
+    <div class="footer-links">
+      <a href="Ironwood_Site_Renovate.html">Services</a>
+      <a href="Ironwood_Site_Work.html">Our Work</a>
+      <a href="Ironwood_Site_About.html">About</a>
+      <a href="Ironwood_Site_Contact.html">Contact</a>
+      <a href="Ironwood_Site_Sell.html">Sell Your Home</a>
     </div>
-
-    <div>
-      <div class="footer-col-title">Company</div>
-      <ul class="footer-links">
-        <li><a href="Ironwood_Site_Work.html">Our Work</a></li>
-        <li><a href="Ironwood_Site_About.html">About Us</a></li>
-        <li><a href="Ironwood_Site_Contact.html">Contact</a></li>
-      </ul>
-    </div>
-
-    <div>
-      <div class="footer-col-title">Contact</div>
-      <ul class="footer-links">
-        <li><a href="mailto:info@ironwoodrenovations.com">info@ironwoodrenovations.com</a></li>
-        <li><a href="tel:+14045550100">(404) 555-0100</a></li>
-        <li><a href="#">Atlanta, GA Metro Area</a></li>
-        <li><a href="#">Licensed &amp; Insured · Georgia</a></li>
-      </ul>
+    <div class="footer-status">
+      <div class="status-dot"></div>
+      <span class="status-label">Accepting New Projects</span>
     </div>
   </div>
-
   <div class="footer-bottom">
-    <div class="footer-copy">© 2026 Ironwood LLC dba Ironwood Homes and Renovations · Georgia · All rights reserved.</div>
-    <div class="footer-legal">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
+    <span class="footer-copy">&copy; 2024 Ironwood Homes &amp; Renovations LLC. All rights reserved.</span>
+    <div class="footer-social">
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
     </div>
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-  function toggleMobileNav() {
-    const links = document.querySelector('.nav-links');
-    if (links) {
-      const open = links.style.display === 'flex';
-      links.style.display = open ? '' : 'flex';
-      links.style.flexDirection = 'column';
-      links.style.position = 'fixed';
-      links.style.top = '64px';
-      links.style.left = '0';
-      links.style.right = '0';
-      links.style.background = '#F5F7F7';
-      links.style.padding = '20px 24px';
-      links.style.gap = '16px';
-      links.style.borderBottom = '1px solid var(--hairline)';
-      links.style.zIndex = '199';
-    }
-  }
-</script>
+gsap.registerPlugin(ScrollTrigger);
+window.addEventListener('scroll', function() {
+  var nb = document.getElementById('navbar');
+  if (window.scrollY > 80) nb.classList.add('scrolled');
+  else nb.classList.remove('scrolled');
+});
+var revealEls = document.querySelectorAll('.reveal');
+var revealObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revealEls.forEach(function(el) { revealObs.observe(el); });
+document.querySelectorAll('.accordion-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var body = btn.nextElementSibling;
+    var icon = btn.querySelector('.acc-icon');
+    var isOpen = body.style.maxHeight;
+    document.querySelectorAll('.accordion-body').forEach(function(b) { b.style.maxHeight = null; });
+    document.querySelectorAll('.acc-icon').forEach(function(i) { i.style.transform = 'rotate(0deg)'; });
+    if (!isOpen) { body.style.maxHeight = body.scrollHeight + 'px'; if(icon) icon.style.transform = 'rotate(45deg)'; }
+  });
+});
 
+function handleFormSubmit(formId, wrapId, confirmId, errorId) {
+  var form = document.getElementById(formId);
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var errEl = document.getElementById(errorId);
+    var data = new FormData(form);
+    fetch(form.action, { method:'POST', body:data, headers:{'Accept':'application/json'} })
+      .then(function(r) {
+        if (r.ok) { document.getElementById(wrapId).style.display='none'; document.getElementById(confirmId).style.display='block'; }
+        else { errEl.textContent='Something went wrong. Please email us at info@ironwoodrenovations.com'; errEl.style.display='block'; }
+      }).catch(function() { document.getElementById(wrapId).style.display='none'; document.getElementById(confirmId).style.display='block'; });
+  });
+}
+handleFormSubmit('sell-form-el', 'sell-form-wrap', 'sell-confirm', 'sell-error');
+</script>
 </body>
 </html>

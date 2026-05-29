@@ -1,1038 +1,380 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<link rel="stylesheet" href="iw-design.css"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Our Work - Ironwood LLC · Atlanta, GA</title>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  /* Remap site-local names to iw-design.css shared tokens */
-  --black:    var(--bg);
-  --white:    var(--surface-2);
-  --off-white:var(--surface);
-  --cream:    var(--surface);
-  --gold:     var(--bronze);
-  --gold-lt:  var(--bronze-tint);
-  --gold-dim: var(--bronze-deep);
-  --surface-2:var(--surface);
-  --surface-3:var(--surface);
-  --border:   var(--hairline);
-  --border-dk:var(--hairline-2);
-  --muted:    var(--muted);
-  --text:     var(--ink);
-  --text-lt:  var(--ink-soft);
-  --green:    var(--ok);
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--sans);
-  min-height: 100vh;
-}
-
-/* ── NAV ── */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 200;
-  background: rgba(255,255,255,0.97);
-  border-bottom: 1px solid var(--border);
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  backdrop-filter: blur(8px);
-}
-
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-}
-
-.nav-logo-box {
-  width: 36px;
-  height: 36px;
-  background: var(--bronze);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--surface);
-  border-radius: 4px;
-}
-
-/* LOGO PLACEHOLDER - replace .nav-logo-box with <img src="logo.svg"> when ready */
-.nav-logo-text {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--bronze);
-  text-transform: uppercase;
-}
-
-.nav-logo-text span {
-  color: var(--muted);
-  font-weight: 400;
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  margin-left: 8px;
-  text-transform: uppercase;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  list-style: none;
-}
-
-.nav-links a {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color .15s;
-}
-
-.nav-links a:hover { color: var(--text); }
-.nav-links a.active { color: var(--bronze); }
-
-.nav-ctas {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.btn-nav-outline {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  border: 1px solid var(--gold-dim);
-  background: transparent;
-  padding: 8px 16px;
-  border-radius: 2px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background .15s, color .15s;
-}
-
-.btn-nav-outline:hover { background: rgba(184,147,62,0.08); }
-
-.btn-nav-fill {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--white);
-  background: var(--bronze);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 2px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background .15s;
-}
-
-.btn-nav-fill:hover { background: var(--gold-lt); }
-
-.nav-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.nav-toggle span {
-  width: 22px;
-  height: 2px;
-  background: var(--ink);
-  border-radius: 1px;
-  transition: all .2s;
-}
-
-@media (max-width: 900px) {
-  .nav-links, .nav-ctas { display: none; }
-  .nav-toggle { display: flex; }
-}
-
-/* ── SECTION BASE ── */
-section { padding: 80px 40px; }
-
-.container {
-  max-width: 1080px;
-  margin: 0 auto;
-}
-
-.section-eyebrow {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 12px;
-}
-
-.section-title {
-  font-size: clamp(24px, 4vw, 38px);
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.2;
-  margin-bottom: 14px;
-}
-
-.section-sub {
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.75;
-  max-width: 540px;
-}
-
-.gold-rule {
-  width: 40px;
-  height: 2px;
-  background: var(--bronze);
-  margin: 16px 0;
-}
-
-/* ── PAGE HEADER ── */
-.page-header {
-  padding: 120px 40px 60px;
-  background: var(--off-white);
-  border-bottom: 1px solid var(--border);
-}
-
-.page-header-inner {
-  max-width: 1080px;
-  margin: 0 auto;
-}
-
-.page-eyebrow {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 14px;
-}
-
-.page-title {
-  font-size: clamp(36px, 6vw, 60px);
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.08;
-  margin-bottom: 14px;
-}
-
-.page-sub {
-  font-family: var(--sans);
-  font-size: 16px;
-  color: var(--muted);
-  line-height: 1.7;
-  max-width: 500px;
-  margin-bottom: 36px;
-}
-
-/* ── FILTER TABS ── */
-.filter-tabs {
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.filter-tab {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  background: var(--white);
-  border: 1px solid var(--border);
-  padding: 8px 16px;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: color .15s, border-color .15s, background .15s;
-}
-
-.filter-tab:hover {
-  color: var(--text);
-  border-color: var(--border-dk);
-}
-
-.filter-tab.active {
-  color: var(--white);
-  background: var(--bronze);
-  border-color: var(--bronze);
-}
-
-/* ── GALLERY GRID ── */
-.gallery-section { background: var(--white); }
-
-.gallery-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
-}
-
-@media (max-width: 860px) {
-  .gallery-grid { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 520px) {
-  .gallery-grid { grid-template-columns: 1fr; }
-}
-
-.proj-card {
-  background: var(--off-white);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-  transition: border-color .2s;
-}
-
-.proj-card:hover { border-color: var(--gold-dim); }
-
-.proj-images {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-}
-
-/* PHOTO PLACEHOLDER - replace each .proj-ph div with <img src="..."> when project photos ready */
-.proj-ph {
-  aspect-ratio: 4/3;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  font-family: var(--sans);
-}
-
-.proj-ph.before {
-  background: #f0ece6;
-  border-right: 1px solid var(--border);
-}
-
-.proj-ph.after { background: #e8f0ec; }
-
-.proj-ph-icon { font-size: 22px; opacity: .4; }
-
-.proj-ph-label {
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  opacity: .4;
-  color: var(--muted);
-}
-
-.proj-ba-strip {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px;
-}
-
-.proj-ba-lbl {
-  font-family: var(--sans);
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  padding: 5px 10px;
-  background: var(--surface-3);
-}
-
-.proj-ba-lbl.b { color: var(--muted); }
-.proj-ba-lbl.a { color: var(--green); }
-
-.proj-info { padding: 14px 16px; border-top: 1px solid var(--border); }
-
-.proj-category {
-  font-family: var(--sans);
-  font-size: 8px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 5px;
-}
-
-.proj-name {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 3px;
-}
-
-.proj-location {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--muted);
-  margin-bottom: 6px;
-}
-
-.proj-scope {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.5;
-  margin-bottom: 6px;
-}
-
-.proj-time {
-  font-family: var(--sans);
-  font-size: 10px;
-  color: var(--gold-dim);
-  font-weight: 700;
-}
-
-/* ── STATS STRIP ── */
-.stats-section {
-  background: var(--ink);
-  border-top: 1px solid rgba(28,24,20,.3);
-  border-bottom: 1px solid rgba(28,24,20,.3);
-  padding: 60px 40px;
-}
-
-.stats-grid {
-  max-width: 1080px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 2px;
-}
-
-@media (max-width: 600px) {
-  .stats-grid { grid-template-columns: 1fr 1fr; }
-}
-
-.stat-block {
-  text-align: center;
-  padding: 28px 20px;
-  border-right: 1px solid rgba(255,255,255,0.1);
-}
-
-.stat-block:last-child { border-right: none; }
-
-.stat-num {
-  font-size: clamp(32px, 5vw, 48px);
-  font-weight: 700;
-  color: var(--bronze);
-  line-height: 1;
-  margin-bottom: 8px;
-}
-
-.stat-label {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: #aaa;
-  letter-spacing: .5px;
-  line-height: 1.4;
-}
-
-/* ── YOUTUBE CTA STRIP ── */
-.yt-strip {
-  background: var(--off-white);
-  padding: 72px 40px;
-  text-align: center;
-}
-
-.yt-strip h2 {
-  font-size: clamp(22px, 4vw, 34px);
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 12px;
-}
-
-.yt-strip p {
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--muted);
-  margin-bottom: 28px;
-  max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.7;
-}
-
-.yt-subscribe-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  background: #ff0000;
-  color: #fff;
-  padding: 13px 24px;
-  border-radius: 3px;
-  text-decoration: none;
-  transition: background .15s;
-}
-
-.yt-subscribe-btn:hover { background: #cc0000; }
-
-/* ── FOOTER ── */
-footer {
-  background: var(--surface);
-  border-top: 1px solid var(--hairline);
-  padding: 52px 40px 32px;
-}
-
-.footer-grid {
-  max-width: 1080px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: 40px;
-  margin-bottom: 40px;
-}
-
-@media (max-width: 760px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 480px) {
-  .footer-grid { grid-template-columns: 1fr; }
-}
-
-.footer-brand-name {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--bronze);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-
-.footer-brand-desc {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.7;
-  margin-bottom: 16px;
-}
-
-.footer-social { display: flex; gap: 10px; }
-
-.social-btn {
-  width: 32px;
-  height: 32px;
-  background: var(--surface-2);
-  border: 1px solid var(--hairline);
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  text-decoration: none;
-  transition: border-color .15s, background .15s;
-  color: var(--muted);
-}
-
-.social-btn:hover {
-  border-color: var(--bronze);
-  background: var(--bronze-wash);
-  color: var(--bronze-deep);
-}
-
-.footer-col-title {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 14px;
-}
-
-.footer-links {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.footer-links a {
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color .15s;
-}
-
-.footer-links a:hover { color: var(--ink); }
-
-.footer-bottom {
-  max-width: 1080px;
-  margin: 0 auto;
-  border-top: 1px solid var(--hairline);
-  padding-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.footer-copy {
-  font-family: var(--sans);
-  font-size: 10px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-.footer-legal { display: flex; gap: 16px; }
-
-.footer-legal a {
-  font-family: var(--sans);
-  font-size: 10px;
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.footer-legal a:hover { color: var(--ink); }
-
-@media (max-width: 600px) {
-  nav { padding: 0 20px; }
-  .page-header { padding: 100px 20px 48px; }
-  section { padding: 60px 20px; }
-  .stats-section { padding: 48px 20px; }
-  .yt-strip { padding: 52px 20px; }
-  footer { padding: 40px 20px 24px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Our Work | Ironwood Homes &amp; Renovations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest:       #1a2e1a;
+      --forest-mid:   #243824;
+      --bronze:       #8a6c3a;
+      --bronze-lt:    #c4963e;
+      --cream:        #f5f0e8;
+      --cream-card:   #ffffff;
+      --text-primary: #1a1a14;
+      --text-sec:     #6b6352;
+      --border:       rgba(138,108,58,0.18);
+      --green:        #22c55e;
+      --r-lg: 2rem;
+      --r-xl: 3rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); color: var(--text-primary); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    #noise-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.045; }
+    .navbar { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; width: calc(100% - 48px); max-width: 1100px; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-radius: 999px; transition: background 0.4s ease, box-shadow 0.4s ease, border 0.4s ease; background: transparent; border: 1px solid transparent; }
+    .navbar.scrolled { background: rgba(245,240,232,0.82); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-color: var(--border); box-shadow: 0 8px 32px rgba(138,108,58,0.1); }
+    .navbar-logo { display: flex; align-items: center; gap: 10px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; color: white; text-decoration: none; letter-spacing: -0.01em; transition: color 0.4s; }
+    .navbar-logo-box { width: 34px; height: 34px; border-radius: 8px; background: var(--bronze); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .navbar.scrolled .navbar-logo { color: var(--forest); }
+    .navbar-links { display: flex; gap: 28px; align-items: center; }
+    .navbar-links a { font-size: 0.875rem; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none; transition: all 0.2s; }
+    .navbar-links a:hover { color: white; transform: translateY(-1px); }
+    .navbar.scrolled .navbar-links a { color: var(--text-sec); }
+    .navbar.scrolled .navbar-links a:hover { color: var(--forest); }
+    .navbar-cta { background: var(--bronze) !important; color: white !important; padding: 9px 20px; border-radius: 999px; font-weight: 600; font-size: 0.875rem; transition: transform 0.25s, background 0.2s !important; }
+    .navbar-cta:hover { transform: scale(1.03) translateY(-1px) !important; background: #7a5c2a !important; color: white !important; }
+    section { padding: 120px 64px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--bronze); margin-bottom: 16px; }
+    .section-h2 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.25rem); color: var(--forest); letter-spacing: -0.03em; line-height: 1.1; }
+    .section-h2 em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 1.2em; }
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    footer { background: var(--forest); border-radius: var(--r-xl) var(--r-xl) 0 0; padding: 60px 64px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 32px; }
+    .footer-brand { display: flex; flex-direction: column; gap: 8px; }
+    .footer-logo-row { display: flex; align-items: center; gap: 10px; }
+    .footer-logo-box { width: 32px; height: 32px; border-radius: 7px; background: var(--bronze); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; color: white; font-family: 'Outfit', sans-serif; flex-shrink: 0; }
+    .footer-logo-text { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; color: white; }
+    .footer-tagline { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
+    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.875rem; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: white; }
+    .footer-status { display: flex; align-items: center; gap: 10px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    .status-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; }
+    .footer-bottom { max-width: 1100px; margin: 40px auto 0; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.25); }
+    .footer-social { display: flex; gap: 16px; }
+    .footer-social a { font-size: 0.8rem; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; font-family: 'IBM Plex Mono', monospace; }
+    .footer-social a:hover { color: white; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* Page hero */
+    .page-hero { position: relative; height: 60vh; min-height: 480px; display: flex; align-items: flex-end; overflow: hidden; }
+    .page-hero-bg { position: absolute; inset: 0; z-index: 0; background: var(--forest); }
+    .page-hero-bg img { width: 100%; height: 100%; object-fit: cover; }
+    .page-hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,46,26,0.96) 0%, rgba(26,46,26,0.55) 50%, rgba(26,46,26,0.2) 100%); }
+    .page-hero-content { position: relative; z-index: 1; padding: 0 64px 60px; max-width: 900px; }
+    .page-hero-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.15em; color: var(--bronze-lt); text-transform: uppercase; margin-bottom: 16px; }
+    .page-hero-line1 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.5rem); color: white; line-height: 1.05; letter-spacing: -0.03em; }
+    .page-hero-line2 { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(3rem, 8vw, 7rem); color: white; line-height: 0.9; letter-spacing: -0.02em; }
+    .page-hero-line2 span { color: var(--bronze-lt); }
+    .page-hero-sub { font-size: 1.05rem; color: rgba(255,255,255,0.7); margin-top: 20px; max-width: 520px; line-height: 1.6; }
+    .hero-ctas { display: flex; gap: 16px; margin-top: 28px; }
+    .btn-hero-primary { background: var(--bronze); color: white; padding: 14px 30px; border-radius: 999px; font-weight: 600; font-size: 0.95rem; text-decoration: none; border: none; cursor: pointer; transition: transform 0.25s, box-shadow 0.25s; box-shadow: 0 8px 24px rgba(138,108,58,0.4); }
+    .btn-hero-primary:hover { transform: scale(1.03); }
+    .btn-hero-sec { background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); color: white; padding: 14px 30px; border-radius: 999px; font-weight: 500; font-size: 0.95rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.28); transition: background 0.25s, transform 0.25s; }
+    .btn-hero-sec:hover { background: rgba(255,255,255,0.2); transform: scale(1.03); }
+
+    /* Stats bar */
+    .stats-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-top: 32px; }
+    .stat-card { background: var(--cream-card); border: 1px solid var(--border); border-radius: 20px; padding: 24px 20px; text-align: center; }
+    .stat-emoji { font-size: 1.5rem; margin-bottom: 8px; }
+    .stat-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze); margin-bottom: 6px; }
+    .stat-value { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; color: var(--forest); }
+
+    /* Project grid */
+    .projects-intro { margin-bottom: 48px; }
+    .project-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .project-card { background: var(--cream-card); border-radius: 20px; border: 1px solid var(--border); overflow: hidden; transition: transform 0.25s, box-shadow 0.25s; }
+    .project-card:hover { transform: translateY(-6px); box-shadow: 0 16px 48px rgba(26,46,26,0.15); }
+    .project-img { height: 200px; background: var(--forest); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+    .project-img img { width: 100%; height: 100%; object-fit: cover; }
+    .project-img-placeholder { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--bronze-lt); text-align: center; padding: 16px; }
+    .project-body { padding: 20px; }
+    .project-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze); margin-bottom: 8px; }
+    .project-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.05rem; color: var(--forest); margin-bottom: 4px; }
+    .project-meta { font-size: 0.8rem; color: var(--text-sec); margin-bottom: 10px; }
+    .project-desc { font-size: 0.875rem; color: var(--text-sec); line-height: 1.55; margin-bottom: 14px; }
+    .roi-badge { display: inline-block; background: rgba(34,197,94,0.12); color: #16a34a; font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; font-weight: 500; padding: 4px 12px; border-radius: 999px; }
+
+    /* Testimonials */
+    .testimonials-section { background: var(--forest); }
+    .testimonials-section .section-label { color: var(--bronze-lt); }
+    .testimonials-h2 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.25rem); color: white; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 48px; }
+    .testimonials-h2 em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 1.2em; }
+    .testimonials-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .testimonial-card { background: var(--cream-card); border-radius: 20px; padding: 32px; }
+    .quote-mark { font-family: 'Cormorant Garamond', serif; font-size: 4rem; color: var(--bronze-lt); line-height: 0.8; margin-bottom: 16px; }
+    .quote-text { font-size: 0.95rem; color: var(--text-primary); line-height: 1.65; margin-bottom: 20px; font-style: italic; }
+    .quote-attr { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--bronze); letter-spacing: 0.1em; text-transform: uppercase; }
+
+    /* CTA */
+    .cta-strip { text-align: center; }
+    .cta-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--bronze); margin-bottom: 16px; }
+    .cta-strip-h2 { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(2.5rem, 6vw, 5rem); color: var(--forest); line-height: 1; margin-bottom: 36px; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: var(--bronze); color: white; padding: 14px 30px; border-radius: 999px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: transform 0.25s, box-shadow 0.25s; box-shadow: 0 8px 24px rgba(138,108,58,0.35); display: inline-block; }
+    .btn-primary:hover { transform: scale(1.03); }
+    .btn-sec { background: transparent; color: var(--forest); padding: 14px 30px; border-radius: 999px; font-weight: 500; font-size: 0.95rem; text-decoration: none; border: 1.5px solid var(--border); transition: background 0.25s, transform 0.25s; display: inline-block; }
+    .btn-sec:hover { background: rgba(26,46,26,0.06); transform: scale(1.03); }
+
+    @media (max-width: 900px) {
+      section { padding: 80px 24px; }
+      footer { padding: 48px 24px; border-radius: var(--r-lg) var(--r-lg) 0 0; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .navbar-links .nav-link-desktop { display: none; }
+      .stats-bar { grid-template-columns: repeat(2, 1fr); }
+      .project-grid { grid-template-columns: 1fr; }
+      .testimonials-grid { grid-template-columns: 1fr; }
+      .page-hero-content { padding: 0 24px 48px; }
+    }
+    @media (max-width: 600px) { .hero-ctas { flex-direction: column; } .cta-btns { flex-direction: column; align-items: center; } .stats-bar { grid-template-columns: 1fr; } }
+  </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="Ironwood_Site_Home.html">
-    <!-- LOGO PLACEHOLDER: replace .nav-logo-box with <img src="logo.svg"> when ready -->
-    <div class="nav-logo-box" style="background:var(--bronze);color:var(--surface);font-family:var(--serif);font-style:italic;font-size:18px;font-weight:400;border-radius:4px;"><em>I</em></div>
-    <div style="font-family:var(--serif);font-size:17px;color:var(--ink);letter-spacing:-.01em;">Ironwood Homes and Renovations</div>
+<svg id="noise-overlay" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+  <rect width="100%" height="100%" filter="url(#noise)" opacity="1"/>
+</svg>
+
+<nav class="navbar" id="navbar">
+  <a href="Ironwood_Site_Home.html" class="navbar-logo">
+    <div class="navbar-logo-box">IW</div>
+    <span>IRONWOOD</span>
   </a>
-
-  <ul class="nav-links">
-    <li><a href="Ironwood_Site_Home.html">Home</a></li>
-    <li><a href="Ironwood_Site_Sell.html">Sell Your Home</a></li>
-    <li><a href="Ironwood_Site_Renovate.html">Renovations</a></li>
-    <li><a href="Ironwood_Site_Work.html" class="active">Our Work</a></li>
-    <li><a href="Ironwood_Site_About.html">About</a></li>
-    <li><a href="Ironwood_Site_Contact.html">Contact</a></li>
-  </ul>
-
-  <div class="nav-ctas">
-    <a class="btn-nav-outline" href="Ironwood_SellerLead.html">Get My Offer</a>
-    <a class="btn-nav-fill" href="Ironwood_Estimator_Public.html">Free Estimate</a>
-  </div>
-
-  <div class="nav-toggle" onclick="toggleMobileNav()">
-    <span></span><span></span><span></span>
+  <div class="navbar-links">
+    <a href="Ironwood_Site_Renovate.html" class="nav-link-desktop">Services</a>
+    <a href="Ironwood_Site_Work.html" class="nav-link-desktop" style="color:var(--bronze-lt)">Our Work</a>
+    <a href="Ironwood_Site_About.html" class="nav-link-desktop">About</a>
+    <a href="Ironwood_Site_Sell.html" class="nav-link-desktop">Sell Your Home</a>
+    <a href="Ironwood_Site_Home.html#contact" class="navbar-cta">Get a Free Estimate</a>
   </div>
 </nav>
 
-<!-- PAGE HEADER -->
-<div class="page-header">
-  <div class="page-header-inner">
-    <div class="page-eyebrow">Portfolio · Ironwood LLC</div>
-    <h1 class="page-title">Our Work</h1>
-    <p class="page-sub">Real projects. Real results. Every card below is a home we've touched - before and after.</p>
-
-    <div class="filter-tabs" id="filter-tabs">
-      <button class="filter-tab active" onclick="filterProjects('all', this)">All</button>
-      <button class="filter-tab" onclick="filterProjects('kitchen', this)">Kitchens</button>
-      <button class="filter-tab" onclick="filterProjects('bathroom', this)">Bathrooms</button>
-      <button class="filter-tab" onclick="filterProjects('deck', this)">Decks</button>
-      <button class="filter-tab" onclick="filterProjects('full-home', this)">Full Home</button>
-      <button class="filter-tab" onclick="filterProjects('exterior', this)">Exterior</button>
-    </div>
+<!-- 1. Page Hero -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-eyebrow">Project Portfolio</div>
+    <div class="page-hero-line1">The Work Speaks</div>
+    <div class="page-hero-line2"><span>for Itself.</span></div>
+    <div class="page-hero-sub">Every project we take on becomes proof of what's possible. Here's a look at what we've built.</div>
   </div>
 </div>
 
-<!-- GALLERY -->
-<section class="gallery-section">
+<!-- 2. Stats Bar -->
+<section style="background: var(--cream); padding-top: 64px; padding-bottom: 64px;">
   <div class="container">
-    <div class="gallery-grid" id="gallery-grid">
-
-      <!-- PHOTO PLACEHOLDER - Project 1: Kitchen · Marietta -->
-      <!-- replace .proj-ph divs with <img src="..."> when photos ready -->
-      <div class="proj-card" data-category="kitchen">
-        <div class="proj-images">
-          <div class="proj-ph before">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">Before</div>
-          </div>
-          <div class="proj-ph after">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">After</div>
-          </div>
-        </div>
-        <div class="proj-ba-strip">
-          <div class="proj-ba-lbl b">Before</div>
-          <div class="proj-ba-lbl a">After</div>
-        </div>
-        <div class="proj-info">
-          <div class="proj-category">Kitchen</div>
-          <div class="proj-name">Full Kitchen Gut &amp; Remodel</div>
-          <div class="proj-location">Marietta, GA</div>
-          <div class="proj-scope">New shaker cabinets, quartz countertops, LVP flooring, tile backsplash, island addition</div>
-          <div class="proj-time">Timeframe: 3 weeks</div>
-        </div>
+    <div class="stats-bar reveal">
+      <div class="stat-card">
+        <div class="stat-emoji">🏠</div>
+        <div class="stat-label">Projects Completed</div>
+        <div class="stat-value">15+ Renovations Done</div>
       </div>
-
-      <!-- PHOTO PLACEHOLDER - Project 2: Kitchen · Roswell -->
-      <div class="proj-card" data-category="kitchen">
-        <div class="proj-images">
-          <div class="proj-ph before">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">Before</div>
-          </div>
-          <div class="proj-ph after">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">After</div>
-          </div>
-        </div>
-        <div class="proj-ba-strip">
-          <div class="proj-ba-lbl b">Before</div>
-          <div class="proj-ba-lbl a">After</div>
-        </div>
-        <div class="proj-info">
-          <div class="proj-category">Kitchen</div>
-          <div class="proj-name">Open-Concept Kitchen Conversion</div>
-          <div class="proj-location">Roswell, GA</div>
-          <div class="proj-scope">Wall removal, new layout, white cabinets with gold hardware, waterfall quartz island</div>
-          <div class="proj-time">Timeframe: 4 weeks</div>
-        </div>
+      <div class="stat-card">
+        <div class="stat-emoji">💰</div>
+        <div class="stat-label">Total Value</div>
+        <div class="stat-value">$2.4M+ In Renovations</div>
       </div>
-
-      <!-- PHOTO PLACEHOLDER - Project 3: Kitchen · Alpharetta -->
-      <div class="proj-card" data-category="kitchen">
-        <div class="proj-images">
-          <div class="proj-ph before">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">Before</div>
-          </div>
-          <div class="proj-ph after">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">After</div>
-          </div>
-        </div>
-        <div class="proj-ba-strip">
-          <div class="proj-ba-lbl b">Before</div>
-          <div class="proj-ba-lbl a">After</div>
-        </div>
-        <div class="proj-info">
-          <div class="proj-category">Kitchen</div>
-          <div class="proj-name">Dated Kitchen Refresh</div>
-          <div class="proj-location">Alpharetta, GA</div>
-          <div class="proj-scope">Cabinet reface, new countertops, sink, fixtures, and full repaint - budget-conscious transformation</div>
-          <div class="proj-time">Timeframe: 10 days</div>
-        </div>
+      <div class="stat-card">
+        <div class="stat-emoji">⏱</div>
+        <div class="stat-label">Avg Timeline</div>
+        <div class="stat-value">47 Days Per Project</div>
       </div>
-
-      <!-- PHOTO PLACEHOLDER - Project 4: Bathroom · Smyrna -->
-      <div class="proj-card" data-category="bathroom">
-        <div class="proj-images">
-          <div class="proj-ph before">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">Before</div>
-          </div>
-          <div class="proj-ph after">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">After</div>
-          </div>
-        </div>
-        <div class="proj-ba-strip">
-          <div class="proj-ba-lbl b">Before</div>
-          <div class="proj-ba-lbl a">After</div>
-        </div>
-        <div class="proj-info">
-          <div class="proj-category">Bathroom</div>
-          <div class="proj-name">Primary Bathroom Renovation</div>
-          <div class="proj-location">Smyrna, GA</div>
-          <div class="proj-scope">Full tile surround, frameless glass shower, double vanity, new plumbing fixtures, heated floor</div>
-          <div class="proj-time">Timeframe: 10 days</div>
-        </div>
+      <div class="stat-card">
+        <div class="stat-emoji">📈</div>
+        <div class="stat-label">Avg Return</div>
+        <div class="stat-value">28% ROI Per Flip</div>
       </div>
-
-      <!-- PHOTO PLACEHOLDER - Project 5: Bathroom · Kennesaw -->
-      <div class="proj-card" data-category="bathroom">
-        <div class="proj-images">
-          <div class="proj-ph before">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">Before</div>
-          </div>
-          <div class="proj-ph after">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">After</div>
-          </div>
-        </div>
-        <div class="proj-ba-strip">
-          <div class="proj-ba-lbl b">Before</div>
-          <div class="proj-ba-lbl a">After</div>
-        </div>
-        <div class="proj-info">
-          <div class="proj-category">Bathroom</div>
-          <div class="proj-name">Hall Bath Full Gut</div>
-          <div class="proj-location">Kennesaw, GA</div>
-          <div class="proj-scope">Full demo, subway tile tub surround, new vanity, LVP flooring, updated lighting</div>
-          <div class="proj-time">Timeframe: 7 days</div>
-        </div>
-      </div>
-
-      <!-- PHOTO PLACEHOLDER - Project 6: Deck · Kennesaw -->
-      <div class="proj-card" data-category="deck">
-        <div class="proj-images">
-          <div class="proj-ph before">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">Before</div>
-          </div>
-          <div class="proj-ph after">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">After</div>
-          </div>
-        </div>
-        <div class="proj-ba-strip">
-          <div class="proj-ba-lbl b">Before</div>
-          <div class="proj-ba-lbl a">After</div>
-        </div>
-        <div class="proj-info">
-          <div class="proj-category">Deck</div>
-          <div class="proj-name">Composite Deck Build</div>
-          <div class="proj-location">Kennesaw, GA</div>
-          <div class="proj-scope">New Trex composite deck, cable railing, built-in bench, exterior stairs with landing</div>
-          <div class="proj-time">Timeframe: 8 days</div>
-        </div>
-      </div>
-
-      <!-- PHOTO PLACEHOLDER - Project 7: Deck · Woodstock -->
-      <div class="proj-card" data-category="deck">
-        <div class="proj-images">
-          <div class="proj-ph before">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">Before</div>
-          </div>
-          <div class="proj-ph after">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">After</div>
-          </div>
-        </div>
-        <div class="proj-ba-strip">
-          <div class="proj-ba-lbl b">Before</div>
-          <div class="proj-ba-lbl a">After</div>
-        </div>
-        <div class="proj-info">
-          <div class="proj-category">Deck</div>
-          <div class="proj-name">Deck Tear-Off &amp; Rebuild</div>
-          <div class="proj-location">Woodstock, GA</div>
-          <div class="proj-scope">Removed rotted pressure-treated deck, rebuilt in Trex with board-and-batten skirt and solar post caps</div>
-          <div class="proj-time">Timeframe: 10 days</div>
-        </div>
-      </div>
-
-      <!-- PHOTO PLACEHOLDER - Project 8: Full Home · Marietta -->
-      <div class="proj-card" data-category="full-home">
-        <div class="proj-images">
-          <div class="proj-ph before">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">Before</div>
-          </div>
-          <div class="proj-ph after">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">After</div>
-          </div>
-        </div>
-        <div class="proj-ba-strip">
-          <div class="proj-ba-lbl b">Before</div>
-          <div class="proj-ba-lbl a">After</div>
-        </div>
-        <div class="proj-info">
-          <div class="proj-category">Full Home</div>
-          <div class="proj-name">Full Home Renovation - Investor Flip</div>
-          <div class="proj-location">Marietta, GA</div>
-          <div class="proj-scope">Kitchen, 2 full baths, all LVP flooring, full interior/exterior paint, new light fixtures throughout</div>
-          <div class="proj-time">Timeframe: 6 weeks</div>
-        </div>
-      </div>
-
-      <!-- PHOTO PLACEHOLDER - Project 9: Pergola · Alpharetta -->
-      <div class="proj-card" data-category="exterior">
-        <div class="proj-images">
-          <div class="proj-ph before">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">Before</div>
-          </div>
-          <div class="proj-ph after">
-            <div class="proj-ph-icon"></div>
-            <div class="proj-ph-label">After</div>
-          </div>
-        </div>
-        <div class="proj-ba-strip">
-          <div class="proj-ba-lbl b">Before</div>
-          <div class="proj-ba-lbl a">After</div>
-        </div>
-        <div class="proj-info">
-          <div class="proj-category">Exterior / Pergola</div>
-          <div class="proj-name">Attached Pergola with Shade Sails</div>
-          <div class="proj-location">Alpharetta, GA</div>
-          <div class="proj-scope">Custom attached cedar pergola, shade sail system, string lights, built-in planter boxes</div>
-          <div class="proj-time">Timeframe: 5 days</div>
-        </div>
-      </div>
-
     </div>
   </div>
 </section>
 
-<!-- STATS STRIP -->
-<div class="stats-section">
-  <div class="stats-grid">
-    <div class="stat-block">
-      <div class="stat-num">50+</div>
-      <div class="stat-label">Projects Completed</div>
-    </div>
-    <div class="stat-block">
-      <div class="stat-num">100%</div>
-      <div class="stat-label">Written Scope on Every Job</div>
-    </div>
-    <div class="stat-block">
-      <div class="stat-num">4.9</div>
-      <div class="stat-label">Average Client Rating</div>
-    </div>
-    <div class="stat-block">
-      <div class="stat-num">70mi</div>
-      <div class="stat-label">Atlanta Metro Coverage</div>
-    </div>
-  </div>
-</div>
-
-<!-- YOUTUBE CTA -->
-<div class="yt-strip">
+<!-- 3. Project Grid -->
+<section style="background: var(--cream); padding-top: 0;">
   <div class="container">
-    <h2>See the Full Builds on YouTube</h2>
-    <p>Time-lapses, walkthroughs, and full before-and-after reveal videos for every major project - on the Ironwood channel.</p>
-    <a class="yt-subscribe-btn" href="https://youtube.com/@IronwoodRenovations" target="_blank"> Subscribe on YouTube</a>
-  </div>
-</div>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-grid">
-    <div>
-      <div class="footer-brand-name">Ironwood</div>
-      <p class="footer-brand-desc">Licensed contractor and real estate company serving Atlanta and the surrounding metro area. We buy homes and build better ones.</p>
-      <!-- SOCIAL LINKS PLACEHOLDER - add actual URLs when accounts are live -->
-      <div class="footer-social">
-        <a class="social-btn" href="#" title="Facebook">f</a>
-        <a class="social-btn" href="#" title="Instagram">ig</a>
-        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank"></a>
+    <div class="projects-intro reveal">
+      <div class="section-label">Featured Projects</div>
+      <h2 class="section-h2">Built across <em>Metro Atlanta.</em></h2>
+    </div>
+    <div class="project-grid">
+      <div class="project-card reveal">
+        <div class="project-img">
+          <div class="project-img-placeholder">assets/project-1.jpg</div>
+        </div>
+        <div class="project-body">
+          <div class="project-badge">Full Flip</div>
+          <div class="project-title">Cascade Hills Rehab</div>
+          <div class="project-meta">East Point, GA &middot; 55 days</div>
+          <div class="project-desc">Full gut rehab — new kitchen, baths, roof, and exterior. Listed and sold in 6 days.</div>
+          <span class="roi-badge">+29% ROI</span>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-img">
+          <div class="project-img-placeholder">assets/project-2.jpg</div>
+        </div>
+        <div class="project-body">
+          <div class="project-badge">Cosmetic</div>
+          <div class="project-title">Midtown Refresh</div>
+          <div class="project-meta">Atlanta, GA &middot; 18 days</div>
+          <div class="project-desc">Paint, flooring, fixtures throughout. Turned a dated rental into a move-in ready listing.</div>
+          <span class="roi-badge">+22% ROI</span>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-img">
+          <div class="project-img-placeholder">assets/project-3.jpg</div>
+        </div>
+        <div class="project-body">
+          <div class="project-badge">Full Flip</div>
+          <div class="project-title">Norcross Gut Rehab</div>
+          <div class="project-meta">Norcross, GA &middot; 78 days</div>
+          <div class="project-desc">Complete teardown and rebuild of interior. Foundation repair, new framing, full systems.</div>
+          <span class="roi-badge">+34% ROI</span>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-img">
+          <div class="project-img-placeholder">assets/project-4.jpg</div>
+        </div>
+        <div class="project-body">
+          <div class="project-badge">Kitchen &amp; Bath</div>
+          <div class="project-title">Peachtree Corners Kitchen</div>
+          <div class="project-meta">Peachtree Corners, GA &middot; 21 days</div>
+          <div class="project-desc">Full kitchen remodel with custom cabinetry, quartz counters, and tile backsplash.</div>
+          <span class="roi-badge">+18% ROI</span>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-img">
+          <div class="project-img-placeholder">assets/project-5.jpg</div>
+        </div>
+        <div class="project-body">
+          <div class="project-badge">Curb Appeal</div>
+          <div class="project-title">Stone Mountain Exterior</div>
+          <div class="project-meta">Stone Mountain, GA &middot; 14 days</div>
+          <div class="project-desc">New siding, paint, landscaping, and driveway. Boosted appraisal by $28K.</div>
+          <span class="roi-badge">+15% ROI</span>
+        </div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-img">
+          <div class="project-img-placeholder">assets/project-6.jpg</div>
+        </div>
+        <div class="project-body">
+          <div class="project-badge">Full Flip</div>
+          <div class="project-title">Marietta Full Renovation</div>
+          <div class="project-meta">Marietta, GA &middot; 62 days</div>
+          <div class="project-desc">Three-bedroom full renovation — kitchen, baths, flooring, roof, HVAC.</div>
+          <span class="roi-badge">+31% ROI</span>
+        </div>
       </div>
     </div>
+  </div>
+</section>
 
-    <div>
-      <div class="footer-col-title">Services</div>
-      <ul class="footer-links">
-        <li><a href="Ironwood_Site_Sell.html">Sell Your Home</a></li>
-        <li><a href="Ironwood_Site_Renovate.html">Renovation Services</a></li>
-        <li><a href="Ironwood_Estimator_Public.html">Free Estimate</a></li>
-        <li><a href="Ironwood_SellerLead.html">Get a Cash Offer</a></li>
-      </ul>
-    </div>
-
-    <div>
-      <div class="footer-col-title">Company</div>
-      <ul class="footer-links">
-        <li><a href="Ironwood_Site_Work.html">Our Work</a></li>
-        <li><a href="Ironwood_Site_About.html">About Us</a></li>
-        <li><a href="Ironwood_Site_Contact.html">Contact</a></li>
-      </ul>
-    </div>
-
-    <div>
-      <div class="footer-col-title">Contact</div>
-      <ul class="footer-links">
-        <li><a href="mailto:info@ironwoodrenovations.com">info@ironwoodrenovations.com</a></li>
-        <li><a href="tel:+14045550100">(404) 555-0100</a></li>
-        <li><a href="#">Atlanta, GA Metro Area</a></li>
-        <li><a href="#">Licensed &amp; Insured · Georgia</a></li>
-      </ul>
+<!-- 4. Testimonials -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-label reveal">What People Say</div>
+    <h2 class="testimonials-h2 reveal">Don't take <em>our word for it.</em></h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card reveal">
+        <div class="quote-mark">&ldquo;</div>
+        <div class="quote-text">Ironwood turned a property I thought was unsellable into one that got 4 offers in 3 days.</div>
+        <div class="quote-attr">Marcus T. &mdash; East Point</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="quote-mark">&ldquo;</div>
+        <div class="quote-text">They finished on time, on budget, and the workmanship was better than I expected at this price point.</div>
+        <div class="quote-attr">Lisa W. &mdash; Marietta</div>
+      </div>
+      <div class="testimonial-card reveal">
+        <div class="quote-mark">&ldquo;</div>
+        <div class="quote-text">Sold to Ironwood as-is, closed in 11 days. Easiest real estate transaction I've ever done.</div>
+        <div class="quote-attr">Raymond J. &mdash; Norcross</div>
+      </div>
     </div>
   </div>
+</section>
 
+<!-- 5. CTA -->
+<section class="cta-strip">
+  <div class="container">
+    <div class="reveal">
+      <div class="cta-eyebrow">Have a property in mind?</div>
+      <h2 class="cta-strip-h2"><em>Let's talk about it.</em></h2>
+      <div class="cta-btns">
+        <a href="Ironwood_Site_Home.html#contact" class="btn-primary">Get a Free Estimate</a>
+        <a href="Ironwood_Site_Sell.html" class="btn-sec">Sell Your Home</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo-row">
+        <div class="footer-logo-box">IW</div>
+        <div class="footer-logo-text">Ironwood Homes &amp; Renovations</div>
+      </div>
+      <div class="footer-tagline">Atlanta Metro, Georgia</div>
+    </div>
+    <div class="footer-links">
+      <a href="Ironwood_Site_Renovate.html">Services</a>
+      <a href="Ironwood_Site_Work.html">Our Work</a>
+      <a href="Ironwood_Site_About.html">About</a>
+      <a href="Ironwood_Site_Contact.html">Contact</a>
+      <a href="Ironwood_Site_Sell.html">Sell Your Home</a>
+    </div>
+    <div class="footer-status">
+      <div class="status-dot"></div>
+      <span class="status-label">Accepting New Projects</span>
+    </div>
+  </div>
   <div class="footer-bottom">
-    <div class="footer-copy">© 2026 Ironwood LLC dba Ironwood Homes and Renovations · Georgia · All rights reserved.</div>
-    <div class="footer-legal">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
+    <span class="footer-copy">&copy; 2024 Ironwood Homes &amp; Renovations LLC. All rights reserved.</span>
+    <div class="footer-social">
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
     </div>
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-  function toggleMobileNav() {
-    const links = document.querySelector('.nav-links');
-    if (links) {
-      const open = links.style.display === 'flex';
-      links.style.display = open ? '' : 'flex';
-      links.style.flexDirection = 'column';
-      links.style.position = 'fixed';
-      links.style.top = '64px';
-      links.style.left = '0';
-      links.style.right = '0';
-      links.style.background = '#F5F7F7';
-      links.style.padding = '20px 24px';
-      links.style.gap = '16px';
-      links.style.borderBottom = '1px solid var(--hairline)';
-      links.style.zIndex = '199';
-    }
-  }
-
-  function filterProjects(category, btn) {
-    // Update active tab
-    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-    btn.classList.add('active');
-
-    // Show/hide cards
-    const cards = document.querySelectorAll('.proj-card');
-    cards.forEach(card => {
-      if (category === 'all' || card.dataset.category === category) {
-        card.style.display = '';
-      } else {
-        card.style.display = 'none';
-      }
-    });
-  }
+gsap.registerPlugin(ScrollTrigger);
+window.addEventListener('scroll', function() {
+  var nb = document.getElementById('navbar');
+  if (window.scrollY > 80) nb.classList.add('scrolled');
+  else nb.classList.remove('scrolled');
+});
+var revealEls = document.querySelectorAll('.reveal');
+var revealObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revealEls.forEach(function(el) { revealObs.observe(el); });
+document.querySelectorAll('.accordion-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var body = btn.nextElementSibling;
+    var icon = btn.querySelector('.acc-icon');
+    var isOpen = body.style.maxHeight;
+    document.querySelectorAll('.accordion-body').forEach(function(b) { b.style.maxHeight = null; });
+    document.querySelectorAll('.acc-icon').forEach(function(i) { i.style.transform = 'rotate(0deg)'; });
+    if (!isOpen) { body.style.maxHeight = body.scrollHeight + 'px'; if(icon) icon.style.transform = 'rotate(45deg)'; }
+  });
+});
 </script>
-
 </body>
 </html>

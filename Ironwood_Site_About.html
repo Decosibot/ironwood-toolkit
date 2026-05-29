@@ -1,972 +1,332 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"/>
-<link rel="stylesheet" href="iw-design.css"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>About Ironwood LLC · Atlanta, GA</title>
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  /* Remap site-local names to iw-design.css shared tokens */
-  --black:    var(--bg);
-  --white:    var(--surface-2);
-  --off-white:var(--surface);
-  --cream:    var(--surface);
-  --gold:     var(--bronze);
-  --gold-lt:  var(--bronze-tint);
-  --gold-dim: var(--bronze-deep);
-  --surface-2:var(--surface);
-  --surface-3:var(--surface);
-  --border:   var(--hairline);
-  --border-dk:var(--hairline-2);
-  --muted:    var(--muted);
-  --text:     var(--ink);
-  --text-lt:  var(--ink-soft);
-  --green:    var(--ok);
-}
-
-html { scroll-behavior: smooth; }
-
-body {
-  background: var(--bg);
-  color: var(--ink);
-  font-family: var(--sans);
-  min-height: 100vh;
-}
-
-/* ── NAV ── */
-nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 200;
-  background: rgba(255,255,255,0.97);
-  border-bottom: 1px solid var(--border);
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 40px;
-  backdrop-filter: blur(8px);
-}
-
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  text-decoration: none;
-}
-
-.nav-logo-box {
-  width: 36px;
-  height: 36px;
-  background: var(--bronze);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: 18px;
-  font-weight: 400;
-  color: var(--surface);
-  border-radius: 4px;
-}
-
-/* LOGO PLACEHOLDER - replace .nav-logo-box with <img src="logo.svg"> when ready */
-.nav-logo-text {
-  font-family: var(--sans);
-  font-size: 14px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--bronze);
-  text-transform: uppercase;
-}
-
-.nav-logo-text span {
-  color: var(--muted);
-  font-weight: 400;
-  font-size: 10px;
-  letter-spacing: 1.5px;
-  margin-left: 8px;
-  text-transform: uppercase;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-  list-style: none;
-}
-
-.nav-links a {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color .15s;
-}
-
-.nav-links a:hover { color: var(--text); }
-.nav-links a.active { color: var(--bronze); }
-
-.nav-ctas {
-  display: flex;
-  gap: 10px;
-  align-items: center;
-}
-
-.btn-nav-outline {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  border: 1px solid var(--gold-dim);
-  background: transparent;
-  padding: 8px 16px;
-  border-radius: 2px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background .15s, color .15s;
-}
-
-.btn-nav-outline:hover { background: rgba(184,147,62,0.08); }
-
-.btn-nav-fill {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-  color: var(--white);
-  background: var(--bronze);
-  border: none;
-  padding: 8px 16px;
-  border-radius: 2px;
-  cursor: pointer;
-  text-decoration: none;
-  transition: background .15s;
-}
-
-.btn-nav-fill:hover { background: var(--gold-lt); }
-
-.nav-toggle {
-  display: none;
-  flex-direction: column;
-  gap: 5px;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.nav-toggle span {
-  width: 22px;
-  height: 2px;
-  background: var(--ink);
-  border-radius: 1px;
-  transition: all .2s;
-}
-
-@media (max-width: 900px) {
-  .nav-links, .nav-ctas { display: none; }
-  .nav-toggle { display: flex; }
-}
-
-/* ── SECTION BASE ── */
-section { padding: 80px 40px; }
-
-.container {
-  max-width: 1080px;
-  margin: 0 auto;
-}
-
-.section-eyebrow {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 12px;
-}
-
-.section-title {
-  font-size: clamp(24px, 4vw, 38px);
-  font-weight: 700;
-  color: var(--text);
-  line-height: 1.2;
-  margin-bottom: 14px;
-}
-
-.section-sub {
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.75;
-  max-width: 540px;
-}
-
-.section-header { margin-bottom: 44px; }
-
-.section-header.centered {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.gold-rule {
-  width: 40px;
-  height: 2px;
-  background: var(--bronze);
-  margin: 16px 0;
-}
-
-.section-header.centered .gold-rule { margin: 16px auto; }
-
-/* ── HERO ── */
-.hero {
-  min-height: 70vh;
-  display: flex;
-  align-items: center;
-  position: relative;
-  overflow: hidden;
-  padding: 120px 40px 80px;
-}
-
-/* PHOTO PLACEHOLDER - replace .hero-bg background with: background-image: url('hero-about.jpg'); background-size: cover; background-position: center; */
-.hero-bg {
-  position: absolute;
-  inset: 0;
-  background: var(--cream);
-  z-index: 0;
-}
-
-.hero-bg-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to right, rgba(245,240,232,0.2) 40%, rgba(245,240,232,0.0) 100%);
-  z-index: 1;
-}
-
-.hero-grid-line {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(rgba(184,147,62,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(184,147,62,0.06) 1px, transparent 1px);
-  background-size: 60px 60px;
-  z-index: 1;
-}
-
-.hero-content {
-  position: relative;
-  z-index: 2;
-  max-width: 600px;
-}
-
-.hero-eyebrow {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 4px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 18px;
-}
-
-.hero h1 {
-  font-size: clamp(30px, 5.5vw, 58px);
-  font-weight: 700;
-  line-height: 1.1;
-  color: var(--text);
-  margin-bottom: 20px;
-}
-
-.hero h1 em {
-  font-style: normal;
-  color: var(--bronze);
-}
-
-.hero-sub {
-  font-family: var(--sans);
-  font-size: 15px;
-  color: var(--muted);
-  line-height: 1.75;
-  max-width: 480px;
-}
-
-/* ── STORY ── */
-.story-section { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
-.story-layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 60px;
-  align-items: center;
-}
-
-@media (max-width: 768px) {
-  .story-layout { grid-template-columns: 1fr; gap: 32px; }
-}
-
-.story-text p {
-  font-family: var(--sans);
-  font-size: 14px;
-  color: var(--muted);
-  line-height: 1.85;
-  margin-bottom: 16px;
-}
-
-.story-text p:last-child { margin-bottom: 0; }
-
-.story-text strong { color: var(--text); font-weight: 700; }
-
-/* PHOTO PLACEHOLDER - replace .story-photo-placeholder with <img src="team-photo.jpg"> when ready */
-.story-photo-placeholder {
-  width: 100%;
-  aspect-ratio: 4/3;
-  background: var(--surface-3);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-}
-
-.story-photo-icon { font-size: 36px; opacity: .25; }
-
-.story-photo-label {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  opacity: .5;
-}
-
-/* ── TEAM ── */
-.team-section { background: var(--off-white); }
-
-.team-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
-}
-
-@media (max-width: 768px) {
-  .team-grid { grid-template-columns: 1fr; }
-}
-
-.team-card {
-  background: var(--white);
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-/* PHOTO PLACEHOLDER - replace .team-photo-placeholder with <img src="headshot.jpg"> when ready */
-.team-photo-placeholder {
-  width: 100%;
-  aspect-ratio: 3/2;
-  background: var(--surface-3);
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.team-ph-icon { font-size: 36px; opacity: .2; }
-
-.team-ph-label {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  opacity: .4;
-}
-
-.team-info { padding: 20px 20px 22px; }
-
-.team-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-
-.team-role {
-  font-family: var(--sans);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 12px;
-}
-
-.team-bio {
-  font-family: var(--sans);
-  font-size: 12.5px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-/* ── VALUES ── */
-.values-section { background: var(--white); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-
-.values-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 14px;
-}
-
-@media (max-width: 768px) {
-  .values-grid { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 480px) {
-  .values-grid { grid-template-columns: 1fr; }
-}
-
-.value-card {
-  background: var(--off-white);
-  border: 1px solid var(--border);
-  border-radius: 3px;
-  padding: 26px 22px;
-  transition: border-color .2s;
-}
-
-.value-card:hover { border-color: var(--gold-dim); }
-
-.value-icon { font-size: 28px; margin-bottom: 14px; }
-
-.value-title {
-  font-size: 17px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 8px;
-}
-
-.value-desc {
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--muted);
-  line-height: 1.65;
-}
-
-/* ── COVERAGE ── */
-.coverage-section { background: var(--off-white); }
-
-.coverage-inner {
-  max-width: 680px;
-}
-
-.coverage-inner p {
-  font-family: var(--sans);
-  font-size: 15px;
-  color: var(--muted);
-  line-height: 1.85;
-  margin-bottom: 20px;
-}
-
-.coverage-cities {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.city-chip {
-  font-family: var(--sans);
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--text-lt);
-  background: var(--cream);
-  border: 1px solid var(--border-dk);
-  padding: 6px 12px;
-  border-radius: 2px;
-  letter-spacing: .3px;
-}
-
-/* ── CTA BAND ── */
-.cta-band {
-  background: var(--bronze);
-  padding: 72px 40px;
-  text-align: center;
-}
-
-.cta-band h2 {
-  font-size: clamp(22px, 4vw, 38px);
-  font-weight: 700;
-  color: var(--black);
-  margin-bottom: 12px;
-  line-height: 1.2;
-}
-
-.cta-band p {
-  font-family: var(--sans);
-  font-size: 15px;
-  color: rgba(10,10,10,0.65);
-  margin-bottom: 32px;
-}
-
-.cta-btns {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.btn-cta-dark {
-  display: inline-block;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  background: var(--black);
-  color: var(--bronze);
-  padding: 15px 28px;
-  border-radius: 2px;
-  text-decoration: none;
-  transition: background .15s;
-}
-
-.btn-cta-dark:hover { background: var(--ink); }
-
-.btn-cta-outline {
-  display: inline-block;
-  font-family: var(--sans);
-  font-size: 12px;
-  font-weight: 900;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  background: transparent;
-  color: var(--black);
-  border: 2px solid rgba(10,10,10,0.3);
-  padding: 15px 28px;
-  border-radius: 2px;
-  text-decoration: none;
-  transition: border-color .15s;
-}
-
-.btn-cta-outline:hover { border-color: var(--black); }
-
-/* ── FOOTER ── */
-footer {
-  background: var(--surface);
-  border-top: 1px solid var(--hairline);
-  padding: 52px 40px 32px;
-}
-
-.footer-grid {
-  max-width: 1080px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1.5fr 1fr 1fr 1fr;
-  gap: 40px;
-  margin-bottom: 40px;
-}
-
-@media (max-width: 760px) {
-  .footer-grid { grid-template-columns: 1fr 1fr; }
-}
-
-@media (max-width: 480px) {
-  .footer-grid { grid-template-columns: 1fr; }
-}
-
-.footer-brand-name {
-  font-family: var(--sans);
-  font-size: 13px;
-  font-weight: 900;
-  letter-spacing: 3px;
-  color: var(--bronze);
-  text-transform: uppercase;
-  margin-bottom: 10px;
-}
-
-.footer-brand-desc {
-  font-family: var(--sans);
-  font-size: 11px;
-  color: var(--muted);
-  line-height: 1.7;
-  margin-bottom: 16px;
-}
-
-.footer-social { display: flex; gap: 10px; }
-
-.social-btn {
-  width: 32px;
-  height: 32px;
-  background: var(--surface-2);
-  border: 1px solid var(--hairline);
-  border-radius: 3px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  text-decoration: none;
-  transition: border-color .15s, background .15s;
-  color: var(--muted);
-}
-
-.social-btn:hover {
-  border-color: var(--bronze);
-  background: var(--bronze-wash);
-  color: var(--bronze-deep);
-}
-
-.footer-col-title {
-  font-family: var(--sans);
-  font-size: 9px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--bronze);
-  margin-bottom: 14px;
-}
-
-.footer-links {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.footer-links a {
-  font-family: var(--sans);
-  font-size: 12px;
-  color: var(--muted);
-  text-decoration: none;
-  transition: color .15s;
-}
-
-.footer-links a:hover { color: var(--ink); }
-
-.footer-bottom {
-  max-width: 1080px;
-  margin: 0 auto;
-  border-top: 1px solid var(--hairline);
-  padding-top: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.footer-copy {
-  font-family: var(--sans);
-  font-size: 10px;
-  color: var(--muted);
-  line-height: 1.7;
-}
-
-.footer-legal { display: flex; gap: 16px; }
-
-.footer-legal a {
-  font-family: var(--sans);
-  font-size: 10px;
-  color: var(--muted);
-  text-decoration: none;
-}
-
-.footer-legal a:hover { color: var(--ink); }
-
-@media (max-width: 600px) {
-  nav { padding: 0 20px; }
-  .hero { padding: 100px 20px 60px; }
-  section { padding: 60px 20px; }
-  footer { padding: 40px 20px 24px; }
-  .cta-band { padding: 52px 20px; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About | Ironwood Homes &amp; Renovations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest:       #1a2e1a;
+      --forest-mid:   #243824;
+      --bronze:       #8a6c3a;
+      --bronze-lt:    #c4963e;
+      --cream:        #f5f0e8;
+      --cream-card:   #ffffff;
+      --text-primary: #1a1a14;
+      --text-sec:     #6b6352;
+      --border:       rgba(138,108,58,0.18);
+      --green:        #22c55e;
+      --r-lg: 2rem;
+      --r-xl: 3rem;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); color: var(--text-primary); overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+    #noise-overlay { position: fixed; inset: 0; pointer-events: none; z-index: 9999; opacity: 0.045; }
+    .navbar { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; width: calc(100% - 48px); max-width: 1100px; display: flex; align-items: center; justify-content: space-between; padding: 14px 24px; border-radius: 999px; transition: background 0.4s ease, box-shadow 0.4s ease, border 0.4s ease; background: transparent; border: 1px solid transparent; }
+    .navbar.scrolled { background: rgba(245,240,232,0.82); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border-color: var(--border); box-shadow: 0 8px 32px rgba(138,108,58,0.1); }
+    .navbar-logo { display: flex; align-items: center; gap: 10px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; color: white; text-decoration: none; letter-spacing: -0.01em; transition: color 0.4s; }
+    .navbar-logo-box { width: 34px; height: 34px; border-radius: 8px; background: var(--bronze); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; font-weight: 800; color: white; flex-shrink: 0; }
+    .navbar.scrolled .navbar-logo { color: var(--forest); }
+    .navbar-links { display: flex; gap: 28px; align-items: center; }
+    .navbar-links a { font-size: 0.875rem; font-weight: 500; color: rgba(255,255,255,0.85); text-decoration: none; transition: all 0.2s; }
+    .navbar-links a:hover { color: white; transform: translateY(-1px); }
+    .navbar.scrolled .navbar-links a { color: var(--text-sec); }
+    .navbar.scrolled .navbar-links a:hover { color: var(--forest); }
+    .navbar-cta { background: var(--bronze) !important; color: white !important; padding: 9px 20px; border-radius: 999px; font-weight: 600; font-size: 0.875rem; transition: transform 0.25s, background 0.2s !important; }
+    .navbar-cta:hover { transform: scale(1.03) translateY(-1px) !important; background: #7a5c2a !important; color: white !important; }
+    section { padding: 120px 64px; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--bronze); margin-bottom: 16px; }
+    .section-h2 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.25rem); color: var(--forest); letter-spacing: -0.03em; line-height: 1.1; }
+    .section-h2 em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 1.2em; }
+    .reveal { opacity: 0; transform: translateY(32px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal.visible { opacity: 1; transform: none; }
+    footer { background: var(--forest); border-radius: var(--r-xl) var(--r-xl) 0 0; padding: 60px 64px; border-top: 1px solid rgba(255,255,255,0.06); }
+    .footer-inner { max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 32px; }
+    .footer-brand { display: flex; flex-direction: column; gap: 8px; }
+    .footer-logo-row { display: flex; align-items: center; gap: 10px; }
+    .footer-logo-box { width: 32px; height: 32px; border-radius: 7px; background: var(--bronze); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; font-weight: 800; color: white; font-family: 'Outfit', sans-serif; flex-shrink: 0; }
+    .footer-logo-text { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; color: white; }
+    .footer-tagline { font-size: 0.8rem; color: rgba(255,255,255,0.35); }
+    .footer-links { display: flex; gap: 28px; flex-wrap: wrap; }
+    .footer-links a { font-size: 0.875rem; color: rgba(255,255,255,0.5); text-decoration: none; transition: color 0.2s; }
+    .footer-links a:hover { color: white; }
+    .footer-status { display: flex; align-items: center; gap: 10px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+    .status-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: rgba(255,255,255,0.4); letter-spacing: 0.1em; text-transform: uppercase; }
+    .footer-bottom { max-width: 1100px; margin: 40px auto 0; border-top: 1px solid rgba(255,255,255,0.07); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
+    .footer-copy { font-size: 0.8rem; color: rgba(255,255,255,0.25); }
+    .footer-social { display: flex; gap: 16px; }
+    .footer-social a { font-size: 0.8rem; color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s; font-family: 'IBM Plex Mono', monospace; }
+    .footer-social a:hover { color: white; }
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* Page hero */
+    .page-hero { position: relative; height: 60vh; min-height: 480px; display: flex; align-items: flex-end; overflow: hidden; }
+    .page-hero-bg { position: absolute; inset: 0; z-index: 0; background: var(--forest); }
+    .page-hero-bg img { width: 100%; height: 100%; object-fit: cover; }
+    .page-hero-bg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(26,46,26,0.96) 0%, rgba(26,46,26,0.55) 50%, rgba(26,46,26,0.2) 100%); }
+    .page-hero-content { position: relative; z-index: 1; padding: 0 64px 60px; max-width: 900px; }
+    .page-hero-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; letter-spacing: 0.15em; color: var(--bronze-lt); text-transform: uppercase; margin-bottom: 16px; }
+    .page-hero-line1 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.5rem); color: white; line-height: 1.05; letter-spacing: -0.03em; }
+    .page-hero-line2 { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(3rem, 8vw, 7rem); color: white; line-height: 0.9; letter-spacing: -0.02em; }
+    .page-hero-line2 span { color: var(--bronze-lt); }
+    .page-hero-sub { font-size: 1.05rem; color: rgba(255,255,255,0.7); margin-top: 20px; max-width: 520px; line-height: 1.6; }
+    .btn-hero-primary { background: var(--bronze); color: white; padding: 14px 30px; border-radius: 999px; font-weight: 600; font-size: 0.95rem; text-decoration: none; border: none; cursor: pointer; transition: transform 0.25s, box-shadow 0.25s; box-shadow: 0 8px 24px rgba(138,108,58,0.4); }
+    .btn-hero-primary:hover { transform: scale(1.03); }
+    .btn-hero-sec { background: rgba(255,255,255,0.1); backdrop-filter: blur(8px); color: white; padding: 14px 30px; border-radius: 999px; font-weight: 500; font-size: 0.95rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.28); transition: background 0.25s, transform 0.25s; }
+    .btn-hero-sec:hover { background: rgba(255,255,255,0.2); transform: scale(1.03); }
+
+    /* Mission */
+    .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .mission-quote { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.6rem; color: var(--forest); line-height: 1.5; border-left: 4px solid var(--bronze); padding-left: 24px; margin-top: 24px; }
+    .values-stack { display: flex; flex-direction: column; gap: 16px; }
+    .value-card { background: var(--cream-card); border-left: 4px solid var(--bronze); padding: 20px 24px; border-radius: 12px; }
+    .value-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.95rem; color: var(--forest); margin-bottom: 6px; }
+    .value-desc { font-size: 0.875rem; color: var(--text-sec); line-height: 1.55; }
+
+    /* Team */
+    .team-section { background: var(--forest); }
+    .team-section .section-label { color: var(--bronze-lt); }
+    .team-h2 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: clamp(2rem, 4vw, 3.25rem); color: white; letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 48px; }
+    .team-h2 em { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: 1.2em; }
+    .team-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .team-card { background: var(--cream-card); border-radius: 20px; padding: 32px; text-align: center; }
+    .team-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--forest-mid); margin: 0 auto 16px; border: 2px solid var(--border); }
+    .team-name { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--forest); margin-bottom: 6px; }
+    .team-title { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze-lt); margin-bottom: 14px; }
+    .team-bio { font-size: 0.875rem; color: var(--text-sec); line-height: 1.6; }
+
+    /* Timeline */
+    .timeline-section { background: var(--cream); }
+    .timeline-wrap { position: relative; margin-top: 56px; padding-left: 32px; border-left: 3px solid var(--bronze); display: flex; flex-direction: column; gap: 48px; }
+    .timeline-entry { position: relative; }
+    .timeline-dot { position: absolute; left: -43px; top: 6px; width: 16px; height: 16px; border-radius: 50%; background: var(--bronze); border: 3px solid var(--cream); }
+    .timeline-badge { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.4rem; color: var(--bronze-lt); margin-bottom: 6px; }
+    .timeline-title { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; color: var(--forest); margin-bottom: 6px; }
+    .timeline-desc { font-size: 0.9rem; color: var(--text-sec); line-height: 1.6; max-width: 560px; }
+
+    /* CTA (forest bg) */
+    .cta-forest { background: var(--forest); text-align: center; }
+    .cta-forest .section-label { color: var(--bronze-lt); }
+    .cta-forest-h2 { font-family: 'Cormorant Garamond', serif; font-style: italic; font-weight: 300; font-size: clamp(2.5rem, 6vw, 5rem); color: white; line-height: 1; margin-bottom: 20px; }
+    .cta-forest-sub { font-size: 1rem; color: rgba(255,255,255,0.6); margin-bottom: 36px; }
+    .cta-btns { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: var(--bronze); color: white; padding: 14px 30px; border-radius: 999px; font-weight: 600; font-size: 0.95rem; text-decoration: none; transition: transform 0.25s, box-shadow 0.25s; box-shadow: 0 8px 24px rgba(138,108,58,0.4); display: inline-block; }
+    .btn-primary:hover { transform: scale(1.03); }
+    .btn-ghost { background: rgba(255,255,255,0.1); color: white; padding: 14px 30px; border-radius: 999px; font-weight: 500; font-size: 0.95rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.28); transition: background 0.25s, transform 0.25s; display: inline-block; }
+    .btn-ghost:hover { background: rgba(255,255,255,0.2); transform: scale(1.03); }
+
+    @media (max-width: 900px) {
+      section { padding: 80px 24px; }
+      footer { padding: 48px 24px; border-radius: var(--r-lg) var(--r-lg) 0 0; }
+      .footer-inner { flex-direction: column; text-align: center; }
+      .navbar-links .nav-link-desktop { display: none; }
+      .mission-grid { grid-template-columns: 1fr; gap: 40px; }
+      .team-grid { grid-template-columns: 1fr; }
+      .page-hero-content { padding: 0 24px 48px; }
+    }
+    @media (max-width: 600px) { .cta-btns { flex-direction: column; align-items: center; } }
+  </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav>
-  <a class="nav-logo" href="Ironwood_Site_Home.html">
-    <!-- LOGO PLACEHOLDER: replace .nav-logo-box with <img src="logo.svg"> when ready -->
-    <div class="nav-logo-box" style="background:var(--bronze);color:var(--surface);font-family:var(--serif);font-style:italic;font-size:18px;font-weight:400;border-radius:4px;"><em>I</em></div>
-    <div style="font-family:var(--serif);font-size:17px;color:var(--ink);letter-spacing:-.01em;">Ironwood Homes and Renovations</div>
+<svg id="noise-overlay" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+  <filter id="noise"><feTurbulence type="fractalNoise" baseFrequency="0.65" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+  <rect width="100%" height="100%" filter="url(#noise)" opacity="1"/>
+</svg>
+
+<nav class="navbar" id="navbar">
+  <a href="Ironwood_Site_Home.html" class="navbar-logo">
+    <div class="navbar-logo-box">IW</div>
+    <span>IRONWOOD</span>
   </a>
-
-  <ul class="nav-links">
-    <li><a href="Ironwood_Site_Home.html">Home</a></li>
-    <li><a href="Ironwood_Site_Sell.html">Sell Your Home</a></li>
-    <li><a href="Ironwood_Site_Renovate.html">Renovations</a></li>
-    <li><a href="Ironwood_Site_Work.html">Our Work</a></li>
-    <li><a href="Ironwood_Site_About.html" class="active">About</a></li>
-    <li><a href="Ironwood_Site_Contact.html">Contact</a></li>
-  </ul>
-
-  <div class="nav-ctas">
-    <a class="btn-nav-outline" href="Ironwood_SellerLead.html">Get My Offer</a>
-    <a class="btn-nav-fill" href="Ironwood_Estimator_Public.html">Free Estimate</a>
-  </div>
-
-  <div class="nav-toggle" onclick="toggleMobileNav()">
-    <span></span><span></span><span></span>
+  <div class="navbar-links">
+    <a href="Ironwood_Site_Renovate.html" class="nav-link-desktop">Services</a>
+    <a href="Ironwood_Site_Work.html" class="nav-link-desktop">Our Work</a>
+    <a href="Ironwood_Site_About.html" class="nav-link-desktop" style="color:var(--bronze-lt)">About</a>
+    <a href="Ironwood_Site_Sell.html" class="nav-link-desktop">Sell Your Home</a>
+    <a href="Ironwood_Site_Home.html#contact" class="navbar-cta">Get a Free Estimate</a>
   </div>
 </nav>
 
-<!-- HERO -->
-<div class="hero">
-  <div class="hero-bg"></div>
-  <!-- PHOTO PLACEHOLDER - replace .hero-bg background with: background-image: url('jobsite-photo.jpg'); background-size: cover; background-position: center; -->
-  <div class="hero-bg-overlay"></div>
-  <div class="hero-grid-line"></div>
-
-  <div class="hero-content">
-    <div class="hero-eyebrow">About Ironwood</div>
-    <h1>Built on Accountability.<br/>Driven by <em>Results.</em></h1>
-    <p class="hero-sub">Ironwood is an Atlanta-based real estate and renovation company built on a simple belief: do the work right, be transparent about the cost, and show up every day. That's it.</p>
+<!-- 1. Page Hero -->
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="page-hero-content">
+    <div class="page-hero-eyebrow">Our Story</div>
+    <div class="page-hero-line1">Built on</div>
+    <div class="page-hero-line2"><span>Craftsmanship.</span></div>
+    <div class="page-hero-sub">Two operators. One mission. Atlanta real estate done the right way.</div>
   </div>
 </div>
 
-<!-- STORY -->
-<section class="story-section">
+<!-- 2. Mission -->
+<section style="background: var(--cream);">
   <div class="container">
-    <div class="story-layout">
-      <div class="story-text">
-        <div class="section-eyebrow">Our Story</div>
-        <h2 class="section-title">How Ironwood Started</h2>
-        <div class="gold-rule"></div>
-        <p>Ironwood was founded in Atlanta with a clear purpose: to fix what's broken about how renovation and real estate services are delivered to regular people. Too many homeowners have been burned by contractors who disappeared mid-project, or sellers who felt pressured into bad deals with no transparency.</p>
-        <p>We built Ironwood around two lines of business - buying homes from motivated sellers who need speed and simplicity, and delivering renovation work to homeowners who deserve a contractor they can actually trust. Both lines share the same core commitment: <strong>written scopes, transparent pricing, and no surprises.</strong></p>
-        <p>We operate in Atlanta and the surrounding metro because this is our home. We know the neighborhoods, we understand the market, and we're invested in the outcome of every job we take. When a project has our name on it, we stand behind it - from the first phone call to the punch list.</p>
-        <p>We're not the biggest contractor in Atlanta. We're focused on being the most reliable one in every community we serve.</p>
+    <div class="mission-grid">
+      <div class="reveal">
+        <div class="section-label">Our Mission</div>
+        <blockquote class="mission-quote">"We started Ironwood because we saw too many flips built to the minimum — just enough to sell, not enough to last. We build every property like someone we care about is going to live there."</blockquote>
       </div>
-
-      <div>
-        <!-- PHOTO PLACEHOLDER - replace the div below with <img src="team-jobsite.jpg" alt="Ironwood team on job site" style="width:100%; border-radius:4px;"> when photo is ready -->
-        <div class="story-photo-placeholder">
-          <div class="story-photo-icon"></div>
-          <div class="story-photo-label">Team / Job Site Photo</div>
+      <div class="values-stack reveal">
+        <div class="value-card">
+          <div class="value-title">Craftsmanship First</div>
+          <div class="value-desc">We don't cut corners. Every finish is held to the standard we'd want in our own homes.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-title">Transparent Pricing</div>
+          <div class="value-desc">Full itemized scope before work starts. No surprises, no change-order games.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-title">On-Time Every Time</div>
+          <div class="value-desc">A project manager on-site every day. We set a timeline and we stick to it.</div>
+        </div>
+        <div class="value-card">
+          <div class="value-title">Built to Last</div>
+          <div class="value-desc">Quality materials and vetted subs. Properties that appraise strong and sell fast.</div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- TEAM -->
+<!-- 3. Team -->
 <section class="team-section">
   <div class="container">
-    <div class="section-header centered">
-      <div class="section-eyebrow">The Team</div>
-      <h2 class="section-title">The People Behind Ironwood</h2>
-      <div class="gold-rule"></div>
-    </div>
-
+    <div class="section-label reveal">The Team</div>
+    <h2 class="team-h2 reveal">The people <em>behind the work.</em></h2>
     <div class="team-grid">
-
-      <div class="team-card">
-        <!-- PHOTO PLACEHOLDER - replace .team-photo-placeholder with <img src="ty-headshot.jpg" alt="Ty Jackson"> when ready -->
-        <div class="team-photo-placeholder">
-          <div class="team-ph-icon"></div>
-          <div class="team-ph-label">Photo Placeholder</div>
-        </div>
-        <div class="team-info">
-          <div class="team-name">Ty Jackson</div>
-          <div class="team-role">Managing Member</div>
-          <div class="team-bio">Leads business operations, deal sourcing, and client relationships. Licensed real estate professional with deep roots in the Atlanta market. Also handles photography for every Ironwood project - ensuring every before-and-after is captured with care.</div>
-        </div>
+      <div class="team-card reveal">
+        <div class="team-avatar"></div>
+        <div class="team-name">Jeff Sarabia</div>
+        <div class="team-title">Lead Operator &amp; Project Manager</div>
+        <div class="team-bio">Jeff manages every project from permit to punch list. With hands-on construction experience across Metro Atlanta, he's the reason projects finish on time and on budget.</div>
       </div>
-
-      <div class="team-card">
-        <!-- PHOTO PLACEHOLDER - replace .team-photo-placeholder with <img src="jeff-headshot.jpg" alt="Jeff Sarabia"> when ready -->
-        <div class="team-photo-placeholder">
-          <div class="team-ph-icon"></div>
-          <div class="team-ph-label">Photo Placeholder</div>
-        </div>
-        <div class="team-info">
-          <div class="team-name">Jeff Sarabia</div>
-          <div class="team-role">Field Operations</div>
-          <div class="team-bio">Manages all on-site construction, crew coordination, and quality control. Hands-on from the first day of demo through the final punch list. Jeff is the reason Ironwood projects finish on schedule and to spec.</div>
-        </div>
+      <div class="team-card reveal">
+        <div class="team-avatar"></div>
+        <div class="team-name">Ty Jackson</div>
+        <div class="team-title">Acquisitions &amp; Marketing</div>
+        <div class="team-bio">Ty identifies and acquires properties before they hit the market. His background in real estate and marketing is how Ironwood sources deals that make sense.</div>
       </div>
-
-      <div class="team-card">
-        <!-- PHOTO PLACEHOLDER - replace .team-photo-placeholder with <img src="jordan-headshot.jpg" alt="Jordan Sarabia"> when ready -->
-        <div class="team-photo-placeholder">
-          <div class="team-ph-icon"></div>
-          <div class="team-ph-label">Photo Placeholder</div>
-        </div>
-        <div class="team-info">
-          <div class="team-name">Jordan Sarabia</div>
-          <div class="team-role">Brand &amp; Design</div>
-          <div class="team-bio">Handles all graphic design, brand development, and visual identity for Ironwood. From logo to print collateral to digital assets - Jordan shapes how Ironwood presents itself to the world.</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- VALUES -->
-<section class="values-section">
-  <div class="container">
-    <div class="section-header centered">
-      <div class="section-eyebrow">What We Stand For</div>
-      <h2 class="section-title">Our Core Values</h2>
-      <div class="gold-rule"></div>
-    </div>
-
-    <div class="values-grid">
-      <div class="value-card">
-        <div class="value-icon"></div>
-        <div class="value-title">Transparency</div>
-        <div class="value-desc">Every project starts with a written scope and a firm price. You know what you're getting before anything starts. We don't hide costs or surprise you mid-project.</div>
-      </div>
-
-      <div class="value-card">
-        <div class="value-icon"></div>
-        <div class="value-title">Accountability</div>
-        <div class="value-desc">We show up. We respond. We follow through. If something goes wrong - and occasionally it does - we own it and fix it. Our word means something on every job.</div>
-      </div>
-
-      <div class="value-card">
-        <div class="value-icon">⭐</div>
-        <div class="value-title">Quality</div>
-        <div class="value-desc">Done right the first time. We use quality materials, skilled labor, and attention to detail that shows in the finished product - and holds up for years after we leave.</div>
-      </div>
-
-      <div class="value-card">
-        <div class="value-icon"></div>
-        <div class="value-title">Community</div>
-        <div class="value-desc">Atlanta is home. We're not a franchise or a national chain - we're local people doing local work. Every project improves a neighborhood we live in and care about.</div>
+      <div class="team-card reveal">
+        <div class="team-avatar"></div>
+        <div class="team-name">Jordan Sarabia</div>
+        <div class="team-title">Operations &amp; Client Relations</div>
+        <div class="team-bio">Jordan keeps the operation running — from client communication to vendor coordination, she ensures every project moves forward without friction.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- COVERAGE AREA -->
-<section class="coverage-section">
+<!-- 4. Timeline -->
+<section class="timeline-section">
   <div class="container">
-    <div class="coverage-inner">
-      <div class="section-eyebrow">Service Area</div>
-      <h2 class="section-title">Where We Work</h2>
-      <div class="gold-rule"></div>
-      <p>We serve Atlanta and the surrounding metro area - covering a 70-mile radius from the city. Whether you're in a Buckhead townhome or a Woodstock ranch, Ironwood is close by and ready to work.</p>
-      <p>Current coverage includes but is not limited to:</p>
-      <div class="coverage-cities">
-        <span class="city-chip">Atlanta, GA</span>
-        <span class="city-chip">Marietta, GA</span>
-        <span class="city-chip">Kennesaw, GA</span>
-        <span class="city-chip">Smyrna, GA</span>
-        <span class="city-chip">Roswell, GA</span>
-        <span class="city-chip">Alpharetta, GA</span>
-        <span class="city-chip">Woodstock, GA</span>
-        <span class="city-chip">Acworth, GA</span>
-        <span class="city-chip">Canton, GA</span>
-        <span class="city-chip">Cartersville, GA</span>
-        <span class="city-chip">Sandy Springs, GA</span>
-        <span class="city-chip">Dunwoody, GA</span>
-        <span class="city-chip">Johns Creek, GA</span>
-        <span class="city-chip">Cumming, GA</span>
-        <span class="city-chip">Douglasville, GA</span>
+    <div class="reveal">
+      <div class="section-label">Our Journey</div>
+      <h2 class="section-h2">From deal one <em>to where we are now.</em></h2>
+    </div>
+    <div class="timeline-wrap">
+      <div class="timeline-entry reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">2024 Q1</div>
+        <div class="timeline-title">Founded</div>
+        <div class="timeline-desc">Ironwood LLC formed. First acquisition identified and underway.</div>
+      </div>
+      <div class="timeline-entry reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">2024 Q2</div>
+        <div class="timeline-title">First Flip Complete</div>
+        <div class="timeline-desc">Full gut rehab sold in 6 days. 29% ROI. The proof of concept.</div>
+      </div>
+      <div class="timeline-entry reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">2024 Q3</div>
+        <div class="timeline-title">Team Grows</div>
+        <div class="timeline-desc">Jordan joins operations. Project capacity doubles. First repeat client.</div>
+      </div>
+      <div class="timeline-entry reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-badge">2025</div>
+        <div class="timeline-title">Scaling</div>
+        <div class="timeline-desc">15+ projects completed. New construction pipeline in development. Next chapter begins.</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- CTA BAND -->
-<div class="cta-band">
+<!-- 5. CTA -->
+<section class="cta-forest">
   <div class="container">
-    <h2>Ready to Work With Us?</h2>
-    <p>Whether you need a cash offer on your home or a contractor who shows up and delivers - Ironwood is ready.</p>
-    <div class="cta-btns">
-      <a class="btn-cta-dark" href="Ironwood_SellerLead.html">Get a Cash Offer</a>
-      <a class="btn-cta-outline" href="Ironwood_Estimator_Public.html">Free Renovation Estimate</a>
+    <div class="reveal">
+      <h2 class="cta-forest-h2"><em>Want to work with us?</em></h2>
+      <p class="cta-forest-sub">Reach out and we'll get back to you within 24 hours.</p>
+      <div class="cta-btns">
+        <a href="Ironwood_Site_Home.html#contact" class="btn-primary">Start a Project</a>
+        <a href="tel:4045550100" class="btn-ghost">Call (404) 555-0100</a>
+      </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- FOOTER -->
 <footer>
-  <div class="footer-grid">
-    <div>
-      <div class="footer-brand-name">Ironwood</div>
-      <p class="footer-brand-desc">Licensed contractor and real estate company serving Atlanta and the surrounding metro area. We buy homes and build better ones.</p>
-      <!-- SOCIAL LINKS PLACEHOLDER - add actual URLs when accounts are live -->
-      <div class="footer-social">
-        <a class="social-btn" href="#" title="Facebook">f</a>
-        <a class="social-btn" href="#" title="Instagram">ig</a>
-        <a class="social-btn" href="https://youtube.com/@IronwoodRenovations" title="YouTube" target="_blank"></a>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo-row">
+        <div class="footer-logo-box">IW</div>
+        <div class="footer-logo-text">Ironwood Homes &amp; Renovations</div>
       </div>
+      <div class="footer-tagline">Atlanta Metro, Georgia</div>
     </div>
-
-    <div>
-      <div class="footer-col-title">Services</div>
-      <ul class="footer-links">
-        <li><a href="Ironwood_Site_Sell.html">Sell Your Home</a></li>
-        <li><a href="Ironwood_Site_Renovate.html">Renovation Services</a></li>
-        <li><a href="Ironwood_Estimator_Public.html">Free Estimate</a></li>
-        <li><a href="Ironwood_SellerLead.html">Get a Cash Offer</a></li>
-      </ul>
+    <div class="footer-links">
+      <a href="Ironwood_Site_Renovate.html">Services</a>
+      <a href="Ironwood_Site_Work.html">Our Work</a>
+      <a href="Ironwood_Site_About.html">About</a>
+      <a href="Ironwood_Site_Contact.html">Contact</a>
+      <a href="Ironwood_Site_Sell.html">Sell Your Home</a>
     </div>
-
-    <div>
-      <div class="footer-col-title">Company</div>
-      <ul class="footer-links">
-        <li><a href="Ironwood_Site_Work.html">Our Work</a></li>
-        <li><a href="Ironwood_Site_About.html">About Us</a></li>
-        <li><a href="Ironwood_Site_Contact.html">Contact</a></li>
-      </ul>
-    </div>
-
-    <div>
-      <div class="footer-col-title">Contact</div>
-      <ul class="footer-links">
-        <li><a href="mailto:info@ironwoodrenovations.com">info@ironwoodrenovations.com</a></li>
-        <li><a href="tel:+14045550100">(404) 555-0100</a></li>
-        <li><a href="#">Atlanta, GA Metro Area</a></li>
-        <li><a href="#">Licensed &amp; Insured · Georgia</a></li>
-      </ul>
+    <div class="footer-status">
+      <div class="status-dot"></div>
+      <span class="status-label">Accepting New Projects</span>
     </div>
   </div>
-
   <div class="footer-bottom">
-    <div class="footer-copy">© 2026 Ironwood LLC dba Ironwood Homes and Renovations · Georgia · All rights reserved.</div>
-    <div class="footer-legal">
-      <a href="#">Privacy Policy</a>
-      <a href="#">Terms of Service</a>
+    <span class="footer-copy">&copy; 2024 Ironwood Homes &amp; Renovations LLC. All rights reserved.</span>
+    <div class="footer-social">
+      <a href="#">Facebook</a>
+      <a href="#">Instagram</a>
     </div>
   </div>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script>
-  function toggleMobileNav() {
-    const links = document.querySelector('.nav-links');
-    if (links) {
-      const open = links.style.display === 'flex';
-      links.style.display = open ? '' : 'flex';
-      links.style.flexDirection = 'column';
-      links.style.position = 'fixed';
-      links.style.top = '64px';
-      links.style.left = '0';
-      links.style.right = '0';
-      links.style.background = '#F5F7F7';
-      links.style.padding = '20px 24px';
-      links.style.gap = '16px';
-      links.style.borderBottom = '1px solid var(--hairline)';
-      links.style.zIndex = '199';
-    }
-  }
+gsap.registerPlugin(ScrollTrigger);
+window.addEventListener('scroll', function() {
+  var nb = document.getElementById('navbar');
+  if (window.scrollY > 80) nb.classList.add('scrolled');
+  else nb.classList.remove('scrolled');
+});
+var revealEls = document.querySelectorAll('.reveal');
+var revealObs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if (e.isIntersecting) { e.target.classList.add('visible'); revealObs.unobserve(e.target); } });
+}, { threshold: 0.1 });
+revealEls.forEach(function(el) { revealObs.observe(el); });
+document.querySelectorAll('.accordion-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var body = btn.nextElementSibling;
+    var icon = btn.querySelector('.acc-icon');
+    var isOpen = body.style.maxHeight;
+    document.querySelectorAll('.accordion-body').forEach(function(b) { b.style.maxHeight = null; });
+    document.querySelectorAll('.acc-icon').forEach(function(i) { i.style.transform = 'rotate(0deg)'; });
+    if (!isOpen) { body.style.maxHeight = body.scrollHeight + 'px'; if(icon) icon.style.transform = 'rotate(45deg)'; }
+  });
+});
 </script>
-
 </body>
 </html>
