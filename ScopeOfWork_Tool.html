@@ -283,6 +283,46 @@
   ::-webkit-scrollbar-track{background:#0a0a0a;}
   ::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:3px;}
   ::-webkit-scrollbar-thumb:hover{background:#c9a84c;}
+
+  /* ── SUBCONTRACTOR LOOKUP ── */
+  .sub-lookup-btn{
+    background:none;border:1px solid #3a3a3a;border-radius:4px;
+    color:#b8b0a0;cursor:pointer;font-size:13px;padding:2px 5px;
+    flex-shrink:0;transition:all .15s;line-height:1;
+  }
+  .sub-lookup-btn:hover{background:#c9a84c22;border-color:#c9a84c;color:#c9a84c;}
+
+  /* Popover */
+  .sub-popover{
+    position:fixed;z-index:9999;
+    background:#111111;border:1px solid #c9a84c44;border-radius:10px;
+    box-shadow:0 12px 40px -6px rgba(0,0,0,.7);
+    width:290px;max-height:320px;display:flex;flex-direction:column;overflow:hidden;
+  }
+  .sub-pop-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 14px 8px;border-bottom:1px solid #2a2a2a;flex-shrink:0;
+  }
+  .sub-pop-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#b8b0a0;font-weight:bold;}
+  .sub-pop-close{background:none;border:none;color:#b8b0a0;cursor:pointer;font-size:17px;padding:0 2px;line-height:1;}
+  .sub-pop-close:hover{color:#fff;}
+  .sub-pop-body{padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;}
+  .sub-trade-sel{
+    width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:5px;
+    color:#f5f0e8;padding:6px 8px;font-size:12px;font-family:Arial;
+    appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'><path d='M1 1l4 4 4-4' stroke='%23b8b0a0' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;
+    cursor:pointer;
+  }
+  .sub-trade-sel:focus{outline:none;border-color:#c9a84c;}
+  .sub-list{display:flex;flex-direction:column;gap:4px;overflow-y:auto;}
+  .sub-list-item{
+    padding:7px 10px;border-radius:6px;cursor:pointer;border:1px solid transparent;
+    transition:all .15s;
+  }
+  .sub-list-item:hover{background:#1a1a1a;border-color:#c9a84c44;}
+  .sub-item-company{font-size:12px;font-weight:bold;color:#f5f0e8;}
+  .sub-item-meta{font-size:10px;color:#b8b0a0;margin-top:1px;}
 </style>
 <link rel="stylesheet" href="iw-print.css">
 </head>
@@ -839,12 +879,176 @@ const BUILD_STEPS=[
 ];
 
 // ══════════════════════════════════════════════════════════════════════
+//  CONTRACTOR DIRECTORY
+// ══════════════════════════════════════════════════════════════════════
+const CONTRACTORS = [
+  { trade: "Lumber", company: "Carter Lumber", contact: "", phone: "", email: "", website: "" },
+  { trade: "Lumber", company: "Contract Lumber", contact: "Jim Ashford", phone: "740.927.4242", email: "", website: "" },
+  { trade: "Lumber", company: "84 Lumber", contact: "", phone: "", email: "", website: "" },
+  { trade: "Lumber", company: "Brand-Vaughan Lumber", contact: "", phone: "678.597.5532", email: "invoices@bvlumber.com", website: "www.bvlumber.com" },
+  { trade: "Cabinetry & Countertops", company: "Reinstate Homes", contact: "Jeff Akana", phone: "404.358.2068", email: "jeff@reinstatehomes.com", website: "www.reinstatehomes.com" },
+  { trade: "Foundation / Concrete", company: "2 Brothers Foundation", contact: "PePe Ortiz", phone: "770.318.2251", email: "twobrothersfoundation@outlook.com", website: "" },
+  { trade: "Foundation / Concrete", company: "Rojas Concrete", contact: "Cesar Rojas", phone: "678.873.7408", email: "cesarsgrading2012@gmail.com", website: "" },
+  { trade: "Foundation / Concrete", company: "Millenium Foundations", contact: "Kamaron Garmon", phone: "678.206.7762", email: "kamaron@millenniumfoundations.com", website: "" },
+  { trade: "Foundation / Concrete", company: "Middle GA Concrete Pumping", contact: "", phone: "678.618.5220", email: "accounting@mgcp-llc.com", website: "" },
+  { trade: "Foundation / Concrete", company: "R&O Concrete Services, LLC", contact: "", phone: "770.231.4739", email: "reginopadron.rp@gmail.com", website: "" },
+  { trade: "Foundation / Concrete", company: "Arreola Concrete Company", contact: "Angie Arreola", phone: "770.554.2503", email: "arreolaconcrete@aol.com", website: "" },
+  { trade: "Flooring", company: "Atlanta Flooring Design Center", contact: "Jodie Strickland", phone: "770.476.8306", email: "jodiestrickland@atlantaflooringdesign.com", website: "" },
+  { trade: "Flooring", company: "Georgia Flooring Outlet", contact: "Kevin Barwick", phone: "770.474.9270", email: "kevin@georgiaflooringoutlet.com", website: "" },
+  { trade: "Framing", company: "Jeg Construction", contact: "Efren Reyes", phone: "404.516.4233", email: "jegframing@bellsouth.net", website: "" },
+  { trade: "Framing", company: "Olmedo Construction", contact: "Alejandro Carmona", phone: "762.338.9807", email: "alejandrocarmona843338@gmail.com", website: "" },
+  { trade: "Framing", company: "DGO Southern Cons", contact: "Francisco Chaidez", phone: "404.964.0801", email: "dgosouthern@outlook.com", website: "" },
+  { trade: "Trim & Painting", company: "Atlanta Trim", contact: "Alejandro Hernandez", phone: "404.287.8356", email: "atlantatrim@yahoo.com", website: "" },
+  { trade: "Trim & Painting", company: "GM Painting & More", contact: "Guillermo Fernandez", phone: "770.432.2043", email: "gmpainting19@gmail.com", website: "" },
+  { trade: "Appliances", company: "Southeastern Appliances & More", contact: "Terry Veneable", phone: "770.941.2121", email: "mabreu@climaticcorp.com", website: "" },
+  { trade: "Electrical", company: "Willco Electric Company", contact: "", phone: "", email: "elopez.willcoelectric.com", website: "" },
+  { trade: "Fireplace", company: "CR Construction Resources", contact: "Marci Webster", phone: "404.378.3132", email: "mwebster@crhomeusa.com", website: "" },
+  { trade: "Fence", company: "All Advanced Fence", contact: "", phone: "", email: "", website: "" },
+  { trade: "Fence", company: "Alliance Construction Consultants", contact: "Christin", phone: "770.697.3203", email: "christin@alliancecconsultants.com", website: "" },
+  { trade: "Garage Door", company: "Voyles Overhead Door", contact: "", phone: "678.714.3725", email: "voylesoffice@gmail.com", website: "" },
+  { trade: "Garage Door", company: "Palmer Construction Consultants", contact: "Kari Palmer", phone: "770.886.5033", email: "admin@palmercci.com", website: "" },
+  { trade: "Garage Door", company: "Southeastern Appliances & More", contact: "Terry Veneable", phone: "770.941.2121", email: "mabreu@climaticcorp.com", website: "" },
+  { trade: "Grading & Landscaping", company: "SDR Grading, LLC", contact: "Terry Cain", phone: "770.954.1422", email: "nataliecain@live.com", website: "" },
+  { trade: "Grading & Landscaping", company: "Tr3s Grading Irrigation & Landscaping", contact: "Emily Hernandez", phone: "470.483.2259", email: "emily.hernandez@ruizestate.com", website: "" },
+  { trade: "Grading & Landscaping", company: "Ruiz Grading & Landscaping", contact: "Yesy Pineda", phone: "404.952.7344", email: "yes.pineda@ruizestate.com", website: "" },
+  { trade: "Grading & Landscaping", company: "Sears Smith Landscape", contact: "Ginger", phone: "", email: "ginger@searsmithlandscape.com", website: "" },
+  { trade: "Grading & Landscaping", company: "Atlanta Sod & Landscape", contact: "David Brunson", phone: "770.318.6200", email: "david@atlantasodandlanscape.com", website: "" },
+  { trade: "Insulation", company: "Woodman Insulation", contact: "", phone: "770.442.9089", email: "", website: "www.woodmaninsulationcumming.com" },
+  { trade: "Inspectors", company: "Southern Construction Consulting", contact: "", phone: "770.614.0407", email: "sccsvcs@gmail.com", website: "" },
+  { trade: "Inspectors", company: "Captive Engineering", contact: "Nicole Cash", phone: "678.622.3232", email: "ncash.captiveeng@gmail.com", website: "" },
+  { trade: "Plumbing", company: "C&T Plumbing", contact: "", phone: "770.318.0718", email: "ctplumbing2004@gmail.com", website: "" },
+  { trade: "Plumbing", company: "Serrano Plumbing", contact: "", phone: "", email: "shererronnie58@gmail.com", website: "" },
+  { trade: "Masonry / Brick / Stone", company: "Alley-Cassetty Brick & Stone", contact: "", phone: "615.961.5492", email: "", website: "www.alley-cassetty.com" },
+  { trade: "Masonry / Brick / Stone", company: "Big City Masonry", contact: "", phone: "", email: "bigcityfree@yahoo.com", website: "" },
+  { trade: "Mailbox Installation", company: "SEI GROUP", contact: "", phone: "770.840.7625", email: "seiinvoices@seigroupga.com", website: "" },
+  { trade: "Sealing & Waterproofing", company: "Sealing Agents Waterproofing", contact: "", phone: "704.882.8443", email: "", website: "www.sealingagents.com" },
+  { trade: "Erosion Control", company: "The Erosion Company", contact: "", phone: "678.990.0207", email: "billing@tecompanies.com", website: "" },
+  { trade: "Erosion Control", company: "CSI Erosion", contact: "", phone: "770.456.0124", email: "", website: "" },
+  { trade: "Erosion Control", company: "Focused Service Group", contact: "Jami Brown", phone: "770.389.8666", email: "jbrown@fdc-llc.com", website: "" },
+  { trade: "Design Consultants", company: "Falcon Design Consultants", contact: "Jami Brown", phone: "770.389.8666", email: "jbrown@fdc-llc.com", website: "" },
+  { trade: "Paving", company: "RP Paving Solutions", contact: "Cameron Dutton", phone: "678.840.4088", email: "camerondutton@fixourlot.com", website: "www.rppavingsolutions.com" },
+  { trade: "Hardware & Specialty", company: "Georgia Specialty Products", contact: "Michele Walton", phone: "770.476.8547", email: "mwalton@gaspecialty.com", website: "" },
+  { trade: "HVAC", company: "Omega Heating & Air", contact: "", phone: "770.679.5494", email: "workorders@omegahvac.com", website: "www.omegahvac.com" },
+  { trade: "Pest Control", company: "Pest USA", contact: "", phone: "844.777.3996", email: "billing@pestusa.com", website: "" },
+  { trade: "Porta Potty", company: "Toi Toi", contact: "", phone: "", email: "", website: "" },
+  { trade: "Porta Potty", company: "AAA Northside Portable Toilets", contact: "", phone: "478.452.6936", email: "", website: "www.northsideportables.com" },
+  { trade: "Porta Potty", company: "A-OK Portable Services", contact: "", phone: "478.956.1525", email: "april@aokportableservices.com", website: "" },
+  { trade: "Trash & Junk Removal", company: "Freddys Trash", contact: "Alejandra Araiza", phone: "404.918.1503", email: "ale.aramon@hotmail.com", website: "" },
+  { trade: "Trash & Junk Removal", company: "El Extreme Junk Removal & Cleaning", contact: "Jenifer Maroquin", phone: "770.946.2228", email: "elextremejunk@gmail.com", website: "" },
+  { trade: "Roofing", company: "Southern Expert Roofing", contact: "Brandy Truman", phone: "470.651.0482", email: "", website: "" },
+  { trade: "Siding & Gutters", company: "Southern Siding and Gutters", contact: "Harrison Kuhn", phone: "770.775.9374", email: "info@sidingandgutters.com", website: "www.sidingandgutters.com" },
+];
+
+// Map from SOW category id → contractor trade keywords (for smart matching)
+const CAT_TRADE_MAP = {
+  'foundation':  ['Foundation / Concrete'],
+  'structure':   ['Framing', 'Lumber'],
+  'mechanicals': ['Electrical', 'Plumbing', 'HVAC'],
+  'interior':    ['Cabinetry & Countertops', 'Trim & Painting', 'Flooring', 'Fireplace', 'Insulation', 'Appliances'],
+  'exterior':    ['Roofing', 'Siding & Gutters', 'Masonry / Brick / Stone', 'Fence', 'Garage Door', 'Grading & Landscaping', 'Paving', 'Sealing & Waterproofing'],
+  'flooring':    ['Flooring'],
+  'soft-costs':  ['Inspectors', 'Pest Control', 'Porta Potty', 'Erosion Control', 'Mailbox Installation'],
+  'demolition':  ['Trash & Junk Removal', 'Erosion Control'],
+  'final-misc':  ['Inspectors', 'Design Consultants'],
+};
+
+// ── CONTRACTOR LOOKUP MODAL ──
+function openSubLookup(catId, rowIdx, btnEl) {
+  // Remove any existing popover
+  document.querySelectorAll('.sub-popover').forEach(p => p.remove());
+
+  const trades = CAT_TRADE_MAP[catId] || [];
+  const matches = trades.length
+    ? CONTRACTORS.filter(c => trades.includes(c.trade))
+    : CONTRACTORS;
+
+  const popover = document.createElement('div');
+  popover.className = 'sub-popover';
+  popover.innerHTML = `
+    <div class="sub-pop-header">
+      <span class="sub-pop-title">Assign Subcontractor</span>
+      <button class="sub-pop-close" onclick="this.closest('.sub-popover').remove()">×</button>
+    </div>
+    <div class="sub-pop-body">
+      <select class="sub-trade-sel" onchange="filterSubList(this)">
+        <option value="">All Trades</option>
+        ${[...new Set(CONTRACTORS.map(c=>c.trade))].sort().map(t=>`<option value="${t}"${trades.includes(t)?' selected':''}>${t}</option>`).join('')}
+      </select>
+      <div class="sub-list" id="sub-list-${catId}-${rowIdx}">
+        ${renderSubList(matches, catId, rowIdx)}
+      </div>
+    </div>`;
+
+  // Position near button
+  const rect = btnEl.getBoundingClientRect();
+  popover.style.position = 'fixed';
+  popover.style.top  = Math.min(rect.bottom + 6, window.innerHeight - 320) + 'px';
+  popover.style.left = Math.max(4, Math.min(rect.left - 60, window.innerWidth - 300)) + 'px';
+  document.body.appendChild(popover);
+
+  // Store context on popover for filtering
+  popover._catId  = catId;
+  popover._rowIdx = rowIdx;
+
+  // Close on outside click
+  setTimeout(() => {
+    document.addEventListener('click', function outsideClick(e) {
+      if (!popover.contains(e.target) && e.target !== btnEl) {
+        popover.remove();
+        document.removeEventListener('click', outsideClick);
+      }
+    });
+  }, 0);
+}
+
+function renderSubList(list, catId, rowIdx) {
+  if (!list.length) return '<div style="color:#b8b0a0;font-size:11px;padding:8px 4px;">No contractors for this trade.</div>';
+  return list.map(c => {
+    const phone = c.phone ? c.phone.replace(/\./g, '-') : '';
+    const label = c.company + (c.contact ? ' — ' + c.contact : '') + (phone ? ' · ' + phone : '');
+    return `<div class="sub-list-item" onclick="selectSub('${catId}',${rowIdx},${JSON.stringify(c.company).replace(/'/g,"\\'")},'${phone}','${c.contact||''}')">
+      <div class="sub-item-company">${c.company}</div>
+      <div class="sub-item-meta">${[c.contact, phone].filter(Boolean).join(' · ')}</div>
+    </div>`;
+  }).join('');
+}
+
+function filterSubList(sel) {
+  const popover = sel.closest('.sub-popover');
+  if (!popover) return;
+  const trade   = sel.value;
+  const catId   = popover._catId;
+  const rowIdx  = popover._rowIdx;
+  const list    = trade ? CONTRACTORS.filter(c => c.trade === trade) : CONTRACTORS;
+  const listEl  = popover.querySelector('.sub-list');
+  if (listEl) listEl.innerHTML = renderSubList(list, catId, rowIdx);
+}
+
+function selectSub(catId, rowIdx, company, phone, contact) {
+  // Write into state
+  S.budget[catId][rowIdx].subCompany = company;
+  S.budget[catId][rowIdx].subPhone   = phone;
+  S.budget[catId][rowIdx].subContact = contact;
+  autoSave();
+
+  // Update the visible cell
+  const cell = document.getElementById(`sub-cell-${catId}-${rowIdx}`);
+  if (cell) {
+    cell.querySelector('.sub-display-company').textContent = company;
+    cell.querySelector('.sub-display-phone').textContent   = phone || '';
+  }
+
+  // Close popover
+  document.querySelectorAll('.sub-popover').forEach(p => p.remove());
+}
+
+// ══════════════════════════════════════════════════════════════════════
 //  DEFAULT DATA
 // ══════════════════════════════════════════════════════════════════════
 function defaultBudget(){
   const b={};
   CATEGORIES.forEach(cat=>{
-    b[cat.id]=cat.items.map(it=>({num:it.num,desc:it.desc,matBudget:'',labBudget:'',matActual:'',labActual:'',compDate:''}));
+    b[cat.id]=cat.items.map(it=>({num:it.num,desc:it.desc,matBudget:'',labBudget:'',matActual:'',labActual:'',compDate:'',subCompany:'',subPhone:'',subContact:''}));
   });
   return b;
 }
@@ -997,6 +1201,7 @@ function buildBudgetUI(){
     tbl.innerHTML=`<thead><tr>
       <th style="width:78px">Item #</th>
       <th>Description</th>
+      <th class="internal-col" style="min-width:140px">Subcontractor</th>
       <th class="internal-col" style="width:90px">Mat Cost <span style="color:#c9843a;font-size:8px;">(Internal)</span></th>
       <th class="internal-col" style="width:90px">Labor Budget</th>
       <th class="internal-col" style="width:88px">Internal Total</th>
@@ -1032,10 +1237,21 @@ function renderBudgetRows(catId){
     const lt=pv(row.matBudget)+pv(row.labBudget);
     const at=pv(row.matActual)+pv(row.labActual);
     const clientPrice=pv(row.matBudget)*(1+mu)+pv(row.labBudget);
+    const subCo   = row.subCompany || '';
+    const subPh   = row.subPhone   || '';
     const tr=document.createElement('tr');
     tr.innerHTML=`
       <td><input style="width:72px" value="${esc(row.num)}" onchange="S.budget['${catId}'][${i}].num=this.value;autoSave()"></td>
       <td><input class="desc-input" value="${esc(row.desc)}" onchange="S.budget['${catId}'][${i}].desc=this.value;autoSave()"></td>
+      <td class="internal-col sub-col" id="sub-cell-${catId}-${i}">
+        <div style="display:flex;align-items:center;gap:5px;min-width:130px;">
+          <div style="flex:1;min-width:0;">
+            <div class="sub-display-company" style="font-size:11px;color:#f5f0e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(subCo)}</div>
+            <div class="sub-display-phone" style="font-size:10px;color:#b8b0a0;">${esc(subPh)}</div>
+          </div>
+          <button class="sub-lookup-btn" title="Find contractor" onclick="openSubLookup('${catId}',${i},this)">&#128100;</button>
+        </div>
+      </td>
       <td class="internal-col"><input class="num-input" type="number" value="${row.matBudget}" placeholder="0" oninput="S.budget['${catId}'][${i}].matBudget=this.value;updateBudgetRow(this,'${catId}',${i})"></td>
       <td class="internal-col"><input class="num-input" type="number" value="${row.labBudget}" placeholder="0" oninput="S.budget['${catId}'][${i}].labBudget=this.value;updateBudgetRow(this,'${catId}',${i})"></td>
       <td class="line-total-cell internal-col" id="lt-${catId}-${i}">${fmtSh(lt)}</td>
@@ -1119,7 +1335,7 @@ function recalcSummary(){
 }
 
 function addBudgetRow(catId){
-  S.budget[catId].push({num:'',desc:'',matBudget:'',labBudget:'',matActual:'',labActual:'',compDate:''});
+  S.budget[catId].push({num:'',desc:'',matBudget:'',labBudget:'',matActual:'',labActual:'',compDate:'',subCompany:'',subPhone:'',subContact:''});
   renderBudgetRows(catId);
   autoSave();
 }

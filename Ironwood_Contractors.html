@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vendor & Contractor Directory — Ironwood Homes and Renovations</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+  body { background: #fff; color: var(--ink); }
+
+  /* ── STICKY TOOLBAR ── */
+  #toolbar {
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    background: #fff;
+    border-bottom: 1px solid var(--hairline);
+    padding: 12px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+  }
+  #toolbar .search-wrap {
+    flex: 1;
+    min-width: 180px;
+    max-width: 360px;
+    position: relative;
+  }
+  #toolbar .search-wrap svg {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+  }
+  #search-input {
+    width: 100%;
+    padding: 9px 12px 9px 35px;
+    border: 1px solid var(--hairline-2);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: var(--sans);
+    color: var(--ink);
+    background: #fff;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  #search-input:focus {
+    border-color: var(--bronze);
+    box-shadow: 0 0 0 3px var(--bronze-wash);
+  }
+  #trade-filter {
+    padding: 9px 36px 9px 12px;
+    border: 1px solid var(--hairline-2);
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-family: var(--sans);
+    color: var(--ink);
+    background: #fff;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' stroke='%237A6F60' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    cursor: pointer;
+    transition: border-color .2s;
+    min-width: 200px;
+  }
+  #trade-filter:focus { border-color: var(--bronze); }
+  #clear-btn {
+    padding: 9px 16px;
+    border: 1px solid var(--hairline-2);
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-family: var(--sans);
+    font-weight: 500;
+    color: var(--muted);
+    background: #fff;
+    cursor: pointer;
+    transition: all .2s;
+    white-space: nowrap;
+  }
+  #clear-btn:hover { border-color: var(--bronze); color: var(--ink); }
+  #count-badge {
+    font-size: 12px;
+    color: var(--muted);
+    letter-spacing: 0.03em;
+    margin-left: auto;
+    white-space: nowrap;
+    font-family: var(--sans);
+  }
+  #count-badge strong { color: var(--ink); }
+
+  /* ── PAGE HERO ── */
+  .page-hero {
+    background: #fff;
+    border-bottom: 3px solid var(--bronze);
+    padding: 40px 24px 32px;
+    text-align: center;
+  }
+  .page-hero .eyebrow {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    color: var(--bronze);
+    font-weight: 600;
+    margin-bottom: 10px;
+    font-family: var(--sans);
+  }
+  .page-hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(24px, 4vw, 38px);
+    font-weight: 400;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .page-hero .subtitle {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  /* ── DIRECTORY ── */
+  .directory { max-width: 1100px; margin: 0 auto; padding: 32px 20px 80px; }
+
+  /* ── TRADE SECTION ── */
+  .trade-section { margin-bottom: 40px; }
+  .trade-section[data-hidden="true"] { display: none; }
+
+  .trade-heading {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .trade-heading::before {
+    content: '';
+    display: block;
+    width: 4px;
+    height: 22px;
+    background: var(--bronze);
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .trade-heading h2 {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--bronze);
+    margin: 0;
+  }
+  .trade-heading .trade-count {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: var(--sans);
+  }
+
+  /* ── VENDOR CARD GRID ── */
+  .vendor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 10px;
+  }
+
+  /* ── INDIVIDUAL VENDOR CARD ── */
+  .vendor-card {
+    background: #fff;
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color .2s, box-shadow .15s;
+  }
+  .vendor-card:nth-child(even) { background: var(--surface); }
+  .vendor-card[data-hidden="true"] { display: none; }
+  .vendor-card:hover {
+    border-color: var(--bronze-border);
+    box-shadow: 0 4px 14px -4px rgba(28,24,20,.10);
+  }
+
+  .vc-company {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.3;
+  }
+  .vc-contact {
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-family: var(--sans);
+  }
+  .vc-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 2px;
+  }
+  .vc-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 11.5px;
+    color: var(--bronze);
+    text-decoration: none;
+    font-family: var(--sans);
+    transition: color .15s;
+  }
+  .vc-link:hover { color: var(--bronze-deep); text-decoration: underline; }
+  .vc-link svg { flex-shrink: 0; }
+  .vc-sep { color: var(--hairline-2); font-size: 11px; }
+
+  /* ── CALL BUTTON (mobile) ── */
+  .vc-footer {
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .vc-call-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 12px;
+    background: var(--bronze-wash);
+    border: 1px solid var(--bronze-border);
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--bronze);
+    text-decoration: none;
+    font-family: var(--sans);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background .15s, color .15s;
+    white-space: nowrap;
+  }
+  .vc-call-btn:hover { background: var(--bronze); color: #fff; border-color: var(--bronze); }
+  .vc-call-btn.no-phone {
+    opacity: 0.35;
+    pointer-events: none;
+    cursor: default;
+  }
+
+  /* ── NO RESULTS ── */
+  #no-results {
+    display: none;
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    font-family: var(--sans);
+    font-size: 15px;
+  }
+  #no-results strong { color: var(--ink); }
+
+  /* ── PRINT ── */
+  @media print {
+    #toolbar { display: none !important; }
+    .page-hero { padding: 20px; }
+    .vendor-card { break-inside: avoid; border: 1px solid #ccc; }
+    .vc-call-btn { display: none; }
+    body { background: #fff !important; }
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    #toolbar { padding: 10px 14px; gap: 8px; }
+    #trade-filter { min-width: 150px; }
+    #count-badge { display: none; }
+    .vendor-grid { grid-template-columns: 1fr; }
+    .directory { padding: 20px 14px 60px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <div class="iw-logo-box"><em>IW</em></div>
+    <div>
+      <div class="iw-logo-text">Ironwood Homes &amp; Renovations</div>
+      <div class="iw-logo-sub">Atlanta Metro, Georgia</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <span class="iw-badge">Internal</span>
+    <a class="iw-back-btn" href="index.html">Back to Tools</a>
+  </div>
+</header>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="eyebrow">Ironwood Homes &amp; Renovations</div>
+  <h1>Vendor &amp; Contractor Directory</h1>
+  <p class="subtitle">On-site reference for trades, contacts, and quick-dial access</p>
+</div>
+
+<!-- STICKY SEARCH & FILTER TOOLBAR -->
+<div id="toolbar">
+  <div class="search-wrap">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+    </svg>
+    <input type="search" id="search-input" placeholder="Search company, contact, or trade…" oninput="filterDirectory()">
+  </div>
+  <select id="trade-filter" onchange="filterDirectory()">
+    <option value="">All Trades</option>
+  </select>
+  <button id="clear-btn" onclick="clearFilters()">Clear</button>
+  <div id="count-badge"><strong id="visible-count">0</strong> vendors &middot; <strong id="trade-count">0</strong> trades</div>
+</div>
+
+<!-- DIRECTORY CONTAINER -->
+<div class="directory" id="directory"></div>
+<div id="no-results"><strong>No vendors found</strong><br>Try a different search or clear the filter.</div>
+
+<script>
+const CONTRACTORS = [
+  // LUMBER
+  { trade: "Lumber", company: "Carter Lumber", contact: "", phone: "", email: "", website: "" },
+  { trade: "Lumber", company: "Contract Lumber", contact: "Jim Ashford", phone: "740.927.4242", email: "", website: "" },
+  { trade: "Lumber", company: "84 Lumber", contact: "", phone: "", email: "", website: "" },
+  { trade: "Lumber", company: "Brand-Vaughan Lumber", contact: "", phone: "678.597.5532", email: "invoices@bvlumber.com", website: "www.bvlumber.com" },
+  // CABINETRY
+  { trade: "Cabinetry & Countertops", company: "Reinstate Homes", contact: "Jeff Akana", phone: "404.358.2068", email: "jeff@reinstatehomes.com", website: "www.reinstatehomes.com" },
+  // FOUNDATION / CONCRETE
+  { trade: "Foundation / Concrete", company: "2 Brothers Foundation", contact: "PePe Ortiz", phone: "770.318.2251", email: "twobrothersfoundation@outlook.com", website: "" },
+  { trade: "Foundation / Concrete", company: "Rojas Concrete", contact: "Cesar Rojas", phone: "678.873.7408", email: "cesarsgrading2012@gmail.com", website: "" },
+  { trade: "Foundation / Concrete", company: "Millenium Foundations", contact: "Kamaron Garmon", phone: "678.206.7762", email: "kamaron@millenniumfoundations.com", website: "" },
+  { trade: "Foundation / Concrete", company: "Middle GA Concrete Pumping", contact: "", phone: "678.618.5220", email: "accounting@mgcp-llc.com", website: "" },
+  { trade: "Foundation / Concrete", company: "R&O Concrete Services, LLC", contact: "", phone: "770.231.4739", email: "reginopadron.rp@gmail.com", website: "" },
+  { trade: "Foundation / Concrete", company: "Arreola Concrete Company", contact: "Angie Arreola", phone: "770.554.2503", email: "arreolaconcrete@aol.com", website: "" },
+  // FLOORING
+  { trade: "Flooring", company: "Atlanta Flooring Design Center", contact: "Jodie Strickland", phone: "770.476.8306", email: "jodiestrickland@atlantaflooringdesign.com", website: "" },
+  { trade: "Flooring", company: "Georgia Flooring Outlet", contact: "Kevin Barwick", phone: "770.474.9270", email: "kevin@georgiaflooringoutlet.com", website: "" },
+  // FRAMING
+  { trade: "Framing", company: "Jeg Construction", contact: "Efren Reyes", phone: "404.516.4233", email: "jegframing@bellsouth.net", website: "" },
+  { trade: "Framing", company: "Olmedo Construction", contact: "Alejandro Carmona", phone: "762.338.9807", email: "alejandrocarmona843338@gmail.com", website: "" },
+  { trade: "Framing", company: "DGO Southern Cons", contact: "Francisco Chaidez", phone: "404.964.0801", email: "dgosouthern@outlook.com", website: "" },
+  // TRIMMING / PAINTING
+  { trade: "Trim & Painting", company: "Atlanta Trim", contact: "Alejandro Hernandez", phone: "404.287.8356", email: "atlantatrim@yahoo.com", website: "" },
+  { trade: "Trim & Painting", company: "GM Painting & More", contact: "Guillermo Fernandez", phone: "770.432.2043", email: "gmpainting19@gmail.com", website: "" },
+  // APPLIANCES
+  { trade: "Appliances", company: "Southeastern Appliances & More", contact: "Terry Veneable", phone: "770.941.2121", email: "mabreu@climaticcorp.com", website: "" },
+  // ELECTRIC
+  { trade: "Electrical", company: "Willco Electric Company", contact: "", phone: "", email: "elopez.willcoelectric.com", website: "" },
+  // FIREPLACE
+  { trade: "Fireplace", company: "CR Construction Resources", contact: "Marci Webster", phone: "404.378.3132", email: "mwebster@crhomeusa.com", website: "" },
+  // FENCE
+  { trade: "Fence", company: "All Advanced Fence", contact: "", phone: "", email: "", website: "" },
+  { trade: "Fence", company: "Alliance Construction Consultants", contact: "Christin", phone: "770.697.3203", email: "christin@alliancecconsultants.com", website: "" },
+  // GARAGE DOOR
+  { trade: "Garage Door", company: "Voyles Overhead Door", contact: "", phone: "678.714.3725", email: "voylesoffice@gmail.com", website: "" },
+  { trade: "Garage Door", company: "Palmer Construction Consultants", contact: "Kari Palmer", phone: "770.886.5033", email: "admin@palmercci.com", website: "" },
+  { trade: "Garage Door", company: "Southeastern Appliances & More", contact: "Terry Veneable", phone: "770.941.2121", email: "mabreu@climaticcorp.com", website: "" },
+  // GRADING / LANDSCAPING
+  { trade: "Grading & Landscaping", company: "SDR Grading, LLC", contact: "Terry Cain", phone: "770.954.1422", email: "nataliecain@live.com", website: "" },
+  { trade: "Grading & Landscaping", company: "Tr3s Grading Irrigation & Landscaping", contact: "Emily Hernandez", phone: "470.483.2259", email: "emily.hernandez@ruizestate.com", website: "" },
+  { trade: "Grading & Landscaping", company: "Ruiz Grading & Landscaping", contact: "Yesy Pineda", phone: "404.952.7344", email: "yes.pineda@ruizestate.com", website: "" },
+  { trade: "Grading & Landscaping", company: "Sears Smith Landscape", contact: "Ginger", phone: "", email: "ginger@searsmithlandscape.com", website: "" },
+  { trade: "Grading & Landscaping", company: "Atlanta Sod & Landscape", contact: "David Brunson", phone: "770.318.6200", email: "david@atlantasodandlanscape.com", website: "" },
+  // INSULATION
+  { trade: "Insulation", company: "Woodman Insulation", contact: "", phone: "770.442.9089", email: "", website: "www.woodmaninsulationcumming.com" },
+  // INSPECTORS
+  { trade: "Inspectors", company: "Southern Construction Consulting", contact: "", phone: "770.614.0407", email: "sccsvcs@gmail.com", website: "" },
+  { trade: "Inspectors", company: "Captive Engineering", contact: "Nicole Cash", phone: "678.622.3232", email: "ncash.captiveeng@gmail.com", website: "" },
+  // PLUMBING
+  { trade: "Plumbing", company: "C&T Plumbing", contact: "", phone: "770.318.0718", email: "ctplumbing2004@gmail.com", website: "" },
+  { trade: "Plumbing", company: "Serrano Plumbing", contact: "", phone: "", email: "shererronnie58@gmail.com", website: "" },
+  // MASONRY
+  { trade: "Masonry / Brick / Stone", company: "Alley-Cassetty Brick & Stone", contact: "", phone: "615.961.5492", email: "", website: "www.alley-cassetty.com" },
+  { trade: "Masonry / Brick / Stone", company: "Big City Masonry", contact: "", phone: "", email: "bigcityfree@yahoo.com", website: "" },
+  // MAILBOX
+  { trade: "Mailbox Installation", company: "SEI GROUP", contact: "", phone: "770.840.7625", email: "seiinvoices@seigroupga.com", website: "" },
+  // SEALING / WATERPROOFING
+  { trade: "Sealing & Waterproofing", company: "Sealing Agents Waterproofing", contact: "", phone: "704.882.8443", email: "", website: "www.sealingagents.com" },
+  // EROSION
+  { trade: "Erosion Control", company: "The Erosion Company", contact: "", phone: "678.990.0207", email: "billing@tecompanies.com", website: "" },
+  { trade: "Erosion Control", company: "CSI Erosion", contact: "", phone: "770.456.0124", email: "", website: "" },
+  { trade: "Erosion Control", company: "Focused Service Group", contact: "Jami Brown", phone: "770.389.8666", email: "jbrown@fdc-llc.com", website: "" },
+  // DESIGN
+  { trade: "Design Consultants", company: "Falcon Design Consultants", contact: "Jami Brown", phone: "770.389.8666", email: "jbrown@fdc-llc.com", website: "" },
+  // PAVING
+  { trade: "Paving", company: "RP Paving Solutions", contact: "Cameron Dutton", phone: "678.840.4088", email: "camerondutton@fixourlot.com", website: "www.rppavingsolutions.com" },
+  // LOCKS / MIRRORS / HARDWARE
+  { trade: "Hardware & Specialty", company: "Georgia Specialty Products", contact: "Michele Walton", phone: "770.476.8547", email: "mwalton@gaspecialty.com", website: "" },
+  // HVAC
+  { trade: "HVAC", company: "Omega Heating & Air", contact: "", phone: "770.679.5494", email: "workorders@omegahvac.com", website: "www.omegahvac.com" },
+  // PEST
+  { trade: "Pest Control", company: "Pest USA", contact: "", phone: "844.777.3996", email: "billing@pestusa.com", website: "" },
+  // PORTA POTTY
+  { trade: "Porta Potty", company: "Toi Toi", contact: "", phone: "", email: "", website: "" },
+  { trade: "Porta Potty", company: "AAA Northside Portable Toilets", contact: "", phone: "478.452.6936", email: "", website: "www.northsideportables.com" },
+  { trade: "Porta Potty", company: "A-OK Portable Services", contact: "", phone: "478.956.1525", email: "april@aokportableservices.com", website: "" },
+  // TRASH / JUNK
+  { trade: "Trash & Junk Removal", company: "Freddys Trash", contact: "Alejandra Araiza", phone: "404.918.1503", email: "ale.aramon@hotmail.com", website: "" },
+  { trade: "Trash & Junk Removal", company: "El Extreme Junk Removal & Cleaning", contact: "Jenifer Maroquin", phone: "770.946.2228", email: "elextremejunk@gmail.com", website: "" },
+  // ROOFING
+  { trade: "Roofing", company: "Southern Expert Roofing", contact: "Brandy Truman", phone: "470.651.0482", email: "", website: "" },
+  // SIDING
+  { trade: "Siding & Gutters", company: "Southern Siding and Gutters", contact: "Harrison Kuhn", phone: "770.775.9374", email: "info@sidingandgutters.com", website: "www.sidingandgutters.com" },
+];
+
+// ── ICONS (inline SVG snippets) ──
+const ICON_PHONE  = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.1 2.18 2 2 0 012.11 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.18 6.18l1.27-.45a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>`;
+const ICON_EMAIL  = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>`;
+const ICON_WEB    = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>`;
+const ICON_CALL   = `<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.81 19.79 19.79 0 01.1 2.18 2 2 0 012.11 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.91 7.91a16 16 0 006.18 6.18l1.27-.45a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/></svg>`;
+
+// ── FORMAT PHONE: dots → dashes ──
+function fmtPhone(p) {
+  return p ? p.replace(/\./g, '-') : '';
+}
+
+// ── COLLECT UNIQUE TRADES ──
+const ALL_TRADES = [...new Set(CONTRACTORS.map(c => c.trade))].sort();
+const TOTAL_VENDORS = CONTRACTORS.length;
+const TOTAL_TRADES  = ALL_TRADES.length;
+
+// ── POPULATE TRADE DROPDOWN ──
+const sel = document.getElementById('trade-filter');
+ALL_TRADES.forEach(t => {
+  const opt = document.createElement('option');
+  opt.value = t;
+  opt.textContent = t;
+  sel.appendChild(opt);
+});
+
+// ── GROUP BY TRADE ──
+function groupByTrade(arr) {
+  const map = {};
+  arr.forEach(c => {
+    if (!map[c.trade]) map[c.trade] = [];
+    map[c.trade].push(c);
+  });
+  return map;
+}
+
+// ── BUILD CARD HTML ──
+function buildCard(c) {
+  const phoneFormatted = fmtPhone(c.phone);
+  const links = [];
+  if (c.phone) {
+    links.push(`<a class="vc-link" href="tel:${c.phone.replace(/\./g,'-')}">${ICON_PHONE} ${phoneFormatted}</a>`);
+  }
+  if (c.email) {
+    // some emails in data are missing "mailto:" — treat as address
+    const emailAddr = c.email.includes('@') ? c.email : '';
+    if (emailAddr) {
+      links.push(`<a class="vc-link" href="mailto:${emailAddr}">${ICON_EMAIL} ${emailAddr}</a>`);
+    }
+  }
+  if (c.website) {
+    const url = c.website.startsWith('http') ? c.website : 'https://' + c.website;
+    links.push(`<a class="vc-link" href="${url}" target="_blank" rel="noopener">${ICON_WEB} ${c.website}</a>`);
+  }
+
+  const callBtnClass = c.phone ? 'vc-call-btn' : 'vc-call-btn no-phone';
+  const callHref     = c.phone ? `href="tel:${fmtPhone(c.phone)}"` : '';
+  const callLabel    = c.phone ? `Call ${phoneFormatted}` : 'No phone listed';
+
+  return `
+    <div class="vendor-card" data-company="${(c.company||'').toLowerCase()}" data-contact="${(c.contact||'').toLowerCase()}" data-trade="${(c.trade||'').toLowerCase()}">
+      <div class="vc-company">${c.company}</div>
+      ${c.contact ? `<div class="vc-contact">${c.contact}</div>` : ''}
+      ${links.length ? `<div class="vc-links">${links.join('<span class="vc-sep"> · </span>')}</div>` : ''}
+      <div class="vc-footer">
+        <a class="${callBtnClass}" ${callHref}>${ICON_CALL} ${callLabel}</a>
+      </div>
+    </div>`;
+}
+
+// ── INITIAL RENDER ──
+function buildDirectory() {
+  const dir = document.getElementById('directory');
+  dir.innerHTML = '';
+  const grouped = groupByTrade(CONTRACTORS);
+  ALL_TRADES.forEach(trade => {
+    const vendors = grouped[trade] || [];
+    const section = document.createElement('div');
+    section.className = 'trade-section';
+    section.dataset.trade = trade;
+    section.innerHTML = `
+      <div class="trade-heading">
+        <h2>${trade}</h2>
+        <span class="trade-count">${vendors.length} vendor${vendors.length !== 1 ? 's' : ''}</span>
+      </div>
+      <div class="vendor-grid">${vendors.map(buildCard).join('')}</div>`;
+    dir.appendChild(section);
+  });
+  updateCount(TOTAL_VENDORS, TOTAL_TRADES);
+}
+
+// ── FILTER ──
+function filterDirectory() {
+  const q    = (document.getElementById('search-input').value || '').toLowerCase().trim();
+  const cat  = (document.getElementById('trade-filter').value || '').toLowerCase();
+
+  let visVendors = 0;
+  let visTrades  = 0;
+
+  document.querySelectorAll('.trade-section').forEach(section => {
+    const tradeName = (section.dataset.trade || '').toLowerCase();
+    const tradeMatch = !cat || tradeName === cat;
+
+    let visInSection = 0;
+    section.querySelectorAll('.vendor-card').forEach(card => {
+      const cMatch = !q || card.dataset.company.includes(q) || card.dataset.contact.includes(q) || card.dataset.trade.includes(q);
+      const show = tradeMatch && cMatch;
+      card.dataset.hidden = show ? 'false' : 'true';
+      if (show) visInSection++;
+    });
+
+    const showSection = visInSection > 0;
+    section.dataset.hidden = showSection ? 'false' : 'true';
+    if (showSection) {
+      visTrades++;
+      visVendors += visInSection;
+    }
+  });
+
+  updateCount(visVendors, visTrades);
+  document.getElementById('no-results').style.display = visVendors === 0 ? 'block' : 'none';
+}
+
+function updateCount(vendors, trades) {
+  document.getElementById('visible-count').textContent = vendors;
+  document.getElementById('trade-count').textContent   = trades;
+}
+
+// ── CLEAR ──
+function clearFilters() {
+  document.getElementById('search-input').value = '';
+  document.getElementById('trade-filter').value = '';
+  filterDirectory();
+}
+
+// ── BOOT ──
+buildDirectory();
+</script>
+</body>
+</html>
