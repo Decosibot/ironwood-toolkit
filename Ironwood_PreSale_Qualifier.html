@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Sale Renovation Qualifier — Ironwood</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest:    #1a2e1a;
+      --bronze:    #8a6c3a;
+      --bronze-lt: #c4963e;
+      --cream:     #f5f0e8;
+      --ink:       #1a1a14;
+      --ink-soft:  #4a4438;
+      --muted:     #6b6352;
+      --border:    rgba(138,108,58,0.18);
+      --border-2:  rgba(138,108,58,0.32);
+      --surface:   #f7f4ee;
+      --green:     #22c55e;
+      --green-bg:  #dcfce7;
+      --green-bdr: #86efac;
+      --red:       #ef4444;
+      --red-bg:    #fee2e2;
+      --red-bdr:   #fca5a5;
+      --amber:     #d97706;
+      --amber-bg:  #fef3c7;
+      --amber-bdr: #fcd34d;
+      --radius:    10px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+    /* ── HEADER ── */
+    .iw-header {
+      background: #fff; border-bottom: 1px solid var(--border);
+      padding: 0 24px; height: 58px;
+      display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .iw-logo-area { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .iw-logo-box {
+      width: 32px; height: 32px; background: var(--bronze);
+      border-radius: 6px; display: flex; align-items: center; justify-content: center;
+      font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.8rem; color: white;
+    }
+    .iw-logo-text { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--ink); letter-spacing: -0.01em; }
+    .iw-logo-sub { font-size: 0.65rem; color: var(--muted); }
+    .iw-header-right { display: flex; align-items: center; gap: 12px; }
+    .iw-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-bdr); padding: 3px 8px; border-radius: 999px; }
+    .iw-back-btn { font-size: 0.78rem; color: var(--muted); text-decoration: none; border: 1px solid var(--border-2); padding: 5px 12px; border-radius: var(--radius); transition: color .2s, border-color .2s; }
+    .iw-back-btn:hover { color: var(--ink); border-color: var(--bronze); }
+
+    /* ── PAGE HERO ── */
+    .page-hero { background: #fff; border-bottom: 3px solid var(--bronze); padding: 32px 24px 28px; text-align: center; }
+    .page-hero .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bronze); margin-bottom: 8px; }
+    .page-hero h1 { font-family: 'Outfit', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; color: var(--forest); letter-spacing: -0.02em; margin-bottom: 6px; }
+    .page-hero .subtitle { font-size: 0.85rem; color: var(--muted); }
+
+    /* ── LAYOUT ── */
+    .qualifier { max-width: 820px; margin: 0 auto; padding: 32px 20px 80px; }
+
+    /* ── SECTIONS ── */
+    .q-section { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
+    .q-section-title {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+      letter-spacing: 0.14em; text-transform: uppercase; color: var(--bronze);
+      margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
+    }
+    .q-section-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+    /* ── FORM FIELDS ── */
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 14px; }
+    .field-row.single { grid-template-columns: 1fr; }
+    .field-row.triple { grid-template-columns: 1fr 1fr 1fr; }
+    .field { display: flex; flex-direction: column; gap: 5px; }
+    .field label { font-size: 0.72rem; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+    .field input, .field select {
+      padding: 9px 12px; border-radius: var(--radius);
+      border: 1.5px solid var(--border-2); background: var(--cream);
+      font-size: 0.88rem; font-family: inherit; color: var(--ink);
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .field input:focus, .field select:focus {
+      outline: none; border-color: var(--bronze);
+      box-shadow: 0 0 0 3px rgba(138,108,58,0.12); background: #fff;
+    }
+
+    /* ── CALC ROWS ── */
+    .calc-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 10px 14px; border-radius: var(--radius);
+      background: var(--surface); margin-bottom: 8px;
+      border: 1px solid var(--border);
+    }
+    .calc-label { font-size: 0.8rem; color: var(--ink-soft); font-weight: 500; }
+    .calc-value { font-family: 'IBM Plex Mono', monospace; font-size: 0.88rem; font-weight: 600; color: var(--ink); }
+    .calc-row.highlight { background: var(--cream); border-color: var(--border-2); }
+    .calc-row .status-icon { font-size: 1rem; margin-left: 10px; }
+
+    .pass { color: #16a34a !important; }
+    .fail { color: var(--red) !important; }
+    .neutral { color: var(--muted) !important; }
+
+    .calc-row.status-pass { background: var(--green-bg); border-color: var(--green-bdr); }
+    .calc-row.status-fail { background: var(--red-bg); border-color: var(--red-bdr); }
+
+    /* ── CHECKLIST ── */
+    .checklist-item {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+      gap: 12px;
+    }
+    .checklist-item:last-child { border-bottom: none; }
+    .checklist-text { font-size: 0.85rem; color: var(--ink); flex: 1; line-height: 1.4; }
+    .checklist-text .req { font-size: 0.65rem; font-family: 'IBM Plex Mono', monospace; color: var(--red); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 6px; }
+    .toggle-wrap { display: flex; gap: 6px; flex-shrink: 0; }
+    .toggle-btn {
+      padding: 5px 14px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;
+      font-family: inherit; cursor: pointer; border: 1.5px solid var(--border-2);
+      background: #fff; color: var(--muted); transition: all .15s;
+    }
+    .toggle-btn.yes-active { background: var(--green-bg); border-color: var(--green-bdr); color: #16a34a; }
+    .toggle-btn.no-active  { background: var(--red-bg);   border-color: var(--red-bdr);   color: var(--red); }
+
+    /* ── FUNDING RADIO ── */
+    .radio-group { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
+    .radio-btn {
+      padding: 8px 16px; border-radius: 999px; font-size: 0.8rem; font-weight: 600;
+      font-family: inherit; cursor: pointer; border: 1.5px solid var(--border-2);
+      background: #fff; color: var(--muted); transition: all .15s;
+    }
+    .radio-btn.active { background: rgba(138,108,58,0.1); border-color: var(--bronze); color: var(--bronze); }
+    #hm-detail { display: none; margin-top: 4px; }
+
+    /* ── VERDICT ── */
+    #verdict-box {
+      border-radius: 16px; padding: 28px 32px; text-align: center;
+      margin-bottom: 20px; border: 2px solid var(--border);
+      background: var(--surface); transition: all .3s;
+    }
+    #verdict-box.go     { background: var(--green-bg); border-color: var(--green-bdr); }
+    #verdict-box.nogo   { background: var(--red-bg);   border-color: var(--red-bdr);   }
+    #verdict-box.review { background: var(--amber-bg); border-color: var(--amber-bdr); }
+    #verdict-label {
+      font-family: 'Outfit', sans-serif; font-weight: 800;
+      font-size: 2.6rem; letter-spacing: -0.02em; line-height: 1;
+      color: var(--muted); margin-bottom: 6px;
+    }
+    #verdict-box.go   #verdict-label { color: #16a34a; }
+    #verdict-box.nogo #verdict-label { color: var(--red); }
+    #verdict-box.review #verdict-label { color: var(--amber); }
+    #verdict-sub { font-size: 0.88rem; color: var(--muted); line-height: 1.5; margin-bottom: 16px; }
+    #verdict-issues { text-align: left; }
+    .verdict-issue {
+      display: flex; align-items: flex-start; gap: 8px;
+      font-size: 0.8rem; color: var(--ink-soft); padding: 5px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .verdict-issue:last-child { border-bottom: none; }
+    .vi-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+    .vi-dot.pass { background: #16a34a; }
+    .vi-dot.fail { background: var(--red); }
+    .vi-dot.warn { background: var(--amber); }
+
+    /* ── SUMMARY CARD ── */
+    #summary-card { display: none; }
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+    .summary-item { background: var(--surface); border-radius: var(--radius); padding: 12px 16px; border: 1px solid var(--border); }
+    .summary-item-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .summary-item-value { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
+    .print-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 10px 22px; background: var(--bronze); color: white;
+      border: none; border-radius: 999px; font-size: 0.85rem; font-weight: 600;
+      font-family: inherit; cursor: pointer; transition: opacity .2s;
+    }
+    .print-btn:hover { opacity: 0.88; }
+
+    /* ── PRINT ── */
+    @media print {
+      .iw-header .iw-back-btn, .print-btn { display: none; }
+      .page-hero { border-bottom: 2px solid #8a6c3a; }
+      body { background: #fff; }
+      .q-section { border: 1px solid #ccc; break-inside: avoid; }
+      #verdict-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    }
+
+    @media (max-width: 640px) {
+      .field-row, .field-row.triple { grid-template-columns: 1fr; }
+      .summary-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <div class="iw-logo-box">IW</div>
+    <div>
+      <div class="iw-logo-text">Ironwood Homes &amp; Renovations</div>
+      <div class="iw-logo-sub">Atlanta Metro, Georgia</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <span class="iw-badge">Internal Tool</span>
+    <a class="iw-back-btn" href="index.html">Back to Tools</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="page-hero">
+  <div class="eyebrow">Pre-Sale Renovation Program</div>
+  <h1>Deal Qualifying Checklist</h1>
+  <p class="subtitle">Complete all fields to receive a GO / NO-GO / REVIEW verdict with deal economics.</p>
+</div>
+
+<!-- QUALIFIER -->
+<div class="qualifier">
+
+  <!-- VERDICT (shown at top for quick reference) -->
+  <div id="verdict-box">
+    <div id="verdict-label">INCOMPLETE</div>
+    <div id="verdict-sub">Fill in the financial fields and checklist below to generate a verdict.</div>
+    <div id="verdict-issues"></div>
+  </div>
+
+  <!-- SECTION 1: PROPERTY INFO -->
+  <div class="q-section">
+    <div class="q-section-title">Section 1 — Property Info</div>
+    <div class="field-row single">
+      <div class="field">
+        <label>Property Address</label>
+        <input type="text" id="address" placeholder="123 Peachtree St, Atlanta, GA" oninput="recalc()">
+      </div>
+    </div>
+    <div class="field-row triple">
+      <div class="field">
+        <label>Seller Name</label>
+        <input type="text" id="seller-name" placeholder="John Smith" oninput="recalc()">
+      </div>
+      <div class="field">
+        <label>Listing Agent</label>
+        <input type="text" id="agent-name" placeholder="Agent Name" oninput="recalc()">
+      </div>
+      <div class="field">
+        <label>Assessment Date</label>
+        <input type="date" id="assess-date" oninput="recalc()">
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label>Agent Phone</label>
+        <input type="tel" id="agent-phone" placeholder="(404) 555-0100" oninput="recalc()">
+      </div>
+      <div class="field">
+        <label>Agent Email</label>
+        <input type="email" id="agent-email" placeholder="agent@email.com" oninput="recalc()">
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2: FINANCIAL QUALIFIERS -->
+  <div class="q-section">
+    <div class="q-section-title">Section 2 — Financial Qualifiers</div>
+
+    <div class="field-row triple">
+      <div class="field">
+        <label>Current Property Value ($)</label>
+        <input type="number" id="prop-value" placeholder="250000" min="0" oninput="recalc()">
+      </div>
+      <div class="field">
+        <label>Outstanding Mortgage ($)</label>
+        <input type="number" id="mortgage" placeholder="180000" min="0" oninput="recalc()">
+      </div>
+      <div class="field">
+        <label>Other Liens ($)</label>
+        <input type="number" id="liens" placeholder="0" min="0" value="0" oninput="recalc()">
+      </div>
+    </div>
+
+    <div class="calc-row highlight" id="equity-row">
+      <span class="calc-label">Available Equity</span>
+      <span class="calc-value neutral" id="equity-val">—</span>
+    </div>
+
+    <div class="field-row" style="margin-top:14px;">
+      <div class="field">
+        <label>Estimated Renovation Cost ($)</label>
+        <input type="number" id="reno-cost" placeholder="20000" min="0" oninput="recalc()">
+      </div>
+      <div class="field">
+        <label>Projected ARV After Renovation ($)</label>
+        <input type="number" id="arv" placeholder="310000" min="0" oninput="recalc()">
+      </div>
+    </div>
+
+    <div class="calc-row" id="cushion-row">
+      <span class="calc-label">Equity Cushion Ratio <span style="font-size:0.7rem;color:var(--muted);">(min 1.5×)</span></span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span class="calc-value neutral" id="cushion-val">—</span>
+        <span class="status-icon" id="cushion-icon"></span>
+      </span>
+    </div>
+
+    <div class="calc-row" id="lift-row">
+      <span class="calc-label">Value Lift <span style="font-size:0.7rem;color:var(--muted);">(ARV − Current Value)</span></span>
+      <span class="calc-value neutral" id="lift-val">—</span>
+    </div>
+
+    <div class="calc-row" id="lift-ratio-row">
+      <span class="calc-label">Lift-to-Cost Ratio <span style="font-size:0.7rem;color:var(--muted);">(min 1.3×)</span></span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span class="calc-value neutral" id="lift-ratio-val">—</span>
+        <span class="status-icon" id="lift-ratio-icon"></span>
+      </span>
+    </div>
+
+    <div class="field-row" style="margin-top:14px;">
+      <div class="field">
+        <label>Service Fee % (default 18)</label>
+        <input type="number" id="fee-pct" value="18" min="15" max="25" oninput="recalc()">
+      </div>
+    </div>
+
+    <div class="calc-row">
+      <span class="calc-label">Service Fee ($)</span>
+      <span class="calc-value" id="fee-val">—</span>
+    </div>
+    <div class="calc-row">
+      <span class="calc-label">Total Owed at Closing</span>
+      <span class="calc-value" id="total-owed-val">—</span>
+    </div>
+    <div class="calc-row highlight" id="seller-net-row">
+      <span class="calc-label"><strong>Seller Net After Ironwood</strong> <span style="font-size:0.7rem;color:var(--muted);">(min $5,000)</span></span>
+      <span style="display:flex;align-items:center;gap:6px;">
+        <span class="calc-value neutral" id="seller-net-val">—</span>
+        <span class="status-icon" id="seller-net-icon"></span>
+      </span>
+    </div>
+  </div>
+
+  <!-- SECTION 3: QUALIFICATION CHECKLIST -->
+  <div class="q-section">
+    <div class="q-section-title">Section 3 — Qualification Checklist</div>
+
+    <div class="checklist-item">
+      <span class="checklist-text">Seller has a signed listing agreement with a licensed agent <span class="req">Required</span></span>
+      <div class="toggle-wrap">
+        <button class="toggle-btn" data-key="listing" data-val="yes" onclick="setToggle(this,'yes','listing')">Yes</button>
+        <button class="toggle-btn" data-key="listing" data-val="no"  onclick="setToggle(this,'no','listing')">No</button>
+      </div>
+    </div>
+    <div class="checklist-item">
+      <span class="checklist-text">Property has clear title — no undisclosed liens or encumbrances <span class="req">Required</span></span>
+      <div class="toggle-wrap">
+        <button class="toggle-btn" data-key="title" data-val="yes" onclick="setToggle(this,'yes','title')">Yes</button>
+        <button class="toggle-btn" data-key="title" data-val="no"  onclick="setToggle(this,'no','title')">No</button>
+      </div>
+    </div>
+    <div class="checklist-item">
+      <span class="checklist-text">Seller agrees to minimum list price (renovation cost × 1.25) in writing <span class="req">Required</span></span>
+      <div class="toggle-wrap">
+        <button class="toggle-btn" data-key="minprice" data-val="yes" onclick="setToggle(this,'yes','minprice')">Yes</button>
+        <button class="toggle-btn" data-key="minprice" data-val="no"  onclick="setToggle(this,'no','minprice')">No</button>
+      </div>
+    </div>
+    <div class="checklist-item">
+      <span class="checklist-text">Seller agrees to list within 60 days of project completion <span class="req">Required</span></span>
+      <div class="toggle-wrap">
+        <button class="toggle-btn" data-key="timeline" data-val="yes" onclick="setToggle(this,'yes','timeline')">Yes</button>
+        <button class="toggle-btn" data-key="timeline" data-val="no"  onclick="setToggle(this,'no','timeline')">No</button>
+      </div>
+    </div>
+    <div class="checklist-item">
+      <span class="checklist-text">Renovation scope is within Ironwood's capabilities</span>
+      <div class="toggle-wrap">
+        <button class="toggle-btn" data-key="scope" data-val="yes" onclick="setToggle(this,'yes','scope')">Yes</button>
+        <button class="toggle-btn" data-key="scope" data-val="no"  onclick="setToggle(this,'no','scope')">No</button>
+      </div>
+    </div>
+    <div class="checklist-item">
+      <span class="checklist-text">Renovation cost is ≤ $40,000 OR Managing Member approval obtained</span>
+      <div class="toggle-wrap">
+        <button class="toggle-btn" data-key="maxcost" data-val="yes" onclick="setToggle(this,'yes','maxcost')">Yes</button>
+        <button class="toggle-btn" data-key="maxcost" data-val="no"  onclick="setToggle(this,'no','maxcost')">No</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 4: FUNDING SOURCE -->
+  <div class="q-section">
+    <div class="q-section-title">Section 4 — Funding Source</div>
+    <div class="radio-group" id="funding-group">
+      <button class="radio-btn active" data-fund="operating" onclick="setFunding(this,'operating')">Ironwood Operating Capital</button>
+      <button class="radio-btn" data-fund="hardmoney" onclick="setFunding(this,'hardmoney')">Hard Money Lender</button>
+      <button class="radio-btn" data-fund="anchorpro" onclick="setFunding(this,'anchorpro')">Anchor Pro Solutions</button>
+      <button class="radio-btn" data-fund="other" onclick="setFunding(this,'other')">Other</button>
+    </div>
+    <div id="hm-detail">
+      <div class="field-row">
+        <div class="field">
+          <label>Interest Rate (% annualized)</label>
+          <input type="number" id="hm-rate" value="12" min="0" max="30" step="0.5" oninput="recalc()">
+        </div>
+        <div class="field">
+          <label>Estimated Days to Close</label>
+          <input type="number" id="hm-days" value="60" min="1" oninput="recalc()">
+        </div>
+      </div>
+      <div class="calc-row" id="interest-row">
+        <span class="calc-label">Estimated Interest Cost</span>
+        <span class="calc-value" id="interest-val">—</span>
+      </div>
+      <div class="calc-row highlight">
+        <span class="calc-label"><strong>Net Margin After Interest</strong></span>
+        <span class="calc-value" id="net-margin-val">—</span>
+      </div>
+    </div>
+    <div id="anchorpro-detail" style="display:none;">
+      <div class="calc-row" style="margin-top:8px;">
+        <span class="calc-label">Anchor Pro Funding Fee (8%)</span>
+        <span class="calc-value" id="ap-fee-val">—</span>
+      </div>
+      <div class="calc-row highlight">
+        <span class="calc-label"><strong>Net Margin After Anchor Pro Fee</strong></span>
+        <span class="calc-value" id="ap-net-val">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5: SUMMARY CARD -->
+  <div class="q-section" id="summary-card">
+    <div class="q-section-title">Section 5 — Deal Summary</div>
+    <div class="summary-grid">
+      <div class="summary-item"><div class="summary-item-label">Property Address</div><div class="summary-item-value" id="sum-address">—</div></div>
+      <div class="summary-item"><div class="summary-item-label">Assessment Date</div><div class="summary-item-value" id="sum-date">—</div></div>
+      <div class="summary-item"><div class="summary-item-label">Seller</div><div class="summary-item-value" id="sum-seller">—</div></div>
+      <div class="summary-item"><div class="summary-item-label">Listing Agent</div><div class="summary-item-value" id="sum-agent">—</div></div>
+      <div class="summary-item"><div class="summary-item-label">Renovation Cost</div><div class="summary-item-value" id="sum-reno">—</div></div>
+      <div class="summary-item"><div class="summary-item-label">Service Fee</div><div class="summary-item-value" id="sum-fee">—</div></div>
+      <div class="summary-item"><div class="summary-item-label">Total Owed at Closing</div><div class="summary-item-value" id="sum-total">—</div></div>
+      <div class="summary-item"><div class="summary-item-label">Projected ARV</div><div class="summary-item-value" id="sum-arv">—</div></div>
+      <div class="summary-item"><div class="summary-item-label">Seller Net After Ironwood</div><div class="summary-item-value" id="sum-seller-net">—</div></div>
+      <div class="summary-item"><div class="summary-item-label">Funding Source</div><div class="summary-item-value" id="sum-funding">—</div></div>
+      <div class="summary-item" style="grid-column:1/-1;"><div class="summary-item-label">Verdict</div><div class="summary-item-value" id="sum-verdict" style="font-size:1.2rem;">—</div></div>
+    </div>
+    <button class="print-btn" onclick="window.print()">🖨 Print / Save PDF</button>
+  </div>
+
+</div><!-- /qualifier -->
+
+<script>
+// ── STATE ──
+var checks = { listing: null, title: null, minprice: null, timeline: null, scope: null, maxcost: null };
+var fundingSource = 'operating';
+
+function fmt(n) { return isNaN(n) ? '—' : '$' + Math.round(n).toLocaleString(); }
+function fmtR(n) { return isNaN(n) ? '—' : n.toFixed(2) + '×'; }
+
+function setToggle(btn, val, key) {
+  var wrap = btn.closest('.toggle-wrap');
+  wrap.querySelectorAll('.toggle-btn').forEach(function(b) { b.classList.remove('yes-active','no-active'); });
+  btn.classList.add(val === 'yes' ? 'yes-active' : 'no-active');
+  checks[key] = val;
+  recalc();
+}
+
+function setFunding(btn, fund) {
+  document.querySelectorAll('#funding-group .radio-btn').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  fundingSource = fund;
+  document.getElementById('hm-detail').style.display       = fund === 'hardmoney' ? 'block' : 'none';
+  document.getElementById('anchorpro-detail').style.display = fund === 'anchorpro' ? 'block' : 'none';
+  recalc();
+}
+
+function recalc() {
+  var propVal  = parseFloat(document.getElementById('prop-value').value) || 0;
+  var mortgage = parseFloat(document.getElementById('mortgage').value)   || 0;
+  var liens    = parseFloat(document.getElementById('liens').value)      || 0;
+  var renoCost = parseFloat(document.getElementById('reno-cost').value)  || 0;
+  var arv      = parseFloat(document.getElementById('arv').value)        || 0;
+  var feePct   = parseFloat(document.getElementById('fee-pct').value)    || 18;
+
+  var equity       = propVal - mortgage - liens;
+  var cushionRatio = renoCost > 0 ? equity / renoCost : 0;
+  var lift         = arv - propVal;
+  var liftRatio    = renoCost > 0 ? lift / renoCost : 0;
+  var serviceFee   = renoCost * (feePct / 100);
+  var totalOwed    = renoCost + serviceFee;
+  var sellerNet    = arv - mortgage - liens - totalOwed;
+
+  // ── EQUITY ──
+  var eEl = document.getElementById('equity-val');
+  var eRow = document.getElementById('equity-row');
+  eEl.textContent = propVal ? fmt(equity) : '—';
+  eEl.className = 'calc-value ' + (propVal ? (equity > 0 ? 'pass' : 'fail') : 'neutral');
+  eRow.className = 'calc-row highlight ' + (propVal ? (equity > 0 ? 'status-pass' : 'status-fail') : '');
+
+  // ── CUSHION ──
+  var cEl = document.getElementById('cushion-val');
+  var cIcon = document.getElementById('cushion-icon');
+  var cushionPass = renoCost > 0 && cushionRatio >= 1.5;
+  var cushionFail = renoCost > 0 && cushionRatio < 1.5;
+  cEl.textContent = renoCost > 0 ? fmtR(cushionRatio) : '—';
+  cEl.className   = 'calc-value ' + (renoCost > 0 ? (cushionPass ? 'pass' : 'fail') : 'neutral');
+  cIcon.textContent = renoCost > 0 ? (cushionPass ? '✅' : '❌') : '';
+  document.getElementById('cushion-row').className = 'calc-row ' + (renoCost > 0 ? (cushionPass ? 'status-pass' : 'status-fail') : '');
+
+  // ── LIFT ──
+  document.getElementById('lift-val').textContent  = (arv && propVal) ? fmt(lift) : '—';
+  document.getElementById('lift-val').className    = 'calc-value ' + ((arv && propVal) ? (lift > 0 ? 'pass' : 'fail') : 'neutral');
+
+  // ── LIFT RATIO ──
+  var lrEl   = document.getElementById('lift-ratio-val');
+  var lrIcon = document.getElementById('lift-ratio-icon');
+  var lrPass = renoCost > 0 && liftRatio >= 1.3;
+  var lrFail = renoCost > 0 && liftRatio < 1.3;
+  lrEl.textContent = renoCost > 0 && arv > 0 ? fmtR(liftRatio) : '—';
+  lrEl.className   = 'calc-value ' + (renoCost > 0 && arv > 0 ? (lrPass ? 'pass' : 'fail') : 'neutral');
+  lrIcon.textContent = (renoCost > 0 && arv > 0) ? (lrPass ? '✅' : '❌') : '';
+  document.getElementById('lift-ratio-row').className = 'calc-row ' + (renoCost > 0 && arv > 0 ? (lrPass ? 'status-pass' : 'status-fail') : '');
+
+  // ── FEES ──
+  document.getElementById('fee-val').textContent       = renoCost > 0 ? fmt(serviceFee) : '—';
+  document.getElementById('total-owed-val').textContent = renoCost > 0 ? fmt(totalOwed)  : '—';
+
+  // ── SELLER NET ──
+  var snEl   = document.getElementById('seller-net-val');
+  var snIcon = document.getElementById('seller-net-icon');
+  var snPass = renoCost > 0 && arv > 0 && sellerNet >= 5000;
+  var snFail = renoCost > 0 && arv > 0 && sellerNet < 5000;
+  snEl.textContent = (renoCost > 0 && arv > 0) ? fmt(sellerNet) : '—';
+  snEl.className   = 'calc-value ' + (renoCost > 0 && arv > 0 ? (snPass ? 'pass' : 'fail') : 'neutral');
+  snIcon.textContent = (renoCost > 0 && arv > 0) ? (snPass ? '✅' : '❌') : '';
+  document.getElementById('seller-net-row').className = 'calc-row highlight ' + (renoCost > 0 && arv > 0 ? (snPass ? 'status-pass' : 'status-fail') : '');
+
+  // ── FUNDING ──
+  if (fundingSource === 'hardmoney') {
+    var hmRate = parseFloat(document.getElementById('hm-rate').value) || 12;
+    var hmDays = parseFloat(document.getElementById('hm-days').value) || 60;
+    var interest = renoCost * (hmRate / 100) * (hmDays / 365);
+    document.getElementById('interest-val').textContent  = renoCost > 0 ? fmt(interest) : '—';
+    document.getElementById('net-margin-val').textContent = renoCost > 0 ? fmt(serviceFee - interest) : '—';
+    document.getElementById('net-margin-val').className  = 'calc-value ' + (serviceFee - interest > 0 ? 'pass' : 'fail');
+  }
+  if (fundingSource === 'anchorpro') {
+    var apFee = renoCost * 0.08;
+    document.getElementById('ap-fee-val').textContent = renoCost > 0 ? fmt(apFee) : '—';
+    document.getElementById('ap-net-val').textContent = renoCost > 0 ? fmt(serviceFee - apFee) : '—';
+    document.getElementById('ap-net-val').className   = 'calc-value ' + (serviceFee - apFee > 0 ? 'pass' : 'fail');
+  }
+
+  // ── VERDICT ──
+  var requiredChecks = ['listing','title','minprice','timeline'];
+  var allRequired = requiredChecks.every(function(k) { return checks[k] === 'yes'; });
+  var anyRequiredNo = requiredChecks.some(function(k) { return checks[k] === 'no'; });
+  var anyNo = Object.keys(checks).some(function(k) { return checks[k] === 'no'; });
+  var allChecked = Object.keys(checks).every(function(k) { return checks[k] !== null; });
+  var hasFinancials = propVal > 0 && renoCost > 0 && arv > 0;
+
+  var financialPass = hasFinancials && cushionPass && lrPass && snPass;
+  var financialFail = hasFinancials && (!cushionPass || !lrPass || !snPass);
+
+  var issues = [];
+
+  if (!hasFinancials) {
+    issues.push({ type:'warn', text: 'Enter property value, renovation cost, and ARV to evaluate financials.' });
+  } else {
+    issues.push({ type: cushionPass ? 'pass' : 'fail', text: 'Equity cushion ratio: ' + (renoCost > 0 ? fmtR(cushionRatio) : '—') + (cushionPass ? ' ✓ (min 1.5×)' : ' ✗ (min 1.5× required)') });
+    issues.push({ type: lrPass ? 'pass' : 'fail', text: 'Lift-to-cost ratio: ' + (renoCost > 0 && arv > 0 ? fmtR(liftRatio) : '—') + (lrPass ? ' ✓ (min 1.3×)' : ' ✗ (min 1.3× required)') });
+    issues.push({ type: snPass ? 'pass' : 'fail', text: 'Seller net after Ironwood: ' + (renoCost > 0 && arv > 0 ? fmt(sellerNet) : '—') + (snPass ? ' ✓' : ' ✗ (min $5,000 required)') });
+  }
+
+  if (!allChecked) {
+    issues.push({ type:'warn', text: 'Complete all checklist items in Section 3.' });
+  } else {
+    requiredChecks.forEach(function(k) {
+      var labels = { listing:'Signed listing agreement', title:'Clear title', minprice:'Minimum list price agreement', timeline:'60-day listing commitment' };
+      issues.push({ type: checks[k] === 'yes' ? 'pass' : 'fail', text: labels[k] + ': ' + (checks[k] === 'yes' ? 'Yes ✓' : 'No ✗') });
+    });
+  }
+
+  var box = document.getElementById('verdict-box');
+  var label = document.getElementById('verdict-label');
+  var sub = document.getElementById('verdict-sub');
+  var issuesEl = document.getElementById('verdict-issues');
+
+  issuesEl.innerHTML = issues.map(function(i) {
+    return '<div class="verdict-issue"><div class="vi-dot ' + i.type + '"></div><span>' + i.text + '</span></div>';
+  }).join('');
+
+  if (!hasFinancials || !allChecked) {
+    box.className = ''; label.textContent = 'INCOMPLETE';
+    sub.textContent = 'Fill in all financial fields and complete the checklist to generate a verdict.';
+    document.getElementById('summary-card').style.display = 'none';
+  } else if (financialFail || anyRequiredNo || anyNo) {
+    box.className = 'nogo'; label.textContent = 'NO-GO';
+    sub.textContent = 'This deal does not meet Ironwood\'s qualification criteria. See issues below.';
+    document.getElementById('summary-card').style.display = 'none';
+  } else if (financialPass && allRequired && allChecked) {
+    box.className = 'go'; label.textContent = 'GO';
+    sub.textContent = 'This deal meets all qualification criteria. Review the summary below and proceed to the Pre-Sale Renovation Agreement.';
+    document.getElementById('summary-card').style.display = 'block';
+    updateSummary(renoCost, serviceFee, totalOwed, arv, sellerNet);
+  } else {
+    box.className = 'review'; label.textContent = 'REVIEW';
+    sub.textContent = 'Some criteria are borderline or incomplete. Review issues before proceeding.';
+    document.getElementById('summary-card').style.display = 'block';
+    updateSummary(renoCost, serviceFee, totalOwed, arv, sellerNet);
+  }
+}
+
+function updateSummary(renoCost, serviceFee, totalOwed, arv, sellerNet) {
+  var fundLabels = { operating:'Ironwood Operating Capital', hardmoney:'Hard Money Lender', anchorpro:'Anchor Pro Solutions', other:'Other' };
+  document.getElementById('sum-address').textContent    = document.getElementById('address').value || '—';
+  document.getElementById('sum-date').textContent       = document.getElementById('assess-date').value || '—';
+  document.getElementById('sum-seller').textContent     = document.getElementById('seller-name').value || '—';
+  document.getElementById('sum-agent').textContent      = document.getElementById('agent-name').value || '—';
+  document.getElementById('sum-reno').textContent       = fmt(renoCost);
+  document.getElementById('sum-fee').textContent        = fmt(serviceFee);
+  document.getElementById('sum-total').textContent      = fmt(totalOwed);
+  document.getElementById('sum-arv').textContent        = fmt(arv);
+  document.getElementById('sum-seller-net').textContent = fmt(sellerNet);
+  document.getElementById('sum-funding').textContent    = fundLabels[fundingSource] || fundingSource;
+  var vb = document.getElementById('verdict-box');
+  document.getElementById('sum-verdict').textContent    = document.getElementById('verdict-label').textContent;
+  document.getElementById('sum-verdict').style.color    = vb.classList.contains('go') ? '#16a34a' : vb.classList.contains('nogo') ? '#ef4444' : '#d97706';
+}
+
+// Init
+recalc();
+</script>
+</body>
+</html>

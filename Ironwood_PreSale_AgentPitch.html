@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pre-Sale Renovation Program — Ironwood Homes & Renovations</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --forest:       #1a2e1a;
+      --bronze:       #8a6c3a;
+      --bronze-lt:    #c4963e;
+      --cream:        #f5f0e8;
+      --ink:          #1a1a14;
+      --text-sec:     #6b6352;
+      --border:       rgba(138,108,58,0.2);
+      --green:        #22c55e;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 14px; }
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: #fff;
+      color: var(--ink);
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── HEADER ── */
+    .doc-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 24px 48px;
+      border-bottom: 3px solid var(--bronze);
+      background: #fff;
+    }
+    .logo-area { display: flex; align-items: center; gap: 12px; }
+    .logo-box {
+      width: 38px; height: 38px; background: var(--bronze);
+      border-radius: 8px; display: flex; align-items: center;
+      justify-content: center; font-family: 'Outfit', sans-serif;
+      font-weight: 800; font-size: 0.9rem; color: white;
+    }
+    .logo-text { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1rem; color: var(--forest); letter-spacing: -0.01em; }
+    .logo-sub { font-size: 0.7rem; color: var(--text-sec); letter-spacing: 0.04em; }
+    .header-tag { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--bronze); text-align: right; line-height: 1.6; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--forest);
+      padding: 52px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(138,108,58,0.15) 0%, transparent 60%);
+    }
+    .hero-inner { position: relative; z-index: 1; }
+    .hero-eyebrow {
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.65rem; letter-spacing: 0.18em;
+      text-transform: uppercase; color: var(--bronze-lt);
+      margin-bottom: 14px;
+    }
+    .hero-line1 {
+      font-family: 'Outfit', sans-serif; font-weight: 700;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      color: white; line-height: 1.1; letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+    .hero-line2 {
+      font-family: 'Cormorant Garamond', serif; font-style: italic;
+      font-weight: 300; font-size: clamp(2.4rem, 6vw, 4.2rem);
+      color: white; line-height: 0.95; letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+    .hero-line2 span { color: var(--bronze-lt); }
+    .hero-sub {
+      font-size: 0.95rem; color: rgba(255,255,255,0.7);
+      max-width: 560px; line-height: 1.65;
+    }
+
+    /* ── BODY SECTIONS ── */
+    .body { padding: 0 48px; }
+
+    /* ── HOW IT WORKS ── */
+    .how-section { padding: 36px 0 28px; border-bottom: 1px solid var(--border); }
+    .section-label {
+      font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem;
+      letter-spacing: 0.16em; text-transform: uppercase; color: var(--bronze);
+      margin-bottom: 20px;
+    }
+    .steps-row { display: flex; gap: 0; }
+    .step {
+      flex: 1; display: flex; flex-direction: column; align-items: center;
+      text-align: center; position: relative; padding: 0 8px;
+    }
+    .step:not(:last-child)::after {
+      content: '→';
+      position: absolute; right: -8px; top: 18px;
+      font-size: 1rem; color: var(--border);
+    }
+    .step-num {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--bronze); color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'IBM Plex Mono', monospace; font-weight: 500;
+      font-size: 0.75rem; margin-bottom: 10px; flex-shrink: 0;
+    }
+    .step-title { font-weight: 700; font-size: 0.8rem; color: var(--forest); margin-bottom: 4px; line-height: 1.3; }
+    .step-desc { font-size: 0.72rem; color: var(--text-sec); line-height: 1.5; }
+
+    /* ── TWO COLUMN ── */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; padding: 28px 0; border-bottom: 1px solid var(--border); }
+    .col-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--bronze); margin-bottom: 14px; }
+    .service-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .service-list li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 0.85rem; color: var(--ink); font-weight: 500;
+    }
+    .service-list li::before {
+      content: ''; width: 6px; height: 6px; border-radius: 50%;
+      background: var(--bronze); flex-shrink: 0;
+    }
+
+    /* ── BENEFIT CARDS ── */
+    .benefits-row { display: flex; gap: 16px; padding: 28px 0; border-bottom: 1px solid var(--border); }
+    .benefit-card {
+      flex: 1; background: #fff; border: 1px solid var(--border);
+      border-left: 4px solid var(--bronze); border-radius: 12px;
+      padding: 20px;
+    }
+    .benefit-title { font-weight: 700; font-size: 0.9rem; color: var(--forest); margin-bottom: 6px; }
+    .benefit-desc { font-size: 0.8rem; color: var(--text-sec); line-height: 1.55; }
+
+    /* ── NUMBERS TABLE ── */
+    .numbers-section { padding: 28px 0; border-bottom: 1px solid var(--border); }
+    table { width: 100%; border-collapse: collapse; margin-top: 14px; }
+    th {
+      text-align: left; font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.62rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--text-sec); padding: 10px 12px;
+      border-bottom: 2px solid var(--border); background: var(--cream);
+    }
+    td { padding: 10px 12px; font-size: 0.82rem; border-bottom: 1px solid var(--border); color: var(--ink); }
+    tr:last-child td { border-bottom: none; }
+    td strong { color: var(--forest); }
+    .td-green { color: #16a34a; font-weight: 700; font-family: 'IBM Plex Mono', monospace; }
+
+    /* ── REFERRAL BOX ── */
+    .referral-box {
+      background: var(--forest);
+      border-radius: 16px; padding: 28px 32px;
+      margin: 28px 0;
+      display: flex; align-items: center; gap: 28px;
+    }
+    .referral-icon {
+      width: 52px; height: 52px; border-radius: 50%;
+      background: rgba(196,150,62,0.2); border: 2px solid var(--bronze-lt);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem; flex-shrink: 0;
+    }
+    .referral-text h3 { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.1rem; color: white; margin-bottom: 6px; letter-spacing: -0.01em; }
+    .referral-text p { font-size: 0.82rem; color: rgba(255,255,255,0.65); line-height: 1.6; }
+    .referral-amount {
+      margin-left: auto; text-align: center; flex-shrink: 0;
+      font-family: 'Outfit', sans-serif; font-weight: 800;
+      font-size: 2rem; color: var(--bronze-lt); line-height: 1;
+    }
+    .referral-amount span { display: block; font-size: 0.65rem; font-weight: 500; color: rgba(255,255,255,0.4); font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase; margin-top: 4px; }
+
+    /* ── FOOTER ── */
+    .doc-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px; border-top: 1px solid var(--border);
+      margin-top: 8px; flex-wrap: wrap; gap: 8px;
+    }
+    .doc-footer-item { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; color: var(--text-sec); letter-spacing: 0.06em; }
+    .doc-footer-item a { color: var(--bronze); text-decoration: none; }
+
+    /* ── PRINT ── */
+    @media print {
+      body { max-width: 100%; font-size: 12px; }
+      .hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .referral-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .logo-box { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .step-num { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      .benefit-card { border-left-color: var(--bronze) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      @page { margin: 0.5in; size: letter; }
+    }
+
+    @media (max-width: 700px) {
+      .doc-header, .body, .doc-footer { padding-left: 20px; padding-right: 20px; }
+      .hero { padding: 36px 20px; }
+      .steps-row { flex-direction: column; gap: 16px; }
+      .step:not(:last-child)::after { display: none; }
+      .two-col { grid-template-columns: 1fr; }
+      .benefits-row { flex-direction: column; }
+      .referral-box { flex-direction: column; text-align: center; }
+      .referral-amount { margin-left: 0; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <div class="logo-area">
+    <div class="logo-box">IW</div>
+    <div>
+      <div class="logo-text">Ironwood Homes &amp; Renovations</div>
+      <div class="logo-sub">Atlanta Metro, Georgia</div>
+    </div>
+  </div>
+  <div class="header-tag">Pre-Sale Renovation Program<br>For Listing Agents · Atlanta Metro</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-eyebrow">For Listing Agents</div>
+    <div class="hero-line1">Your listings. Better condition.</div>
+    <div class="hero-line2">Zero cost to your <span>sellers.</span></div>
+    <p class="hero-sub">Ironwood renovates your listings before they hit the market — sellers pay nothing upfront. We scope it, build it, and get paid at closing from proceeds. You close a better home at a higher price.</p>
+  </div>
+</div>
+
+<!-- BODY -->
+<div class="body">
+
+  <!-- HOW IT WORKS -->
+  <div class="how-section">
+    <div class="section-label">How It Works</div>
+    <div class="steps-row">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">You Refer a Seller</div>
+        <div class="step-desc">Connect your listing client with Ironwood. One phone call or email is all it takes.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">We Scope &amp; Build</div>
+        <div class="step-desc">Free on-site assessment, full itemized scope, then we build it. No cost to the seller.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Home Lists</div>
+        <div class="step-desc">Your listing goes live in better condition. Better photos, better showings, better offers.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div class="step-title">Ironwood Paid at Closing</div>
+        <div class="step-desc">The closing attorney pays Ironwood directly from proceeds. Seller keeps everything above our invoice.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- WHAT WE DO -->
+  <div class="two-col">
+    <div>
+      <div class="col-label">What We Renovate</div>
+      <ul class="service-list">
+        <li>Kitchen &amp; Bath Updates</li>
+        <li>Flooring &amp; Interior Paint</li>
+        <li>Exterior &amp; Curb Appeal</li>
+        <li>Fixture &amp; Hardware Upgrades</li>
+      </ul>
+    </div>
+    <div>
+      <div class="col-label">&nbsp;</div>
+      <ul class="service-list">
+        <li>Full Gut Rehabs</li>
+        <li>Staging Prep &amp; Photo Ready</li>
+        <li>Inspection Repair Coordination</li>
+        <li>Structural &amp; Foundation Repairs</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- BENEFIT CARDS -->
+  <div class="benefits-row">
+    <div class="benefit-card">
+      <div class="benefit-title">Close Faster</div>
+      <div class="benefit-desc">Renovated homes sell 2–3× faster than as-is listings. Your days-on-market drops — and your pipeline moves.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-title">Higher Commission</div>
+      <div class="benefit-desc">A $20K renovation can lift sale price by $40–60K. Your commission goes up alongside your seller's net proceeds.</div>
+    </div>
+    <div class="benefit-card">
+      <div class="benefit-title">Zero Seller Friction</div>
+      <div class="benefit-desc">No out-of-pocket cost means sellers say yes to the renovation — and yes to listing with you.</div>
+    </div>
+  </div>
+
+  <!-- THE NUMBERS -->
+  <div class="numbers-section">
+    <div class="section-label">The Numbers — Projected Value Lift</div>
+    <table>
+      <thead>
+        <tr>
+          <th>Renovation Cost</th>
+          <th>Projected Value Lift</th>
+          <th>Seller Net Gain</th>
+          <th>Your Commission Lift (3%)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>$10,000</strong></td>
+          <td>$20,000 – $30,000</td>
+          <td class="td-green">+$10,000 – $20,000</td>
+          <td class="td-green">+$600 – $900</td>
+        </tr>
+        <tr>
+          <td><strong>$20,000</strong></td>
+          <td>$40,000 – $60,000</td>
+          <td class="td-green">+$20,000 – $40,000</td>
+          <td class="td-green">+$1,200 – $1,800</td>
+        </tr>
+        <tr>
+          <td><strong>$35,000</strong></td>
+          <td>$65,000 – $90,000</td>
+          <td class="td-green">+$30,000 – $55,000</td>
+          <td class="td-green">+$1,950 – $2,700</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- REFERRAL BOX -->
+  <div class="referral-box">
+    <div class="referral-icon">💼</div>
+    <div class="referral-text">
+      <h3>Referral Program</h3>
+      <p>Refer a seller. We complete the renovation. You earn a referral fee per closed deal — paid at closing alongside your commission. No paperwork, no tracking. Just refer and collect.</p>
+    </div>
+    <div class="referral-amount">$500<span>per closed deal</span></div>
+  </div>
+
+</div><!-- /body -->
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <div class="doc-footer-item">Ironwood Homes &amp; Renovations LLC · Atlanta Metro, Georgia</div>
+  <div class="doc-footer-item"><a href="tel:4045550100">(404) 555-0100</a> · <a href="mailto:info@ironwoodrenovations.com">info@ironwoodrenovations.com</a></div>
+  <div class="doc-footer-item">ironwoodrenovations.com</div>
+</div>
+
+</body>
+</html>
