@@ -918,6 +918,7 @@
       </div>
 
       <div class="form-nav">
+        <div id="err-step1" style="display:none;color:#e05c5c;font-size:13px;font-weight:700;margin-bottom:8px;text-align:center;"></div>
         <button class="btn-next" onclick="goStep(2)">Next — More Details →</button>
       </div>
     </div>
@@ -997,6 +998,7 @@
       </div>
 
       <div class="form-nav">
+        <div id="err-step2" style="display:none;color:#e05c5c;font-size:13px;font-weight:700;margin-bottom:8px;text-align:center;"></div>
         <button class="btn-back" onclick="goStep(1)">← Back</button>
         <button class="btn-next" onclick="goStep(3)">Next — Your Info →</button>
       </div>
@@ -1328,25 +1330,34 @@
   function fmt(n) { return '$' + n.toLocaleString('en-US'); }
 
   // ── STEP NAVIGATION ──
+  function showStepErr(id, msg) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = msg;
+    el.style.display = msg ? 'block' : 'none';
+  }
+
   function goStep(n) {
     if (n === 2) {
       const desc = document.getElementById('r-description').value.trim();
       if (desc.length < 10) {
-        alert('Please describe your project so we can build your estimate.');
+        showStepErr('err-step1', 'Please describe your project — a few sentences is all we need.');
+        document.getElementById('r-description').focus();
         return;
       }
-      // Ensure parse ran
+      showStepErr('err-step1', '');
       parseDescription(desc);
     }
     if (n === 3) {
       if (!document.getElementById('r-condition').value) {
-        alert('Please select the current condition of the space.');
+        showStepErr('err-step2', 'Please select the current condition of the space.');
         return;
       }
       if (!document.getElementById('r-address').value.trim()) {
-        alert('Please enter the property address.');
+        showStepErr('err-step2', 'Please enter the property address.');
         return;
       }
+      showStepErr('err-step2', '');
     }
 
     document.getElementById('step-' + currentStep).classList.remove('active');
