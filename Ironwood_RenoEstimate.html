@@ -381,7 +381,7 @@
     font-weight: 700;
     letter-spacing: 1px;
     text-transform: uppercase;
-    color: var(--muted);
+    color: #cccccc;
     margin-bottom: 5px;
     display: block;
   }
@@ -906,15 +906,9 @@
       </div>
 
       <div class="field-group">
-        <label class="field-label">Approximate Size of the Space</label>
-        <select class="field-select" id="r-size">
-          <option value="">Not sure / I'll describe it</option>
-          <option value="small">Small — Under 150 sqft (half bath, small room)</option>
-          <option value="medium">Medium — 150–400 sqft (full bath, average kitchen)</option>
-          <option value="large">Large — 400–800 sqft (primary suite, open floor plan)</option>
-          <option value="xlarge">Extra Large — 800+ sqft (full floor, large addition)</option>
-          <option value="whole_home">Whole Home</option>
-        </select>
+        <label class="field-label">Square Footage of the Space</label>
+        <input class="field-input" id="r-sqft" type="number" min="10" max="10000" placeholder="e.g. 120 — leave blank if unsure" oninput="this.value=this.value.replace(/[^0-9]/g,'')"/>
+        <div style="font-size:11px;color:#888;margin-top:4px;">Common sizes: half bath ~50 sqft · full bath ~80 sqft · kitchen ~200 sqft · primary suite ~300 sqft</div>
       </div>
 
       <div class="form-nav">
@@ -976,7 +970,8 @@
 
       <div class="field-group">
         <label class="field-label">Property Address <span class="req">*</span></label>
-        <input class="field-input" id="r-address" type="text" placeholder="123 Main St, Atlanta, GA" required/>
+        <input class="field-input" id="r-address" type="text" placeholder="123 Main St, Atlanta, GA" required autocomplete="street-address" oninput="addressSuggest(this.value)"/>
+        <div id="address-suggestions" style="display:none;background:#1a1a1a;border:1px solid #2e2e2e;border-top:none;border-radius:0 0 4px 4px;max-height:180px;overflow-y:auto;"></div>
       </div>
 
       <div class="field-group">
@@ -1136,32 +1131,46 @@
   let detectedScope = new Set();
 
   // ── ESTIMATE DATA ──
-  const BASE = {
-    kitchen:            [12000, 55000],
-    bathroom:           [6000,  28000],
-    full_remodel:       [40000, 180000],
-    flooring:           [3000,  18000],
-    painting:           [2000,  12000],
-    addition:           [30000, 120000],
-    plumbing_electrical:[4000,  22000],
-    windows_doors:      [3000,  20000],
-    deck:               [8000,  45000],
-    pergola:            [6000,  35000],
-    shed:               [4000,  25000],
-    land_clearing:      [1500,  18000],
-    equipment_rental:   [300,   3500],
-    multiple:           [15000, 80000],
-    other:              [5000,  40000],
+  // Base range = typical mid-size job. Sqft scales from here.
+  // $/sqft rates by project type: [low, high]
+  const RATE_PER_SQFT = {
+    kitchen:             [65,  110],
+    bathroom:            [80,  130],
+    full_remodel:        [45,   80],
+    flooring:            [8,    18],
+    painting:            [3,     7],
+    addition:            [90,  150],
+    plumbing_electrical: [20,   45],
+    windows_doors:       [25,   55],
+    deck:                [18,   38],
+    pergola:             [15,   32],
+    shed:                [20,   40],
+    land_clearing:       [2,     8],
+    equipment_rental:    [0,     0],
+    multiple:            [35,   70],
+    other:               [20,   55],
   };
-  const SIZE_MULT   = { small:.7, medium:1.0, large:1.4, xlarge:1.8, whole_home:2.5 };
-  const COND_MULT   = { good:.8, fair:1.0, poor:1.25, gut:1.5 };
-  const FINISH_MULT = { standard:.85, mid:1.0, high:1.45 };
+  // Default sqft if user leaves blank (typical size per project type)
+  const DEFAULT_SQFT = {
+    kitchen:80, bathroom:80, full_remodel:1400, flooring:800, painting:1200,
+    addition:400, plumbing_electrical:1, windows_doors:1, deck:300, pergola:250,
+    shed:120, land_clearing:5000, equipment_rental:1, multiple:600, other:300,
+  };
+  // Fixed-cost minimums (some jobs have a floor regardless of sqft)
+  const BASE_MIN = {
+    kitchen:8000, bathroom:4500, full_remodel:25000, flooring:1500, painting:800,
+    addition:20000, plumbing_electrical:2500, windows_doors:1500, deck:5000,
+    pergola:4000, shed:2500, land_clearing:1000, equipment_rental:300,
+    multiple:8000, other:2500,
+  };
+  const COND_MULT   = { good:.85, fair:1.0, poor:1.2, gut:1.45 };
+  const FINISH_MULT = { standard:.85, mid:1.0, high:1.4 };
   const SCOPE_ADD   = {
-    demo:600, framing:1800, plumbing:3500, electrical:3000, drywall:1400,
-    tile:2800, flooring:2200, cabinets:4500, countertops:2500, painting:1800,
-    fixtures:900, exterior:3200,
-    deck_build:8000, pergola_build:6000, shed_build:4500,
-    land_clearing:3500, equipment_rental:0,
+    demo:500, framing:1500, plumbing:2800, electrical:2500, drywall:1200,
+    tile:2200, flooring:1800, cabinets:3800, countertops:2000, painting:1400,
+    fixtures:700, exterior:2500,
+    deck_build:6000, pergola_build:5000, shed_build:3500,
+    land_clearing:2500, equipment_rental:0,
   };
 
   // ── DESCRIPTION PARSER ──
@@ -1303,26 +1312,31 @@
 
   // ── ESTIMATE CALCULATOR ──
   function calcEstimate() {
-    const size   = document.getElementById('r-size').value || 'medium';
+    const sqft   = parseInt(document.getElementById('r-sqft').value) || DEFAULT_SQFT[detectedType] || 200;
     const cond   = document.getElementById('r-condition').value || 'fair';
     const finish = document.getElementById('r-finish').value || 'mid';
 
-    let [lo, hi] = BASE[detectedType] || BASE['other'];
+    const [rLo, rHi] = RATE_PER_SQFT[detectedType] || RATE_PER_SQFT['other'];
+    const minCost    = BASE_MIN[detectedType] || 2500;
 
-    lo *= (SIZE_MULT[size]    || 1);
-    hi *= (SIZE_MULT[size]    || 1);
+    let lo = Math.max(rLo * sqft, minCost);
+    let hi = Math.max(rHi * sqft, minCost * 1.4);
+
     lo *= (COND_MULT[cond]    || 1);
     hi *= (COND_MULT[cond]    || 1);
     lo *= (FINISH_MULT[finish] || 1);
     hi *= (FINISH_MULT[finish] || 1);
 
+    // Scope adds — only add items not already covered by project type
+    const typeScopes = { kitchen:['cabinets','countertops'], bathroom:['tile','fixtures'], full_remodel:[] };
+    const skipFor = typeScopes[detectedType] || [];
     let scopeAdd = 0;
-    detectedScope.forEach(s => { scopeAdd += (SCOPE_ADD[s] || 0); });
-    lo += scopeAdd * 0.7;
-    hi += scopeAdd * 1.1;
+    detectedScope.forEach(s => { if (!skipFor.includes(s)) scopeAdd += (SCOPE_ADD[s] || 0); });
+    lo += scopeAdd * 0.8;
+    hi += scopeAdd * 1.05;
 
-    lo = Math.round(lo / 500) * 500;
-    hi = Math.round(hi / 500) * 500;
+    lo = Math.round(lo / 250) * 250;
+    hi = Math.round(hi / 250) * 250;
 
     return { lo, hi };
   }
@@ -1445,7 +1459,7 @@
       projectDescription: document.getElementById('r-description').value.trim(),
       projectType:  detectedType,
       projectLabel: TYPE_LABELS[detectedType] || detectedType,
-      spaceSize:    document.getElementById('r-size').value,
+      spaceSize:    document.getElementById('r-sqft').value ? document.getElementById('r-sqft').value + ' sqft' : 'Not specified',
       scope:        Array.from(detectedScope),
       scopeLabels:  Array.from(detectedScope).map(s => SCOPE_LABELS[s] || s),
       condition:    document.getElementById('r-condition').value,
@@ -1504,7 +1518,7 @@
       <div class="breakdown-title">What We Detected &amp; Used for Your Estimate</div>
       <div class="breakdown-row"><span class="br-label">Your Description</span><span class="br-value" style="font-style:italic;font-size:11px;max-width:200px;text-align:right">"${descSnippet}"</span></div>
       <div class="breakdown-row"><span class="br-label">Project Category</span><span class="br-value">${TYPE_LABELS[payload.projectType] || payload.projectType}</span></div>
-      <div class="breakdown-row"><span class="br-label">Space Size</span><span class="br-value">${sizeLabels[payload.spaceSize] || 'Not specified'}</span></div>
+      <div class="breakdown-row"><span class="br-label">Space Size</span><span class="br-value">${payload.spaceSize}</span></div>
       <div class="breakdown-row"><span class="br-label">Current Condition</span><span class="br-value">${condLabels[payload.condition] || '—'}</span></div>
       <div class="breakdown-row"><span class="br-label">Finish Level</span><span class="br-value">${finishLabels[payload.finishLevel] || '—'}</span></div>
       <div class="breakdown-row"><span class="br-label">Detected Scope</span><span class="br-value" style="font-size:10.5px;max-width:200px;text-align:right;line-height:1.4">${scopeDisplay}</span></div>
@@ -1515,6 +1529,36 @@
     document.getElementById('estimate-panel').style.display = 'block';
     document.getElementById('reno-form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
+
+  // ── ADDRESS AUTOCOMPLETE (Nominatim — no API key needed) ──
+  let addrTimer = null;
+  function addressSuggest(val) {
+    const box = document.getElementById('address-suggestions');
+    clearTimeout(addrTimer);
+    if (!val || val.length < 4) { box.style.display = 'none'; return; }
+    addrTimer = setTimeout(async () => {
+      try {
+        const res = await fetch('https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&limit=5&countrycodes=us&q=' + encodeURIComponent(val), { headers:{'Accept-Language':'en'} });
+        const data = await res.json();
+        if (!data.length) { box.style.display = 'none'; return; }
+        box.innerHTML = data.map(d => {
+          const label = d.display_name.split(',').slice(0,4).join(',');
+          return `<div onclick="pickAddress('${label.replace(/'/g,"\\'")}')` +
+            `" style="padding:9px 12px;cursor:pointer;font-size:13px;color:#fff;border-bottom:1px solid #2a2a2a;" ` +
+            `onmouseover="this.style.background='#2a2a2a'" onmouseout="this.style.background=''">${label}</div>`;
+        }).join('');
+        box.style.display = 'block';
+      } catch(e) { box.style.display = 'none'; }
+    }, 350);
+  }
+  function pickAddress(val) {
+    document.getElementById('r-address').value = val;
+    document.getElementById('address-suggestions').style.display = 'none';
+  }
+  document.addEventListener('click', e => {
+    if (!e.target.closest('#r-address') && !e.target.closest('#address-suggestions'))
+      document.getElementById('address-suggestions').style.display = 'none';
+  });
 </script>
 
 </body>
