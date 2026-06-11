@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blueprint Tool — Ironwood Renovations</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0e0e0e;--surface:#161616;--surface-2:#1e1e1e;--surface-3:#252525;
+  --border:#2a2a2a;--border-2:#333;
+  --ink:#ffffff;--muted:#aaaaaa;--muted-2:#666;
+  --blue:#6B8DB5;--blue-deep:#4A6FA5;--blue-tint:rgba(107,141,181,.12);
+  --green:#3a9c6d;--green-tint:rgba(58,156,109,.1);
+  --red:#e05c5c;--red-tint:rgba(224,92,92,.1);
+  --gold:#c9a84c;
+  --radius:8px;--radius-lg:12px;
+  --sans:'Geist',system-ui,sans-serif;
+  --serif:'Instrument Serif',Georgia,serif;
+}
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600;700;800&display=swap');
+
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;min-height:100vh}
+
+/* ── HEADER ── */
+.bp-header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.bp-logo{font-size:13px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--blue)}
+.bp-logo span{color:var(--muted);font-weight:400;font-size:10px;letter-spacing:1px;margin-left:8px}
+.bp-ref{font-size:11px;color:var(--muted);font-family:monospace}
+
+/* ── TABS ── */
+.tab-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 24px;gap:0}
+.tab-btn{padding:12px 20px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-btn.done{color:var(--green)}
+.tab-btn:hover:not(.active){color:var(--ink)}
+
+.tab-panel{display:none;padding:24px;max-width:1100px;margin:0 auto}
+.tab-panel.active{display:block}
+
+/* ── CARDS ── */
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
+.card-title{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
+.card-sub{font-size:12px;color:var(--muted);margin-top:-10px;margin-bottom:14px;line-height:1.5}
+
+/* ── FORM FIELDS ── */
+.field-group{margin-bottom:14px}
+.field-label{font-size:10px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:#cccccc;display:block;margin-bottom:5px}
+.field-label .req{color:var(--blue);margin-left:2px}
+.field-input,.field-select,.field-textarea{width:100%;background:#111;border:1px solid var(--border-2);border-radius:6px;padding:9px 12px;font-family:var(--sans);font-size:13px;color:#fff;outline:none;transition:border-color .15s}
+.field-input:focus,.field-select:focus,.field-textarea:focus{border-color:var(--blue)}
+.field-input::placeholder,.field-textarea::placeholder{color:#555}
+.field-select option{background:#111;color:#fff}
+.field-textarea{resize:vertical;min-height:80px}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* ── ROOM TYPE SELECTOR ── */
+.room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:4px}
+.room-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:12px 10px;text-align:center;cursor:pointer;transition:all .2s}
+.room-btn:hover{border-color:var(--blue)}
+.room-btn.selected{background:var(--blue-tint);border-color:var(--blue)}
+.room-btn .r-icon{font-size:22px;margin-bottom:4px}
+.room-btn .r-name{font-size:11px;font-weight:700;color:#fff}
+.room-btn .r-sub{font-size:9.5px;color:var(--muted);margin-top:2px}
+
+/* ── BUTTONS ── */
+.btn-primary{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:11px 22px;font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:background .15s}
+.btn-primary:hover{background:var(--blue-deep)}
+.btn-secondary{background:transparent;color:var(--blue);border:1px solid var(--blue);border-radius:6px;padding:10px 20px;font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .15s}
+.btn-secondary:hover{background:var(--blue-tint)}
+.btn-danger{background:transparent;color:var(--red);border:1px solid var(--red);border-radius:6px;padding:8px 14px;font-size:11px;font-weight:700;cursor:pointer}
+.btn-success{background:var(--green);color:#fff;border:none;border-radius:6px;padding:11px 22px;font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer}
+.btn-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
+
+/* ── PHOTO MARKUP TAB ── */
+.photo-upload-zone{border:2px dashed var(--border-2);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:16px}
+.photo-upload-zone:hover{border-color:var(--blue)}
+.photo-upload-zone .up-icon{font-size:28px;margin-bottom:8px}
+.photo-upload-zone .up-text{font-size:13px;color:var(--muted)}
+
+.photo-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;margin-bottom:16px}
+.photo-thumb-card{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;overflow:hidden;cursor:pointer;transition:border-color .2s}
+.photo-thumb-card:hover{border-color:var(--blue)}
+.photo-thumb-card img{width:100%;height:120px;object-fit:cover;display:block}
+.photo-thumb-card .ptc-label{padding:7px 10px;font-size:11px;color:var(--muted);display:flex;justify-content:space-between;align-items:center}
+.photo-thumb-card.has-markup .ptc-label{color:var(--green)}
+
+/* Markup modal */
+.markup-modal{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;flex-direction:column}
+.markup-modal.open{display:flex}
+.markup-toolbar{background:var(--surface);border-bottom:1px solid var(--border);padding:10px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.markup-tool-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:5px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s}
+.markup-tool-btn.active{background:var(--blue-tint);border-color:var(--blue);color:var(--blue)}
+.markup-color-btn{width:24px;height:24px;border-radius:50%;border:2px solid transparent;cursor:pointer;transition:border-color .15s}
+.markup-color-btn.active{border-color:#fff}
+.markup-size-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:4px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--muted);font-size:11px;font-weight:700}
+.markup-size-btn.active{border-color:var(--blue);color:var(--blue)}
+.markup-canvas-wrap{flex:1;display:flex;align-items:center;justify-content:center;overflow:hidden;background:#000;position:relative}
+#markupCanvas{max-width:100%;max-height:100%;cursor:crosshair;touch-action:none}
+.markup-footer{background:var(--surface);border-top:1px solid var(--border);padding:10px 16px;display:flex;justify-content:space-between;align-items:center}
+.markup-note-input{background:#111;border:1px solid var(--border);border-radius:5px;padding:7px 10px;font-size:12px;color:#fff;width:340px;outline:none}
+.markup-note-input::placeholder{color:#555}
+
+/* ── FLOOR PLAN TAB ── */
+.fp-layout{display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:start}
+.fp-sidebar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;position:sticky;top:100px}
+.fp-sidebar-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--blue);margin-bottom:12px}
+.fixture-palette{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.fixture-item{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:7px 6px;text-align:center;cursor:grab;transition:all .15s;user-select:none}
+.fixture-item:hover{border-color:var(--blue);background:var(--blue-tint)}
+.fixture-item:active{cursor:grabbing}
+.fixture-item .fi-icon{font-size:16px;display:block;margin-bottom:2px}
+.fixture-item .fi-name{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:.3px}
+.fp-mode-btns{display:flex;gap:6px;margin-bottom:12px}
+.fp-mode-btn{flex:1;padding:7px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border:1px solid var(--border);border-radius:5px;background:var(--surface-2);color:var(--muted);cursor:pointer;transition:all .15s}
+.fp-mode-btn.active{background:var(--blue-tint);border-color:var(--blue);color:var(--blue)}
+
+.fp-canvas-wrap{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px}
+.fp-dims{display:flex;gap:10px;margin-bottom:12px;align-items:flex-end}
+.fp-dim-input{background:#111;border:1px solid var(--border);border-radius:5px;padding:7px 10px;font-size:13px;color:#fff;width:90px;outline:none}
+.fp-dim-input:focus{border-color:var(--blue)}
+.fp-dim-label{font-size:10px;color:var(--muted);margin-bottom:4px;display:block;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
+.fp-canvas-container{position:relative;background:#1a1a1a;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+#floorCanvas{display:block;cursor:crosshair}
+.fp-controls{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.fp-ctrl-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:5px;padding:6px 12px;font-size:11px;font-weight:700;color:var(--muted);cursor:pointer;transition:all .15s}
+.fp-ctrl-btn:hover{border-color:var(--blue);color:var(--blue)}
+
+/* Placed fixture on canvas */
+.canvas-fixture{position:absolute;background:rgba(107,141,181,.15);border:1.5px solid var(--blue);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:move;user-select:none;min-width:40px;min-height:40px;padding:4px}
+.canvas-fixture.selected{border-color:#fff;box-shadow:0 0 0 2px var(--blue)}
+.canvas-fixture .cf-icon{font-size:18px;line-height:1}
+.canvas-fixture .cf-label{font-size:8px;color:#fff;font-weight:700;text-align:center;margin-top:2px;letter-spacing:.3px}
+.canvas-fixture .cf-del{position:absolute;top:-8px;right:-8px;width:16px;height:16px;background:var(--red);border-radius:50%;font-size:9px;color:#fff;display:none;align-items:center;justify-content:center;cursor:pointer;font-weight:900}
+.canvas-fixture.selected .cf-del{display:flex}
+.canvas-fixture .cf-rotate{position:absolute;bottom:-8px;right:-8px;width:16px;height:16px;background:var(--blue);border-radius:50%;font-size:9px;color:#fff;display:none;align-items:center;justify-content:center;cursor:pointer}
+.canvas-fixture.selected .cf-rotate{display:flex}
+
+/* ── SCOPE TAB ── */
+.scope-table{width:100%;border-collapse:collapse;margin-bottom:16px}
+.scope-table th{background:var(--surface-2);padding:9px 12px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);text-align:left;border-bottom:1px solid var(--border)}
+.scope-table td{padding:9px 12px;font-size:12px;border-bottom:1px solid var(--border);color:#fff;vertical-align:top}
+.scope-table tr:last-child td{border-bottom:none}
+.scope-table td input,.scope-table td select{background:#111;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:12px;color:#fff;width:100%;outline:none}
+.scope-tag{display:inline-block;background:var(--blue-tint);border:1px solid var(--blue);border-radius:4px;padding:2px 8px;font-size:10px;color:var(--blue);font-weight:700;margin:2px}
+.add-scope-row{display:flex;gap:8px;margin-bottom:12px}
+.add-scope-input{flex:1;background:#111;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;color:#fff;outline:none}
+.add-scope-input:focus{border-color:var(--blue)}
+
+/* ── E-SIGNATURE ── */
+.sig-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px}
+.sig-canvas-wrap{background:#fff;border-radius:6px;margin:10px 0;position:relative}
+#sigCanvas{display:block;border-radius:6px;cursor:crosshair;touch-action:none}
+.sig-names{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.sig-date{font-size:11px;color:var(--muted);margin-top:6px}
+
+/* ── EXPORT PREVIEW ── */
+.export-preview{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
+.export-section-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.export-type-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
+.export-type-btn{background:var(--surface-2);border:2px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .2s;text-align:center}
+.export-type-btn.selected{border-color:var(--blue);background:var(--blue-tint)}
+.export-type-btn .et-icon{font-size:28px;margin-bottom:8px}
+.export-type-btn .et-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
+.export-type-btn .et-desc{font-size:11px;color:var(--muted);line-height:1.4}
+
+/* ── STATUS BADGE ── */
+.status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
+.status-badge.draft{background:rgba(170,170,170,.1);color:#aaa;border:1px solid #444}
+.status-badge.complete{background:var(--green-tint);color:var(--green);border:1px solid rgba(58,156,109,.3)}
+.status-badge.signed{background:var(--blue-tint);color:var(--blue);border:1px solid rgba(107,141,181,.3)}
+
+/* ── PROGRESS BAR ── */
+.progress-bar{height:3px;background:var(--border);margin-bottom:0}
+.progress-fill{height:100%;background:var(--blue);transition:width .4s}
+
+/* ── PRINT/PDF DOCUMENT ── */
+#pdf-doc{display:none}
+.pdf-page{width:816px;background:#fff;color:#1a1a1a;font-family:'Geist',Arial,sans-serif;padding:48px}
+.pdf-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid #6B8DB5}
+.pdf-logo{font-size:18px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:#6B8DB5}
+.pdf-logo-sub{font-size:10px;color:#888;letter-spacing:1px;margin-top:2px}
+.pdf-doc-title{font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:28px}
+.pdf-section{margin-bottom:24px}
+.pdf-section-title{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:#6B8DB5;border-bottom:1px solid #e0e0e0;padding-bottom:6px;margin-bottom:12px}
+.pdf-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f0f0f0;font-size:12px}
+.pdf-row .pr-label{color:#666;font-weight:500}
+.pdf-row .pr-value{font-weight:700;color:#1a1a1a;text-align:right;max-width:300px}
+.pdf-scope-table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+.pdf-scope-table th{background:#f5f5f5;padding:7px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.8px;color:#666;border-bottom:2px solid #e0e0e0}
+.pdf-scope-table td{padding:7px 10px;border-bottom:1px solid #f0f0f0;vertical-align:top}
+.pdf-sig-section{margin-top:32px;padding-top:20px;border-top:2px solid #e0e0e0;display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.pdf-sig-block .psb-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:#888;margin-bottom:8px}
+.pdf-sig-block .psb-line{border-bottom:1px solid #1a1a1a;height:40px;margin-bottom:6px}
+.pdf-sig-block .psb-name{font-size:11px;color:#666}
+.pdf-footer{margin-top:32px;padding-top:12px;border-top:1px solid #e0e0e0;font-size:9px;color:#aaa;display:flex;justify-content:space-between}
+.pdf-photos{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:8px}
+.pdf-photos img{width:100%;height:140px;object-fit:cover;border-radius:4px;border:1px solid #e0e0e0}
+
+@media print{body{background:#fff}#pdf-doc{display:block!important}.tab-bar,.bp-header,.tab-panel{display:none!important}}
+</style>
+</head>
+<body>
+
+<div class="bp-header">
+  <div>
+    <div class="bp-logo">Ironwood <span>Blueprint Tool</span></div>
+  </div>
+  <div style="display:flex;align-items:center;gap:14px">
+    <div class="bp-ref" id="header-ref"></div>
+    <span id="doc-status" class="status-badge draft">● Draft</span>
+  </div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="main-progress" style="width:25%"></div></div>
+
+<div class="tab-bar">
+  <button class="tab-btn active" onclick="switchTab(1)" id="tab-btn-1">① Project Info</button>
+  <button class="tab-btn" onclick="switchTab(2)" id="tab-btn-2">② Photos & Markup</button>
+  <button class="tab-btn" onclick="switchTab(3)" id="tab-btn-3">③ Floor Plan</button>
+  <button class="tab-btn" onclick="switchTab(4)" id="tab-btn-4">④ Scope & Sign Off</button>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 1 — PROJECT INFO
+══════════════════════════════════════════════════════ -->
+<div class="tab-panel active" id="tab-1">
+  <div class="card">
+    <div class="card-title">Client Information</div>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">First Name <span class="req">*</span></label>
+        <input class="field-input" id="p-fname" placeholder="John" oninput="saveState()"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Last Name <span class="req">*</span></label>
+        <input class="field-input" id="p-lname" placeholder="Smith" oninput="saveState()"/>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Phone</label>
+        <input class="field-input" id="p-phone" placeholder="(404) 000-0000" oninput="saveState()"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Email</label>
+        <input class="field-input" id="p-email" placeholder="client@email.com" oninput="saveState()"/>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Property Address <span class="req">*</span></label>
+      <input class="field-input" id="p-address" placeholder="123 Main St, Canton, GA 30114" oninput="saveState()"/>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Estimate Ref # (from online form)</label>
+        <input class="field-input" id="p-ref" placeholder="IW-XXXXXX" oninput="loadFromRef()"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Site Visit Date <span class="req">*</span></label>
+        <input class="field-input" id="p-visit-date" type="date" oninput="saveState()"/>
+      </div>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Team Member</label>
+        <select class="field-select" id="p-team" onchange="saveState()">
+          <option value="">Select</option>
+          <option>Ty Jackson</option>
+          <option>Jeff Sarabia</option>
+          <option>Jordan Sarabia</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Project Stage</label>
+        <select class="field-select" id="p-stage" onchange="saveState()">
+          <option value="estimate">Estimate / Quoting</option>
+          <option value="signed">Contract Signed</option>
+          <option value="active">Active Build</option>
+          <option value="punch">Punch List</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Room Type <span style="color:var(--muted);font-weight:400;font-size:10px;margin-left:4px">— select all that apply</span></div>
+    <div class="room-grid" id="room-selector">
+      <div class="room-btn" onclick="toggleRoom(this,'kitchen')"><div class="r-icon">🍳</div><div class="r-name">Kitchen</div><div class="r-sub">Full kitchen scope</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'bathroom')"><div class="r-icon">🛁</div><div class="r-name">Bathroom</div><div class="r-sub">Bath/shower/tile</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'master_bath')"><div class="r-icon">🚿</div><div class="r-name">Primary Bath</div><div class="r-sub">Primary suite bath</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'living')"><div class="r-icon">🛋️</div><div class="r-name">Living Room</div><div class="r-sub">Common areas</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'bedroom')"><div class="r-icon">🛏️</div><div class="r-name">Bedroom</div><div class="r-sub">Sleeping space</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'laundry')"><div class="r-icon">🫧</div><div class="r-name">Laundry</div><div class="r-sub">Laundry room</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'basement')"><div class="r-icon">⬇️</div><div class="r-name">Basement</div><div class="r-sub">Lower level</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'exterior')"><div class="r-icon">🏡</div><div class="r-name">Exterior</div><div class="r-sub">Outside/curb</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'addition')"><div class="r-icon">🏗️</div><div class="r-name">Addition</div><div class="r-sub">New space</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'whole_home')"><div class="r-icon">🏠</div><div class="r-name">Whole Home</div><div class="r-sub">Full remodel</div></div>
+    </div>
+  </div>
+
+  <div class="card" id="room-details-card" style="display:none">
+    <div class="card-title">Room Details</div>
+    <div id="room-details-content"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Site Visit Notes</div>
+    <div class="field-group">
+      <label class="field-label">Overall Condition Observed</label>
+      <select class="field-select" id="p-condition" onchange="saveState()">
+        <option value="">Select</option>
+        <option value="good">Good — Mostly cosmetic</option>
+        <option value="fair">Fair — Functional but outdated</option>
+        <option value="poor">Poor — Significant work needed</option>
+        <option value="gut">Full Gut — Starting from scratch</option>
+      </select>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Client's Vision / What They Described</label>
+      <textarea class="field-textarea" id="p-vision" placeholder="What the client said they want — in their words..." oninput="saveState()"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Internal Notes (not shown to client)</label>
+      <textarea class="field-textarea" id="p-internal-notes" placeholder="Structural concerns, access issues, anything the team needs to know..." oninput="saveState()"></textarea>
+    </div>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Finish Level</label>
+        <select class="field-select" id="p-finish" onchange="saveState()">
+          <option value="">Select</option>
+          <option value="standard">Standard / Builder Grade</option>
+          <option value="mid">Mid-Range</option>
+          <option value="high">High-End / Custom</option>
+        </select>
+      </div>
+      <div class="field-group">
+        <label class="field-label">Estimated Timeline</label>
+        <select class="field-select" id="p-timeline" onchange="saveState()">
+          <option value="">Select</option>
+          <option>1–2 weeks</option>
+          <option>2–4 weeks</option>
+          <option>1–2 months</option>
+          <option>2–3 months</option>
+          <option>3–6 months</option>
+          <option>6+ months</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-primary" onclick="switchTab(2)">Next — Photos & Markup →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 2 — PHOTOS & MARKUP
+══════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-2">
+  <div class="card">
+    <div class="card-title">Upload Site Visit Photos</div>
+    <div class="card-sub">Upload photos from the site visit. Click any photo to open the markup editor — draw, annotate, and mark what needs to change.</div>
+    <div class="photo-upload-zone" onclick="document.getElementById('photo-upload-input').click()">
+      <input type="file" id="photo-upload-input" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(this)"/>
+      <div class="up-icon">📷</div>
+      <div class="up-text">Tap to upload photos &nbsp;·&nbsp; Up to 20 photos &nbsp;·&nbsp; JPG, PNG, HEIC</div>
+    </div>
+    <div class="photo-list" id="photo-list"></div>
+    <div id="no-photos-msg" style="text-align:center;color:var(--muted);padding:20px;font-size:13px">No photos uploaded yet.</div>
+  </div>
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="switchTab(1)">← Back</button>
+    <button class="btn-primary" onclick="switchTab(3)">Next — Floor Plan →</button>
+  </div>
+</div>
+
+<!-- MARKUP MODAL -->
+<div class="markup-modal" id="markup-modal">
+  <div class="markup-toolbar">
+    <strong style="font-size:11px;color:var(--muted);margin-right:4px">TOOL:</strong>
+    <button class="markup-tool-btn active" id="tool-pen" onclick="setMarkupTool('pen')">✏️ Pen</button>
+    <button class="markup-tool-btn" id="tool-arrow" onclick="setMarkupTool('arrow')">➡️ Arrow</button>
+    <button class="markup-tool-btn" id="tool-rect" onclick="setMarkupTool('rect')">⬜ Box</button>
+    <button class="markup-tool-btn" id="tool-text" onclick="setMarkupTool('text')">T Text</button>
+    <button class="markup-tool-btn" id="tool-eraser" onclick="setMarkupTool('eraser')">🧹 Erase</button>
+    <div style="width:1px;height:24px;background:var(--border);margin:0 4px"></div>
+    <strong style="font-size:11px;color:var(--muted);margin-right:4px">COLOR:</strong>
+    <div class="markup-color-btn active" style="background:#e05c5c" title="Red — Remove" onclick="setMarkupColor('#e05c5c',this)"></div>
+    <div class="markup-color-btn" style="background:#3a9c6d" title="Green — Add" onclick="setMarkupColor('#3a9c6d',this)"></div>
+    <div class="markup-color-btn" style="background:#6B8DB5" title="Blue — Note" onclick="setMarkupColor('#6B8DB5',this)"></div>
+    <div class="markup-color-btn" style="background:#c9a84c" title="Gold — Question" onclick="setMarkupColor('#c9a84c',this)"></div>
+    <div class="markup-color-btn" style="background:#ffffff" title="White" onclick="setMarkupColor('#ffffff',this)"></div>
+    <div style="width:1px;height:24px;background:var(--border);margin:0 4px"></div>
+    <strong style="font-size:11px;color:var(--muted);margin-right:4px">SIZE:</strong>
+    <div class="markup-size-btn active" onclick="setMarkupSize(3,this)" title="Small">S</div>
+    <div class="markup-size-btn" onclick="setMarkupSize(6,this)" title="Medium">M</div>
+    <div class="markup-size-btn" onclick="setMarkupSize(12,this)" title="Large">L</div>
+    <div style="margin-left:auto;display:flex;gap:8px">
+      <button class="markup-tool-btn" onclick="undoMarkup()">↩ Undo</button>
+      <button class="markup-tool-btn" onclick="clearMarkup()">🗑 Clear</button>
+    </div>
+  </div>
+  <div class="markup-canvas-wrap">
+    <canvas id="markupCanvas"></canvas>
+  </div>
+  <div class="markup-footer">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:11px;color:var(--muted)">Note:</span>
+      <input class="markup-note-input" id="markup-note" placeholder="Add a note about this photo (optional)..."/>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn-danger" onclick="closeMarkupModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveMarkup()">Save Markup ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 3 — FLOOR PLAN BUILDER
+══════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-3">
+  <div class="card" style="margin-bottom:12px">
+    <div class="card-title">Room Dimensions</div>
+    <div class="fp-dims">
+      <div>
+        <span class="fp-dim-label">Length (ft)</span>
+        <input class="fp-dim-input" id="fp-length" type="number" value="12" min="4" max="100" oninput="renderFloorPlan()"/>
+      </div>
+      <div>
+        <span class="fp-dim-label">Width (ft)</span>
+        <input class="fp-dim-input" id="fp-width" type="number" value="10" min="4" max="100" oninput="renderFloorPlan()"/>
+      </div>
+      <div>
+        <span class="fp-dim-label">Ceiling Ht (ft)</span>
+        <input class="fp-dim-input" id="fp-ceiling" type="number" value="9" min="6" max="20" oninput="saveState()"/>
+      </div>
+      <div style="margin-left:auto">
+        <span class="fp-dim-label">Room Label</span>
+        <input class="fp-dim-input" id="fp-room-label" placeholder="Kitchen" style="width:130px" oninput="renderFloorPlan()"/>
+      </div>
+    </div>
+  </div>
+
+  <div class="fp-layout">
+    <!-- Sidebar -->
+    <div class="fp-sidebar">
+      <div class="fp-sidebar-title">Mode</div>
+      <div class="fp-mode-btns">
+        <button class="fp-mode-btn active" id="mode-drag" onclick="setFpMode('drag')">Drag</button>
+        <button class="fp-mode-btn" id="mode-draw" onclick="setFpMode('draw')">Draw</button>
+      </div>
+
+      <div class="fp-sidebar-title">Draw Tool</div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap" id="draw-tools" style="display:none">
+        <button class="fp-ctrl-btn" onclick="setDrawTool('wall')" id="dt-wall">Wall</button>
+        <button class="fp-ctrl-btn" onclick="setDrawTool('door')" id="dt-door">Door</button>
+        <button class="fp-ctrl-btn" onclick="setDrawTool('window')" id="dt-window">Window</button>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
+        <select class="field-select" id="fp-color-pick" onchange="setFpDrawColor(this.value)" style="font-size:11px;padding:5px 8px">
+          <option value="#e05c5c">🔴 Remove</option>
+          <option value="#3a9c6d">🟢 Add/New</option>
+          <option value="#6B8DB5" selected>🔵 Existing</option>
+          <option value="#c9a84c">🟡 Question</option>
+        </select>
+      </div>
+
+      <div class="fp-sidebar-title">Fixtures</div>
+      <div class="fixture-palette" id="fixture-palette"></div>
+
+      <button class="fp-ctrl-btn" style="width:100%;margin-top:4px" onclick="clearFixtures()">🗑 Clear All</button>
+    </div>
+
+    <!-- Canvas -->
+    <div class="fp-canvas-wrap">
+      <div class="fp-canvas-container" id="fp-canvas-container">
+        <canvas id="floorCanvas"></canvas>
+        <div id="fixtures-layer" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none"></div>
+      </div>
+      <div class="fp-controls">
+        <button class="fp-ctrl-btn" onclick="undoFpDraw()">↩ Undo</button>
+        <button class="fp-ctrl-btn" onclick="clearFpDraw()">🗑 Clear Drawing</button>
+        <button class="fp-ctrl-btn" onclick="exportFloorPlanImg()">📥 Save Image</button>
+        <span style="margin-left:auto;font-size:11px;color:var(--muted)" id="fp-scale-label"></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="btn-row" style="margin-top:16px">
+    <button class="btn-secondary" onclick="switchTab(2)">← Back</button>
+    <button class="btn-primary" onclick="switchTab(4)">Next — Scope & Sign Off →</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     TAB 4 — SCOPE SUMMARY & SIGN OFF
+══════════════════════════════════════════════════════ -->
+<div class="tab-panel" id="tab-4">
+
+  <!-- Scope of Work Table -->
+  <div class="card">
+    <div class="card-title">Scope of Work</div>
+    <div class="card-sub">Auto-generated from floor plan fixtures. Edit, add, or remove line items as needed.</div>
+    <div class="add-scope-row">
+      <input class="add-scope-input" id="new-scope-item" placeholder="Add a scope item manually..." onkeydown="if(event.key==='Enter')addScopeItem()"/>
+      <select class="field-select" id="new-scope-trade" style="width:150px">
+        <option value="Demo">Demo</option>
+        <option value="Framing">Framing</option>
+        <option value="Plumbing">Plumbing</option>
+        <option value="Electrical">Electrical</option>
+        <option value="Tile">Tile</option>
+        <option value="Flooring">Flooring</option>
+        <option value="Cabinets">Cabinets</option>
+        <option value="Paint">Paint</option>
+        <option value="Drywall">Drywall</option>
+        <option value="HVAC">HVAC</option>
+        <option value="Fixtures">Fixtures</option>
+        <option value="General">General</option>
+      </select>
+      <button class="btn-primary" onclick="addScopeItem()">+ Add</button>
+    </div>
+    <table class="scope-table" id="scope-table">
+      <thead>
+        <tr>
+          <th style="width:40px">#</th>
+          <th style="width:110px">Trade</th>
+          <th>Scope Item</th>
+          <th style="width:90px">Est. Cost</th>
+          <th style="width:36px"></th>
+        </tr>
+      </thead>
+      <tbody id="scope-tbody"></tbody>
+    </table>
+    <div style="display:flex;justify-content:flex-end;gap:20px;padding:10px 0;border-top:1px solid var(--border);margin-top:4px">
+      <span style="font-size:12px;color:var(--muted)">Subtotal</span>
+      <span style="font-size:14px;font-weight:700;color:#fff" id="scope-subtotal">$0</span>
+    </div>
+  </div>
+
+  <!-- Estimate Range -->
+  <div class="card">
+    <div class="card-title">Project Estimate</div>
+    <div class="field-row">
+      <div class="field-group">
+        <label class="field-label">Low Estimate ($)</label>
+        <input class="field-input" id="est-low" type="number" placeholder="15000" oninput="saveState()"/>
+      </div>
+      <div class="field-group">
+        <label class="field-label">High Estimate ($)</label>
+        <input class="field-input" id="est-high" type="number" placeholder="22000" oninput="saveState()"/>
+      </div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Estimate Notes (shown on client proposal)</label>
+      <textarea class="field-textarea" id="est-notes" placeholder="Estimate is based on scope as described. Final pricing confirmed after material selection and sub quotes..." oninput="saveState()"></textarea>
+    </div>
+  </div>
+
+  <!-- E-Signature -->
+  <div class="card">
+    <div class="card-title">Client Sign-Off</div>
+    <div class="card-sub">Have the client sign below to confirm they've reviewed and approved the scope of work. This becomes part of both the client proposal and internal work order.</div>
+
+    <div class="sig-box">
+      <div style="font-size:11px;color:var(--muted);margin-bottom:6px">Client Signature — sign in the white box below</div>
+      <div class="sig-canvas-wrap">
+        <canvas id="sigCanvas" width="700" height="140"></canvas>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:8px">
+        <button class="btn-secondary" onclick="clearSig()" style="font-size:11px;padding:6px 14px">Clear Signature</button>
+        <span style="font-size:11px;color:var(--muted);align-self:center" id="sig-status">Not signed</span>
+      </div>
+      <div class="sig-names">
+        <div class="field-group">
+          <label class="field-label">Client Printed Name</label>
+          <input class="field-input" id="sig-client-name" placeholder="Full name" oninput="saveState()"/>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Date Signed</label>
+          <input class="field-input" id="sig-date" type="date" oninput="saveState()"/>
+        </div>
+      </div>
+      <div class="field-group" style="margin-top:8px">
+        <label class="field-label">Ironwood Representative</label>
+        <input class="field-input" id="sig-rep" placeholder="Team member name" oninput="saveState()"/>
+      </div>
+    </div>
+  </div>
+
+  <!-- Export -->
+  <div class="card">
+    <div class="card-title">Export Documents</div>
+    <div class="export-type-btns">
+      <div class="export-type-btn selected" id="export-client-btn" onclick="selectExport('client')">
+        <div class="et-icon">📄</div>
+        <div class="et-name">Client Proposal</div>
+        <div class="et-desc">Branded PDF — scope, floor plan, photos, estimate range, signature block. Clean and professional.</div>
+      </div>
+      <div class="export-type-btn" id="export-internal-btn" onclick="selectExport('internal')">
+        <div class="et-icon">🔧</div>
+        <div class="et-name">Internal Work Order</div>
+        <div class="et-desc">Sub-ready PDF — full dimensions, all notes, fixture list, trade breakdown, internal comments.</div>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn-primary" onclick="exportPDF()">📥 Export PDF</button>
+      <button class="btn-secondary" onclick="exportBoth()">Export Both</button>
+      <button class="btn-success" onclick="markComplete()">✓ Mark Complete</button>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn-secondary" onclick="switchTab(3)">← Back</button>
+  </div>
+</div>
+
+<!-- ══ HIDDEN PDF DOCUMENT ══ -->
+<div id="pdf-doc">
+  <div class="pdf-page" id="pdf-content">
+    <div class="pdf-header">
+      <div>
+        <div class="pdf-logo">IRONWOOD</div>
+        <div class="pdf-logo-sub">Homes & Renovations · Canton, GA</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:#888" id="pdf-ref-display"></div>
+        <div style="font-size:11px;color:#888" id="pdf-date-display"></div>
+        <div style="font-size:11px;font-weight:700;color:#6B8DB5;margin-top:4px" id="pdf-doc-type-label"></div>
+      </div>
+    </div>
+
+    <div class="pdf-doc-title" id="pdf-title"></div>
+
+    <div class="pdf-section">
+      <div class="pdf-section-title">Client & Project Information</div>
+      <div class="pdf-row"><span class="pr-label">Client</span><span class="pr-value" id="pdf-client-name"></span></div>
+      <div class="pdf-row"><span class="pr-label">Property Address</span><span class="pr-value" id="pdf-address"></span></div>
+      <div class="pdf-row"><span class="pr-label">Phone</span><span class="pr-value" id="pdf-phone"></span></div>
+      <div class="pdf-row"><span class="pr-label">Email</span><span class="pr-value" id="pdf-email"></span></div>
+      <div class="pdf-row"><span class="pr-label">Site Visit Date</span><span class="pr-value" id="pdf-visit-date"></span></div>
+      <div class="pdf-row"><span class="pr-label">Project Rooms</span><span class="pr-value" id="pdf-rooms"></span></div>
+      <div class="pdf-row"><span class="pr-label">Condition</span><span class="pr-value" id="pdf-condition"></span></div>
+      <div class="pdf-row"><span class="pr-label">Finish Level</span><span class="pr-value" id="pdf-finish"></span></div>
+      <div class="pdf-row"><span class="pr-label">Estimated Timeline</span><span class="pr-value" id="pdf-timeline"></span></div>
+    </div>
+
+    <div class="pdf-section" id="pdf-vision-section">
+      <div class="pdf-section-title">Project Vision</div>
+      <div style="font-size:12px;line-height:1.7;color:#333" id="pdf-vision"></div>
+    </div>
+
+    <div class="pdf-section">
+      <div class="pdf-section-title">Scope of Work</div>
+      <table class="pdf-scope-table" id="pdf-scope-table">
+        <thead><tr><th>#</th><th>Trade</th><th>Description</th><th>Est. Cost</th></tr></thead>
+        <tbody id="pdf-scope-tbody"></tbody>
+      </table>
+      <div style="display:flex;justify-content:flex-end;margin-top:8px;gap:20px;font-size:12px">
+        <span style="color:#666">Estimated Range</span>
+        <strong id="pdf-estimate-range"></strong>
+      </div>
+      <div style="font-size:11px;color:#666;margin-top:8px;line-height:1.6" id="pdf-est-notes"></div>
+    </div>
+
+    <div class="pdf-section" id="pdf-photos-section">
+      <div class="pdf-section-title">Site Photos</div>
+      <div class="pdf-photos" id="pdf-photos-grid"></div>
+    </div>
+
+    <div class="pdf-section" id="pdf-internal-section" style="display:none">
+      <div class="pdf-section-title">Internal Notes (not for client)</div>
+      <div style="font-size:12px;line-height:1.7;color:#333;background:#f9f9f9;padding:10px;border-radius:4px" id="pdf-internal-notes"></div>
+    </div>
+
+    <div class="pdf-section" id="pdf-fp-section">
+      <div class="pdf-section-title">Floor Plan</div>
+      <div style="font-size:11px;color:#666;margin-bottom:8px" id="pdf-fp-dims"></div>
+      <img id="pdf-fp-img" style="max-width:100%;border:1px solid #e0e0e0;border-radius:4px" src="" alt="Floor Plan"/>
+    </div>
+
+    <div class="pdf-sig-section">
+      <div class="pdf-sig-block">
+        <div class="psb-label">Client Signature</div>
+        <div class="psb-line" style="position:relative">
+          <img id="pdf-sig-img" style="max-height:40px;position:absolute;bottom:4px;left:0" src="" alt=""/>
+        </div>
+        <div class="psb-name" id="pdf-sig-client"></div>
+      </div>
+      <div class="pdf-sig-block">
+        <div class="psb-label">Ironwood Representative</div>
+        <div class="psb-line"></div>
+        <div class="psb-name" id="pdf-sig-rep"></div>
+      </div>
+    </div>
+
+    <div class="pdf-footer">
+      <span>Ironwood Homes & Renovations · Canton, GA · ironwoodrenovations.com</span>
+      <span id="pdf-footer-ref"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════════════
+const state = {
+  rooms: [],
+  photos: [],       // {id, dataUrl, note, markupDataUrl}
+  scopeItems: [],   // {id, trade, desc, cost}
+  fixtures: [],     // placed on floor plan
+  fpDrawings: [],   // freehand strokes on floor plan
+  sigDataUrl: null,
+  fpImageDataUrl: null,
+  exportType: 'client',
+  currentTab: 1,
+};
+
+// ════════════════════════════════════════════════════════
+// TAB NAVIGATION
+// ════════════════════════════════════════════════════════
+function switchTab(n) {
+  [1,2,3,4].forEach(i => {
+    document.getElementById('tab-'+i).classList.toggle('active', i===n);
+    const btn = document.getElementById('tab-btn-'+i);
+    btn.classList.toggle('active', i===n);
+  });
+  state.currentTab = n;
+  document.getElementById('main-progress').style.width = (n/4*100)+'%';
+  if (n===3) { setTimeout(initFloorPlan, 100); }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ════════════════════════════════════════════════════════
+// ROOM SELECTION
+// ════════════════════════════════════════════════════════
+function toggleRoom(el, val) {
+  el.classList.toggle('selected');
+  const idx = state.rooms.indexOf(val);
+  if (idx===-1) state.rooms.push(val); else state.rooms.splice(idx,1);
+  updateRoomDetails();
+  updateFixturePalette();
+  saveState();
+}
+
+const ROOM_DETAILS = {
+  kitchen: `
+    <div class="field-row-3">
+      <div class="field-group"><label class="field-label">Cabinet Style</label>
+        <select class="field-select" oninput="saveState()">
+          <option>Shaker</option><option>Flat Panel</option><option>Raised Panel</option><option>Open Shelving</option>
+        </select></div>
+      <div class="field-group"><label class="field-label">Island</label>
+        <select class="field-select" oninput="saveState()"><option>No Island</option><option>New Island</option><option>Remove Island</option><option>Modify Island</option></select></div>
+      <div class="field-group"><label class="field-label">Appliances</label>
+        <select class="field-select" oninput="saveState()"><option>Client Provides</option><option>Ironwood Supplies</option><option>Existing Stay</option></select></div>
+    </div>
+    <div class="field-group"><label class="field-label">Linear Feet of Cabinets (est.)</label>
+      <input class="field-input" type="number" placeholder="e.g. 18" oninput="saveState()"/></div>`,
+  bathroom: `
+    <div class="field-row">
+      <div class="field-group"><label class="field-label">Shower / Tub Config</label>
+        <select class="field-select" oninput="saveState()"><option>Tub Only</option><option>Shower Only</option><option>Tub/Shower Combo</option><option>Separate Tub & Shower</option></select></div>
+      <div class="field-group"><label class="field-label">Vanity</label>
+        <select class="field-select" oninput="saveState()"><option>Single Vanity</option><option>Double Vanity</option><option>Pedestal Sink</option></select></div>
+    </div>
+    <div class="field-row">
+      <div class="field-group"><label class="field-label">ADA Accessible</label>
+        <select class="field-select" oninput="saveState()"><option>No</option><option>Yes — grab bars</option><option>Yes — full ADA</option></select></div>
+      <div class="field-group"><label class="field-label">Tile Scope</label>
+        <select class="field-select" oninput="saveState()"><option>Floor Only</option><option>Shower/Tub Surround</option><option>Floor + Walls</option><option>Full Tile</option></select></div>
+    </div>`,
+  master_bath: `<div class="field-row">
+      <div class="field-group"><label class="field-label">Double Vanity</label>
+        <select class="field-select"><option>Yes</option><option>No</option></select></div>
+      <div class="field-group"><label class="field-label">Freestanding Tub</label>
+        <select class="field-select"><option>No</option><option>Yes</option></select></div>
+      <div class="field-group"><label class="field-label">Walk-In Shower</label>
+        <select class="field-select"><option>Yes</option><option>No</option></select></div>
+    </div>`,
+};
+
+function updateRoomDetails() {
+  const card = document.getElementById('room-details-card');
+  const content = document.getElementById('room-details-content');
+  const detailRooms = state.rooms.filter(r => ROOM_DETAILS[r]);
+  if (!detailRooms.length) { card.style.display='none'; return; }
+  card.style.display='block';
+  content.innerHTML = detailRooms.map(r => `
+    <div style="margin-bottom:16px">
+      <div style="font-size:11px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px">${r.replace('_',' ').toUpperCase()}</div>
+      ${ROOM_DETAILS[r]}
+    </div>`).join('<hr style="border-color:var(--border);margin:12px 0">');
+}
+
+// ════════════════════════════════════════════════════════
+// PHOTO MARKUP
+// ════════════════════════════════════════════════════════
+function handlePhotoUpload(input) {
+  const files = Array.from(input.files).slice(0, 20 - state.photos.length);
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      state.photos.push({ id: Date.now()+Math.random(), dataUrl: e.target.result, note:'', markupDataUrl: null });
+      renderPhotoList();
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value = '';
+}
+
+function renderPhotoList() {
+  const list = document.getElementById('photo-list');
+  const msg = document.getElementById('no-photos-msg');
+  msg.style.display = state.photos.length ? 'none' : 'block';
+  list.innerHTML = state.photos.map((p,i) => `
+    <div class="photo-thumb-card ${p.markupDataUrl?'has-markup':''}" onclick="openMarkup(${i})">
+      <img src="${p.markupDataUrl||p.dataUrl}" alt="Photo ${i+1}"/>
+      <div class="ptc-label">
+        <span>${p.markupDataUrl?'✓ Marked up':'Click to markup'}</span>
+        <span onclick="event.stopPropagation();removePhoto(${i})" style="cursor:pointer;color:var(--red)">✕</span>
+      </div>
+    </div>`).join('');
+}
+
+function removePhoto(i) { state.photos.splice(i,1); renderPhotoList(); }
+
+// Markup modal
+let markupCtx, markupImgEl, markupTool='pen', markupColor='#e05c5c', markupSize=3;
+let markupDrawing=false, markupLastX=0, markupLastY=0;
+let markupHistory=[], markupCurrentPhotoIdx=null;
+let markupStartX=0, markupStartY=0;
+
+function openMarkup(idx) {
+  markupCurrentPhotoIdx = idx;
+  const modal = document.getElementById('markup-modal');
+  modal.classList.add('open');
+  const canvas = document.getElementById('markupCanvas');
+  markupCtx = canvas.getContext('2d');
+  markupImgEl = new Image();
+  markupImgEl.onload = () => {
+    const maxW = window.innerWidth - 40;
+    const maxH = window.innerHeight - 160;
+    const scale = Math.min(maxW/markupImgEl.width, maxH/markupImgEl.height, 1);
+    canvas.width = markupImgEl.width * scale;
+    canvas.height = markupImgEl.height * scale;
+    markupCtx.drawImage(markupImgEl, 0, 0, canvas.width, canvas.height);
+    // If already has markup, restore it
+    const existing = state.photos[idx].markupDataUrl;
+    if (existing) {
+      const mImg = new Image();
+      mImg.onload = () => markupCtx.drawImage(mImg, 0, 0, canvas.width, canvas.height);
+      mImg.src = existing;
+    }
+    markupHistory = [canvas.toDataURL()];
+  };
+  markupImgEl.src = state.photos[idx].dataUrl;
+  document.getElementById('markup-note').value = state.photos[idx].note || '';
+
+  canvas.addEventListener('mousedown', startMarkupDraw);
+  canvas.addEventListener('mousemove', doMarkupDraw);
+  canvas.addEventListener('mouseup', endMarkupDraw);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); const t=e.touches[0]; startMarkupDraw({offsetX:t.clientX-canvas.getBoundingClientRect().left,offsetY:t.clientY-canvas.getBoundingClientRect().top}); }, {passive:false});
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); const t=e.touches[0]; doMarkupDraw({offsetX:t.clientX-canvas.getBoundingClientRect().left,offsetY:t.clientY-canvas.getBoundingClientRect().top}); }, {passive:false});
+  canvas.addEventListener('touchend', endMarkupDraw);
+}
+
+function startMarkupDraw(e) {
+  markupDrawing = true;
+  markupLastX = e.offsetX; markupLastY = e.offsetY;
+  markupStartX = e.offsetX; markupStartY = e.offsetY;
+  if (markupTool === 'text') {
+    const txt = prompt('Enter text:');
+    if (txt) {
+      markupCtx.font = `${markupSize*5+12}px Arial`;
+      markupCtx.fillStyle = markupColor;
+      markupCtx.fillText(txt, e.offsetX, e.offsetY);
+      markupHistory.push(document.getElementById('markupCanvas').toDataURL());
+    }
+    markupDrawing = false;
+  }
+}
+
+function doMarkupDraw(e) {
+  if (!markupDrawing) return;
+  const canvas = document.getElementById('markupCanvas');
+  if (markupTool==='pen' || markupTool==='eraser') {
+    markupCtx.beginPath();
+    markupCtx.moveTo(markupLastX, markupLastY);
+    markupCtx.lineTo(e.offsetX, e.offsetY);
+    markupCtx.strokeStyle = markupTool==='eraser' ? 'rgba(0,0,0,1)' : markupColor;
+    markupCtx.lineWidth = markupTool==='eraser' ? markupSize*4 : markupSize;
+    markupCtx.lineCap='round';
+    if (markupTool==='eraser') markupCtx.globalCompositeOperation='destination-out';
+    else markupCtx.globalCompositeOperation='source-over';
+    markupCtx.stroke();
+    markupLastX=e.offsetX; markupLastY=e.offsetY;
+  } else if (markupTool==='rect' || markupTool==='arrow') {
+    // Preview — restore last history state then draw preview
+    const img = new Image();
+    img.onload = () => {
+      markupCtx.clearRect(0,0,canvas.width,canvas.height);
+      markupCtx.drawImage(img,0,0);
+      markupCtx.strokeStyle=markupColor; markupCtx.lineWidth=markupSize; markupCtx.globalCompositeOperation='source-over';
+      if (markupTool==='rect') {
+        markupCtx.strokeRect(markupStartX, markupStartY, e.offsetX-markupStartX, e.offsetY-markupStartY);
+      } else {
+        drawArrow(markupCtx, markupStartX, markupStartY, e.offsetX, e.offsetY);
+      }
+    };
+    img.src = markupHistory[markupHistory.length-1];
+  }
+}
+
+function endMarkupDraw(e) {
+  if (!markupDrawing) return;
+  markupDrawing = false;
+  markupCtx.globalCompositeOperation='source-over';
+  markupHistory.push(document.getElementById('markupCanvas').toDataURL());
+}
+
+function drawArrow(ctx, x1,y1,x2,y2) {
+  const angle = Math.atan2(y2-y1,x2-x1);
+  const len = 12;
+  ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(x2,y2);
+  ctx.lineTo(x2-len*Math.cos(angle-Math.PI/6), y2-len*Math.sin(angle-Math.PI/6));
+  ctx.lineTo(x2-len*Math.cos(angle+Math.PI/6), y2-len*Math.sin(angle+Math.PI/6));
+  ctx.closePath(); ctx.fillStyle=markupColor; ctx.fill();
+}
+
+function undoMarkup() {
+  if (markupHistory.length<=1) return;
+  markupHistory.pop();
+  const img = new Image();
+  const canvas = document.getElementById('markupCanvas');
+  img.onload = () => { markupCtx.clearRect(0,0,canvas.width,canvas.height); markupCtx.drawImage(img,0,0); };
+  img.src = markupHistory[markupHistory.length-1];
+}
+
+function clearMarkup() {
+  const canvas = document.getElementById('markupCanvas');
+  markupCtx.clearRect(0,0,canvas.width,canvas.height);
+  markupCtx.drawImage(markupImgEl,0,0,canvas.width,canvas.height);
+  markupHistory = [canvas.toDataURL()];
+}
+
+function saveMarkup() {
+  const canvas = document.getElementById('markupCanvas');
+  state.photos[markupCurrentPhotoIdx].markupDataUrl = canvas.toDataURL();
+  state.photos[markupCurrentPhotoIdx].note = document.getElementById('markup-note').value;
+  closeMarkupModal();
+  renderPhotoList();
+}
+
+function closeMarkupModal() {
+  document.getElementById('markup-modal').classList.remove('open');
+  const canvas = document.getElementById('markupCanvas');
+  canvas.removeEventListener('mousedown',startMarkupDraw);
+  canvas.removeEventListener('mousemove',doMarkupDraw);
+  canvas.removeEventListener('mouseup',endMarkupDraw);
+}
+
+function setMarkupTool(t) {
+  markupTool=t;
+  document.querySelectorAll('.markup-tool-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tool-'+t)?.classList.add('active');
+}
+function setMarkupColor(c,el) {
+  markupColor=c;
+  document.querySelectorAll('.markup-color-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+function setMarkupSize(s,el) {
+  markupSize=s;
+  document.querySelectorAll('.markup-size-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ════════════════════════════════════════════════════════
+// FLOOR PLAN
+// ════════════════════════════════════════════════════════
+const FIXTURES_BY_ROOM = {
+  kitchen:     [{icon:'🗄',name:'Base Cab',w:80,h:30},{icon:'🔲',name:'Upper Cab',w:80,h:20},{icon:'🏝',name:'Island',w:80,h:50},{icon:'🚰',name:'Sink',w:50,h:30},{icon:'🍳',name:'Range',w:50,h:50},{icon:'❄️',name:'Fridge',w:36,h:36},{icon:'🫧',name:'Dishwasher',w:36,h:36},{icon:'🗑',name:'Pantry',w:36,h:50}],
+  bathroom:    [{icon:'🚽',name:'Toilet',w:28,h:36},{icon:'🛁',name:'Tub',w:60,h:30},{icon:'🚿',name:'Shower',w:36,h:36},{icon:'🪥',name:'Vanity',w:48,h:22},{icon:'🪥',name:'Dbl Vanity',w:72,h:22},{icon:'🗄',name:'Linen',w:24,h:18}],
+  master_bath: [{icon:'🚽',name:'Toilet',w:28,h:36},{icon:'🛁',name:'Freestand Tub',w:60,h:34},{icon:'🚿',name:'Walk-In',w:50,h:50},{icon:'🪥',name:'Dbl Vanity',w:72,h:22}],
+  bedroom:     [{icon:'🛏',name:'Queen Bed',w:60,h:80},{icon:'🛏',name:'King Bed',w:76,h:80},{icon:'🗄',name:'Dresser',w:48,h:20},{icon:'🪟',name:'Window',w:36,h:10},{icon:'🚪',name:'Closet',w:60,h:24}],
+  living:      [{icon:'🛋',name:'Sofa',w:84,h:36},{icon:'📺',name:'TV Wall',w:72,h:8},{icon:'🪑',name:'Chair',w:36,h:36},{icon:'🔥',name:'Fireplace',w:50,h:16},{icon:'📚',name:'Built-Ins',w:72,h:16}],
+  laundry:     [{icon:'🫧',name:'Washer',w:28,h:28},{icon:'🌀',name:'Dryer',w:28,h:28},{icon:'🗄',name:'Cabinet',w:48,h:18}],
+  basement:    [{icon:'🏋',name:'Exercise',w:80,h:60},{icon:'🛋',name:'Sofa',w:84,h:36},{icon:'🚽',name:'Toilet',w:28,h:36}],
+  addition:    [{icon:'🚪',name:'Door',w:32,h:8},{icon:'🪟',name:'Window',w:36,h:8},{icon:'🧱',name:'Wall',w:80,h:8}],
+  exterior:    [{icon:'🚗',name:'Driveway',w:100,h:60},{icon:'🌿',name:'Garden',w:60,h:40}],
+  whole_home:  [],
+};
+const UNIVERSAL_FIXTURES = [
+  {icon:'🚪',name:'Door',w:32,h:8},{icon:'🪟',name:'Window',w:36,h:8},
+  {icon:'🧱',name:'Wall',w:80,h:8},{icon:'↕',name:'Stairs',w:40,h:60}
+];
+
+let fpMode='drag', fpDrawTool='wall', fpDrawColor='#6B8DB5';
+let fpCtx, fpCanvas, fpScale=10;
+let fpDrawing=false, fpStartX=0, fpStartY=0;
+let fpStrokes=[];
+
+function updateFixturePalette() {
+  const palette = document.getElementById('fixture-palette');
+  let fixtures = [...UNIVERSAL_FIXTURES];
+  state.rooms.forEach(r => { if (FIXTURES_BY_ROOM[r]) fixtures.push(...FIXTURES_BY_ROOM[r]); });
+  const seen = new Set();
+  fixtures = fixtures.filter(f => { const k=f.name; if(seen.has(k)) return false; seen.add(k); return true; });
+  palette.innerHTML = fixtures.map(f =>
+    `<div class="fixture-item" draggable="true" ondragstart="startFixtureDrag(event,'${f.name}','${f.icon}',${f.w},${f.h})">
+      <span class="fi-icon">${f.icon}</span>
+      <span class="fi-name">${f.name}</span>
+    </div>`).join('');
+}
+
+function initFloorPlan() {
+  fpCanvas = document.getElementById('floorCanvas');
+  fpCtx = fpCanvas.getContext('2d');
+  const container = document.getElementById('fp-canvas-container');
+  const cw = container.clientWidth - 2;
+  fpCanvas.width = cw; fpCanvas.height = Math.min(cw*0.7, 520);
+  container.style.height = fpCanvas.height+'px';
+  document.getElementById('fixtures-layer').style.pointerEvents = fpMode==='drag' ? 'auto' : 'none';
+
+  fpCanvas.addEventListener('mousedown', fpMouseDown);
+  fpCanvas.addEventListener('mousemove', fpMouseMove);
+  fpCanvas.addEventListener('mouseup', fpMouseUp);
+
+  const dropZone = document.getElementById('fp-canvas-container');
+  dropZone.addEventListener('dragover', e => e.preventDefault());
+  dropZone.addEventListener('drop', dropFixture);
+
+  renderFloorPlan();
+  updateFixturePalette();
+}
+
+function renderFloorPlan() {
+  if (!fpCtx) return;
+  const len = parseFloat(document.getElementById('fp-length').value)||12;
+  const wid = parseFloat(document.getElementById('fp-width').value)||10;
+  const label = document.getElementById('fp-room-label').value || 'Room';
+  const cw = fpCanvas.width, ch = fpCanvas.height;
+  const pad = 48;
+  fpScale = Math.min((cw-pad*2)/len, (ch-pad*2)/wid);
+  const rw = len*fpScale, rh = wid*fpScale;
+  const ox = (cw-rw)/2, oy = (ch-rh)/2;
+
+  fpCtx.clearRect(0,0,cw,ch);
+  // Grid
+  fpCtx.strokeStyle='#222'; fpCtx.lineWidth=0.5;
+  for(let x=0;x<cw;x+=fpScale){fpCtx.beginPath();fpCtx.moveTo(x,0);fpCtx.lineTo(x,ch);fpCtx.stroke();}
+  for(let y=0;y<ch;y+=fpScale){fpCtx.beginPath();fpCtx.moveTo(0,y);fpCtx.lineTo(cw,y);fpCtx.stroke();}
+
+  // Room outline
+  fpCtx.fillStyle='#1a2030';
+  fpCtx.fillRect(ox,oy,rw,rh);
+  fpCtx.strokeStyle='#6B8DB5'; fpCtx.lineWidth=3;
+  fpCtx.strokeRect(ox,oy,rw,rh);
+
+  // Dimension labels
+  fpCtx.fillStyle='#aaa'; fpCtx.font='bold 11px Arial'; fpCtx.textAlign='center';
+  fpCtx.fillText(len+"'", ox+rw/2, oy-10);
+  fpCtx.save(); fpCtx.translate(ox-14, oy+rh/2); fpCtx.rotate(-Math.PI/2);
+  fpCtx.fillText(wid+"'",0,0); fpCtx.restore();
+
+  // Room label
+  fpCtx.fillStyle='rgba(107,141,181,.4)'; fpCtx.font='bold 14px Arial'; fpCtx.textAlign='center';
+  fpCtx.fillText(label.toUpperCase(), ox+rw/2, oy+rh/2+5);
+
+  // Draw freehand strokes
+  fpStrokes.forEach(s => {
+    fpCtx.strokeStyle=s.color; fpCtx.lineWidth=s.size||2; fpCtx.lineCap='round'; fpCtx.lineJoin='round';
+    fpCtx.beginPath();
+    s.points.forEach((p,i) => i===0 ? fpCtx.moveTo(p.x,p.y) : fpCtx.lineTo(p.x,p.y));
+    fpCtx.stroke();
+  });
+
+  document.getElementById('fp-scale-label').textContent = `Scale: 1px = ${(1/fpScale).toFixed(2)} ft`;
+  state.fpImageDataUrl = fpCanvas.toDataURL();
+}
+
+let fpCurrentStroke = null;
+function fpMouseDown(e) {
+  if (fpMode!=='draw') return;
+  fpDrawing=true;
+  const r=fpCanvas.getBoundingClientRect();
+  fpStartX=e.clientX-r.left; fpStartY=e.clientY-r.top;
+  fpCurrentStroke = {color:fpDrawColor, size:2, points:[{x:fpStartX,y:fpStartY}]};
+}
+function fpMouseMove(e) {
+  if (!fpDrawing||fpMode!=='draw') return;
+  const r=fpCanvas.getBoundingClientRect();
+  const x=e.clientX-r.left, y=e.clientY-r.top;
+  fpCurrentStroke.points.push({x,y});
+  renderFloorPlan();
+  // Draw current stroke preview
+  fpCtx.strokeStyle=fpDrawColor; fpCtx.lineWidth=2; fpCtx.lineCap='round';
+  fpCtx.beginPath();
+  fpCurrentStroke.points.forEach((p,i) => i===0?fpCtx.moveTo(p.x,p.y):fpCtx.lineTo(p.x,p.y));
+  fpCtx.stroke();
+}
+function fpMouseUp() {
+  if (!fpDrawing) return;
+  fpDrawing=false;
+  if (fpCurrentStroke && fpCurrentStroke.points.length>1) fpStrokes.push(fpCurrentStroke);
+  fpCurrentStroke=null;
+  renderFloorPlan();
+  state.fpImageDataUrl=fpCanvas.toDataURL();
+}
+
+function undoFpDraw() { fpStrokes.pop(); renderFloorPlan(); }
+function clearFpDraw() { fpStrokes=[]; renderFloorPlan(); }
+
+function setFpMode(m) {
+  fpMode=m;
+  document.querySelectorAll('.fp-mode-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('mode-'+m).classList.add('active');
+  document.getElementById('fixtures-layer').style.pointerEvents = m==='drag'?'auto':'none';
+  fpCanvas.style.cursor = m==='draw'?'crosshair':'default';
+}
+function setDrawTool(t) { fpDrawTool=t; }
+function setFpDrawColor(c) { fpDrawColor=c; }
+
+// Drag & drop fixtures
+let dragFixture=null;
+function startFixtureDrag(e,name,icon,w,h) {
+  dragFixture={name,icon,w,h};
+}
+function dropFixture(e) {
+  e.preventDefault();
+  if (!dragFixture) return;
+  const r=document.getElementById('fp-canvas-container').getBoundingClientRect();
+  const x=e.clientX-r.left, y=e.clientY-r.top;
+  placeFixture(dragFixture.name, dragFixture.icon, dragFixture.w, dragFixture.h, x-dragFixture.w/2, y-dragFixture.h/2);
+  dragFixture=null;
+}
+
+function placeFixture(name,icon,w,h,left,top) {
+  const id='fix-'+Date.now();
+  const layer=document.getElementById('fixtures-layer');
+  const el=document.createElement('div');
+  el.className='canvas-fixture';
+  el.id=id;
+  el.style.cssText=`left:${left}px;top:${top}px;width:${w}px;height:${h}px`;
+  el.innerHTML=`<span class="cf-icon">${icon}</span><span class="cf-label">${name}</span>
+    <div class="cf-del" onclick="removeFixture('${id}')">✕</div>
+    <div class="cf-rotate" onclick="rotateFixture('${id}')">↻</div>`;
+  el.addEventListener('mousedown', startDragFixtureEl);
+  el.addEventListener('click', () => selectFixture(id));
+  layer.appendChild(el);
+  state.fixtures.push({id,name,icon,w,h,left,top,rotation:0});
+  autoScopeFromFixture(name);
+}
+
+function selectFixture(id) {
+  document.querySelectorAll('.canvas-fixture').forEach(f=>f.classList.remove('selected'));
+  document.getElementById(id)?.classList.add('selected');
+}
+function removeFixture(id) {
+  document.getElementById(id)?.remove();
+  state.fixtures=state.fixtures.filter(f=>f.id!==id);
+}
+function rotateFixture(id) {
+  const el=document.getElementById(id);
+  const fix=state.fixtures.find(f=>f.id===id);
+  if(!el||!fix) return;
+  fix.rotation=(fix.rotation||0)+90;
+  el.style.transform=`rotate(${fix.rotation}deg)`;
+  const tmp=el.style.width; el.style.width=el.style.height; el.style.height=tmp;
+}
+function clearFixtures() {
+  document.getElementById('fixtures-layer').innerHTML='';
+  state.fixtures=[];
+}
+
+let dragEl=null, dragOffX=0, dragOffY=0;
+function startDragFixtureEl(e) {
+  if (fpMode!=='drag') return;
+  e.stopPropagation();
+  dragEl=e.currentTarget;
+  dragOffX=e.clientX-dragEl.getBoundingClientRect().left;
+  dragOffY=e.clientY-dragEl.getBoundingClientRect().top;
+  document.addEventListener('mousemove', moveDragFixtureEl);
+  document.addEventListener('mouseup', stopDragFixtureEl);
+}
+function moveDragFixtureEl(e) {
+  if(!dragEl) return;
+  const container=document.getElementById('fp-canvas-container').getBoundingClientRect();
+  dragEl.style.left=(e.clientX-container.left-dragOffX)+'px';
+  dragEl.style.top=(e.clientY-container.top-dragOffY)+'px';
+}
+function stopDragFixtureEl() { dragEl=null; document.removeEventListener('mousemove',moveDragFixtureEl); document.removeEventListener('mouseup',stopDragFixtureEl); }
+
+function exportFloorPlanImg() {
+  renderFloorPlan();
+  const a=document.createElement('a');
+  a.href=fpCanvas.toDataURL('image/png');
+  a.download='Ironwood_FloorPlan.png';
+  a.click();
+}
+
+// Auto-generate scope from fixtures
+const FIXTURE_SCOPE = {
+  'Toilet':['Plumbing','Remove and replace toilet'],
+  'Tub':['Plumbing','Remove and replace bathtub'],
+  'Shower':['Plumbing','Install new shower unit'],
+  'Walk-In':['Plumbing','Build walk-in shower with tile surround'],
+  'Vanity':['Plumbing','Install vanity and sink'],
+  'Dbl Vanity':['Plumbing','Install double vanity and sinks'],
+  'Freestand Tub':['Plumbing','Install freestanding tub with floor mount filler'],
+  'Range':['Electrical','Install range/stove — verify gas or electric'],
+  'Fridge':['General','Place refrigerator in designated space'],
+  'Dishwasher':['Plumbing','Install dishwasher — plumbing hookup'],
+  'Island':['Cabinets','Build and install kitchen island'],
+  'Base Cab':['Cabinets','Install base cabinets per plan'],
+  'Upper Cab':['Cabinets','Install upper wall cabinets per plan'],
+  'Sink':['Plumbing','Install kitchen sink and faucet'],
+  'Pantry':['Cabinets','Build pantry cabinet or closet'],
+};
+
+function autoScopeFromFixture(name) {
+  const rule = FIXTURE_SCOPE[name];
+  if (!rule) return;
+  const [trade, desc] = rule;
+  const existing = state.scopeItems.find(s => s.desc===desc);
+  if (!existing) addScopeItemDirect(trade, desc, '');
+}
+
+// ════════════════════════════════════════════════════════
+// SCOPE OF WORK
+// ════════════════════════════════════════════════════════
+function addScopeItem() {
+  const desc = document.getElementById('new-scope-item').value.trim();
+  const trade = document.getElementById('new-scope-trade').value;
+  if (!desc) return;
+  addScopeItemDirect(trade, desc, '');
+  document.getElementById('new-scope-item').value='';
+}
+
+function addScopeItemDirect(trade, desc, cost) {
+  state.scopeItems.push({id:'s'+Date.now()+Math.random(), trade, desc, cost});
+  renderScopeTable();
+}
+
+function renderScopeTable() {
+  const tbody = document.getElementById('scope-tbody');
+  tbody.innerHTML = state.scopeItems.map((s,i) => `
+    <tr>
+      <td style="color:var(--muted)">${i+1}</td>
+      <td><select style="background:#111;border:1px solid var(--border);border-radius:4px;padding:4px 6px;font-size:11px;color:#fff;width:100%" onchange="updateScope('${s.id}','trade',this.value)">
+        ${['Demo','Framing','Plumbing','Electrical','Tile','Flooring','Cabinets','Paint','Drywall','HVAC','Fixtures','General'].map(t=>`<option ${t===s.trade?'selected':''}>${t}</option>`).join('')}
+      </select></td>
+      <td><input style="background:#111;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:12px;color:#fff;width:100%" value="${s.desc}" onchange="updateScope('${s.id}','desc',this.value)"/></td>
+      <td><input type="number" style="background:#111;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:12px;color:#fff;width:80px" placeholder="0" value="${s.cost||''}" onchange="updateScope('${s.id}','cost',this.value)"/></td>
+      <td><button onclick="removeScope('${s.id}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px">✕</button></td>
+    </tr>`).join('');
+  updateScopeSubtotal();
+}
+
+function updateScope(id,field,val) {
+  const s=state.scopeItems.find(x=>x.id===id);
+  if(s) { s[field]=val; updateScopeSubtotal(); }
+}
+function removeScope(id) {
+  state.scopeItems=state.scopeItems.filter(s=>s.id!==id);
+  renderScopeTable();
+}
+function updateScopeSubtotal() {
+  const total=state.scopeItems.reduce((a,s)=>a+(parseFloat(s.cost)||0),0);
+  document.getElementById('scope-subtotal').textContent='$'+total.toLocaleString();
+}
+
+// ════════════════════════════════════════════════════════
+// E-SIGNATURE
+// ════════════════════════════════════════════════════════
+let sigCtx, sigDrawing=false, sigLastX=0, sigLastY=0, sigHasData=false;
+
+function initSig() {
+  const canvas=document.getElementById('sigCanvas');
+  sigCtx=canvas.getContext('2d');
+  canvas.style.background='#fff';
+  canvas.addEventListener('mousedown', e=>{sigDrawing=true;[sigLastX,sigLastY]=[e.offsetX,e.offsetY];});
+  canvas.addEventListener('mousemove', e=>{
+    if(!sigDrawing) return;
+    sigCtx.beginPath(); sigCtx.moveTo(sigLastX,sigLastY); sigCtx.lineTo(e.offsetX,e.offsetY);
+    sigCtx.strokeStyle='#1a1a1a'; sigCtx.lineWidth=2; sigCtx.lineCap='round'; sigCtx.stroke();
+    [sigLastX,sigLastY]=[e.offsetX,e.offsetY]; sigHasData=true;
+    document.getElementById('sig-status').textContent='✓ Signed';
+    document.getElementById('sig-status').style.color='var(--green)';
+  });
+  canvas.addEventListener('mouseup', ()=>{sigDrawing=false;if(sigHasData)state.sigDataUrl=canvas.toDataURL();});
+  canvas.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect();sigDrawing=true;sigLastX=t.clientX-r.left;sigLastY=t.clientY-r.top;},{passive:false});
+  canvas.addEventListener('touchmove',e=>{
+    e.preventDefault();const t=e.touches[0],r=canvas.getBoundingClientRect();
+    const x=t.clientX-r.left,y=t.clientY-r.top;
+    sigCtx.beginPath();sigCtx.moveTo(sigLastX,sigLastY);sigCtx.lineTo(x,y);
+    sigCtx.strokeStyle='#1a1a1a';sigCtx.lineWidth=2;sigCtx.lineCap='round';sigCtx.stroke();
+    sigLastX=x;sigLastY=y;sigHasData=true;
+    document.getElementById('sig-status').textContent='✓ Signed';
+    document.getElementById('sig-status').style.color='var(--green)';
+  },{passive:false});
+  canvas.addEventListener('touchend',()=>{sigDrawing=false;if(sigHasData)state.sigDataUrl=canvas.toDataURL();});
+}
+
+function clearSig() {
+  const canvas=document.getElementById('sigCanvas');
+  sigCtx.clearRect(0,0,canvas.width,canvas.height);
+  sigHasData=false; state.sigDataUrl=null;
+  document.getElementById('sig-status').textContent='Not signed';
+  document.getElementById('sig-status').style.color='';
+}
+
+// ════════════════════════════════════════════════════════
+// EXPORT
+// ════════════════════════════════════════════════════════
+function selectExport(type) {
+  state.exportType=type;
+  document.getElementById('export-client-btn').classList.toggle('selected', type==='client');
+  document.getElementById('export-internal-btn').classList.toggle('selected', type==='internal');
+}
+
+function populatePDF(type) {
+  const isInternal = type==='internal';
+  const fname=document.getElementById('p-fname').value;
+  const lname=document.getElementById('p-lname').value;
+  const fullName=`${fname} ${lname}`.trim()||'Client';
+  const refNum=document.getElementById('p-ref').value||'N/A';
+  const today=new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'});
+
+  document.getElementById('pdf-ref-display').textContent='Ref: '+refNum;
+  document.getElementById('pdf-date-display').textContent=today;
+  document.getElementById('pdf-doc-type-label').textContent=isInternal?'INTERNAL WORK ORDER':'CLIENT PROPOSAL';
+  document.getElementById('pdf-title').textContent=isInternal?`Work Order — ${fullName}`:`Renovation Proposal — ${fullName}`;
+  document.getElementById('pdf-client-name').textContent=fullName;
+  document.getElementById('pdf-address').textContent=document.getElementById('p-address').value||'—';
+  document.getElementById('pdf-phone').textContent=document.getElementById('p-phone').value||'—';
+  document.getElementById('pdf-email').textContent=document.getElementById('p-email').value||'—';
+  document.getElementById('pdf-visit-date').textContent=document.getElementById('p-visit-date').value||'—';
+  document.getElementById('pdf-rooms').textContent=state.rooms.map(r=>r.replace('_',' ')).join(', ')||'—';
+  document.getElementById('pdf-condition').textContent=document.getElementById('p-condition').value||'—';
+  document.getElementById('pdf-finish').textContent=document.getElementById('p-finish').value||'—';
+  document.getElementById('pdf-timeline').textContent=document.getElementById('p-timeline').value||'—';
+  document.getElementById('pdf-vision').textContent=document.getElementById('p-vision').value||'—';
+  document.getElementById('pdf-internal-notes').textContent=document.getElementById('p-internal-notes').value||'—';
+  document.getElementById('pdf-internal-section').style.display=isInternal?'block':'none';
+
+  // Scope table
+  const tbody=document.getElementById('pdf-scope-tbody');
+  tbody.innerHTML=state.scopeItems.map((s,i)=>`
+    <tr><td>${i+1}</td><td>${s.trade}</td><td>${s.desc}</td><td>${s.cost?'$'+parseFloat(s.cost).toLocaleString():'—'}</td></tr>`).join('');
+  const lo=document.getElementById('est-low').value;
+  const hi=document.getElementById('est-high').value;
+  document.getElementById('pdf-estimate-range').textContent=
+    lo&&hi?`$${parseFloat(lo).toLocaleString()} – $${parseFloat(hi).toLocaleString()}`:'TBD';
+  document.getElementById('pdf-est-notes').textContent=document.getElementById('est-notes').value||'';
+
+  // Photos
+  const photoGrid=document.getElementById('pdf-photos-grid');
+  const photosToShow=state.photos.slice(0,isInternal?12:6);
+  photoGrid.innerHTML=photosToShow.map(p=>`<img src="${p.markupDataUrl||p.dataUrl}" alt=""/>`).join('');
+  document.getElementById('pdf-photos-section').style.display=photosToShow.length?'block':'none';
+
+  // Floor plan
+  renderFloorPlan();
+  document.getElementById('pdf-fp-img').src=state.fpImageDataUrl||'';
+  const len=document.getElementById('fp-length').value, wid=document.getElementById('fp-width').value;
+  const ceil=document.getElementById('fp-ceiling').value;
+  document.getElementById('pdf-fp-dims').textContent=`${len}' × ${wid}' · Ceiling: ${ceil}' · Total: ${(len*wid).toFixed(0)} sqft`;
+
+  // Signature
+  document.getElementById('pdf-sig-img').src=state.sigDataUrl||'';
+  document.getElementById('pdf-sig-client').textContent=document.getElementById('sig-client-name').value||fullName;
+  document.getElementById('pdf-sig-rep').textContent=document.getElementById('sig-rep').value||document.getElementById('p-team').value||'Ironwood Team';
+  document.getElementById('pdf-footer-ref').textContent='Ref: '+refNum;
+}
+
+async function exportPDF() {
+  populatePDF(state.exportType);
+  const pdfDoc=document.getElementById('pdf-doc');
+  pdfDoc.style.display='block';
+  await new Promise(r=>setTimeout(r,300));
+  try {
+    const canvas=await html2canvas(document.getElementById('pdf-content'),{scale:2,useCORS:true,backgroundColor:'#ffffff'});
+    const {jsPDF}=window.jspdf;
+    const pdf=new jsPDF({orientation:'portrait',unit:'px',format:[816,1056]});
+    const imgData=canvas.toDataURL('image/jpeg',0.92);
+    const ratio=Math.min(816/canvas.width,1056/canvas.height);
+    pdf.addImage(imgData,'JPEG',0,0,canvas.width*ratio,canvas.height*ratio);
+    const fname=document.getElementById('p-fname').value||'Client';
+    const type=state.exportType==='client'?'Proposal':'WorkOrder';
+    pdf.save(`Ironwood_${type}_${fname}_${Date.now()}.pdf`);
+  } finally {
+    pdfDoc.style.display='none';
+  }
+}
+
+async function exportBoth() {
+  state.exportType='client'; await exportPDF();
+  await new Promise(r=>setTimeout(r,800));
+  state.exportType='internal'; await exportPDF();
+  selectExport('client');
+}
+
+function markComplete() {
+  document.getElementById('doc-status').className='status-badge complete';
+  document.getElementById('doc-status').textContent='● Complete';
+  saveState();
+}
+
+// ════════════════════════════════════════════════════════
+// LOAD FROM REF
+// ════════════════════════════════════════════════════════
+function loadFromRef() {
+  const ref=document.getElementById('p-ref').value.trim();
+  document.getElementById('header-ref').textContent=ref?'Ref: '+ref:'';
+  if (!ref) return;
+  // Look up saved estimate data in localStorage
+  const saved=localStorage.getItem('iw_estimate_'+ref);
+  if (saved) {
+    try {
+      const d=JSON.parse(saved);
+      if(d.firstName) document.getElementById('p-fname').value=d.firstName;
+      if(d.lastName)  document.getElementById('p-lname').value=d.lastName;
+      if(d.phone)     document.getElementById('p-phone').value=d.phone;
+      if(d.email)     document.getElementById('p-email').value=d.email;
+      if(d.address)   document.getElementById('p-address').value=d.address;
+      if(d.estimateLow)  document.getElementById('est-low').value=d.estimateLow;
+      if(d.estimateHigh) document.getElementById('est-high').value=d.estimateHigh;
+    } catch(e){}
+  }
+  saveState();
+}
+
+// ════════════════════════════════════════════════════════
+// PERSIST STATE
+// ════════════════════════════════════════════════════════
+function saveState() {
+  const data={
+    fname:document.getElementById('p-fname').value,
+    lname:document.getElementById('p-lname').value,
+    phone:document.getElementById('p-phone').value,
+    email:document.getElementById('p-email').value,
+    address:document.getElementById('p-address').value,
+    ref:document.getElementById('p-ref').value,
+    visitDate:document.getElementById('p-visit-date').value,
+    team:document.getElementById('p-team').value,
+    stage:document.getElementById('p-stage').value,
+    condition:document.getElementById('p-condition').value,
+    vision:document.getElementById('p-vision').value,
+    internalNotes:document.getElementById('p-internal-notes').value,
+    finish:document.getElementById('p-finish').value,
+    timeline:document.getElementById('p-timeline').value,
+    estLow:document.getElementById('est-low').value,
+    estHigh:document.getElementById('est-high').value,
+    estNotes:document.getElementById('est-notes').value,
+    sigClientName:document.getElementById('sig-client-name').value,
+    sigDate:document.getElementById('sig-date').value,
+    sigRep:document.getElementById('sig-rep').value,
+    rooms:state.rooms,
+    scopeItems:state.scopeItems,
+    sigDataUrl:state.sigDataUrl,
+  };
+  localStorage.setItem('iw_blueprint_draft',JSON.stringify(data));
+}
+
+function loadState() {
+  const raw=localStorage.getItem('iw_blueprint_draft');
+  if (!raw) return;
+  try {
+    const d=JSON.parse(raw);
+    const set=(id,v)=>{const el=document.getElementById(id);if(el&&v!==undefined)el.value=v;};
+    set('p-fname',d.fname); set('p-lname',d.lname); set('p-phone',d.phone);
+    set('p-email',d.email); set('p-address',d.address); set('p-ref',d.ref);
+    set('p-visit-date',d.visitDate); set('p-team',d.team); set('p-stage',d.stage);
+    set('p-condition',d.condition); set('p-vision',d.vision);
+    set('p-internal-notes',d.internalNotes); set('p-finish',d.finish);
+    set('p-timeline',d.timeline); set('est-low',d.estLow); set('est-high',d.estHigh);
+    set('est-notes',d.estNotes); set('sig-client-name',d.sigClientName);
+    set('sig-date',d.sigDate); set('sig-rep',d.sigRep);
+    if(d.ref) document.getElementById('header-ref').textContent='Ref: '+d.ref;
+    if(d.rooms) { state.rooms=d.rooms; d.rooms.forEach(r=>{ const btn=document.querySelector(`.room-btn[onclick*="'${r}'"]`); if(btn)btn.classList.add('selected'); }); updateRoomDetails(); updateFixturePalette(); }
+    if(d.scopeItems) { state.scopeItems=d.scopeItems; renderScopeTable(); }
+    if(d.sigDataUrl) { state.sigDataUrl=d.sigDataUrl; const c=document.getElementById('sigCanvas'); const ctx=c.getContext('2d'); const img=new Image(); img.onload=()=>ctx.drawImage(img,0,0); img.src=d.sigDataUrl; document.getElementById('sig-status').textContent='✓ Signed'; document.getElementById('sig-status').style.color='var(--green)'; }
+  } catch(e){}
+}
+
+// ════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', ()=>{
+  // Set today's date defaults
+  const today=new Date().toISOString().split('T')[0];
+  document.getElementById('p-visit-date').value=today;
+  document.getElementById('sig-date').value=today;
+  loadState();
+  initSig();
+  updateFixturePalette();
+});
+</script>
+</body>
+</html>

@@ -1080,6 +1080,13 @@
         ✓ We'll Be in Touch Within 24 Hours
       </button>
 
+      <div style="margin-top:12px;padding:12px;background:rgba(107,141,181,.08);border:1px solid rgba(107,141,181,.2);border-radius:6px;text-align:center">
+        <div style="font-size:10px;color:#aaa;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px">Ironwood Team</div>
+        <a id="blueprint-link" href="Ironwood_BlueprintTool.html" style="display:inline-block;background:#6B8DB5;color:#fff;padding:10px 20px;border-radius:5px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;text-decoration:none">
+          📐 Open Blueprint Tool for This Client
+        </a>
+      </div>
+
     </div>
 
   </div>
@@ -1528,6 +1535,15 @@
     document.getElementById('r-ref-num').textContent = payload.refNum;
     document.getElementById('estimate-panel').style.display = 'block';
     document.getElementById('reno-form-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Wire blueprint tool link with ref + client data pre-filled via localStorage
+    localStorage.setItem('iw_estimate_' + payload.refNum, JSON.stringify({
+      firstName: payload.firstName, lastName: payload.lastName,
+      phone: payload.phone, email: payload.email, address: payload.address,
+      estimateLow: payload.estimateLow, estimateHigh: payload.estimateHigh,
+      refNum: payload.refNum,
+    }));
+    const bpLink = document.getElementById('blueprint-link');
+    if (bpLink) bpLink.href = 'Ironwood_BlueprintTool.html?ref=' + payload.refNum;
   }
 
   // ── ADDRESS AUTOCOMPLETE (Nominatim — no API key needed) ──
