@@ -109,12 +109,13 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 .fp-layout{display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:start}
 .fp-sidebar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;position:sticky;top:100px}
 .fp-sidebar-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--blue);margin-bottom:12px}
-.fixture-palette{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
-.fixture-item{background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:7px 6px;text-align:center;cursor:grab;transition:all .15s;user-select:none}
+.fixture-palette{display:flex;flex-direction:column;gap:4px;margin-bottom:12px}
+.fixture-item{background:var(--surface-2);border:1px solid var(--border);border-radius:5px;padding:6px 10px;text-align:left;cursor:grab;transition:all .15s;user-select:none;display:flex;justify-content:space-between;align-items:center}
 .fixture-item:hover{border-color:var(--blue);background:var(--blue-tint)}
 .fixture-item:active{cursor:grabbing}
-.fixture-item .fi-icon{font-size:16px;display:block;margin-bottom:2px}
-.fixture-item .fi-name{font-size:9px;color:var(--muted);font-weight:600;letter-spacing:.3px}
+.fixture-item .fi-icon{display:none}
+.fixture-item .fi-name{font-size:11px;color:#fff;font-weight:600;letter-spacing:.2px}
+.fixture-item .fi-dim{font-size:10px;color:var(--muted);font-weight:400}
 .fp-mode-btns{display:flex;gap:6px;margin-bottom:12px}
 .fp-mode-btn{flex:1;padding:7px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;border:1px solid var(--border);border-radius:5px;background:var(--surface-2);color:var(--muted);cursor:pointer;transition:all .15s}
 .fp-mode-btn.active{background:var(--blue-tint);border-color:var(--blue);color:var(--blue)}
@@ -133,8 +134,8 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 /* Placed fixture on canvas */
 .canvas-fixture{position:absolute;background:rgba(107,141,181,.15);border:1.5px solid var(--blue);border-radius:4px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:move;user-select:none;min-width:40px;min-height:40px;padding:4px}
 .canvas-fixture.selected{border-color:#fff;box-shadow:0 0 0 2px var(--blue)}
-.canvas-fixture .cf-icon{font-size:18px;line-height:1}
-.canvas-fixture .cf-label{font-size:8px;color:#fff;font-weight:700;text-align:center;margin-top:2px;letter-spacing:.3px}
+.canvas-fixture .cf-icon{display:none}
+.canvas-fixture .cf-label{font-size:8px;color:#fff;font-weight:700;text-align:center;letter-spacing:.3px;line-height:1.2;padding:2px}
 .canvas-fixture .cf-del{position:absolute;top:-8px;right:-8px;width:16px;height:16px;background:var(--red);border-radius:50%;font-size:9px;color:#fff;display:none;align-items:center;justify-content:center;cursor:pointer;font-weight:900}
 .canvas-fixture.selected .cf-del{display:flex}
 .canvas-fixture .cf-rotate{position:absolute;bottom:-8px;right:-8px;width:16px;height:16px;background:var(--blue);border-radius:50%;font-size:9px;color:#fff;display:none;align-items:center;justify-content:center;cursor:pointer}
@@ -1087,20 +1088,20 @@ function updateFixturePalette() {
   let html = '';
 
   if (roomFixtures.length) {
-    html += `<div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin:6px 0 4px;grid-column:1/-1">Room Fixtures</div>`;
+    html += `<div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin:6px 0 4px">Room Fixtures</div>`;
     html += roomFixtures.map(f =>
       `<div class="fixture-item" draggable="true" ondragstart="startFixtureDrag(event,'${f.name.replace(/'/g,"\\'")}','${f.icon}',${f.w},${f.h})">
-        <span class="fi-icon">${f.icon}</span>
         <span class="fi-name">${f.name}</span>
+        ${f.dim?`<span class="fi-dim">${f.dim}</span>`:''}
       </div>`).join('');
   }
 
   Object.entries(groupedUniversal).forEach(([group, items]) => {
-    html += `<div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin:8px 0 4px;grid-column:1/-1">${group}</div>`;
+    html += `<div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin:8px 0 4px">${group}</div>`;
     html += items.map(f =>
       `<div class="fixture-item" draggable="true" ondragstart="startFixtureDrag(event,'${f.name.replace(/'/g,"\\'")}','${f.icon}',${f.w},${f.h})" title="${f.name}${f.dim?' — '+f.dim:''}">
-        <span class="fi-icon">${f.icon}</span>
-        <span class="fi-name" style="font-size:8px">${f.dim||f.name}</span>
+        <span class="fi-name">${f.name}</span>
+        ${f.dim?`<span class="fi-dim">${f.dim}</span>`:''}
       </div>`).join('');
   });
 
@@ -1240,7 +1241,7 @@ function placeFixture(name,icon,w,h,left,top) {
   el.className='canvas-fixture';
   el.id=id;
   el.style.cssText=`left:${left}px;top:${top}px;width:${w}px;height:${h}px`;
-  el.innerHTML=`<span class="cf-icon">${icon}</span><span class="cf-label">${name}</span>
+  el.innerHTML=`<span class="cf-label">${name}</span>
     <div class="cf-del" onclick="removeFixture('${id}')">✕</div>
     <div class="cf-rotate" onclick="rotateFixture('${id}')">↻</div>`;
   el.addEventListener('mousedown', startDragFixtureEl);
