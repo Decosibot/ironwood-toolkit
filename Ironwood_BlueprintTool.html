@@ -321,8 +321,13 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
       </select>
     </div>
     <div class="field-group">
-      <label class="field-label">Client's Vision / What They Described</label>
-      <textarea class="field-textarea" id="p-vision" placeholder="What the client said they want — in their words..." oninput="saveState()"></textarea>
+      <label class="field-label">Client's Vision / What They Described
+        <button type="button" id="voice-btn" onclick="toggleVoiceRecord()" style="margin-left:10px;background:var(--surface-3);border:1px solid var(--border);border-radius:5px;padding:3px 10px;font-size:10px;font-weight:700;color:var(--muted);cursor:pointer;letter-spacing:.6px;text-transform:uppercase;vertical-align:middle">
+          Mic — Record
+        </button>
+        <span id="voice-status" style="font-size:10px;color:var(--muted);margin-left:8px;vertical-align:middle"></span>
+      </label>
+      <textarea class="field-textarea" id="p-vision" placeholder="What the client said they want — in their words... or tap Mic to dictate." oninput="saveState()"></textarea>
     </div>
     <div class="field-group">
       <label class="field-label">Internal Notes (not shown to client)</label>
@@ -373,6 +378,25 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
     <div class="photo-list" id="photo-list"></div>
     <div id="no-photos-msg" style="text-align:center;color:var(--muted);padding:20px;font-size:13px">No photos uploaded yet.</div>
   </div>
+
+  <!-- AI ANALYSIS CARD -->
+  <div class="card" id="ai-analysis-card">
+    <div class="card-title">AI Site Analysis</div>
+    <div class="card-sub">Send the voice notes and uploaded photos to Claude AI for automatic scope generation and fixture identification. Results will pre-populate the floor plan and scope table.</div>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+      <button class="btn-primary" id="ai-analyze-btn" onclick="runAIAnalysis()">Analyze with AI</button>
+      <span id="ai-status" style="font-size:12px;color:var(--muted)">Ready — upload photos and/or add voice notes first.</span>
+    </div>
+    <div id="ai-result-preview" style="display:none;margin-top:14px;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:14px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--green);margin-bottom:10px;text-transform:uppercase">AI Analysis Result</div>
+      <div id="ai-result-text" style="font-size:12px;color:var(--muted);line-height:1.7"></div>
+      <div class="btn-row" style="margin-top:12px">
+        <button class="btn-primary" onclick="applyAIResults()">Apply to Floor Plan + Scope</button>
+        <button class="btn-secondary" onclick="document.getElementById('ai-result-preview').style.display='none'">Dismiss</button>
+      </div>
+    </div>
+  </div>
+
   <div class="btn-row">
     <button class="btn-secondary" onclick="switchTab(1)">← Back</button>
     <button class="btn-primary" onclick="switchTab(3)">Next — Floor Plan →</button>
@@ -486,7 +510,28 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
         <button class="fp-ctrl-btn" onclick="undoFpDraw()">↩ Undo</button>
         <button class="fp-ctrl-btn" onclick="clearFpDraw()">🗑 Clear Drawing</button>
         <button class="fp-ctrl-btn" onclick="exportFloorPlanImg()">📥 Save Image</button>
+        <button class="fp-ctrl-btn" id="ba-toggle-btn" onclick="toggleBeforeAfter()" style="background:var(--blue-tint);border-color:var(--blue);color:var(--blue)">Before / After View</button>
         <span style="margin-left:auto;font-size:11px;color:var(--muted)" id="fp-scale-label"></span>
+      </div>
+      <!-- Before/After Split View -->
+      <div id="before-after-panel" style="display:none;margin-top:16px">
+        <div style="font-size:11px;font-weight:700;letter-spacing:.8px;color:var(--blue);text-transform:uppercase;margin-bottom:10px">Before / After Comparison</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.8px;color:var(--muted);text-transform:uppercase;margin-bottom:6px">Before (Existing)</div>
+            <canvas id="ba-before-canvas" style="width:100%;border:1px solid var(--border);border-radius:6px;background:#111"></canvas>
+            <div style="font-size:10px;color:var(--muted);margin-top:4px">Locked — captured from AI analysis or manually drawn</div>
+          </div>
+          <div>
+            <div style="font-size:10px;font-weight:700;letter-spacing:.8px;color:var(--green);text-transform:uppercase;margin-bottom:6px">After (Proposed)</div>
+            <canvas id="ba-after-canvas" style="width:100%;border:1px solid var(--border);border-radius:6px;background:#111"></canvas>
+            <div style="font-size:10px;color:var(--muted);margin-top:4px">Working plan — mirrors the main floor plan above</div>
+          </div>
+        </div>
+        <div class="btn-row" style="margin-top:10px">
+          <button class="btn-secondary" onclick="captureBeforeSnapshot()">Capture Current as Before</button>
+          <button class="btn-secondary" onclick="syncAfterCanvas()">Sync After from Main</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1581,6 +1626,267 @@ function loadState() {
     if(d.scopeItems) { state.scopeItems=d.scopeItems; renderScopeTable(); }
     if(d.sigDataUrl) { state.sigDataUrl=d.sigDataUrl; const c=document.getElementById('sigCanvas'); const ctx=c.getContext('2d'); const img=new Image(); img.onload=()=>ctx.drawImage(img,0,0); img.src=d.sigDataUrl; document.getElementById('sig-status').textContent='✓ Signed'; document.getElementById('sig-status').style.color='var(--green)'; }
   } catch(e){}
+}
+
+// ════════════════════════════════════════════════════════
+// VOICE RECORDING (Web Speech API)
+// ════════════════════════════════════════════════════════
+let voiceRecognition = null;
+let voiceActive = false;
+
+function toggleVoiceRecord() {
+  const btn = document.getElementById('voice-btn');
+  const status = document.getElementById('voice-status');
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    status.textContent = 'Voice not supported in this browser. Use Chrome.';
+    status.style.color = 'var(--red)';
+    return;
+  }
+  if (voiceActive) {
+    voiceRecognition && voiceRecognition.stop();
+    return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  voiceRecognition = new SR();
+  voiceRecognition.continuous = true;
+  voiceRecognition.interimResults = true;
+  voiceRecognition.lang = 'en-US';
+  const existing = document.getElementById('p-vision').value;
+  let interim = '';
+  voiceRecognition.onstart = () => {
+    voiceActive = true;
+    btn.textContent = 'Mic — Stop';
+    btn.style.borderColor = 'var(--red)';
+    btn.style.color = 'var(--red)';
+    status.textContent = 'Recording...';
+    status.style.color = 'var(--red)';
+  };
+  voiceRecognition.onresult = (e) => {
+    let final = '';
+    interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) final += e.results[i][0].transcript + ' ';
+      else interim += e.results[i][0].transcript;
+    }
+    const textarea = document.getElementById('p-vision');
+    textarea.value = existing + (existing ? '\n' : '') + final + interim;
+    saveState();
+  };
+  voiceRecognition.onerror = (e) => {
+    status.textContent = 'Error: ' + e.error;
+    status.style.color = 'var(--red)';
+    voiceActive = false;
+    btn.textContent = 'Mic — Record';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+  };
+  voiceRecognition.onend = () => {
+    voiceActive = false;
+    btn.textContent = 'Mic — Record';
+    btn.style.borderColor = '';
+    btn.style.color = '';
+    status.textContent = 'Done.';
+    status.style.color = 'var(--green)';
+    setTimeout(() => { status.textContent = ''; }, 3000);
+  };
+  voiceRecognition.start();
+}
+
+// ════════════════════════════════════════════════════════
+// AI ANALYSIS — n8n + Claude
+// ════════════════════════════════════════════════════════
+const N8N_WEBHOOK = 'https://decosibot.app.n8n.cloud/webhook-test/22faac64-45f7-4f61-b974-27e0f1b825e4';
+let aiResultData = null;
+
+async function runAIAnalysis() {
+  const btn = document.getElementById('ai-analyze-btn');
+  const statusEl = document.getElementById('ai-status');
+  const resultBox = document.getElementById('ai-result-preview');
+  const resultText = document.getElementById('ai-result-text');
+
+  // Gather photos as base64 (first 5 max to stay under payload limits)
+  const photoPayload = state.photos.slice(0, 5).map(p => ({
+    id: p.id,
+    note: p.note || '',
+    dataUrl: p.markupDataUrl || p.dataUrl,
+  }));
+
+  const vision = document.getElementById('p-vision').value;
+  const internalNotes = document.getElementById('p-internal-notes').value;
+  const rooms = state.rooms;
+  const condition = document.getElementById('p-condition').value;
+  const finish = document.getElementById('p-finish').value;
+  const clientName = (document.getElementById('p-fname').value + ' ' + document.getElementById('p-lname').value).trim();
+
+  if (!vision && photoPayload.length === 0) {
+    statusEl.textContent = 'Add voice notes or upload photos first.';
+    statusEl.style.color = 'var(--red)';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Analyzing...';
+  statusEl.textContent = 'Sending to Claude AI via n8n...';
+  statusEl.style.color = 'var(--blue)';
+  resultBox.style.display = 'none';
+
+  const payload = {
+    tool: 'BlueprintTool',
+    clientName,
+    rooms,
+    condition,
+    finish,
+    vision,
+    internalNotes,
+    photos: photoPayload,
+    requestedOutput: {
+      existingFixtures: true,
+      proposedFixtures: true,
+      scopeItems: true,
+      estimateRange: true,
+      summary: true,
+    }
+  };
+
+  try {
+    const resp = await fetch(N8N_WEBHOOK, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    if (!resp.ok) throw new Error('n8n responded ' + resp.status);
+    const data = await resp.json();
+    aiResultData = data;
+    displayAIResult(data);
+    statusEl.textContent = 'Analysis complete.';
+    statusEl.style.color = 'var(--green)';
+  } catch (err) {
+    statusEl.textContent = 'Error: ' + err.message + '. Check n8n webhook is active.';
+    statusEl.style.color = 'var(--red)';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Analyze with AI';
+  }
+}
+
+function displayAIResult(data) {
+  const box = document.getElementById('ai-result-preview');
+  const txt = document.getElementById('ai-result-text');
+  let html = '';
+  if (data.summary) html += `<p style="margin-bottom:10px;color:#ccc">${data.summary}</p>`;
+  if (data.scopeItems && data.scopeItems.length) {
+    html += `<p style="font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">Scope Items (${data.scopeItems.length})</p><ul style="padding-left:16px;margin-bottom:10px">`;
+    data.scopeItems.forEach(s => { html += `<li style="font-size:12px;color:#ccc;margin-bottom:3px">[${s.trade}] ${s.desc}</li>`; });
+    html += '</ul>';
+  }
+  if (data.existingFixtures && data.existingFixtures.length) {
+    html += `<p style="font-size:10px;font-weight:700;color:var(--muted);letter-spacing:.8px;text-transform:uppercase;margin-bottom:4px">Existing Fixtures Identified (${data.existingFixtures.length})</p><ul style="padding-left:16px;margin-bottom:10px">`;
+    data.existingFixtures.forEach(f => { html += `<li style="font-size:12px;color:#aaa;margin-bottom:2px">${f.name}</li>`; });
+    html += '</ul>';
+  }
+  if (data.estimateRange) {
+    const lo = (data.estimateRange.lo||0).toLocaleString();
+    const hi = (data.estimateRange.hi||0).toLocaleString();
+    html += `<p style="font-size:12px;color:#ccc">Estimate Range: <strong style="color:var(--blue)">$${lo} – $${hi}</strong></p>`;
+  }
+  txt.innerHTML = html || '<span style="color:var(--muted)">No structured data returned. Check n8n workflow output.</span>';
+  box.style.display = 'block';
+}
+
+function applyAIResults() {
+  if (!aiResultData) return;
+  const d = aiResultData;
+
+  // Apply scope items
+  if (d.scopeItems && d.scopeItems.length) {
+    d.scopeItems.forEach(s => {
+      const id = 'ai-' + Date.now() + '-' + Math.random().toString(36).slice(2,6);
+      state.scopeItems.push({ id, trade: s.trade || 'General', desc: s.desc || s.description || '', cost: s.cost || '' });
+    });
+    renderScopeTable();
+  }
+
+  // Apply estimate range
+  if (d.estimateRange) {
+    if (d.estimateRange.lo) document.getElementById('est-low').value = d.estimateRange.lo;
+    if (d.estimateRange.hi) document.getElementById('est-high').value = d.estimateRange.hi;
+  }
+
+  // Apply proposed fixtures to floor plan
+  if (d.proposedFixtures && d.proposedFixtures.length) {
+    const container = document.getElementById('fp-canvas-container');
+    const cw = container.offsetWidth || 600;
+    const ch = container.offsetHeight || 400;
+    d.proposedFixtures.forEach((f, i) => {
+      const id = 'ai-fx-' + i;
+      const x = f.x !== undefined ? f.x * cw : 60 + (i % 4) * 120;
+      const y = f.y !== undefined ? f.y * ch : 60 + Math.floor(i / 4) * 80;
+      state.fixtures.push({ id, name: f.name, dim: f.dim || '', x, y, w: 80, h: 50, rotate: 0, color: '#6B8DB5' });
+    });
+    renderFixtures();
+  }
+
+  // Capture before snapshot if existing fixtures identified
+  if (d.existingFixtures && d.existingFixtures.length) {
+    captureBeforeSnapshot();
+    toggleBeforeAfter(true);
+  }
+
+  saveState();
+  document.getElementById('ai-result-preview').style.display = 'none';
+  switchTab(3);
+}
+
+// ════════════════════════════════════════════════════════
+// BEFORE / AFTER SPLIT VIEW
+// ════════════════════════════════════════════════════════
+let beforeAfterVisible = false;
+let beforeSnapshotDataUrl = null;
+
+function toggleBeforeAfter(forceOpen) {
+  const panel = document.getElementById('before-after-panel');
+  if (forceOpen === true) beforeAfterVisible = false; // force open below
+  if (!beforeAfterVisible) {
+    panel.style.display = 'block';
+    beforeAfterVisible = true;
+    syncAfterCanvas();
+    if (beforeSnapshotDataUrl) renderBeforeCanvas();
+  } else {
+    panel.style.display = 'none';
+    beforeAfterVisible = false;
+  }
+}
+
+function captureBeforeSnapshot() {
+  const mainCanvas = document.getElementById('floorCanvas');
+  if (!mainCanvas) return;
+  beforeSnapshotDataUrl = mainCanvas.toDataURL('image/png');
+  renderBeforeCanvas();
+  const statusEl = document.getElementById('ai-status');
+  if (statusEl) { statusEl.textContent = 'Before snapshot captured.'; statusEl.style.color = 'var(--green)'; }
+}
+
+function renderBeforeCanvas() {
+  if (!beforeSnapshotDataUrl) return;
+  const bc = document.getElementById('ba-before-canvas');
+  if (!bc) return;
+  const mainCanvas = document.getElementById('floorCanvas');
+  bc.width = mainCanvas.width;
+  bc.height = mainCanvas.height;
+  const ctx = bc.getContext('2d');
+  const img = new Image();
+  img.onload = () => ctx.drawImage(img, 0, 0);
+  img.src = beforeSnapshotDataUrl;
+}
+
+function syncAfterCanvas() {
+  const ac = document.getElementById('ba-after-canvas');
+  const mainCanvas = document.getElementById('floorCanvas');
+  if (!ac || !mainCanvas) return;
+  ac.width = mainCanvas.width;
+  ac.height = mainCanvas.height;
+  const ctx = ac.getContext('2d');
+  ctx.drawImage(mainCanvas, 0, 0);
 }
 
 // ════════════════════════════════════════════════════════
