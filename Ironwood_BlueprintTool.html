@@ -25,13 +25,13 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14px;min-height:100vh}
 
-/* ── HEADER ── */
+/*  HEADER  */
 .bp-header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
 .bp-logo{font-size:13px;font-weight:900;letter-spacing:3px;text-transform:uppercase;color:var(--blue)}
 .bp-logo span{color:var(--muted);font-weight:400;font-size:10px;letter-spacing:1px;margin-left:8px}
 .bp-ref{font-size:11px;color:var(--muted);font-family:monospace}
 
-/* ── TABS ── */
+/*  TABS  */
 .tab-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 24px;gap:0}
 .tab-btn{padding:12px 20px;font-size:11px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);border:none;background:none;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
 .tab-btn.active{color:var(--blue);border-bottom-color:var(--blue)}
@@ -41,12 +41,12 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 .tab-panel{display:none;padding:24px;max-width:1100px;margin:0 auto}
 .tab-panel.active{display:block}
 
-/* ── CARDS ── */
+/*  CARDS  */
 .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
 .card-title{font-size:11px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--blue);margin-bottom:14px}
 .card-sub{font-size:12px;color:var(--muted);margin-top:-10px;margin-bottom:14px;line-height:1.5}
 
-/* ── FORM FIELDS ── */
+/*  FORM FIELDS  */
 .field-group{margin-bottom:14px}
 .field-label{font-size:10px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:#cccccc;display:block;margin-bottom:5px}
 .field-label .req{color:var(--blue);margin-left:2px}
@@ -58,7 +58,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 .field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 .field-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 
-/* ── ROOM TYPE SELECTOR ── */
+/*  ROOM TYPE SELECTOR  */
 .room-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px;margin-bottom:4px}
 .room-btn{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:12px 10px;text-align:center;cursor:pointer;transition:all .2s}
 .room-btn:hover{border-color:var(--blue)}
@@ -67,7 +67,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 .room-btn .r-name{font-size:11px;font-weight:700;color:#fff}
 .room-btn .r-sub{font-size:9.5px;color:var(--muted);margin-top:2px}
 
-/* ── BUTTONS ── */
+/*  BUTTONS  */
 .btn-primary{background:var(--blue);color:#fff;border:none;border-radius:6px;padding:11px 22px;font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:background .15s}
 .btn-primary:hover{background:var(--blue-deep)}
 .btn-secondary{background:transparent;color:var(--blue);border:1px solid var(--blue);border-radius:6px;padding:10px 20px;font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer;transition:all .15s}
@@ -76,7 +76,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 .btn-success{background:var(--green);color:#fff;border:none;border-radius:6px;padding:11px 22px;font-size:12px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;cursor:pointer}
 .btn-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
 
-/* ── PHOTO MARKUP TAB ── */
+/*  PHOTO MARKUP TAB  */
 .photo-upload-zone{border:2px dashed var(--border-2);border-radius:var(--radius);padding:28px;text-align:center;cursor:pointer;transition:border-color .2s;margin-bottom:16px}
 .photo-upload-zone:hover{border-color:var(--blue)}
 .photo-upload-zone .up-icon{font-size:28px;margin-bottom:8px}
@@ -105,7 +105,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 .markup-note-input{background:#111;border:1px solid var(--border);border-radius:5px;padding:7px 10px;font-size:12px;color:#fff;width:340px;outline:none}
 .markup-note-input::placeholder{color:#555}
 
-/* ── FLOOR PLAN TAB ── */
+/*  FLOOR PLAN TAB  */
 .fp-layout{display:grid;grid-template-columns:220px 1fr;gap:16px;align-items:start}
 .fp-sidebar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:14px;position:sticky;top:100px}
 .fp-sidebar-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--blue);margin-bottom:12px}
@@ -141,7 +141,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 .canvas-fixture .cf-rotate{position:absolute;bottom:-8px;right:-8px;width:16px;height:16px;background:var(--blue);border-radius:50%;font-size:9px;color:#fff;display:none;align-items:center;justify-content:center;cursor:pointer}
 .canvas-fixture.selected .cf-rotate{display:flex}
 
-/* ── SCOPE TAB ── */
+/*  SCOPE TAB  */
 .scope-table{width:100%;border-collapse:collapse;margin-bottom:16px}
 .scope-table th{background:var(--surface-2);padding:9px 12px;font-size:10px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--muted);text-align:left;border-bottom:1px solid var(--border)}
 .scope-table td{padding:9px 12px;font-size:12px;border-bottom:1px solid var(--border);color:#fff;vertical-align:top}
@@ -152,14 +152,14 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 .add-scope-input{flex:1;background:#111;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;color:#fff;outline:none}
 .add-scope-input:focus{border-color:var(--blue)}
 
-/* ── E-SIGNATURE ── */
+/*  E-SIGNATURE  */
 .sig-box{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px}
 .sig-canvas-wrap{background:#fff;border-radius:6px;margin:10px 0;position:relative}
 #sigCanvas{display:block;border-radius:6px;cursor:crosshair;touch-action:none}
 .sig-names{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
 .sig-date{font-size:11px;color:var(--muted);margin-top:6px}
 
-/* ── EXPORT PREVIEW ── */
+/*  EXPORT PREVIEW  */
 .export-preview{background:var(--surface-2);border:1px solid var(--border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px}
 .export-section-title{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
 .export-type-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px}
@@ -169,17 +169,17 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 .export-type-btn .et-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
 .export-type-btn .et-desc{font-size:11px;color:var(--muted);line-height:1.4}
 
-/* ── STATUS BADGE ── */
+/*  STATUS BADGE  */
 .status-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
 .status-badge.draft{background:rgba(170,170,170,.1);color:#aaa;border:1px solid #444}
 .status-badge.complete{background:var(--green-tint);color:var(--green);border:1px solid rgba(58,156,109,.3)}
 .status-badge.signed{background:var(--blue-tint);color:var(--blue);border:1px solid rgba(107,141,181,.3)}
 
-/* ── PROGRESS BAR ── */
+/*  PROGRESS BAR  */
 .progress-bar{height:3px;background:var(--border);margin-bottom:0}
 .progress-fill{height:100%;background:var(--blue);transition:width .4s}
 
-/* ── PRINT/PDF DOCUMENT ── */
+/*  PRINT/PDF DOCUMENT  */
 #pdf-doc{display:none}
 .pdf-page{width:816px;background:#fff;color:#1a1a1a;font-family:'Geist',Arial,sans-serif;padding:48px}
 .pdf-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:32px;padding-bottom:20px;border-bottom:2px solid #6B8DB5}
@@ -213,7 +213,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
   </div>
   <div style="display:flex;align-items:center;gap:14px">
     <div class="bp-ref" id="header-ref"></div>
-    <span id="doc-status" class="status-badge draft">● Draft</span>
+    <span id="doc-status" class="status-badge draft"> Draft</span>
   </div>
 </div>
 <div class="progress-bar"><div class="progress-fill" id="main-progress" style="width:25%"></div></div>
@@ -225,9 +225,9 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
   <button class="tab-btn" onclick="switchTab(4)" id="tab-btn-4">④ Scope & Sign Off</button>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
+<!-- 
      TAB 1 — PROJECT INFO
-══════════════════════════════════════════════════════ -->
+ -->
 <div class="tab-panel active" id="tab-1">
   <div class="card">
     <div class="card-title">Client Information</div>
@@ -290,16 +290,16 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
   <div class="card">
     <div class="card-title">Room Type <span style="color:var(--muted);font-weight:400;font-size:10px;margin-left:4px">— select all that apply</span></div>
     <div class="room-grid" id="room-selector">
-      <div class="room-btn" onclick="toggleRoom(this,'kitchen')"><div class="r-icon">🍳</div><div class="r-name">Kitchen</div><div class="r-sub">Full kitchen scope</div></div>
-      <div class="room-btn" onclick="toggleRoom(this,'bathroom')"><div class="r-icon">🛁</div><div class="r-name">Bathroom</div><div class="r-sub">Bath/shower/tile</div></div>
-      <div class="room-btn" onclick="toggleRoom(this,'master_bath')"><div class="r-icon">🚿</div><div class="r-name">Primary Bath</div><div class="r-sub">Primary suite bath</div></div>
-      <div class="room-btn" onclick="toggleRoom(this,'living')"><div class="r-icon">🛋️</div><div class="r-name">Living Room</div><div class="r-sub">Common areas</div></div>
-      <div class="room-btn" onclick="toggleRoom(this,'bedroom')"><div class="r-icon">🛏️</div><div class="r-name">Bedroom</div><div class="r-sub">Sleeping space</div></div>
-      <div class="room-btn" onclick="toggleRoom(this,'laundry')"><div class="r-icon">🫧</div><div class="r-name">Laundry</div><div class="r-sub">Laundry room</div></div>
-      <div class="room-btn" onclick="toggleRoom(this,'basement')"><div class="r-icon">⬇️</div><div class="r-name">Basement</div><div class="r-sub">Lower level</div></div>
-      <div class="room-btn" onclick="toggleRoom(this,'exterior')"><div class="r-icon">🏡</div><div class="r-name">Exterior</div><div class="r-sub">Outside/curb</div></div>
-      <div class="room-btn" onclick="toggleRoom(this,'addition')"><div class="r-icon">🏗️</div><div class="r-name">Addition</div><div class="r-sub">New space</div></div>
-      <div class="room-btn" onclick="toggleRoom(this,'whole_home')"><div class="r-icon">🏠</div><div class="r-name">Whole Home</div><div class="r-sub">Full remodel</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'kitchen')"><div class="r-name">Kitchen</div><div class="r-sub">Full kitchen scope</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'bathroom')"><div class="r-name">Bathroom</div><div class="r-sub">Bath/shower/tile</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'master_bath')"><div class="r-name">Primary Bath</div><div class="r-sub">Primary suite bath</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'living')"><div class="r-name">Living Room</div><div class="r-sub">Common areas</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'bedroom')"><div class="r-name">Bedroom</div><div class="r-sub">Sleeping space</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'laundry')"><div class="r-name">Laundry</div><div class="r-sub">Laundry room</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'basement')"><div class="r-name">Basement</div><div class="r-sub">Lower level</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'exterior')"><div class="r-name">Exterior</div><div class="r-sub">Outside/curb</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'addition')"><div class="r-name">Addition</div><div class="r-sub">New space</div></div>
+      <div class="room-btn" onclick="toggleRoom(this,'whole_home')"><div class="r-name">Whole Home</div><div class="r-sub">Full remodel</div></div>
     </div>
   </div>
 
@@ -363,16 +363,15 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
+<!-- 
      TAB 2 — PHOTOS & MARKUP
-══════════════════════════════════════════════════════ -->
+ -->
 <div class="tab-panel" id="tab-2">
   <div class="card">
     <div class="card-title">Upload Site Visit Photos</div>
     <div class="card-sub">Upload photos from the site visit. Click any photo to open the markup editor — draw, annotate, and mark what needs to change.</div>
     <div class="photo-upload-zone" onclick="document.getElementById('photo-upload-input').click()">
       <input type="file" id="photo-upload-input" accept="image/*" multiple style="display:none" onchange="handlePhotoUpload(this)"/>
-      <div class="up-icon">📷</div>
       <div class="up-text">Tap to upload photos &nbsp;·&nbsp; Up to 20 photos &nbsp;·&nbsp; JPG, PNG, HEIC</div>
     </div>
     <div class="photo-list" id="photo-list"></div>
@@ -407,11 +406,11 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 <div class="markup-modal" id="markup-modal">
   <div class="markup-toolbar">
     <strong style="font-size:11px;color:var(--muted);margin-right:4px">TOOL:</strong>
-    <button class="markup-tool-btn active" id="tool-pen" onclick="setMarkupTool('pen')">✏️ Pen</button>
-    <button class="markup-tool-btn" id="tool-arrow" onclick="setMarkupTool('arrow')">➡️ Arrow</button>
-    <button class="markup-tool-btn" id="tool-rect" onclick="setMarkupTool('rect')">⬜ Box</button>
-    <button class="markup-tool-btn" id="tool-text" onclick="setMarkupTool('text')">T Text</button>
-    <button class="markup-tool-btn" id="tool-eraser" onclick="setMarkupTool('eraser')">🧹 Erase</button>
+    <button class="markup-tool-btn active" id="tool-pen" onclick="setMarkupTool('pen')">Pen</button>
+    <button class="markup-tool-btn" id="tool-arrow" onclick="setMarkupTool('arrow')">Arrow</button>
+    <button class="markup-tool-btn" id="tool-rect" onclick="setMarkupTool('rect')">Box</button>
+    <button class="markup-tool-btn" id="tool-text" onclick="setMarkupTool('text')">Text</button>
+    <button class="markup-tool-btn" id="tool-eraser" onclick="setMarkupTool('eraser')">Erase</button>
     <div style="width:1px;height:24px;background:var(--border);margin:0 4px"></div>
     <strong style="font-size:11px;color:var(--muted);margin-right:4px">COLOR:</strong>
     <div class="markup-color-btn active" style="background:#e05c5c" title="Red — Remove" onclick="setMarkupColor('#e05c5c',this)"></div>
@@ -425,8 +424,8 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
     <div class="markup-size-btn" onclick="setMarkupSize(6,this)" title="Medium">M</div>
     <div class="markup-size-btn" onclick="setMarkupSize(12,this)" title="Large">L</div>
     <div style="margin-left:auto;display:flex;gap:8px">
-      <button class="markup-tool-btn" onclick="undoMarkup()">↩ Undo</button>
-      <button class="markup-tool-btn" onclick="clearMarkup()">🗑 Clear</button>
+      <button class="markup-tool-btn" onclick="undoMarkup()">↩Undo</button>
+      <button class="markup-tool-btn" onclick="clearMarkup()">Clear</button>
     </div>
   </div>
   <div class="markup-canvas-wrap">
@@ -439,14 +438,14 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
     </div>
     <div style="display:flex;gap:8px">
       <button class="btn-danger" onclick="closeMarkupModal()">Cancel</button>
-      <button class="btn-primary" onclick="saveMarkup()">Save Markup ✓</button>
+      <button class="btn-primary" onclick="saveMarkup()">Save Markup </button>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
+<!-- 
      TAB 3 — FLOOR PLAN BUILDER
-══════════════════════════════════════════════════════ -->
+ -->
 <div class="tab-panel" id="tab-3">
   <div class="card" style="margin-bottom:12px">
     <div class="card-title">Room Dimensions</div>
@@ -487,17 +486,17 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
       </div>
       <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
         <select class="field-select" id="fp-color-pick" onchange="setFpDrawColor(this.value)" style="font-size:11px;padding:5px 8px">
-          <option value="#e05c5c">🔴 Remove</option>
-          <option value="#3a9c6d">🟢 Add/New</option>
-          <option value="#6B8DB5" selected>🔵 Existing</option>
-          <option value="#c9a84c">🟡 Question</option>
+          <option value="#e05c5c"> Remove</option>
+          <option value="#3a9c6d"> Add/New</option>
+          <option value="#6B8DB5" selected> Existing</option>
+          <option value="#c9a84c"> Question</option>
         </select>
       </div>
 
       <div class="fp-sidebar-title">Fixtures</div>
       <div class="fixture-palette" id="fixture-palette"></div>
 
-      <button class="fp-ctrl-btn" style="width:100%;margin-top:4px" onclick="clearFixtures()">🗑 Clear All</button>
+      <button class="fp-ctrl-btn" style="width:100%;margin-top:4px" onclick="clearFixtures()">Clear All</button>
     </div>
 
     <!-- Canvas -->
@@ -507,9 +506,9 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
         <div id="fixtures-layer" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none"></div>
       </div>
       <div class="fp-controls">
-        <button class="fp-ctrl-btn" onclick="undoFpDraw()">↩ Undo</button>
-        <button class="fp-ctrl-btn" onclick="clearFpDraw()">🗑 Clear Drawing</button>
-        <button class="fp-ctrl-btn" onclick="exportFloorPlanImg()">📥 Save Image</button>
+        <button class="fp-ctrl-btn" onclick="undoFpDraw()">↩Undo</button>
+        <button class="fp-ctrl-btn" onclick="clearFpDraw()">Clear Drawing</button>
+        <button class="fp-ctrl-btn" onclick="exportFloorPlanImg()">Save Image</button>
         <button class="fp-ctrl-btn" id="ba-toggle-btn" onclick="toggleBeforeAfter()" style="background:var(--blue-tint);border-color:var(--blue);color:var(--blue)">Before / After View</button>
         <span style="margin-left:auto;font-size:11px;color:var(--muted)" id="fp-scale-label"></span>
       </div>
@@ -542,9 +541,9 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
   </div>
 </div>
 
-<!-- ══════════════════════════════════════════════════════
+<!-- 
      TAB 4 — SCOPE SUMMARY & SIGN OFF
-══════════════════════════════════════════════════════ -->
+ -->
 <div class="tab-panel" id="tab-4">
 
   <!-- Scope of Work Table -->
@@ -642,20 +641,18 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
     <div class="card-title">Export Documents</div>
     <div class="export-type-btns">
       <div class="export-type-btn selected" id="export-client-btn" onclick="selectExport('client')">
-        <div class="et-icon">📄</div>
         <div class="et-name">Client Proposal</div>
         <div class="et-desc">Branded PDF — scope, floor plan, photos, estimate range, signature block. Clean and professional.</div>
       </div>
       <div class="export-type-btn" id="export-internal-btn" onclick="selectExport('internal')">
-        <div class="et-icon">🔧</div>
         <div class="et-name">Internal Work Order</div>
         <div class="et-desc">Sub-ready PDF — full dimensions, all notes, fixture list, trade breakdown, internal comments.</div>
       </div>
     </div>
     <div class="btn-row">
-      <button class="btn-primary" onclick="exportPDF()">📥 Export PDF</button>
+      <button class="btn-primary" onclick="exportPDF()">Export PDF</button>
       <button class="btn-secondary" onclick="exportBoth()">Export Both</button>
-      <button class="btn-success" onclick="markComplete()">✓ Mark Complete</button>
+      <button class="btn-success" onclick="markComplete()"> Mark Complete</button>
     </div>
   </div>
 
@@ -664,7 +661,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
   </div>
 </div>
 
-<!-- ══ HIDDEN PDF DOCUMENT ══ -->
+<!--  HIDDEN PDF DOCUMENT  -->
 <div id="pdf-doc">
   <div class="pdf-page" id="pdf-content">
     <div class="pdf-header">
@@ -751,9 +748,9 @@ body{background:var(--bg);color:var(--ink);font-family:var(--sans);font-size:14p
 </div>
 
 <script>
-// ════════════════════════════════════════════════════════
+// 
 // STATE
-// ════════════════════════════════════════════════════════
+// 
 const state = {
   rooms: [],
   photos: [],       // {id, dataUrl, note, markupDataUrl}
@@ -766,9 +763,9 @@ const state = {
   currentTab: 1,
 };
 
-// ════════════════════════════════════════════════════════
+// 
 // TAB NAVIGATION
-// ════════════════════════════════════════════════════════
+// 
 function switchTab(n) {
   [1,2,3,4].forEach(i => {
     document.getElementById('tab-'+i).classList.toggle('active', i===n);
@@ -781,9 +778,9 @@ function switchTab(n) {
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // ROOM SELECTION
-// ════════════════════════════════════════════════════════
+// 
 function toggleRoom(el, val) {
   el.classList.toggle('selected');
   const idx = state.rooms.indexOf(val);
@@ -843,9 +840,9 @@ function updateRoomDetails() {
     </div>`).join('<hr style="border-color:var(--border);margin:12px 0">');
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // PHOTO MARKUP
-// ════════════════════════════════════════════════════════
+// 
 function handlePhotoUpload(input) {
   const files = Array.from(input.files).slice(0, 20 - state.photos.length);
   files.forEach(file => {
@@ -867,8 +864,8 @@ function renderPhotoList() {
     <div class="photo-thumb-card ${p.markupDataUrl?'has-markup':''}" onclick="openMarkup(${i})">
       <img src="${p.markupDataUrl||p.dataUrl}" alt="Photo ${i+1}"/>
       <div class="ptc-label">
-        <span>${p.markupDataUrl?'✓ Marked up':'Click to markup'}</span>
-        <span onclick="event.stopPropagation();removePhoto(${i})" style="cursor:pointer;color:var(--red)">✕</span>
+        <span>${p.markupDataUrl?' Marked up':'Click to markup'}</span>
+        <span onclick="event.stopPropagation();removePhoto(${i})" style="cursor:pointer;color:var(--red)"></span>
       </div>
     </div>`).join('');
 }
@@ -1028,86 +1025,86 @@ function setMarkupSize(s,el) {
   el.classList.add('active');
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // FLOOR PLAN
-// ════════════════════════════════════════════════════════
+// 
 const FIXTURES_BY_ROOM = {
-  kitchen:     [{icon:'🗄',name:'Base Cab',w:80,h:30},{icon:'🔲',name:'Upper Cab',w:80,h:20},{icon:'🏝',name:'Island',w:80,h:50},{icon:'🚰',name:'Sink',w:50,h:30},{icon:'🍳',name:'Range',w:50,h:50},{icon:'❄️',name:'Fridge',w:36,h:36},{icon:'🫧',name:'Dishwasher',w:36,h:36},{icon:'🗑',name:'Pantry',w:36,h:50}],
-  bathroom:    [{icon:'🚽',name:'Toilet',w:28,h:36},{icon:'🛁',name:'Tub',w:60,h:30},{icon:'🚿',name:'Shower',w:36,h:36},{icon:'🪥',name:'Vanity',w:48,h:22},{icon:'🪥',name:'Dbl Vanity',w:72,h:22},{icon:'🗄',name:'Linen',w:24,h:18}],
-  master_bath: [{icon:'🚽',name:'Toilet',w:28,h:36},{icon:'🛁',name:'Freestand Tub',w:60,h:34},{icon:'🚿',name:'Walk-In',w:50,h:50},{icon:'🪥',name:'Dbl Vanity',w:72,h:22}],
-  bedroom:     [{icon:'🛏',name:'Queen Bed',w:60,h:80},{icon:'🛏',name:'King Bed',w:76,h:80},{icon:'🗄',name:'Dresser',w:48,h:20},{icon:'🚪',name:'Closet',w:60,h:24}],
-  living:      [{icon:'🛋',name:'Sofa',w:84,h:36},{icon:'📺',name:'TV Wall',w:72,h:8},{icon:'🪑',name:'Chair',w:36,h:36},{icon:'🔥',name:'Fireplace',w:50,h:16},{icon:'📚',name:'Built-Ins',w:72,h:16}],
-  laundry:     [{icon:'🫧',name:'Washer',w:28,h:28},{icon:'🌀',name:'Dryer',w:28,h:28},{icon:'🗄',name:'Cabinet',w:48,h:18}],
-  basement:    [{icon:'🏋',name:'Exercise',w:80,h:60},{icon:'🛋',name:'Sofa',w:84,h:36},{icon:'🚽',name:'Toilet',w:28,h:36}],
-  addition:    [{icon:'🧱',name:'Wall',w:80,h:8}],
-  exterior:    [{icon:'🚗',name:'Driveway',w:100,h:60},{icon:'🌿',name:'Garden',w:60,h:40}],
+  kitchen:     [{icon:'',name:'Base Cab',w:80,h:30},{icon:'',name:'Upper Cab',w:80,h:20},{icon:'',name:'Island',w:80,h:50},{icon:'',name:'Sink',w:50,h:30},{icon:'',name:'Range',w:50,h:50},{icon:'',name:'Fridge',w:36,h:36},{icon:'',name:'Dishwasher',w:36,h:36},{icon:'',name:'Pantry',w:36,h:50}],
+  bathroom:    [{icon:'',name:'Toilet',w:28,h:36},{icon:'',name:'Tub',w:60,h:30},{icon:'',name:'Shower',w:36,h:36},{icon:'',name:'Vanity',w:48,h:22},{icon:'',name:'Dbl Vanity',w:72,h:22},{icon:'',name:'Linen',w:24,h:18}],
+  master_bath: [{icon:'',name:'Toilet',w:28,h:36},{icon:'',name:'Freestand Tub',w:60,h:34},{icon:'',name:'Walk-In',w:50,h:50},{icon:'',name:'Dbl Vanity',w:72,h:22}],
+  bedroom:     [{icon:'',name:'Queen Bed',w:60,h:80},{icon:'',name:'King Bed',w:76,h:80},{icon:'',name:'Dresser',w:48,h:20},{icon:'',name:'Closet',w:60,h:24}],
+  living:      [{icon:'',name:'Sofa',w:84,h:36},{icon:'',name:'TV Wall',w:72,h:8},{icon:'',name:'Chair',w:36,h:36},{icon:'',name:'Fireplace',w:50,h:16},{icon:'',name:'Built-Ins',w:72,h:16}],
+  laundry:     [{icon:'',name:'Washer',w:28,h:28},{icon:'',name:'Dryer',w:28,h:28},{icon:'',name:'Cabinet',w:48,h:18}],
+  basement:    [{icon:'',name:'Exercise',w:80,h:60},{icon:'',name:'Sofa',w:84,h:36},{icon:'',name:'Toilet',w:28,h:36}],
+  addition:    [{icon:'',name:'Wall',w:80,h:8}],
+  exterior:    [{icon:'',name:'Driveway',w:100,h:60},{icon:'',name:'Garden',w:60,h:40}],
   whole_home:  [],
 };
 // Dimensions are in inches, scaled at 1px = 1 inch on the canvas
 // Standard door widths: 24",28",30",32",36" — all 80" tall (6'8")
 // Standard window widths vary; heights typically 24"–48"
 const DOOR_FIXTURES = [
-  {icon:'🚪',name:'Door 2\'0"',   dim:'24×80"', w:24, h:8,  category:'door'},
-  {icon:'🚪',name:'Door 2\'4"',   dim:'28×80"', w:28, h:8,  category:'door'},
-  {icon:'🚪',name:'Door 2\'6"',   dim:'30×80"', w:30, h:8,  category:'door'},
-  {icon:'🚪',name:'Door 2\'8"',   dim:'32×80"', w:32, h:8,  category:'door'},
-  {icon:'🚪',name:'Door 3\'0"',   dim:'36×80"', w:36, h:8,  category:'door'},
-  {icon:'🚪',name:'Dbl Door 5\'0"', dim:'60×80"', w:60, h:8, category:'door'},
-  {icon:'🚪',name:'Dbl Door 6\'0"', dim:'72×80"', w:72, h:8, category:'door'},
-  {icon:'🚪',name:'Sliding 5\'0"',  dim:'60×80"', w:60, h:8, category:'door'},
-  {icon:'🚪',name:'Sliding 6\'0"',  dim:'72×80"', w:72, h:8, category:'door'},
-  {icon:'🚪',name:'French 5\'0"',   dim:'60×80"', w:60, h:8, category:'door'},
-  {icon:'🚪',name:'French 6\'0"',   dim:'72×80"', w:72, h:8, category:'door'},
-  {icon:'🚪',name:'Pocket Door 2\'8"', dim:'32×80"', w:32, h:8, category:'door'},
-  {icon:'🚪',name:'Pocket Door 3\'0"', dim:'36×80"', w:36, h:8, category:'door'},
-  {icon:'🚪',name:'Bi-Fold 3\'0"', dim:'36×80"', w:36, h:8, category:'door'},
-  {icon:'🚪',name:'Bi-Fold 4\'0"', dim:'48×80"', w:48, h:8, category:'door'},
-  {icon:'🚪',name:'Bi-Fold 5\'0"', dim:'60×80"', w:60, h:8, category:'door'},
-  {icon:'🚪',name:'Bi-Fold 6\'0"', dim:'72×80"', w:72, h:8, category:'door'},
-  {icon:'🚪',name:'Garage 8\'0"',  dim:'96×84"',  w:96, h:8, category:'door'},
-  {icon:'🚪',name:'Garage 9\'0"',  dim:'108×84"', w:108,h:8, category:'door'},
-  {icon:'🚪',name:'Garage 10\'0"', dim:'120×84"', w:120,h:8, category:'door'},
-  {icon:'🚪',name:'Garage 16\'0"', dim:'192×84"', w:192,h:8, category:'door'},
+  {icon:'',name:'Door 2\'0"',   dim:'24×80"', w:24, h:8,  category:'door'},
+  {icon:'',name:'Door 2\'4"',   dim:'28×80"', w:28, h:8,  category:'door'},
+  {icon:'',name:'Door 2\'6"',   dim:'30×80"', w:30, h:8,  category:'door'},
+  {icon:'',name:'Door 2\'8"',   dim:'32×80"', w:32, h:8,  category:'door'},
+  {icon:'',name:'Door 3\'0"',   dim:'36×80"', w:36, h:8,  category:'door'},
+  {icon:'',name:'Dbl Door 5\'0"', dim:'60×80"', w:60, h:8, category:'door'},
+  {icon:'',name:'Dbl Door 6\'0"', dim:'72×80"', w:72, h:8, category:'door'},
+  {icon:'',name:'Sliding 5\'0"',  dim:'60×80"', w:60, h:8, category:'door'},
+  {icon:'',name:'Sliding 6\'0"',  dim:'72×80"', w:72, h:8, category:'door'},
+  {icon:'',name:'French 5\'0"',   dim:'60×80"', w:60, h:8, category:'door'},
+  {icon:'',name:'French 6\'0"',   dim:'72×80"', w:72, h:8, category:'door'},
+  {icon:'',name:'Pocket Door 2\'8"', dim:'32×80"', w:32, h:8, category:'door'},
+  {icon:'',name:'Pocket Door 3\'0"', dim:'36×80"', w:36, h:8, category:'door'},
+  {icon:'',name:'Bi-Fold 3\'0"', dim:'36×80"', w:36, h:8, category:'door'},
+  {icon:'',name:'Bi-Fold 4\'0"', dim:'48×80"', w:48, h:8, category:'door'},
+  {icon:'',name:'Bi-Fold 5\'0"', dim:'60×80"', w:60, h:8, category:'door'},
+  {icon:'',name:'Bi-Fold 6\'0"', dim:'72×80"', w:72, h:8, category:'door'},
+  {icon:'',name:'Garage 8\'0"',  dim:'96×84"',  w:96, h:8, category:'door'},
+  {icon:'',name:'Garage 9\'0"',  dim:'108×84"', w:108,h:8, category:'door'},
+  {icon:'',name:'Garage 10\'0"', dim:'120×84"', w:120,h:8, category:'door'},
+  {icon:'',name:'Garage 16\'0"', dim:'192×84"', w:192,h:8, category:'door'},
 ];
 
 const WINDOW_FIXTURES = [
   // Single-hung / double-hung (most common residential)
-  {icon:'🪟',name:'Window 2\'0"×3\'0"', dim:'24×36"', w:24, h:8, category:'window'},
-  {icon:'🪟',name:'Window 2\'0"×4\'0"', dim:'24×48"', w:24, h:8, category:'window'},
-  {icon:'🪟',name:'Window 2\'6"×4\'0"', dim:'30×48"', w:30, h:8, category:'window'},
-  {icon:'🪟',name:'Window 3\'0"×3\'0"', dim:'36×36"', w:36, h:8, category:'window'},
-  {icon:'🪟',name:'Window 3\'0"×4\'0"', dim:'36×48"', w:36, h:8, category:'window'},
-  {icon:'🪟',name:'Window 3\'0"×4\'6"', dim:'36×54"', w:36, h:8, category:'window'},
-  {icon:'🪟',name:'Window 3\'6"×4\'0"', dim:'42×48"', w:42, h:8, category:'window'},
-  {icon:'🪟',name:'Window 4\'0"×3\'6"', dim:'48×42"', w:48, h:8, category:'window'},
-  {icon:'🪟',name:'Window 4\'0"×4\'0"', dim:'48×48"', w:48, h:8, category:'window'},
-  {icon:'🪟',name:'Window 4\'0"×5\'0"', dim:'48×60"', w:48, h:8, category:'window'},
-  {icon:'🪟',name:'Window 5\'0"×4\'0"', dim:'60×48"', w:60, h:8, category:'window'},
-  {icon:'🪟',name:'Window 6\'0"×4\'0"', dim:'72×48"', w:72, h:8, category:'window'},
+  {icon:'',name:'Window 2\'0"×3\'0"', dim:'24×36"', w:24, h:8, category:'window'},
+  {icon:'',name:'Window 2\'0"×4\'0"', dim:'24×48"', w:24, h:8, category:'window'},
+  {icon:'',name:'Window 2\'6"×4\'0"', dim:'30×48"', w:30, h:8, category:'window'},
+  {icon:'',name:'Window 3\'0"×3\'0"', dim:'36×36"', w:36, h:8, category:'window'},
+  {icon:'',name:'Window 3\'0"×4\'0"', dim:'36×48"', w:36, h:8, category:'window'},
+  {icon:'',name:'Window 3\'0"×4\'6"', dim:'36×54"', w:36, h:8, category:'window'},
+  {icon:'',name:'Window 3\'6"×4\'0"', dim:'42×48"', w:42, h:8, category:'window'},
+  {icon:'',name:'Window 4\'0"×3\'6"', dim:'48×42"', w:48, h:8, category:'window'},
+  {icon:'',name:'Window 4\'0"×4\'0"', dim:'48×48"', w:48, h:8, category:'window'},
+  {icon:'',name:'Window 4\'0"×5\'0"', dim:'48×60"', w:48, h:8, category:'window'},
+  {icon:'',name:'Window 5\'0"×4\'0"', dim:'60×48"', w:60, h:8, category:'window'},
+  {icon:'',name:'Window 6\'0"×4\'0"', dim:'72×48"', w:72, h:8, category:'window'},
   // Casement
-  {icon:'🪟',name:'Casement 2\'0"×3\'0"', dim:'24×36"', w:24, h:8, category:'window'},
-  {icon:'🪟',name:'Casement 2\'0"×4\'0"', dim:'24×48"', w:24, h:8, category:'window'},
-  {icon:'🪟',name:'Casement 3\'0"×4\'0"', dim:'36×48"', w:36, h:8, category:'window'},
+  {icon:'',name:'Casement 2\'0"×3\'0"', dim:'24×36"', w:24, h:8, category:'window'},
+  {icon:'',name:'Casement 2\'0"×4\'0"', dim:'24×48"', w:24, h:8, category:'window'},
+  {icon:'',name:'Casement 3\'0"×4\'0"', dim:'36×48"', w:36, h:8, category:'window'},
   // Sliding
-  {icon:'🪟',name:'Sliding 4\'0"×3\'0"', dim:'48×36"', w:48, h:8, category:'window'},
-  {icon:'🪟',name:'Sliding 5\'0"×3\'6"', dim:'60×42"', w:60, h:8, category:'window'},
-  {icon:'🪟',name:'Sliding 6\'0"×4\'0"', dim:'72×48"', w:72, h:8, category:'window'},
+  {icon:'',name:'Sliding 4\'0"×3\'0"', dim:'48×36"', w:48, h:8, category:'window'},
+  {icon:'',name:'Sliding 5\'0"×3\'6"', dim:'60×42"', w:60, h:8, category:'window'},
+  {icon:'',name:'Sliding 6\'0"×4\'0"', dim:'72×48"', w:72, h:8, category:'window'},
   // Picture / fixed
-  {icon:'🪟',name:'Picture 4\'0"×4\'0"', dim:'48×48"', w:48, h:8, category:'window'},
-  {icon:'🪟',name:'Picture 6\'0"×4\'0"', dim:'72×48"', w:72, h:8, category:'window'},
-  {icon:'🪟',name:'Picture 8\'0"×4\'0"', dim:'96×48"', w:96, h:8, category:'window'},
+  {icon:'',name:'Picture 4\'0"×4\'0"', dim:'48×48"', w:48, h:8, category:'window'},
+  {icon:'',name:'Picture 6\'0"×4\'0"', dim:'72×48"', w:72, h:8, category:'window'},
+  {icon:'',name:'Picture 8\'0"×4\'0"', dim:'96×48"', w:96, h:8, category:'window'},
   // Bathroom/egress
-  {icon:'🪟',name:'Egress 2\'0"×2\'4"', dim:'24×28"', w:24, h:8, category:'window'},
-  {icon:'🪟',name:'Bath 1\'4"×2\'0"',   dim:'16×24"', w:16, h:8, category:'window'},
-  {icon:'🪟',name:'Bay 8\'0"×5\'0"',    dim:'96×60"', w:96, h:8, category:'window'},
+  {icon:'',name:'Egress 2\'0"×2\'4"', dim:'24×28"', w:24, h:8, category:'window'},
+  {icon:'',name:'Bath 1\'4"×2\'0"',   dim:'16×24"', w:16, h:8, category:'window'},
+  {icon:'',name:'Bay 8\'0"×5\'0"',    dim:'96×60"', w:96, h:8, category:'window'},
 ];
 
 const UNIVERSAL_FIXTURES = [
   ...DOOR_FIXTURES,
   ...WINDOW_FIXTURES,
-  {icon:'🧱',name:'Wall',    dim:'custom', w:80, h:8,  category:'structural'},
+  {icon:'',name:'Wall',    dim:'custom', w:80, h:8,  category:'structural'},
   {icon:'↕', name:'Stairs',  dim:'36×60"', w:36, h:60, category:'structural'},
-  {icon:'🏛', name:'Column',  dim:'12×12"', w:12, h:12, category:'structural'},
+  {icon:'', name:'Column',  dim:'12×12"', w:12, h:12, category:'structural'},
 ];
 
 let fpMode='drag', fpDrawTool='wall', fpDrawColor='#6B8DB5';
@@ -1287,7 +1284,7 @@ function placeFixture(name,icon,w,h,left,top) {
   el.id=id;
   el.style.cssText=`left:${left}px;top:${top}px;width:${w}px;height:${h}px`;
   el.innerHTML=`<span class="cf-label">${name}</span>
-    <div class="cf-del" onclick="removeFixture('${id}')">✕</div>
+    <div class="cf-del" onclick="removeFixture('${id}')"></div>
     <div class="cf-rotate" onclick="rotateFixture('${id}')">↻</div>`;
   el.addEventListener('mousedown', startDragFixtureEl);
   el.addEventListener('click', () => selectFixture(id));
@@ -1370,9 +1367,9 @@ function autoScopeFromFixture(name) {
   if (!existing) addScopeItemDirect(trade, desc, '');
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // SCOPE OF WORK
-// ════════════════════════════════════════════════════════
+// 
 function addScopeItem() {
   const desc = document.getElementById('new-scope-item').value.trim();
   const trade = document.getElementById('new-scope-trade').value;
@@ -1396,7 +1393,7 @@ function renderScopeTable() {
       </select></td>
       <td><input style="background:#111;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:12px;color:#fff;width:100%" value="${s.desc}" onchange="updateScope('${s.id}','desc',this.value)"/></td>
       <td><input type="number" style="background:#111;border:1px solid var(--border);border-radius:4px;padding:5px 8px;font-size:12px;color:#fff;width:80px" placeholder="0" value="${s.cost||''}" onchange="updateScope('${s.id}','cost',this.value)"/></td>
-      <td><button onclick="removeScope('${s.id}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px">✕</button></td>
+      <td><button onclick="removeScope('${s.id}')" style="background:none;border:none;color:var(--red);cursor:pointer;font-size:14px"></button></td>
     </tr>`).join('');
   updateScopeSubtotal();
 }
@@ -1414,9 +1411,9 @@ function updateScopeSubtotal() {
   document.getElementById('scope-subtotal').textContent='$'+total.toLocaleString();
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // E-SIGNATURE
-// ════════════════════════════════════════════════════════
+// 
 let sigCtx, sigDrawing=false, sigLastX=0, sigLastY=0, sigHasData=false;
 
 function initSig() {
@@ -1429,7 +1426,7 @@ function initSig() {
     sigCtx.beginPath(); sigCtx.moveTo(sigLastX,sigLastY); sigCtx.lineTo(e.offsetX,e.offsetY);
     sigCtx.strokeStyle='#1a1a1a'; sigCtx.lineWidth=2; sigCtx.lineCap='round'; sigCtx.stroke();
     [sigLastX,sigLastY]=[e.offsetX,e.offsetY]; sigHasData=true;
-    document.getElementById('sig-status').textContent='✓ Signed';
+    document.getElementById('sig-status').textContent=' Signed';
     document.getElementById('sig-status').style.color='var(--green)';
   });
   canvas.addEventListener('mouseup', ()=>{sigDrawing=false;if(sigHasData)state.sigDataUrl=canvas.toDataURL();});
@@ -1440,7 +1437,7 @@ function initSig() {
     sigCtx.beginPath();sigCtx.moveTo(sigLastX,sigLastY);sigCtx.lineTo(x,y);
     sigCtx.strokeStyle='#1a1a1a';sigCtx.lineWidth=2;sigCtx.lineCap='round';sigCtx.stroke();
     sigLastX=x;sigLastY=y;sigHasData=true;
-    document.getElementById('sig-status').textContent='✓ Signed';
+    document.getElementById('sig-status').textContent=' Signed';
     document.getElementById('sig-status').style.color='var(--green)';
   },{passive:false});
   canvas.addEventListener('touchend',()=>{sigDrawing=false;if(sigHasData)state.sigDataUrl=canvas.toDataURL();});
@@ -1454,9 +1451,9 @@ function clearSig() {
   document.getElementById('sig-status').style.color='';
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // EXPORT
-// ════════════════════════════════════════════════════════
+// 
 function selectExport(type) {
   state.exportType=type;
   document.getElementById('export-client-btn').classList.toggle('selected', type==='client');
@@ -1547,13 +1544,13 @@ async function exportBoth() {
 
 function markComplete() {
   document.getElementById('doc-status').className='status-badge complete';
-  document.getElementById('doc-status').textContent='● Complete';
+  document.getElementById('doc-status').textContent=' Complete';
   saveState();
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // LOAD FROM REF
-// ════════════════════════════════════════════════════════
+// 
 function loadFromRef() {
   const ref=document.getElementById('p-ref').value.trim();
   document.getElementById('header-ref').textContent=ref?'Ref: '+ref:'';
@@ -1575,9 +1572,9 @@ function loadFromRef() {
   saveState();
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // PERSIST STATE
-// ════════════════════════════════════════════════════════
+// 
 function saveState() {
   const data={
     fname:document.getElementById('p-fname').value,
@@ -1624,13 +1621,13 @@ function loadState() {
     if(d.ref) document.getElementById('header-ref').textContent='Ref: '+d.ref;
     if(d.rooms) { state.rooms=d.rooms; d.rooms.forEach(r=>{ const btn=document.querySelector(`.room-btn[onclick*="'${r}'"]`); if(btn)btn.classList.add('selected'); }); updateRoomDetails(); updateFixturePalette(); }
     if(d.scopeItems) { state.scopeItems=d.scopeItems; renderScopeTable(); }
-    if(d.sigDataUrl) { state.sigDataUrl=d.sigDataUrl; const c=document.getElementById('sigCanvas'); const ctx=c.getContext('2d'); const img=new Image(); img.onload=()=>ctx.drawImage(img,0,0); img.src=d.sigDataUrl; document.getElementById('sig-status').textContent='✓ Signed'; document.getElementById('sig-status').style.color='var(--green)'; }
+    if(d.sigDataUrl) { state.sigDataUrl=d.sigDataUrl; const c=document.getElementById('sigCanvas'); const ctx=c.getContext('2d'); const img=new Image(); img.onload=()=>ctx.drawImage(img,0,0); img.src=d.sigDataUrl; document.getElementById('sig-status').textContent=' Signed'; document.getElementById('sig-status').style.color='var(--green)'; }
   } catch(e){}
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // VOICE RECORDING (Web Speech API)
-// ════════════════════════════════════════════════════════
+// 
 let voiceRecognition = null;
 let voiceActive = false;
 
@@ -1692,9 +1689,9 @@ function toggleVoiceRecord() {
   voiceRecognition.start();
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // AI ANALYSIS — n8n + Claude
-// ════════════════════════════════════════════════════════
+// 
 const N8N_WEBHOOK = 'https://decosibot.app.n8n.cloud/webhook/22faac64-45f7-4f61-b974-27e0f1b825e4';
 let aiResultData = null;
 
@@ -1837,9 +1834,9 @@ function applyAIResults() {
   switchTab(3);
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // BEFORE / AFTER SPLIT VIEW
-// ════════════════════════════════════════════════════════
+// 
 let beforeAfterVisible = false;
 let beforeSnapshotDataUrl = null;
 
@@ -1889,9 +1886,9 @@ function syncAfterCanvas() {
   ctx.drawImage(mainCanvas, 0, 0);
 }
 
-// ════════════════════════════════════════════════════════
+// 
 // INIT
-// ════════════════════════════════════════════════════════
+// 
 window.addEventListener('DOMContentLoaded', ()=>{
   // Set today's date defaults
   const today=new Date().toISOString().split('T')[0];
