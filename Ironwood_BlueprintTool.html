@@ -989,17 +989,79 @@ const FIXTURES_BY_ROOM = {
   kitchen:     [{icon:'🗄',name:'Base Cab',w:80,h:30},{icon:'🔲',name:'Upper Cab',w:80,h:20},{icon:'🏝',name:'Island',w:80,h:50},{icon:'🚰',name:'Sink',w:50,h:30},{icon:'🍳',name:'Range',w:50,h:50},{icon:'❄️',name:'Fridge',w:36,h:36},{icon:'🫧',name:'Dishwasher',w:36,h:36},{icon:'🗑',name:'Pantry',w:36,h:50}],
   bathroom:    [{icon:'🚽',name:'Toilet',w:28,h:36},{icon:'🛁',name:'Tub',w:60,h:30},{icon:'🚿',name:'Shower',w:36,h:36},{icon:'🪥',name:'Vanity',w:48,h:22},{icon:'🪥',name:'Dbl Vanity',w:72,h:22},{icon:'🗄',name:'Linen',w:24,h:18}],
   master_bath: [{icon:'🚽',name:'Toilet',w:28,h:36},{icon:'🛁',name:'Freestand Tub',w:60,h:34},{icon:'🚿',name:'Walk-In',w:50,h:50},{icon:'🪥',name:'Dbl Vanity',w:72,h:22}],
-  bedroom:     [{icon:'🛏',name:'Queen Bed',w:60,h:80},{icon:'🛏',name:'King Bed',w:76,h:80},{icon:'🗄',name:'Dresser',w:48,h:20},{icon:'🪟',name:'Window',w:36,h:10},{icon:'🚪',name:'Closet',w:60,h:24}],
+  bedroom:     [{icon:'🛏',name:'Queen Bed',w:60,h:80},{icon:'🛏',name:'King Bed',w:76,h:80},{icon:'🗄',name:'Dresser',w:48,h:20},{icon:'🚪',name:'Closet',w:60,h:24}],
   living:      [{icon:'🛋',name:'Sofa',w:84,h:36},{icon:'📺',name:'TV Wall',w:72,h:8},{icon:'🪑',name:'Chair',w:36,h:36},{icon:'🔥',name:'Fireplace',w:50,h:16},{icon:'📚',name:'Built-Ins',w:72,h:16}],
   laundry:     [{icon:'🫧',name:'Washer',w:28,h:28},{icon:'🌀',name:'Dryer',w:28,h:28},{icon:'🗄',name:'Cabinet',w:48,h:18}],
   basement:    [{icon:'🏋',name:'Exercise',w:80,h:60},{icon:'🛋',name:'Sofa',w:84,h:36},{icon:'🚽',name:'Toilet',w:28,h:36}],
-  addition:    [{icon:'🚪',name:'Door',w:32,h:8},{icon:'🪟',name:'Window',w:36,h:8},{icon:'🧱',name:'Wall',w:80,h:8}],
+  addition:    [{icon:'🧱',name:'Wall',w:80,h:8}],
   exterior:    [{icon:'🚗',name:'Driveway',w:100,h:60},{icon:'🌿',name:'Garden',w:60,h:40}],
   whole_home:  [],
 };
+// Dimensions are in inches, scaled at 1px = 1 inch on the canvas
+// Standard door widths: 24",28",30",32",36" — all 80" tall (6'8")
+// Standard window widths vary; heights typically 24"–48"
+const DOOR_FIXTURES = [
+  {icon:'🚪',name:'Door 2\'0"',   dim:'24×80"', w:24, h:8,  category:'door'},
+  {icon:'🚪',name:'Door 2\'4"',   dim:'28×80"', w:28, h:8,  category:'door'},
+  {icon:'🚪',name:'Door 2\'6"',   dim:'30×80"', w:30, h:8,  category:'door'},
+  {icon:'🚪',name:'Door 2\'8"',   dim:'32×80"', w:32, h:8,  category:'door'},
+  {icon:'🚪',name:'Door 3\'0"',   dim:'36×80"', w:36, h:8,  category:'door'},
+  {icon:'🚪',name:'Dbl Door 5\'0"', dim:'60×80"', w:60, h:8, category:'door'},
+  {icon:'🚪',name:'Dbl Door 6\'0"', dim:'72×80"', w:72, h:8, category:'door'},
+  {icon:'🚪',name:'Sliding 5\'0"',  dim:'60×80"', w:60, h:8, category:'door'},
+  {icon:'🚪',name:'Sliding 6\'0"',  dim:'72×80"', w:72, h:8, category:'door'},
+  {icon:'🚪',name:'French 5\'0"',   dim:'60×80"', w:60, h:8, category:'door'},
+  {icon:'🚪',name:'French 6\'0"',   dim:'72×80"', w:72, h:8, category:'door'},
+  {icon:'🚪',name:'Pocket Door 2\'8"', dim:'32×80"', w:32, h:8, category:'door'},
+  {icon:'🚪',name:'Pocket Door 3\'0"', dim:'36×80"', w:36, h:8, category:'door'},
+  {icon:'🚪',name:'Bi-Fold 3\'0"', dim:'36×80"', w:36, h:8, category:'door'},
+  {icon:'🚪',name:'Bi-Fold 4\'0"', dim:'48×80"', w:48, h:8, category:'door'},
+  {icon:'🚪',name:'Bi-Fold 5\'0"', dim:'60×80"', w:60, h:8, category:'door'},
+  {icon:'🚪',name:'Bi-Fold 6\'0"', dim:'72×80"', w:72, h:8, category:'door'},
+  {icon:'🚪',name:'Garage 8\'0"',  dim:'96×84"',  w:96, h:8, category:'door'},
+  {icon:'🚪',name:'Garage 9\'0"',  dim:'108×84"', w:108,h:8, category:'door'},
+  {icon:'🚪',name:'Garage 10\'0"', dim:'120×84"', w:120,h:8, category:'door'},
+  {icon:'🚪',name:'Garage 16\'0"', dim:'192×84"', w:192,h:8, category:'door'},
+];
+
+const WINDOW_FIXTURES = [
+  // Single-hung / double-hung (most common residential)
+  {icon:'🪟',name:'Window 2\'0"×3\'0"', dim:'24×36"', w:24, h:8, category:'window'},
+  {icon:'🪟',name:'Window 2\'0"×4\'0"', dim:'24×48"', w:24, h:8, category:'window'},
+  {icon:'🪟',name:'Window 2\'6"×4\'0"', dim:'30×48"', w:30, h:8, category:'window'},
+  {icon:'🪟',name:'Window 3\'0"×3\'0"', dim:'36×36"', w:36, h:8, category:'window'},
+  {icon:'🪟',name:'Window 3\'0"×4\'0"', dim:'36×48"', w:36, h:8, category:'window'},
+  {icon:'🪟',name:'Window 3\'0"×4\'6"', dim:'36×54"', w:36, h:8, category:'window'},
+  {icon:'🪟',name:'Window 3\'6"×4\'0"', dim:'42×48"', w:42, h:8, category:'window'},
+  {icon:'🪟',name:'Window 4\'0"×3\'6"', dim:'48×42"', w:48, h:8, category:'window'},
+  {icon:'🪟',name:'Window 4\'0"×4\'0"', dim:'48×48"', w:48, h:8, category:'window'},
+  {icon:'🪟',name:'Window 4\'0"×5\'0"', dim:'48×60"', w:48, h:8, category:'window'},
+  {icon:'🪟',name:'Window 5\'0"×4\'0"', dim:'60×48"', w:60, h:8, category:'window'},
+  {icon:'🪟',name:'Window 6\'0"×4\'0"', dim:'72×48"', w:72, h:8, category:'window'},
+  // Casement
+  {icon:'🪟',name:'Casement 2\'0"×3\'0"', dim:'24×36"', w:24, h:8, category:'window'},
+  {icon:'🪟',name:'Casement 2\'0"×4\'0"', dim:'24×48"', w:24, h:8, category:'window'},
+  {icon:'🪟',name:'Casement 3\'0"×4\'0"', dim:'36×48"', w:36, h:8, category:'window'},
+  // Sliding
+  {icon:'🪟',name:'Sliding 4\'0"×3\'0"', dim:'48×36"', w:48, h:8, category:'window'},
+  {icon:'🪟',name:'Sliding 5\'0"×3\'6"', dim:'60×42"', w:60, h:8, category:'window'},
+  {icon:'🪟',name:'Sliding 6\'0"×4\'0"', dim:'72×48"', w:72, h:8, category:'window'},
+  // Picture / fixed
+  {icon:'🪟',name:'Picture 4\'0"×4\'0"', dim:'48×48"', w:48, h:8, category:'window'},
+  {icon:'🪟',name:'Picture 6\'0"×4\'0"', dim:'72×48"', w:72, h:8, category:'window'},
+  {icon:'🪟',name:'Picture 8\'0"×4\'0"', dim:'96×48"', w:96, h:8, category:'window'},
+  // Bathroom/egress
+  {icon:'🪟',name:'Egress 2\'0"×2\'4"', dim:'24×28"', w:24, h:8, category:'window'},
+  {icon:'🪟',name:'Bath 1\'4"×2\'0"',   dim:'16×24"', w:16, h:8, category:'window'},
+  {icon:'🪟',name:'Bay 8\'0"×5\'0"',    dim:'96×60"', w:96, h:8, category:'window'},
+];
+
 const UNIVERSAL_FIXTURES = [
-  {icon:'🚪',name:'Door',w:32,h:8},{icon:'🪟',name:'Window',w:36,h:8},
-  {icon:'🧱',name:'Wall',w:80,h:8},{icon:'↕',name:'Stairs',w:40,h:60}
+  ...DOOR_FIXTURES,
+  ...WINDOW_FIXTURES,
+  {icon:'🧱',name:'Wall',    dim:'custom', w:80, h:8,  category:'structural'},
+  {icon:'↕', name:'Stairs',  dim:'36×60"', w:36, h:60, category:'structural'},
+  {icon:'🏛', name:'Column',  dim:'12×12"', w:12, h:12, category:'structural'},
 ];
 
 let fpMode='drag', fpDrawTool='wall', fpDrawColor='#6B8DB5';
@@ -1009,15 +1071,44 @@ let fpStrokes=[];
 
 function updateFixturePalette() {
   const palette = document.getElementById('fixture-palette');
-  let fixtures = [...UNIVERSAL_FIXTURES];
-  state.rooms.forEach(r => { if (FIXTURES_BY_ROOM[r]) fixtures.push(...FIXTURES_BY_ROOM[r]); });
+
+  // Room-specific fixtures first
+  let roomFixtures = [];
+  state.rooms.forEach(r => { if (FIXTURES_BY_ROOM[r]) roomFixtures.push(...FIXTURES_BY_ROOM[r]); });
   const seen = new Set();
-  fixtures = fixtures.filter(f => { const k=f.name; if(seen.has(k)) return false; seen.add(k); return true; });
-  palette.innerHTML = fixtures.map(f =>
-    `<div class="fixture-item" draggable="true" ondragstart="startFixtureDrag(event,'${f.name}','${f.icon}',${f.w},${f.h})">
-      <span class="fi-icon">${f.icon}</span>
-      <span class="fi-name">${f.name}</span>
-    </div>`).join('');
+  roomFixtures = roomFixtures.filter(f => { if(seen.has(f.name)) return false; seen.add(f.name); return true; });
+
+  const groupedUniversal = {
+    'Doors':       DOOR_FIXTURES,
+    'Windows':     WINDOW_FIXTURES,
+    'Structural':  UNIVERSAL_FIXTURES.filter(f=>f.category==='structural'),
+  };
+
+  let html = '';
+
+  if (roomFixtures.length) {
+    html += `<div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin:6px 0 4px;grid-column:1/-1">Room Fixtures</div>`;
+    html += roomFixtures.map(f =>
+      `<div class="fixture-item" draggable="true" ondragstart="startFixtureDrag(event,'${f.name.replace(/'/g,"\\'")}','${f.icon}',${f.w},${f.h})">
+        <span class="fi-icon">${f.icon}</span>
+        <span class="fi-name">${f.name}</span>
+      </div>`).join('');
+  }
+
+  Object.entries(groupedUniversal).forEach(([group, items]) => {
+    html += `<div style="font-size:9px;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--blue);margin:8px 0 4px;grid-column:1/-1">${group}</div>`;
+    html += items.map(f =>
+      `<div class="fixture-item" draggable="true" ondragstart="startFixtureDrag(event,'${f.name.replace(/'/g,"\\'")}','${f.icon}',${f.w},${f.h})" title="${f.name}${f.dim?' — '+f.dim:''}">
+        <span class="fi-icon">${f.icon}</span>
+        <span class="fi-name" style="font-size:8px">${f.dim||f.name}</span>
+      </div>`).join('');
+  });
+
+  palette.innerHTML = html;
+  // Make palette scrollable since it's now longer
+  palette.style.maxHeight = '420px';
+  palette.style.overflowY = 'auto';
+  palette.style.paddingRight = '4px';
 }
 
 function initFloorPlan() {
