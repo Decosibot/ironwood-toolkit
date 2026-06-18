@@ -3,90 +3,370 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Ironwood Homes and Renovations — Toolkit</title>
+<title>Ironwood Toolkit</title>
 <link rel="stylesheet" href="iw-design.css"/>
 <style>
-  /* Index-specific overrides */
-  .iw-header { position: static; }
+  .iw-header { position: sticky; top: 0; z-index: 200; }
 
-  .hub-hero {
-    background: var(--ink);
-    color: var(--bg);
-    padding: 64px 40px 56px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-  .hub-hero::before {
-    content: '';
-    position: absolute; inset: 0;
-    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(111,132,139,.18), transparent 65%);
-    pointer-events: none;
-  }
-  .hub-eyebrow {
-    font-size: 11px; color: var(--bronze); text-transform: uppercase;
-    letter-spacing: 0.18em; font-weight: 500; margin-bottom: 16px;
-    display: inline-flex; align-items: center; gap: 8px;
-  }
-  .hub-eyebrow::before { content: ''; width: 5px; height: 5px; background: var(--bronze); border-radius: 50%; }
-  .hub-title {
-    font-family: var(--serif);
-    font-size: clamp(36px, 5vw, 58px);
-    font-weight: 400;
-    letter-spacing: -0.02em;
-    color: var(--bg);
-    line-height: 1.05;
-    margin-bottom: 12px;
-  }
-  .hub-title em { font-style: italic; color: var(--bronze-tint, #C8D4D7); }
-  .hub-sub {
-    font-size: 15px;
-    color: rgba(244,239,230,.65);
-    max-width: 480px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-  .hub-stats {
+  /* ── SEARCH BAR ── */
+  .hub-search-wrap {
+    background: var(--surface);
+    border-bottom: 1px solid var(--hairline);
+    padding: 12px 32px;
+    position: sticky;
+    top: 64px;
+    z-index: 190;
     display: flex;
-    justify-content: center;
-    gap: 40px;
-    margin-top: 40px;
+    align-items: center;
+    gap: 12px;
+  }
+  .hub-search {
+    flex: 1;
+    max-width: 480px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: 8px;
+    padding: 0 14px;
+    height: 40px;
+  }
+  .hub-search svg { color: var(--muted); flex-shrink: 0; }
+  .hub-search input {
+    border: none; background: transparent; outline: none;
+    font: inherit; font-size: 14px; color: var(--ink); width: 100%;
+  }
+  .hub-search input::placeholder { color: var(--muted); }
+
+  /* ── ROLE TABS ── */
+  .role-tabs {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+  }
+  .role-tab {
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-size: 12.5px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--hairline);
+    background: transparent;
+    color: var(--muted);
+    transition: all .15s;
+    white-space: nowrap;
+  }
+  .role-tab:hover { border-color: var(--bronze); color: var(--bronze); }
+  .role-tab.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
+  }
+
+  /* ── PINNED ROW ── */
+  .pinned-row {
+    background: var(--ink);
+    padding: 18px 32px;
+    display: flex;
+    gap: 10px;
     flex-wrap: wrap;
+    align-items: center;
   }
-  .hub-stat { text-align: center; }
-  .hub-stat-num {
-    font-family: var(--serif);
-    font-size: 32px;
-    color: var(--bronze-tint, #C8D4D7);
+  .pinned-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: rgba(244,239,230,.45);
+    margin-right: 4px;
+    flex-shrink: 0;
+  }
+  .pin-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 14px;
+    border-radius: 7px;
+    background: rgba(244,239,230,.08);
+    border: 1px solid rgba(244,239,230,.14);
+    color: var(--bg);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background .15s, border-color .15s;
+    white-space: nowrap;
+  }
+  .pin-chip:hover {
+    background: rgba(244,239,230,.15);
+    border-color: rgba(244,239,230,.3);
+    color: var(--bg);
+    text-decoration: none;
+  }
+  .pin-chip .chip-icon { font-size: 15px; }
+  .pin-chip .chip-badge {
+    font-size: 10px;
+    background: var(--bronze);
+    color: #fff;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-weight: 600;
+    letter-spacing: .04em;
+  }
+
+  /* ── MAIN LAYOUT ── */
+  .hub-body {
+    display: flex;
+    min-height: calc(100vh - 180px);
+  }
+
+  /* ── SIDEBAR NAV ── */
+  .hub-sidebar {
+    width: 220px;
+    flex-shrink: 0;
+    border-right: 1px solid var(--hairline);
+    padding: 24px 0;
+    background: var(--surface);
+    position: sticky;
+    top: 113px;
+    height: calc(100vh - 113px);
+    overflow-y: auto;
+  }
+  .sidebar-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .14em;
+    color: var(--muted);
+    padding: 16px 20px 6px;
+  }
+  .sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 20px;
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--ink-soft);
+    text-decoration: none;
+    border-left: 2px solid transparent;
+    transition: all .15s;
+    cursor: pointer;
+  }
+  .sidebar-link:hover {
+    background: var(--bg);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .sidebar-link.active {
+    border-left-color: var(--bronze);
+    color: var(--bronze-deep);
+    background: var(--bronze-wash);
+  }
+  .sidebar-link .sl-icon { font-size: 16px; flex-shrink: 0; }
+  .sidebar-link .sl-count {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    padding: 1px 7px;
+    border-radius: 20px;
+  }
+
+  /* ── CONTENT AREA ── */
+  .hub-content {
+    flex: 1;
+    padding: 32px 36px 60px;
+    min-width: 0;
+  }
+
+  /* ── SECTION ── */
+  .hub-section {
+    margin-bottom: 48px;
+  }
+  .hub-section[data-hidden="true"] { display: none; }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-header:hover .section-title { color: var(--bronze-deep); }
+  .section-icon { font-size: 20px; flex-shrink: 0; }
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 22px;
     font-weight: 400;
-    display: block;
-    line-height: 1;
-    margin-bottom: 4px;
+    color: var(--ink);
+    transition: color .15s;
   }
-  .hub-stat-label { font-size: 11px; color: rgba(244,239,230,.5); text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; }
+  .section-count {
+    font-size: 11px;
+    color: var(--muted);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+  .section-toggle {
+    margin-left: auto;
+    font-size: 12px;
+    color: var(--muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 5px;
+    transition: background .15s;
+  }
+  .section-toggle:hover { background: var(--bg); }
+  .section-body { }
+  .section-body.collapsed { display: none; }
 
-  /* nav cards for index */
-  .iw-nav-card-icon {
-    font-size: 20px;
-    margin-bottom: 12px;
-    display: block;
+  /* ── TOOL CARDS ── */
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 12px;
+  }
+  .tool-card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    text-decoration: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    transition: border-color .15s, box-shadow .15s, transform .15s;
+    position: relative;
+  }
+  .tool-card:hover {
+    border-color: var(--bronze);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-2px);
+    text-decoration: none;
+  }
+  .tool-card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .tool-card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+  }
+  .tool-card-meta { flex: 1; min-width: 0; }
+  .tool-card-eyebrow {
+    font-size: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+  .tool-card-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    line-height: 1.3;
+  }
+  .tool-card-desc {
+    font-size: 12.5px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+  .tool-card-tags {
+    display: flex;
+    gap: 5px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+  }
+  .tool-tag {
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 4px;
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    color: var(--muted);
+  }
+  .tool-tag.tag-field { background: #FFF3CD; border-color: #F0C040; color: #7A5C00; }
+  .tool-tag.tag-finance { background: #D8F3DC; border-color: #74C69D; color: #1B4332; }
+  .tool-tag.tag-client { background: #D6E3F0; border-color: #6B8DB5; color: #1A3A5C; }
+  .tool-tag.tag-ai { background: #F0E6FF; border-color: #C084FC; color: #5B21B6; }
+  .tool-tag.tag-legal { background: #FEE2E2; border-color: #FCA5A5; color: #7F1D1D; }
+  .tool-tag.tag-new {
+    background: var(--bronze);
+    border-color: var(--bronze);
+    color: #fff;
+    font-weight: 700;
   }
 
-  /* website page mini cards */
-  .site-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+  /* featured card variant */
+  .tool-card.featured {
+    border-color: var(--bronze);
+    background: linear-gradient(135deg, var(--surface) 60%, var(--bronze-wash));
+  }
+  .tool-card.featured .tool-card-icon {
+    background: var(--bronze-wash);
+    border-color: var(--bronze-tint);
+  }
+
+  /* ── NO RESULTS ── */
+  .no-results {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+    display: none;
+  }
+  .no-results.visible { display: block; }
+
+  /* ── SITE PAGE GRID ── */
+  .site-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px;
+  }
   .site-card {
     background: var(--surface);
     border: 1px solid var(--hairline);
     border-radius: var(--radius);
-    padding: 16px;
+    padding: 14px;
     text-decoration: none;
     text-align: center;
-    transition: border-color .2s, transform .2s;
-    display: block;
+    transition: border-color .15s, transform .15s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
   }
-  .site-card:hover { border-color: var(--bronze); transform: translateY(-2px); }
-  .site-card-icon { font-size: 20px; margin-bottom: 8px; display: block; }
+  .site-card:hover { border-color: var(--bronze); transform: translateY(-2px); text-decoration: none; }
+  .site-card-icon { font-size: 20px; }
   .site-card-label { font-size: 12.5px; font-weight: 500; color: var(--ink); }
+
+  /* ── MOBILE ── */
+  @media (max-width: 860px) {
+    .hub-sidebar { display: none; }
+    .hub-search-wrap { padding: 10px 16px; }
+    .hub-content { padding: 20px 16px 40px; }
+    .pinned-row { padding: 14px 16px; }
+    .role-tabs { display: none; }
+    .tool-grid { grid-template-columns: 1fr; }
+  }
 </style>
 </head>
 <body>
@@ -105,354 +385,921 @@
   </div>
 </div>
 
-<!-- HERO -->
-<div class="hub-hero">
-  <div class="hub-eyebrow">Operations Hub</div>
-  <div class="hub-title">The Ironwood<br/><em>Toolkit</em></div>
-  <div class="hub-sub">Every tool, document, and strategy for Ironwood Homes and Renovations — all in one place.</div>
-  <div class="hub-stats">
-    <div class="hub-stat"><span class="hub-stat-num">52</span><span class="hub-stat-label">Tools & Docs</span></div>
-    <div class="hub-stat"><span class="hub-stat-num">10</span><span class="hub-stat-label">Strategies</span></div>
-    <div class="hub-stat"><span class="hub-stat-num">$100M</span><span class="hub-stat-label">AUM Target</span></div>
+<!-- SEARCH + ROLE FILTER BAR -->
+<div class="hub-search-wrap">
+  <div class="hub-search">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="text" id="toolSearch" placeholder="Search tools…" oninput="filterTools(this.value)" autocomplete="off"/>
+  </div>
+  <div class="role-tabs">
+    <button class="role-tab active" onclick="setRole('all',this)">All Tools</button>
+    <button class="role-tab" onclick="setRole('field',this)">Field</button>
+    <button class="role-tab" onclick="setRole('finance',this)">Finance</button>
+    <button class="role-tab" onclick="setRole('client',this)">Client-Facing</button>
   </div>
 </div>
 
-<div class="iw-container">
-
-  <!-- CUSTOMER-FACING TOOLS -->
-  <div class="iw-section-label">Customer &amp; Client Tools</div>
-
-  <div style="margin-bottom:10px;">
-    <div class="iw-section-label" style="font-size:9px;color:var(--muted);border:none;margin:0 0 10px;padding:0;letter-spacing:.12em;">Lead Generation</div>
-  </div>
-  <div class="iw-grid" style="margin-bottom:28px;">
-    <a class="iw-nav-card" href="Ironwood_Estimator_Public.html">
-      <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Ad-Ready · GHL</div>
-      <div class="iw-nav-card-title">Renovation Estimator</div>
-      <div class="iw-nav-card-desc">Instant estimate funnel for ads — customer scopes project, gets price range, submits to GHL, books site visit.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_HomeValuation.html">
-      <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Seller Leads · GHL</div>
-      <div class="iw-nav-card-title">Free Home Valuation</div>
-      <div class="iw-nav-card-desc">4-step seller lead capture — property info, condition, instant value range, contact capture with cash offer opt-in.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_InvestorInquiry.html">
-      <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Investor Leads · GHL</div>
-      <div class="iw-nav-card-title">Investor Inquiry</div>
-      <div class="iw-nav-card-desc">Accredited and community investor opt-in — track selection, investment range, deal preferences, GHL investor list.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_RentalApplication.html">
-      <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Tenant Leads · GHL</div>
-      <div class="iw-nav-card-title">Rental Application</div>
-      <div class="iw-nav-card-desc">Full tenant application — 8 sections, background questions, online signature, fires to GHL on submit.</div>
-    </a>
-  </div>
-
-  <div style="margin-bottom:10px;">
-    <div class="iw-section-label" style="font-size:9px;color:var(--muted);border:none;margin:0 0 10px;padding:0;letter-spacing:.12em;">Interactive Decision Tools</div>
-  </div>
-  <div class="iw-grid" style="margin-bottom:28px;">
-    <a class="iw-nav-card" href="IPG_CashOfferVsListing.html">
-      <img src="https://images.unsplash.com/photo-1560520653-9e0e4c89eb11?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Seller Tool · GHL</div>
-      <div class="iw-nav-card-title">Cash Offer vs. Listing</div>
-      <div class="iw-nav-card-desc">Side-by-side net proceeds comparison — sliders for condition, repairs, commission. Converts fence-sitters into motivated sellers.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_NeighborhoodValues.html">
-      <img src="https://images.unsplash.com/photo-1549517045-bc93de199c18?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Seller Leads · GHL</div>
-      <div class="iw-nav-card-title">Neighborhood Home Values</div>
-      <div class="iw-nav-card-desc">Zip or neighborhood lookup shows median price, price/sqft, DOM, and recent sales. Lead capture sidebar sends to GHL.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_BeforeAfterGallery.html">
-      <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Portfolio · Conversion</div>
-      <div class="iw-nav-card-title">Before &amp; After Gallery</div>
-      <div class="iw-nav-card-desc">9 project cards with before/after photo pairs, category filters, and cost/value stats. CTA links to the renovation estimator.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_RentVsSell.html">
-      <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Homeowner Tool</div>
-      <div class="iw-nav-card-title">Rent vs. Sell Calculator</div>
-      <div class="iw-nav-card-desc">Live financial comparison — sliders update both scenarios in real time. Shows 10-yr equity, cash flow, and which path wins.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_RenovationROI.html">
-      <img src="https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Pre-Sale Tool</div>
-      <div class="iw-nav-card-title">Renovation ROI Calculator</div>
-      <div class="iw-nav-card-desc">18 renovations with cost, value added, and ROI%. Toggle on/off to build a plan. Live net gain and projected sale price.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_MaterialCalc.html">
-      <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Project Planning</div>
-      <div class="iw-nav-card-title">Material Calculator</div>
-      <div class="iw-nav-card-desc">Enter room dimensions — no blueprints needed. Get a full materials list with mid-range pricing for paint, flooring, tile, drywall, deck, and basement finish.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_BRRRRAnalyzer.html">
-      <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Investor Tool</div>
-      <div class="iw-nav-card-title">BRRRR Deal Analyzer</div>
-      <div class="iw-nav-card-desc">Full BRRRR analysis — all-in cost, refi proceeds, cash flow, deal score A–D, MAO calc. Links to Ironwood for the renovation.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_STREstimator.html">
-      <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Peach to Palms</div>
-      <div class="iw-nav-card-title">STR Revenue Estimator</div>
-      <div class="iw-nav-card-desc">What could your home earn on Airbnb? Nightly rate, annual revenue, Peach to Palms net, setup cost, and breakeven months.</div>
-    </a>
-  </div>
-
-  <div style="margin-bottom:10px;">
-    <div class="iw-section-label" style="font-size:9px;color:var(--muted);border:none;margin:0 0 10px;padding:0;letter-spacing:.12em;">Active Client Portal</div>
-  </div>
-  <div class="iw-grid" style="margin-bottom:40px;">
-    <a class="iw-nav-card" href="IPG_ProjectStatus.html">
-      <img src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Client Portal</div>
-      <div class="iw-nav-card-title">Project Status</div>
-      <div class="iw-nav-card-desc">Client enters project code to see phase stepper, milestones, recent updates, and PM contact. Enter "DEMO" to preview.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_ChangeOrder.html">
-      <img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Client Portal · GHL</div>
-      <div class="iw-nav-card-title">Change Order Approval</div>
-      <div class="iw-nav-card-desc">Client reviews scope change, signs online with canvas signature pad. Pre-fills from URL params. Fires to GHL on submit.</div>
-    </a>
-    <a class="iw-nav-card" href="IPG_InvoicePayment.html">
-      <img src="https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Client Portal · GHL</div>
-      <div class="iw-nav-card-title">Invoice Payment</div>
-      <div class="iw-nav-card-desc">Client views invoice, selects payment method (Zelle/Cash App/Check/ACH), confirms payment — notifies Ironwood via GHL.</div>
-    </a>
-  </div>
-
-  <!-- CORE TOOLS -->
-  <div class="iw-section-label">Core Tools</div>
-  <div class="iw-grid">
-    <a class="iw-nav-card" href="Ironwood_Estimator_Public.html">
-      <div class="iw-nav-card-eyebrow">Public · Ad-Ready</div>
-      <div class="iw-nav-card-title">Client Estimator</div>
-      <div class="iw-nav-card-desc">Instant estimate funnel for ads — customer scopes project, gets price range, submits to GHL, books site visit.</div>
-    </a>
-    <a class="iw-nav-card" href="Ironwood_ClientPortal.html">
-      <div class="iw-nav-card-eyebrow">Internal + Client-Facing</div>
-      <div class="iw-nav-card-title">Client Portal</div>
-      <div class="iw-nav-card-desc">Create jobs, set 3-phase payment schedules, track milestones. Clients see a branded project dashboard with payment status and Pay Now button.</div>
-    </a>
-    <a class="iw-nav-card" href="Remodel_Estimator.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Remodel Job Estimator</div>
-      <div class="iw-nav-card-desc">Build client proposals with line items, markup, profit waterfall, and supplier notes.</div>
-    </a>
-    <a class="iw-nav-card" href="ScopeOfWork_Tool.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Scope of Work Tool</div>
-      <div class="iw-nav-card-desc">Full construction budget tracker with client vs. internal view and build process tracking.</div>
-    </a>
-    <a class="iw-nav-card" href="MAO_Calculator.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">MAO Calculator</div>
-      <div class="iw-nav-card-desc">Maximum allowable offer calculator with sqft rehab estimator and profit split.</div>
-    </a>
-    <a class="iw-nav-card" href="Ironwood_RenoEstimate.html">
-      <div class="iw-nav-card-eyebrow">Client-Facing</div>
-      <div class="iw-nav-card-title">Renovation Request</div>
-      <div class="iw-nav-card-desc">Client intake form — describe the project, system detects scope automatically.</div>
-    </a>
-    <a class="iw-nav-card" href="Ironwood_SellerLead.html">
-      <div class="iw-nav-card-eyebrow">Client-Facing</div>
-      <div class="iw-nav-card-title">Seller Lead Form</div>
-      <div class="iw-nav-card-desc">Motivated seller intake and lead capture form.</div>
-    </a>
-    <a class="iw-nav-card" href="Homeowner_Intake.html">
-      <div class="iw-nav-card-eyebrow">Client-Facing</div>
-      <div class="iw-nav-card-title">Homeowner Intake</div>
-      <div class="iw-nav-card-desc">Full homeowner onboarding form for renovation clients.</div>
-    </a>
-    <a class="iw-nav-card" href="Contractor_Directory.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Contractor Directory</div>
-      <div class="iw-nav-card-desc">Manage contractors by trade — contact, rates, license, insurance, notes.</div>
-    </a>
-  </div>
-
-  <!-- CAPITAL MANAGEMENT -->
-  <div class="iw-section-label">Capital Management</div>
-  <div class="iw-grid">
-    <a class="iw-nav-card" href="Ironwood_CapitalGroup.html">
-      <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">Platform Overview</div>
-      <div class="iw-nav-card-title">Ironwood Capital Group</div>
-      <div class="iw-nav-card-desc">Full capital management platform — fund structure, commercial RE, OZ fund, lending fund, and the path to $100M AUM.</div>
-    </a>
-    <a class="iw-nav-card" href="Ironwood_StrategyPlaybook.html">
-      <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=56&fit=crop&q=70" style="width:100%;height:56px;object-fit:cover;border-radius:6px;margin-bottom:10px;display:block;" alt=""/>
-      <div class="iw-nav-card-eyebrow">10 Strategies</div>
-      <div class="iw-nav-card-title">Strategy Playbook</div>
-      <div class="iw-nav-card-desc">All 10 Ironwood strategies — renovation, BRRRR, new construction, wholesale, rentals, Peach to Palms, business credit, capital raise, subsidiary launch, commercial RE.</div>
-    </a>
-  </div>
-
-  <!-- FINANCE & DEALS -->
-  <div class="iw-section-label">Finance &amp; Deals</div>
-  <div class="iw-grid">
-    <a class="iw-nav-card" href="IPG_AccountAllocator.html">
-      <div class="iw-nav-card-eyebrow">Profit First · Internal</div>
-      <div class="iw-nav-card-title">Account Allocator</div>
-      <div class="iw-nav-card-desc">Enter project revenue and see exactly how much flows to operations, payroll, tax reserve, and profit — with full 35/30/35 split breakdown.</div>
-    </a>
-    <a class="iw-nav-card" href="Vendor_Accounts_Tracker.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Vendor Accounts Tracker</div>
-      <div class="iw-nav-card-desc">Track net 30/60/90 accounts — credit limits, balances, due dates, bureau reporting.</div>
-    </a>
-    <a class="iw-nav-card" href="Lender_Directory.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Lender Directory</div>
-      <div class="iw-nav-card-desc">Track hard money lenders, brokers, and private lenders — rates, terms, requirements, contacts.</div>
-    </a>
-    <a class="iw-nav-card" href="Profit_Waterfall.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Profit Waterfall</div>
-      <div class="iw-nav-card-desc">Deal-by-deal profit distribution calculator for Ironwood partners.</div>
-    </a>
-    <a class="iw-nav-card" href="Monthly_PL.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Monthly P&amp;L</div>
-      <div class="iw-nav-card-desc">Monthly profit and loss tracker across all active projects.</div>
-    </a>
-    <a class="iw-nav-card" href="Property_Pipeline.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Property Pipeline</div>
-      <div class="iw-nav-card-desc">Track deals from lead to close across the BRRRR pipeline.</div>
-    </a>
-    <a class="iw-nav-card" href="Deal_Summary_Tearsheet.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Deal Summary Tearsheet</div>
-      <div class="iw-nav-card-desc">One-page deal summary for lenders and partners.</div>
-    </a>
-    <a class="iw-nav-card" href="Investor_Deal_Summary.html">
-      <div class="iw-nav-card-eyebrow">Investor-Facing</div>
-      <div class="iw-nav-card-title">Investor Deal Summary</div>
-      <div class="iw-nav-card-desc">Investor-facing deal presentation and return summary.</div>
-    </a>
-    <a class="iw-nav-card" href="Ironwood_LenderPitchDeck.html">
-      <div class="iw-nav-card-eyebrow">Lender-Facing</div>
-      <div class="iw-nav-card-title">Lender Pitch Deck</div>
-      <div class="iw-nav-card-desc">Hard money and private lender pitch presentation.</div>
-    </a>
-    <a class="iw-nav-card" href="Rental_Dashboard.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Rental Dashboard</div>
-      <div class="iw-nav-card-desc">Track rental units, rent rolls, and cash flow.</div>
-    </a>
-    <a class="iw-nav-card" href="BusinessCredit_Tracker.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Business Credit Tracker</div>
-      <div class="iw-nav-card-desc">Monitor business credit accounts, limits, and utilization.</div>
-    </a>
-    <a class="iw-nav-card" href="OperationalCosts_Tracker.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Operational Costs Tracker</div>
-      <div class="iw-nav-card-desc">Track recurring overhead and operational expenses.</div>
-    </a>
-  </div>
-
-  <!-- DOCUMENTS & AGREEMENTS -->
-  <div class="iw-section-label">Documents &amp; Agreements</div>
-  <div class="iw-grid">
-    <a class="iw-nav-card" href="Ironwood_Operating_Agreement.html">
-      <div class="iw-nav-card-eyebrow">Legal</div>
-      <div class="iw-nav-card-title">Operating Agreement</div>
-      <div class="iw-nav-card-desc">Ironwood LLC operating agreement with S-Corp election provisions and investor framework.</div>
-    </a>
-    <a class="iw-nav-card" href="AnchorPro_Partnership_Proposal.html">
-      <div class="iw-nav-card-eyebrow">Partner-Facing</div>
-      <div class="iw-nav-card-title">Partnership Proposal</div>
-      <div class="iw-nav-card-desc">Full Ironwood business structure and partnership proposal document.</div>
-    </a>
-    <a class="iw-nav-card" href="ClientServiceAgreement.html">
-      <div class="iw-nav-card-eyebrow">Client-Facing</div>
-      <div class="iw-nav-card-title">Client Service Agreement</div>
-      <div class="iw-nav-card-desc">Standard renovation service contract for homeowner clients.</div>
-    </a>
-    <a class="iw-nav-card" href="ChangeOrder_Form.html">
-      <div class="iw-nav-card-eyebrow">Client-Facing</div>
-      <div class="iw-nav-card-title">Change Order Form</div>
-      <div class="iw-nav-card-desc">Document scope changes and additional cost approvals.</div>
-    </a>
-    <a class="iw-nav-card" href="InvoiceTemplate.html">
-      <div class="iw-nav-card-eyebrow">Client-Facing</div>
-      <div class="iw-nav-card-title">Invoice Template</div>
-      <div class="iw-nav-card-desc">Client invoice with line items, deposit tracking, and payment terms.</div>
-    </a>
-    <a class="iw-nav-card" href="LienWaiver.html">
-      <div class="iw-nav-card-eyebrow">Legal</div>
-      <div class="iw-nav-card-title">Lien Waiver</div>
-      <div class="iw-nav-card-desc">Conditional and unconditional lien waiver forms.</div>
-    </a>
-    <a class="iw-nav-card" href="ReferralAgreement.html">
-      <div class="iw-nav-card-eyebrow">Partner-Facing</div>
-      <div class="iw-nav-card-title">Referral Agreement</div>
-      <div class="iw-nav-card-desc">Partner and agent referral fee agreement template.</div>
-    </a>
-  </div>
-
-  <!-- OPERATIONS -->
-  <div class="iw-section-label">Operations</div>
-  <div class="iw-grid">
-    <a class="iw-nav-card" href="NewConstruction_Pipeline.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">New Construction Pipeline</div>
-      <div class="iw-nav-card-desc">Track every duplex build cycle — draws, budget, refi math, cash flow, and the full written strategy.</div>
-    </a>
-    <a class="iw-nav-card" href="Ironwood_Dashboard.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Ironwood Dashboard</div>
-      <div class="iw-nav-card-desc">Main operations dashboard — deal status, KPIs, and quick links.</div>
-    </a>
-    <a class="iw-nav-card" href="Ironwood_MasterTimeline.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Master Timeline</div>
-      <div class="iw-nav-card-desc">Project milestone and phase timeline tracker.</div>
-    </a>
-    <a class="iw-nav-card" href="Ironwood_EvolutionMap.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Evolution Map</div>
-      <div class="iw-nav-card-desc">Company growth roadmap and phase evolution plan.</div>
-    </a>
-    <a class="iw-nav-card" href="Tenant_Screener.html">
-      <div class="iw-nav-card-eyebrow">Internal</div>
-      <div class="iw-nav-card-title">Tenant Screener</div>
-      <div class="iw-nav-card-desc">Tenant application scoring and screening checklist.</div>
-    </a>
-    <a class="iw-nav-card" href="Ironwood_HomeownerOnePager.html">
-      <div class="iw-nav-card-eyebrow">Client-Facing</div>
-      <div class="iw-nav-card-title">Homeowner One-Pager</div>
-      <div class="iw-nav-card-desc">Client-facing overview of Ironwood Homes and Renovations services.</div>
-    </a>
-  </div>
-
-  <!-- WEBSITE PAGES -->
-  <div class="iw-section-label">Website Pages</div>
-  <div class="site-grid">
-    <a class="site-card" href="Ironwood_Site_Home.html"><div class="site-card-label">Home</div></a>
-    <a class="site-card" href="Ironwood_Site_Renovate.html"><div class="site-card-label">Renovations</div></a>
-    <a class="site-card" href="Ironwood_Site_Sell.html"><div class="site-card-label">Sell Your Home</div></a>
-    <a class="site-card" href="Ironwood_Site_Work.html"><div class="site-card-label">Our Work</div></a>
-    <a class="site-card" href="Ironwood_Site_About.html"><div class="site-card-label">About</div></a>
-    <a class="site-card" href="Ironwood_Site_Contact.html"><div class="site-card-label">Contact</div></a>
-  </div>
-
+<!-- PINNED QUICK LAUNCH -->
+<div class="pinned-row" id="pinnedRow">
+  <span class="pinned-label">Quick Launch</span>
+  <a class="pin-chip" href="Room_Scanner.html"><span class="chip-icon">📷</span> Room Scanner <span class="chip-badge">NEW</span></a>
+  <a class="pin-chip" href="IPG_BRRRRAnalyzer.html"><span class="chip-icon">🏠</span> BRRRR Analyzer</a>
+  <a class="pin-chip" href="Remodel_Estimator.html"><span class="chip-icon">🔨</span> Remodel Estimator</a>
+  <a class="pin-chip" href="Profit_Waterfall.html"><span class="chip-icon">💧</span> Profit Waterfall</a>
+  <a class="pin-chip" href="Ironwood_Dashboard.html"><span class="chip-icon">📊</span> Dashboard</a>
+  <a class="pin-chip" href="IPG_AccountAllocator.html"><span class="chip-icon">🏦</span> Allocator</a>
+  <a class="pin-chip" href="Ironwood_ClientPortal.html"><span class="chip-icon">👤</span> Client Portal</a>
 </div>
+
+<!-- MAIN LAYOUT -->
+<div class="hub-body">
+
+  <!-- SIDEBAR -->
+  <nav class="hub-sidebar">
+    <div class="sidebar-section-label">Field Work</div>
+    <a class="sidebar-link" onclick="scrollTo('field-tools')" href="#field-tools">
+      <span class="sl-icon">🔧</span> Field Tools <span class="sl-count">5</span>
+    </a>
+
+    <div class="sidebar-section-label">Deals & Finance</div>
+    <a class="sidebar-link" onclick="scrollTo('deals')" href="#deals">
+      <span class="sl-icon">🏠</span> Acquisitions <span class="sl-count">5</span>
+    </a>
+    <a class="sidebar-link" onclick="scrollTo('finance')" href="#finance">
+      <span class="sl-icon">💰</span> Finance & P&L <span class="sl-count">7</span>
+    </a>
+    <a class="sidebar-link" onclick="scrollTo('capital')" href="#capital">
+      <span class="sl-icon">📈</span> Capital & Strategy <span class="sl-count">2</span>
+    </a>
+
+    <div class="sidebar-section-label">Clients</div>
+    <a class="sidebar-link" onclick="scrollTo('lead-gen')" href="#lead-gen">
+      <span class="sl-icon">🎯</span> Lead Gen <span class="sl-count">4</span>
+    </a>
+    <a class="sidebar-link" onclick="scrollTo('decision-tools')" href="#decision-tools">
+      <span class="sl-icon">⚖️</span> Decision Tools <span class="sl-count">8</span>
+    </a>
+    <a class="sidebar-link" onclick="scrollTo('client-portal')" href="#client-portal">
+      <span class="sl-icon">🔑</span> Client Portal <span class="sl-count">3</span>
+    </a>
+
+    <div class="sidebar-section-label">Admin</div>
+    <a class="sidebar-link" onclick="scrollTo('documents')" href="#documents">
+      <span class="sl-icon">📄</span> Documents <span class="sl-count">7</span>
+    </a>
+    <a class="sidebar-link" onclick="scrollTo('operations')" href="#operations">
+      <span class="sl-icon">⚙️</span> Operations <span class="sl-count">6</span>
+    </a>
+    <a class="sidebar-link" onclick="scrollTo('website')" href="#website">
+      <span class="sl-icon">🌐</span> Website Pages <span class="sl-count">6</span>
+    </a>
+  </nav>
+
+  <!-- CONTENT -->
+  <div class="hub-content">
+
+    <div class="no-results" id="noResults">No tools match your search.</div>
+
+    <!-- ── FIELD TOOLS ── -->
+    <div class="hub-section" id="field-tools" data-tags="field">
+      <div class="section-header" onclick="toggleSection('field-tools')">
+        <span class="section-icon">🔧</span>
+        <span class="section-title">Field Tools</span>
+        <span class="section-count">5</span>
+        <button class="section-toggle" id="toggle-field-tools">▾ collapse</button>
+      </div>
+      <div class="section-body" id="body-field-tools">
+        <div class="tool-grid">
+
+          <a class="tool-card featured" href="Room_Scanner.html" data-tags="field ai">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📷</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Field · AI</div>
+                <div class="tool-card-title">Room Scanner</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Photo + LiDAR scan → AI line-item estimate. Voice dictation, property intel, distress signals, multi-room jobs, job history.</div>
+            <div class="tool-card-tags">
+              <span class="tool-tag tag-field">Field</span>
+              <span class="tool-tag tag-ai">AI</span>
+              <span class="tool-tag tag-new">NEW</span>
+            </div>
+          </a>
+
+          <a class="tool-card" href="Remodel_Estimator.html" data-tags="field finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🔨</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Remodel Job Estimator</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Build client proposals with line items, markup, and profit waterfall. Exports directly to Profit Waterfall.</div>
+            <div class="tool-card-tags">
+              <span class="tool-tag tag-field">Field</span>
+              <span class="tool-tag tag-finance">Finance</span>
+            </div>
+          </a>
+
+          <a class="tool-card" href="ScopeOfWork_Tool.html" data-tags="field">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📋</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Scope of Work Tool</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Full construction budget tracker with client vs. internal view and build process tracking.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-field">Field</span></div>
+          </a>
+
+          <a class="tool-card" href="Ironwood_Estimator_Public.html" data-tags="field client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📐</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Public · Ad-Ready</div>
+                <div class="tool-card-title">Client Estimator</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Instant estimate funnel for ads — customer scopes project, gets price range, submits to GHL.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="Ironwood_ClientPortal.html" data-tags="field client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">👤</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal + Client</div>
+                <div class="tool-card-title">Client Portal</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Create jobs, set 3-phase payment schedules, track milestones. Clients see a branded project dashboard.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span><span class="tool-tag tag-field">Field</span></div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── ACQUISITIONS ── -->
+    <div class="hub-section" id="deals" data-tags="finance field">
+      <div class="section-header" onclick="toggleSection('deals')">
+        <span class="section-icon">🏠</span>
+        <span class="section-title">Acquisitions</span>
+        <span class="section-count">5</span>
+        <button class="section-toggle" id="toggle-deals">▾ collapse</button>
+      </div>
+      <div class="section-body" id="body-deals">
+        <div class="tool-grid">
+
+          <a class="tool-card featured" href="IPG_BRRRRAnalyzer.html" data-tags="finance ai">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🏠</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Investor · AI</div>
+                <div class="tool-card-title">BRRRR Deal Analyzer</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Full BRRRR analysis — all-in cost, refi proceeds, cash flow, deal score A–D, MAO calc, AI deal analysis, GHL.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span><span class="tool-tag tag-ai">AI</span></div>
+          </a>
+
+          <a class="tool-card" href="MAO_Calculator.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🧮</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">MAO Calculator</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Maximum allowable offer calculator with sqft rehab estimator and profit split.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="Property_Pipeline.html" data-tags="finance field">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📍</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Property Pipeline</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Track deals from lead to close across the BRRRR pipeline.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="Deal_Summary_Tearsheet.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📎</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Deal Summary Tearsheet</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">One-page deal summary for lenders and partners.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="Investor_Deal_Summary.html" data-tags="finance client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📊</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Investor-Facing</div>
+                <div class="tool-card-title">Investor Deal Summary</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Investor-facing deal presentation and return summary.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── FINANCE & P&L ── -->
+    <div class="hub-section" id="finance" data-tags="finance">
+      <div class="section-header" onclick="toggleSection('finance')">
+        <span class="section-icon">💰</span>
+        <span class="section-title">Finance &amp; P&L</span>
+        <span class="section-count">7</span>
+        <button class="section-toggle" id="toggle-finance">▾ collapse</button>
+      </div>
+      <div class="section-body" id="body-finance">
+        <div class="tool-grid">
+
+          <a class="tool-card featured" href="Profit_Waterfall.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">💧</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Profit Waterfall</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Deal-by-deal profit distribution. Auto-imports from Remodel Estimator. Shows Jeff/Jordan/Ty waterfall splits.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="IPG_AccountAllocator.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🏦</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Profit First</div>
+                <div class="tool-card-title">Account Allocator</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Enter project revenue — see exactly how much flows to ops, payroll, tax reserve, and profit with 35/30/35 split.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="Monthly_PL.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📉</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Monthly P&amp;L</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Monthly profit and loss tracker across all active projects.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="Rental_Dashboard.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🏘️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Rental Dashboard</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Track rental units, rent rolls, and cash flow.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="BusinessCredit_Tracker.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">💳</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Business Credit Tracker</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Monitor business credit accounts, limits, and utilization.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="Vendor_Accounts_Tracker.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📦</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Vendor Accounts</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Track net 30/60/90 accounts — credit limits, balances, due dates, bureau reporting.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="OperationalCosts_Tracker.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">⚙️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Operational Costs</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Track recurring overhead and operational expenses.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CAPITAL & STRATEGY ── -->
+    <div class="hub-section" id="capital" data-tags="finance">
+      <div class="section-header" onclick="toggleSection('capital')">
+        <span class="section-icon">📈</span>
+        <span class="section-title">Capital &amp; Strategy</span>
+        <span class="section-count">3</span>
+        <button class="section-toggle" id="toggle-capital">▾ collapse</button>
+      </div>
+      <div class="section-body" id="body-capital">
+        <div class="tool-grid">
+
+          <a class="tool-card" href="Ironwood_CapitalGroup.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🏛️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Platform Overview</div>
+                <div class="tool-card-title">Ironwood Capital Group</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Fund structure, commercial RE, OZ fund, lending fund, and the path to $100M AUM.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="Ironwood_StrategyPlaybook.html" data-tags="finance field">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📗</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">10 Strategies</div>
+                <div class="tool-card-title">Strategy Playbook</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">All 10 Ironwood strategies — renovation, BRRRR, new construction, wholesale, rentals, Peach to Palms, and more.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="Lender_Directory.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🏦</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Lender Directory</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Track hard money lenders, brokers, and private lenders — rates, terms, requirements, contacts.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LEAD GEN ── -->
+    <div class="hub-section" id="lead-gen" data-tags="client">
+      <div class="section-header" onclick="toggleSection('lead-gen')">
+        <span class="section-icon">🎯</span>
+        <span class="section-title">Lead Generation</span>
+        <span class="section-count">4</span>
+        <button class="section-toggle" id="toggle-lead-gen">▾ collapse</button>
+      </div>
+      <div class="section-body" id="body-lead-gen">
+        <div class="tool-grid">
+
+          <a class="tool-card" href="IPG_HomeValuation.html" data-tags="client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🏡</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Seller Leads · GHL</div>
+                <div class="tool-card-title">Free Home Valuation</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">4-step seller lead capture — property info, condition, instant value range, contact with cash offer opt-in.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="IPG_InvestorInquiry.html" data-tags="client finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🤝</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Investor Leads · GHL</div>
+                <div class="tool-card-title">Investor Inquiry</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Accredited and community investor opt-in — deal preferences, investment range, GHL investor list.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="IPG_RentalApplication.html" data-tags="client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📝</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Tenant Leads · GHL</div>
+                <div class="tool-card-title">Rental Application</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Full tenant application — 8 sections, background questions, online signature, fires to GHL on submit.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="Ironwood_SellerLead.html" data-tags="client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🔔</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Client-Facing</div>
+                <div class="tool-card-title">Seller Lead Form</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Motivated seller intake and lead capture form.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DECISION TOOLS ── -->
+    <div class="hub-section" id="decision-tools" data-tags="client finance">
+      <div class="section-header" onclick="toggleSection('decision-tools')">
+        <span class="section-icon">⚖️</span>
+        <span class="section-title">Interactive Decision Tools</span>
+        <span class="section-count">8</span>
+        <button class="section-toggle" id="toggle-decision-tools">▾ collapse</button>
+      </div>
+      <div class="section-body" id="body-decision-tools">
+        <div class="tool-grid">
+
+          <a class="tool-card" href="IPG_CashOfferVsListing.html" data-tags="client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">⚖️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Seller Tool · GHL</div>
+                <div class="tool-card-title">Cash Offer vs. Listing</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Side-by-side net proceeds comparison — sliders for condition, repairs, commission. Converts fence-sitters.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="IPG_NeighborhoodValues.html" data-tags="client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🗺️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Seller Leads</div>
+                <div class="tool-card-title">Neighborhood Home Values</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Zip/neighborhood lookup — median price, price/sqft, DOM, recent sales. Lead capture sidebar.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="IPG_BeforeAfterGallery.html" data-tags="client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🖼️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Portfolio · Conversion</div>
+                <div class="tool-card-title">Before &amp; After Gallery</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">9 project cards with before/after photo pairs, category filters, and cost/value stats.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="IPG_RentVsSell.html" data-tags="client finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📐</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Homeowner Tool</div>
+                <div class="tool-card-title">Rent vs. Sell Calculator</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Live financial comparison — sliders update both scenarios. Shows 10-yr equity, cash flow, and winner.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="IPG_RenovationROI.html" data-tags="client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📊</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Pre-Sale Tool</div>
+                <div class="tool-card-title">Renovation ROI Calculator</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">18 renovations with cost, value added, and ROI%. Toggle on/off to build a plan.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="IPG_MaterialCalc.html" data-tags="client field">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📏</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Project Planning</div>
+                <div class="tool-card-title">Material Calculator</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Enter room dimensions — full materials list with mid-range pricing for paint, flooring, tile, drywall, deck, and basement.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="IPG_STREstimator.html" data-tags="client finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🏖️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Peach to Palms</div>
+                <div class="tool-card-title">STR Revenue Estimator</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">What could your home earn on Airbnb? Nightly rate, annual revenue, Peach to Palms net, setup cost, breakeven.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="NewConstruction_Estimator.html" data-tags="field finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🏗️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">New Construction</div>
+                <div class="tool-card-title">New Construction Estimator</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Estimate new build costs, draw schedule, and projected profit for ground-up construction projects.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-field">Field</span><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── CLIENT PORTAL ── -->
+    <div class="hub-section" id="client-portal" data-tags="client">
+      <div class="section-header" onclick="toggleSection('client-portal')">
+        <span class="section-icon">🔑</span>
+        <span class="section-title">Active Client Portal</span>
+        <span class="section-count">3</span>
+        <button class="section-toggle" id="toggle-client-portal">▾ collapse</button>
+      </div>
+      <div class="section-body" id="body-client-portal">
+        <div class="tool-grid">
+
+          <a class="tool-card" href="IPG_ProjectStatus.html" data-tags="client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🚦</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Client Portal</div>
+                <div class="tool-card-title">Project Status</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Client enters project code to see phase stepper, milestones, recent updates, and PM contact. Enter "DEMO" to preview.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="IPG_ChangeOrder.html" data-tags="client field">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">✏️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Client Portal · GHL</div>
+                <div class="tool-card-title">Change Order Approval</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Client reviews scope change, signs online with canvas signature pad. Pre-fills from URL params. Fires to GHL.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="IPG_InvoicePayment.html" data-tags="client finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">💳</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Client Portal · GHL</div>
+                <div class="tool-card-title">Invoice Payment</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Client views invoice, selects payment method (Zelle/Cash App/Check/ACH), confirms payment — notifies via GHL.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── DOCUMENTS ── -->
+    <div class="hub-section" id="documents" data-tags="legal">
+      <div class="section-header" onclick="toggleSection('documents')">
+        <span class="section-icon">📄</span>
+        <span class="section-title">Documents &amp; Agreements</span>
+        <span class="section-count">7</span>
+        <button class="section-toggle" id="toggle-documents">▾ collapse</button>
+      </div>
+      <div class="section-body" id="body-documents">
+        <div class="tool-grid">
+
+          <a class="tool-card" href="Ironwood_Operating_Agreement.html" data-tags="legal">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">⚖️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Legal</div>
+                <div class="tool-card-title">Operating Agreement</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Ironwood LLC operating agreement with S-Corp election provisions and investor framework.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-legal">Legal</span></div>
+          </a>
+
+          <a class="tool-card" href="AnchorPro_Partnership_Proposal.html" data-tags="client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🤝</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Partner-Facing</div>
+                <div class="tool-card-title">Partnership Proposal</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Full Ironwood business structure and partnership proposal document.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="ClientServiceAgreement.html" data-tags="client legal">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📜</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Client-Facing</div>
+                <div class="tool-card-title">Client Service Agreement</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Standard renovation service contract for homeowner clients.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-legal">Legal</span></div>
+          </a>
+
+          <a class="tool-card" href="ChangeOrder_Form.html" data-tags="client field">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📝</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Client-Facing</div>
+                <div class="tool-card-title">Change Order Form</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Document scope changes and additional cost approvals.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="InvoiceTemplate.html" data-tags="client finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🧾</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Client-Facing</div>
+                <div class="tool-card-title">Invoice Template</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Client invoice with line items, deposit tracking, and payment terms.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+          <a class="tool-card" href="LienWaiver.html" data-tags="legal field">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🔒</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Legal</div>
+                <div class="tool-card-title">Lien Waiver</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Conditional and unconditional lien waiver forms.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-legal">Legal</span></div>
+          </a>
+
+          <a class="tool-card" href="ReferralAgreement.html" data-tags="client legal">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">💬</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Partner-Facing</div>
+                <div class="tool-card-title">Referral Agreement</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Partner and agent referral fee agreement template.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-legal">Legal</span></div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── OPERATIONS ── -->
+    <div class="hub-section" id="operations" data-tags="field finance">
+      <div class="section-header" onclick="toggleSection('operations')">
+        <span class="section-icon">⚙️</span>
+        <span class="section-title">Operations</span>
+        <span class="section-count">6</span>
+        <button class="section-toggle" id="toggle-operations">▾ collapse</button>
+      </div>
+      <div class="section-body" id="body-operations">
+        <div class="tool-grid">
+
+          <a class="tool-card" href="Ironwood_Dashboard.html" data-tags="field finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📊</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Ironwood Dashboard</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Main operations dashboard — deal status, KPIs, and quick links.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-field">Field</span><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="NewConstruction_Pipeline.html" data-tags="field finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🏗️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">New Construction Pipeline</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Track every duplex build cycle — draws, budget, refi math, cash flow, and the full written strategy.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-field">Field</span></div>
+          </a>
+
+          <a class="tool-card" href="Ironwood_MasterTimeline.html" data-tags="field">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📅</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Master Timeline</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Project milestone and phase timeline tracker.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-field">Field</span></div>
+          </a>
+
+          <a class="tool-card" href="Ironwood_EvolutionMap.html" data-tags="finance">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🗺️</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Evolution Map</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Company growth roadmap and phase evolution plan.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-finance">Finance</span></div>
+          </a>
+
+          <a class="tool-card" href="Tenant_Screener.html" data-tags="field">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">🔍</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Internal</div>
+                <div class="tool-card-title">Tenant Screener</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Tenant application scoring and screening checklist.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-field">Field</span></div>
+          </a>
+
+          <a class="tool-card" href="Ironwood_HomeownerOnePager.html" data-tags="client">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">📰</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">Client-Facing</div>
+                <div class="tool-card-title">Homeowner One-Pager</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Client-facing overview of Ironwood services.</div>
+            <div class="tool-card-tags"><span class="tool-tag tag-client">Client</span></div>
+          </a>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- ── WEBSITE PAGES ── -->
+    <div class="hub-section" id="website" data-tags="client">
+      <div class="section-header" onclick="toggleSection('website')">
+        <span class="section-icon">🌐</span>
+        <span class="section-title">Website Pages</span>
+        <span class="section-count">6</span>
+        <button class="section-toggle" id="toggle-website">▾ collapse</button>
+      </div>
+      <div class="section-body" id="body-website">
+        <div class="site-grid">
+          <a class="site-card" href="Ironwood_Site_Home.html"><span class="site-card-icon">🏠</span><span class="site-card-label">Home</span></a>
+          <a class="site-card" href="Ironwood_Site_Renovate.html"><span class="site-card-icon">🔨</span><span class="site-card-label">Renovations</span></a>
+          <a class="site-card" href="Ironwood_Site_Sell.html"><span class="site-card-icon">🏷️</span><span class="site-card-label">Sell Your Home</span></a>
+          <a class="site-card" href="Ironwood_Site_Work.html"><span class="site-card-icon">🖼️</span><span class="site-card-label">Our Work</span></a>
+          <a class="site-card" href="Ironwood_Site_About.html"><span class="site-card-icon">👥</span><span class="site-card-label">About</span></a>
+          <a class="site-card" href="Ironwood_Site_Contact.html"><span class="site-card-icon">📞</span><span class="site-card-label">Contact</span></a>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /hub-content -->
+</div><!-- /hub-body -->
 
 <div class="iw-footer">
   Ironwood Homes and Renovations · Internal Use Only · Atlanta Metro
 </div>
 
+<script>
+// ── SECTION COLLAPSE ──
+function toggleSection(id) {
+  const body = document.getElementById('body-' + id);
+  const btn = document.getElementById('toggle-' + id);
+  const collapsed = body.classList.toggle('collapsed');
+  btn.textContent = collapsed ? '▸ expand' : '▾ collapse';
+}
+
+// ── SEARCH ──
+function filterTools(q) {
+  q = q.toLowerCase().trim();
+  const sections = document.querySelectorAll('.hub-section');
+  const noResults = document.getElementById('noResults');
+  let anyVisible = false;
+
+  sections.forEach(section => {
+    const cards = section.querySelectorAll('.tool-card, .site-card');
+    let sectionVisible = false;
+
+    cards.forEach(card => {
+      const text = (card.textContent || '').toLowerCase();
+      const match = !q || text.includes(q);
+      card.style.display = match ? '' : 'none';
+      if (match) sectionVisible = true;
+    });
+
+    // also check section title
+    const title = (section.querySelector('.section-title')?.textContent || '').toLowerCase();
+    if (q && title.includes(q)) {
+      cards.forEach(c => c.style.display = '');
+      sectionVisible = true;
+    }
+
+    section.dataset.hidden = (!sectionVisible).toString();
+    if (sectionVisible) {
+      anyVisible = true;
+      // auto-expand when searching
+      if (q) {
+        const body = section.querySelector('.section-body');
+        const btn = section.querySelector('.section-toggle');
+        if (body) body.classList.remove('collapsed');
+        if (btn) btn.textContent = '▾ collapse';
+      }
+    }
+  });
+
+  noResults.classList.toggle('visible', !anyVisible);
+}
+
+// ── ROLE FILTER ──
+let activeRole = 'all';
+function setRole(role, btn) {
+  activeRole = role;
+  document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+
+  // clear search
+  document.getElementById('toolSearch').value = '';
+
+  const sections = document.querySelectorAll('.hub-section');
+  const noResults = document.getElementById('noResults');
+  let anyVisible = false;
+
+  sections.forEach(section => {
+    const cards = section.querySelectorAll('.tool-card');
+    let sectionVisible = false;
+
+    cards.forEach(card => {
+      const tags = (card.dataset.tags || '').split(' ');
+      const match = role === 'all' || tags.includes(role);
+      card.style.display = match ? '' : 'none';
+      if (match) sectionVisible = true;
+    });
+
+    // site-cards always visible
+    section.querySelectorAll('.site-card').forEach(c => {
+      c.style.display = (role === 'all' || role === 'client') ? '' : 'none';
+      if (role === 'all' || role === 'client') sectionVisible = true;
+    });
+
+    section.dataset.hidden = (!sectionVisible).toString();
+    if (sectionVisible) anyVisible = true;
+  });
+
+  noResults.classList.toggle('visible', !anyVisible);
+}
+
+// ── SMOOTH SCROLL / SIDEBAR ACTIVE ──
+document.querySelectorAll('.sidebar-link').forEach(link => {
+  link.addEventListener('click', function(e) {
+    document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
 </body>
 </html>
