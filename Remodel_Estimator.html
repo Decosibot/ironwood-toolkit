@@ -2,25 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ironwood LLC — Remodel Job Estimator</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #EEF2F1; --surface: #F5F7F7; --surface-2: #FFFFFF;
-    --hairline: #D8E0DF; --gold: #c9a84c; --gold-dim: #a07c30;
-    --cream: #EEF2F1; --muted: #888; --danger: #c0392b;
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --gold: #c9a84c; --gold-dim: #a07c30;
+    --cream: #f5f0e8; --muted: #888; --danger: #c0392b;
     --success: #27ae60; --warn: #e67e22;
   }
-  body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
 
   /* ── TOPBAR ── */
   .topbar { background: linear-gradient(135deg,#1a1a1a,#0a0a0a); border-bottom: 1px solid var(--gold); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
   .topbar-brand { display: flex; align-items: center; gap: 12px; }
-  .topbar-logo { width: 36px; height: 36px; background: var(--bronze); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
-  .topbar-title { font-size: 16px; font-weight: 700; color: var(--ink); }
-  .topbar-sub { font-size: 11px; color: var(--bronze); letter-spacing: 1px; text-transform: uppercase; }
+  .topbar-logo { width: 36px; height: 36px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
+  .topbar-title { font-size: 16px; font-weight: 700; color: var(--cream); }
+  .topbar-sub { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
   .topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
   /* ── LAYOUT ── */
@@ -31,8 +30,8 @@
   /* ── BUTTONS ── */
   .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; letter-spacing: .5px; transition: opacity .15s; }
   .btn:hover { opacity: .85; }
-  .btn-gold { background: var(--bronze); color: #0a0a0a; }
-  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--bronze); }
+  .btn-gold { background: var(--gold); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
   .btn-danger { background: var(--danger); color: #fff; }
   .btn-sm { padding: 5px 10px; font-size: 11px; }
   .btn-block { width: 100%; margin-top: 8px; padding: 10px; }
@@ -42,14 +41,14 @@
   .field-group label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 5px; font-weight: 600; }
   .field-group input, .field-group select, .field-group textarea {
     width: 100%; background: var(--surface2); border: 1px solid var(--border);
-    color: var(--ink); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit;
+    color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-family: inherit;
   }
   .field-group input:focus, .field-group select:focus, .field-group textarea:focus { outline: 1px solid var(--gold); }
   .field-row { display: flex; gap: 8px; }
   .field-row .field-group { flex: 1; }
 
   /* ── SECTION HEADERS ── */
-  .section-head { font-size: 11px; color: var(--bronze); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
+  .section-head { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin: 20px 0 10px; padding-bottom: 6px; border-bottom: 1px solid var(--border); }
 
   /* ── LINE ITEMS ── */
   .line-items-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 20px; }
@@ -57,40 +56,40 @@
   .li-row { display: grid; grid-template-columns: 2fr 1fr 80px 80px 90px 180px 36px; gap: 8px; padding: 8px 12px; border-bottom: 1px solid var(--border); align-items: center; transition: background .1s; }
   .li-row:last-child { border-bottom: none; }
   .li-row:hover { background: var(--surface2); }
-  .li-input { background: transparent; border: none; color: var(--ink); font-size: 13px; font-family: inherit; width: 100%; padding: 3px 4px; border-radius: 4px; }
+  .li-input { background: transparent; border: none; color: var(--cream); font-size: 13px; font-family: inherit; width: 100%; padding: 3px 4px; border-radius: 4px; }
   .li-input:focus { outline: 1px solid var(--gold); background: var(--surface2); }
   .li-input.num { text-align: right; }
-  .li-total { text-align: right; font-weight: 700; color: var(--bronze); font-size: 13px; }
+  .li-total { text-align: right; font-weight: 700; color: var(--gold); font-size: 13px; }
   .li-del { background: none; border: none; cursor: pointer; color: #444; font-size: 16px; padding: 2px 6px; border-radius: 4px; transition: color .15s; }
   .li-del:hover { color: var(--danger); }
 
   .add-line-row { display: flex; gap: 8px; padding: 10px 12px; background: var(--surface2); border-top: 1px solid var(--border); flex-wrap: wrap; align-items: flex-end; }
-  .add-line-row input, .add-line-row select { background: var(--surface); border: 1px solid var(--border); color: var(--ink); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
+  .add-line-row input, .add-line-row select { background: var(--surface); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 6px 8px; font-size: 12px; }
   .add-line-row input:focus, .add-line-row select:focus { outline: 1px solid var(--gold); }
   .add-line-row .mini-label { font-size: 10px; color: var(--muted); display: block; margin-bottom: 3px; text-transform: uppercase; }
 
   /* ── CATEGORY TABS ── */
   .cat-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
   .cat-tab { padding: 6px 14px; border-radius: 20px; cursor: pointer; font-size: 11px; font-weight: 600; background: var(--surface2); border: 1px solid var(--border); color: var(--muted); transition: all .15s; }
-  .cat-tab.active { background: var(--bronze); color: #0a0a0a; border-color: var(--bronze); }
-  .cat-tab:hover:not(.active) { border-color: var(--bronze); color: var(--bronze); }
+  .cat-tab.active { background: var(--gold); color: #0a0a0a; border-color: var(--gold); }
+  .cat-tab:hover:not(.active) { border-color: var(--gold); color: var(--gold); }
 
   /* ── TOTALS PANEL ── */
   .totals-panel { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 18px; margin-bottom: 20px; }
-  .totals-panel h3 { font-size: 12px; color: var(--bronze); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 14px; }
+  .totals-panel h3 { font-size: 12px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 14px; }
   .totals-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
   .totals-row:last-child { border-bottom: none; }
   .totals-row.subtotal { color: var(--muted); }
-  .totals-row.total { font-weight: 700; font-size: 16px; color: var(--bronze); border-top: 2px solid var(--gold); margin-top: 8px; padding-top: 10px; }
+  .totals-row.total { font-weight: 700; font-size: 16px; color: var(--gold); border-top: 2px solid var(--gold); margin-top: 8px; padding-top: 10px; }
   .totals-row.split { color: var(--success); font-size: 12px; }
 
   /* ── MARKUP CONTROLS ── */
   .markup-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
   .markup-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
   .markup-card label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 6px; }
-  .markup-card input { background: var(--surface); border: 1px solid var(--border); color: var(--ink); border-radius: 6px; padding: 6px 8px; font-size: 14px; font-weight: 700; width: 70px; text-align: right; }
+  .markup-card input { background: var(--surface); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 6px 8px; font-size: 14px; font-weight: 700; width: 70px; text-align: right; }
   .markup-card input:focus { outline: 1px solid var(--gold); }
-  .markup-card .pct-label { color: var(--bronze); margin-left: 4px; font-size: 13px; }
+  .markup-card .pct-label { color: var(--gold); margin-left: 4px; font-size: 13px; }
 
   /* ── PREVIEW / PROPOSAL ── */
   .preview-wrap { display: none; }
@@ -132,14 +131,14 @@
   .prop-info-block p { font-size: 13px; color: #333; line-height: 1.6; }
 
   .prop-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  .prop-table thead th { background: var(--bg); color: #c9a84c; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
+  .prop-table thead th { background: #0a0a0a; color: #c9a84c; padding: 8px 12px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: .5px; }
   .prop-table tbody tr { border-bottom: 1px solid #e8e0d0; }
   .prop-table tbody tr:last-child { border-bottom: none; }
   .prop-table tbody td { padding: 9px 12px; color: #333; }
   .prop-table tbody tr:nth-child(even) { background: #f9f7f2; }
   .prop-table .cat-row td { background: #f0ece3; font-weight: 700; font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: .5px; padding: 6px 12px; }
   .prop-table .num { text-align: right; }
-  .prop-table .total-row td { background: var(--bg); color: #f5f0e8; font-weight: 700; padding: 10px 12px; }
+  .prop-table .total-row td { background: #0a0a0a; color: #f5f0e8; font-weight: 700; padding: 10px 12px; }
   .prop-table .total-row .num { color: #c9a84c; font-size: 15px; }
 
   .prop-totals { margin-top: 16px; }
@@ -155,47 +154,20 @@
   .sig-line-wrap .sl-line { border-bottom: 1px solid #999; margin-bottom: 4px; height: 36px; }
   .sig-line-wrap .sl-label { font-size: 11px; color: #888; }
 
-  .prop-footer { background: var(--bg); color: #666; font-size: 10px; padding: 12px 40px; display: flex; justify-content: space-between; }
+  .prop-footer { background: #0a0a0a; color: #666; font-size: 10px; padding: 12px 40px; display: flex; justify-content: space-between; }
   .prop-footer span { color: #c9a84c; }
 
   .empty-state { text-align: center; padding: 30px; color: var(--muted); font-size: 13px; }
 </style>
-<link rel="stylesheet" href="iw-print.css">
 </head>
 <body>
-<!-- PRINT LETTERHEAD (hidden on screen, shows on print) -->
-<div class="iw-letterhead">
-  <div class="iw-lh-left">
-    <div class="iw-lh-logo"><img src="ihr-logo.png" alt="Ironwood Homes &amp; Renovations LLC"></div>
-    <div class="iw-lh-brand">
-      <div class="iw-lh-name">Ironwood Homes &amp; Renovations LLC</div>
-      <div class="iw-lh-sub">Licensed Contractor · Atlanta Metro, Georgia</div>
-    </div>
-  </div>
-  <div class="iw-lh-right">
-    <div>tysellshomes96@gmail.com</div>
-    <div>ironwoodhomesrenovations.com</div>
-    <div>(770) 000-0000</div>
-  </div>
-</div>
-<div class="iw-lh-bar"></div>
-
-<!-- LOAD DEAL BAR -->
-<div id="iw-deal-bar" style="width:100%;background:#1a2a1f;border-bottom:1px solid #2d4a35;padding:10px 24px;display:flex;align-items:center;gap:12px;font-size:13px;flex-wrap:wrap;">
-  <span style="color:#7EC98A;font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:11px;">Load Deal</span>
-  <select id="iw-deal-select" style="background:#0f1f14;border:1px solid #2d4a35;color:#e8f5e9;padding:6px 12px;border-radius:6px;font-size:13px;min-width:260px;" onchange="iwLoadDeal()">
-    <option value="">— Select from Property Pipeline —</option>
-  </select>
-  <span id="iw-deal-badge" style="display:none;background:#2d4a35;color:#7EC98A;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;"></span>
-  <a href="Property_Pipeline.html" style="margin-left:auto;color:#7EC98A;font-size:12px;text-decoration:none;opacity:.7;">Open Pipeline →</a>
-</div>
 
 <div class="topbar">
   <div class="topbar-brand">
     <div class="topbar-logo">IW</div>
     <div>
       <div class="topbar-title">Remodel Job Estimator</div>
-      <div class="topbar-sub">Ironwood Homes and Renovations</div>
+      <div class="topbar-sub">Ironwood Renovations</div>
     </div>
   </div>
   <div class="topbar-actions">
@@ -203,6 +175,7 @@
     <button class="btn btn-outline btn-sm" onclick="exportJSON()">&#8595; Export</button>
     <button class="btn btn-outline btn-sm" onclick="toggleView()" id="view-toggle-btn">&#128196; Preview Proposal</button>
     <button class="btn btn-outline btn-sm" onclick="window.print()">&#128424; Print / PDF</button>
+    <button class="btn btn-gold btn-sm" onclick="exportToWaterfall()">&#8594; Waterfall</button>
     <button class="btn btn-gold btn-sm" onclick="saveJob()">&#10003; Save</button>
   </div>
 </div>
@@ -476,49 +449,6 @@
 <input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleFileLoad(event)"/>
 
 <script>
-// ── DEAL LOADER ──
-function iwPopulateDeals() {
-  try {
-    const deals = JSON.parse(localStorage.getItem('ironwood_deals') || '[]');
-    const sel = document.getElementById('iw-deal-select');
-    sel.innerHTML = '<option value="">— Select from Property Pipeline —</option>';
-    deals.forEach(d => {
-      const label = [d.address, d.city, d.state].filter(Boolean).join(', ') || 'Unnamed Deal';
-      const opt = document.createElement('option');
-      opt.value = d.id;
-      opt.textContent = `${label} · ${d.stage || ''}`;
-      opt.dataset.deal = JSON.stringify(d);
-      sel.appendChild(opt);
-    });
-  } catch(e) {}
-}
-
-function iwLoadDeal() {
-  const sel = document.getElementById('iw-deal-select');
-  const opt = sel.options[sel.selectedIndex];
-  if (!opt || !opt.dataset.deal) return;
-  const d = JSON.parse(opt.dataset.deal);
-  document.getElementById('iw-deal-badge').textContent = [d.address, d.city].filter(Boolean).join(', ');
-  document.getElementById('iw-deal-badge').style.display = 'inline-block';
-  // Fill estimator fields
-  const addr = [d.address, d.city, d.state, d.zip].filter(Boolean).join(', ');
-  job.jobAddress = addr;
-  job.jobName = addr;
-  const jaEl = document.getElementById('jobAddress');
-  if (jaEl) jaEl.value = addr;
-  const jnEl = document.getElementById('jobName');
-  if (jnEl) jnEl.value = addr;
-  if (d.startDate) {
-    job.startDate = d.stageDate;
-    const sdEl = document.getElementById('startDate');
-    if (sdEl) sdEl.value = d.stageDate;
-  }
-  render();
-}
-
-iwPopulateDeals();
-window.addEventListener('storage', e => { if (e.key === 'ironwood_deals') iwPopulateDeals(); });
-
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let job = newJobObj();
 let activeCategory = null;
@@ -808,7 +738,7 @@ function buildProposal() {
 
   document.getElementById('proposalDoc').innerHTML = `
     <div class="prop-header">
-      <div class="co-name">Ironwood Homes and Renovations</div>
+      <div class="co-name">Ironwood Renovations</div>
       <h1>Project Estimate</h1>
       <div class="prop-sub">${esc(job.jobType)} · Prepared ${today}</div>
     </div>
@@ -910,7 +840,7 @@ function buildProposal() {
     </div>
 
     <div class="prop-footer">
-      <span>Ironwood Homes and Renovations</span>
+      <span>Ironwood Renovations</span>
       <span>Confidential Estimate · ${today}</span>
     </div>
   `;
@@ -959,6 +889,77 @@ function newJob() {
   renderCatTabs();
   renderItems();
   recalc();
+}
+
+function exportToWaterfall() {
+  collectSidebar();
+
+  const matMu    = (parseFloat(job.matMarkup) || 25) / 100;
+  const labMu    = (parseFloat(job.labMarkup) || 35) / 100;
+  const contPct  = (parseFloat(job.contingency) || 10) / 100;
+  const depPct   = (parseFloat(job.depositPct) || 35) / 100;
+  const jeffMode = job.jeffMode || 'hourly';
+  const jeffPct  = parseFloat(job.jeffPct) || 30;
+  const jeffHours= parseFloat(job.jeffHours) || 0;
+  const jordanPct= parseFloat(job.jordanPct) || 3;
+  const tyPct    = parseFloat(job.tyPct) || 3;
+  const tyHours  = parseFloat(job.tyHours) || 0;
+  const adSpend  = parseFloat(job.adSpend) || 0;
+
+  let matRaw = 0, labRaw = 0, subTotal = 0;
+  job.items.forEach(i => {
+    const raw = (i.qty || 0) * (i.cost || 0);
+    if (i.type === 'material') matRaw += raw;
+    else if (i.type === 'labor') labRaw += raw;
+    else subTotal += raw;
+  });
+
+  const matMarked = matRaw * (1 + matMu);
+  const labMarked = labRaw * (1 + labMu);
+  const subtotal  = matMarked + labMarked + subTotal;
+  const cont      = subtotal * contPct;
+  const total     = subtotal + cont;
+  const deposit   = total * depPct;
+
+  const grossProfit = Math.max(0, total - matRaw - subTotal - adSpend);
+  const jeffCut     = jeffMode === 'hourly' ? jeffHours * 50 : grossProfit * (jeffPct / 100);
+  const mgmtFee     = total * 0.05;
+  const jordanFee   = total * (jordanPct / 100);
+  const tyFee       = total * (tyPct / 100);
+  const tyLabor     = tyHours * 30;
+  const netDist     = Math.max(0, grossProfit - jeffCut - mgmtFee - jordanFee - tyFee - tyLabor);
+
+  const payload = {
+    jobName:      job.jobName || '',
+    clientName:   job.clientName || '',
+    address:      job.jobName || '',
+    roomType:     job.roomType || '',
+    total,
+    matRaw,
+    labRaw,
+    subTotal,
+    cont,
+    deposit,
+    grossProfit,
+    jeffCut,
+    mgmtFee,
+    jordanFee,
+    tyFee,
+    tyLabor,
+    netDist,
+    splitEach: netDist * 0.50,
+    adSpend,
+    exportedAt: new Date().toISOString(),
+    source: 'Remodel_Estimator',
+  };
+
+  localStorage.setItem('ironwood_waterfall_import', JSON.stringify(payload));
+
+  const btn = event.target;
+  btn.textContent = '✓ Sent!';
+  setTimeout(() => btn.textContent = '→ Waterfall', 1500);
+
+  window.open('Profit_Waterfall.html', '_blank');
 }
 
 function exportJSON() {

@@ -2,28 +2,27 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
-<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Anchor Pro — Profit Waterfall Calculator</title>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #EEF2F1; --surface: #F5F7F7; --surface-2: #FFFFFF;
-    --hairline: #D8E0DF; --gold: #c9a84c; --cream: #EEF2F1;
+    --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
+    --border: #2a2a2a; --gold: #c9a84c; --cream: #f5f0e8;
     --muted: #888; --success: #27ae60; --danger: #c0392b; --warn: #e67e22;
   }
-  body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+  body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
 
   .topbar { background: linear-gradient(135deg,#1a1a1a,#0a0a0a); border-bottom: 1px solid var(--gold); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; }
   .topbar-brand { display: flex; align-items: center; gap: 12px; }
-  .topbar-logo { width: 36px; height: 36px; background: var(--bronze); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
+  .topbar-logo { width: 36px; height: 36px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
   .topbar-title { font-size: 16px; font-weight: 700; }
-  .topbar-sub { font-size: 11px; color: var(--bronze); letter-spacing: 1px; text-transform: uppercase; }
+  .topbar-sub { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
 
   .btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity .15s; }
   .btn:hover { opacity: .85; }
-  .btn-gold { background: var(--bronze); color: #0a0a0a; }
-  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--bronze); }
+  .btn-gold { background: var(--gold); color: #0a0a0a; }
+  .btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
   .btn-sm { padding: 5px 10px; font-size: 11px; }
 
   .container { max-width: 1000px; margin: 0 auto; padding: 28px 20px; }
@@ -31,7 +30,7 @@
   /* ── DEAL TYPE TOGGLE ── */
   .deal-toggle { display: flex; gap: 4px; margin-bottom: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 4px; width: fit-content; flex-wrap: wrap; }
   .deal-btn { padding: 8px 20px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 700; letter-spacing: .5px; border: none; background: transparent; color: var(--muted); transition: all .15s; }
-  .deal-btn.active { background: var(--bronze); color: #0a0a0a; }
+  .deal-btn.active { background: var(--gold); color: #0a0a0a; }
 
   /* ── TWO COL ── */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
@@ -39,26 +38,26 @@
 
   /* ── INPUT CARD ── */
   .input-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
-  .input-card h3 { font-size: 11px; color: var(--bronze); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 14px; }
+  .input-card h3 { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 14px; }
   .field { margin-bottom: 12px; }
   .field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; font-weight: 600; }
   .field-row { display: flex; align-items: center; gap: 6px; }
   .field-row .prefix { color: var(--muted); font-size: 13px; }
-  .field input, .field select { background: var(--surface2); border: 1px solid var(--border); color: var(--ink); border-radius: 6px; padding: 8px 10px; font-size: 14px; font-weight: 600; width: 100%; }
+  .field input, .field select { background: var(--surface2); border: 1px solid var(--border); color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 14px; font-weight: 600; width: 100%; }
   .field input:focus, .field select:focus { outline: 1px solid var(--gold); }
-  .field input[readonly] { color: var(--bronze); cursor: default; }
+  .field input[readonly] { color: var(--gold); cursor: default; }
   .field .hint { font-size: 10px; color: #555; margin-top: 3px; }
-  .field .calc-result { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 14px; font-weight: 700; color: var(--bronze); width: 100%; display: block; }
+  .field .calc-result { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 8px 10px; font-size: 14px; font-weight: 700; color: var(--gold); width: 100%; display: block; }
 
   /* ── WATERFALL DISPLAY ── */
   .waterfall { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
-  .wf-title { padding: 14px 20px; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--bronze); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
+  .wf-title { padding: 14px 20px; background: var(--surface2); border-bottom: 1px solid var(--border); font-size: 12px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; display: flex; justify-content: space-between; align-items: center; }
   .wf-row { display: flex; justify-content: space-between; align-items: center; padding: 11px 20px; border-bottom: 1px solid var(--border); font-size: 13px; }
   .wf-row:last-child { border-bottom: none; }
   .wf-row.section-head { background: #111; font-size: 10px; color: #555; text-transform: uppercase; letter-spacing: 1px; padding: 6px 20px; }
   .wf-row.deduct .amt { color: var(--danger); }
   .wf-row.result { background: #161a10; }
-  .wf-row.result .label { font-weight: 700; color: var(--ink); }
+  .wf-row.result .label { font-weight: 700; color: var(--cream); }
   .wf-row.result .amt { font-weight: 700; color: var(--success); font-size: 15px; }
   .wf-row.split-anchor { background: #0d1a10; }
   .wf-row.split-anchor .label { color: #5cb85c; font-weight: 700; }
@@ -68,10 +67,10 @@
   .wf-row.split-landon .amt { color: #64b5f6; font-weight: 700; font-size: 16px; }
   .wf-row.gross { background: #1a1a10; }
   .wf-row.gross .label { font-weight: 700; }
-  .wf-row.gross .amt { font-weight: 700; color: var(--bronze); font-size: 15px; }
-  .wf-row .label { color: var(--ink); }
+  .wf-row.gross .amt { font-weight: 700; color: var(--gold); font-size: 15px; }
+  .wf-row .label { color: var(--cream); }
   .wf-row .sub-label { font-size: 11px; color: var(--muted); }
-  .wf-row .amt { color: var(--ink); font-weight: 600; }
+  .wf-row .amt { color: var(--cream); font-weight: 600; }
 
   /* ── PARTNER CARDS ── */
   .partner-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
@@ -86,22 +85,22 @@
   .partner-card.landon .pc-amount { color: #64b5f6; }
   .partner-card .pc-pct { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
   .partner-card .pc-breakdown { font-size: 11px; color: var(--muted); line-height: 1.8; }
-  .partner-card .pc-breakdown span { color: var(--ink); font-weight: 600; }
+  .partner-card .pc-breakdown span { color: var(--cream); font-weight: 600; }
 
   /* ── BAR CHART ── */
   .bar-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin-bottom: 24px; }
-  .bar-wrap h3 { font-size: 11px; color: var(--bronze); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 16px; }
+  .bar-wrap h3 { font-size: 11px; color: var(--gold); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 16px; }
   .bar-item { margin-bottom: 12px; }
   .bar-label-row { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 4px; }
   .bar-label-row .bl { color: var(--muted); }
-  .bar-label-row .bv { color: var(--ink); font-weight: 600; }
+  .bar-label-row .bv { color: var(--cream); font-weight: 600; }
   .bar-track { height: 10px; background: var(--surface2); border-radius: 5px; overflow: hidden; }
   .bar-fill { height: 100%; border-radius: 5px; transition: width .4s; }
 
   /* ── HISTORY ── */
   .history-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px; }
   .history-wrap .hw-header { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--border); }
-  .history-wrap .hw-header h3 { font-size: 12px; color: var(--bronze); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+  .history-wrap .hw-header h3 { font-size: 12px; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
   table.hist-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   table.hist-table thead th { background: var(--surface2); padding: 8px 14px; text-align: left; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .5px; border-bottom: 1px solid var(--border); }
   table.hist-table tbody tr { border-bottom: 1px solid var(--border); }
@@ -119,16 +118,6 @@
 </head>
 <body>
 
-<!-- LOAD DEAL BAR -->
-<div id="iw-deal-bar" style="width:100%;background:#1a2a1f;border-bottom:1px solid #2d4a35;padding:10px 24px;display:flex;align-items:center;gap:12px;font-size:13px;flex-wrap:wrap;">
-  <span style="color:#7EC98A;font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:11px;">Load Deal</span>
-  <select id="iw-deal-select" style="background:#0f1f14;border:1px solid #2d4a35;color:#e8f5e9;padding:6px 12px;border-radius:6px;font-size:13px;min-width:260px;" onchange="iwLoadDeal()">
-    <option value="">— Select from Property Pipeline —</option>
-  </select>
-  <span id="iw-deal-badge" style="display:none;background:#2d4a35;color:#7EC98A;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;"></span>
-  <a href="Property_Pipeline.html" style="margin-left:auto;color:#7EC98A;font-size:12px;text-decoration:none;opacity:.7;">Open Pipeline →</a>
-</div>
-
 <div class="topbar">
   <div class="topbar-brand">
     <div class="topbar-logo">$</div>
@@ -140,6 +129,18 @@
   <div style="display:flex; gap:8px;">
     <button class="btn btn-outline btn-sm" onclick="window.print()">&#128424; Print</button>
     <button class="btn btn-gold btn-sm" onclick="saveToDeal()">+ Save to History</button>
+  </div>
+</div>
+
+<!-- Estimator Import Banner -->
+<div id="importBanner" style="display:none;background:#1a1400;border-bottom:2px solid #C9A84C;padding:14px 24px;display:none;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+  <div>
+    <span style="color:#C9A84C;font-weight:700;font-size:14px;">&#8599; Estimate imported from Remodel Estimator</span>
+    <span id="importBannerJob" style="color:#aaa;font-size:13px;margin-left:10px;"></span>
+  </div>
+  <div style="display:flex;gap:10px;">
+    <button onclick="applyEstimatorImport()" style="background:#C9A84C;color:#000;border:none;padding:8px 18px;border-radius:6px;font-weight:700;cursor:pointer;font-size:13px;">Import Now</button>
+    <button onclick="dismissImportBanner()" style="background:transparent;color:#aaa;border:1px solid #444;padding:8px 14px;border-radius:6px;cursor:pointer;font-size:13px;">Dismiss</button>
   </div>
 </div>
 
@@ -274,7 +275,7 @@
         <div class="hint" id="mgmt-calc-hint">= $0</div>
       </div>
       <div class="field">
-        <label>Jordan Sarabia — Landon Side</label>
+        <label>Jordan Zoza — Landon Side</label>
         <div class="field-row"><input type="number" id="jordanPct" placeholder="3" min="0" max="20" oninput="calc()"/><span class="prefix">% of gross revenue → Landon Renovations</span></div>
         <div class="hint" id="jordan-calc-hint">= $0</div>
       </div>
@@ -352,51 +353,65 @@
 </div>
 
 <script>
-// ── DEAL LOADER ──
-function iwPopulateDeals() {
-  try {
-    const deals = JSON.parse(localStorage.getItem('ironwood_deals') || '[]');
-    const sel = document.getElementById('iw-deal-select');
-    sel.innerHTML = '<option value="">— Select from Property Pipeline —</option>';
-    deals.forEach(d => {
-      const label = [d.address, d.city, d.state].filter(Boolean).join(', ') || 'Unnamed Deal';
-      const opt = document.createElement('option');
-      opt.value = d.id;
-      opt.textContent = `${label} · ${d.stage || ''}`;
-      opt.dataset.deal = JSON.stringify(d);
-      sel.appendChild(opt);
-    });
-  } catch(e) {}
-}
-
-function iwLoadDeal() {
-  const sel = document.getElementById('iw-deal-select');
-  const opt = sel.options[sel.selectedIndex];
-  if (!opt || !opt.dataset.deal) return;
-  const d = JSON.parse(opt.dataset.deal);
-  document.getElementById('iw-deal-badge').textContent = [d.address, d.city].filter(Boolean).join(', ');
-  document.getElementById('iw-deal-badge').style.display = 'inline-block';
-  // Map pipeline deal type to waterfall deal type
-  const typeMap = { 'Flip': 'flip', 'BRRRR': 'brrrr', 'Vacation Rental': 'vtr', 'Remodel': 'remodel', 'Rental': 'brrrr' };
-  const wType = typeMap[d.dealType] || 'remodel';
-  const wBtn = document.querySelector(`[data-type="${wType}"]`) || document.querySelector('.deal-btn');
-  if (wBtn) setDealType(wType, wBtn);
-  const addr = [d.address, d.city].filter(Boolean).join(', ');
-  const dn = document.getElementById('dealName');
-  if (dn) dn.value = addr;
-  if (d.arv)         document.getElementById('grossRevenue').value = d.arv;
-  if (d.rehabBudget) document.getElementById('hardCosts').value    = d.rehabBudget;
-  if (d.rentTarget && document.getElementById('monthlyRent')) document.getElementById('monthlyRent').value = d.rentTarget;
-  calc();
-}
-
-iwPopulateDeals();
-window.addEventListener('storage', e => { if (e.key === 'ironwood_deals') iwPopulateDeals(); });
-
 let dealType = 'remodel';
 let history = JSON.parse(localStorage.getItem('anchorpro_waterfall_history') || '[]');
 
-window.onload = function() { renderHistory(); calc(); };
+window.onload = function() {
+  renderHistory();
+  calc();
+  checkEstimatorImport();
+};
+
+let _pendingImport = null;
+
+function checkEstimatorImport() {
+  const raw = localStorage.getItem('ironwood_waterfall_import');
+  if (!raw) return;
+  try {
+    _pendingImport = JSON.parse(raw);
+    const banner = document.getElementById('importBanner');
+    banner.style.display = 'flex';
+    const job = _pendingImport.jobName || _pendingImport.address || '';
+    document.getElementById('importBannerJob').textContent = job ? '— ' + job : '';
+  } catch(e) {
+    localStorage.removeItem('ironwood_waterfall_import');
+  }
+}
+
+function applyEstimatorImport() {
+  if (!_pendingImport) return;
+  const d = _pendingImport;
+
+  // Populate revenue & cost fields
+  const setV = (id, val) => { const el = document.getElementById(id); if (el) el.value = Math.round(val || 0); };
+  setV('grossRevenue', d.total);
+  setV('hardCosts', d.matRaw + d.subTotal);
+
+  // Jeff
+  if (d.jeffCut) {
+    const jeffHoursEl = document.getElementById('jeffHours');
+    if (jeffHoursEl) jeffHoursEl.value = Math.round(d.jeffCut / 50);
+  }
+
+  // Ad spend
+  const adEl = document.getElementById('adSpend');
+  if (adEl && d.adSpend) adEl.value = Math.round(d.adSpend);
+
+  // Jordan % → Jordan fee field if present
+  const jordanEl = document.getElementById('jordanFee');
+  if (jordanEl && d.jordanFee) jordanEl.value = Math.round(d.jordanFee);
+
+  localStorage.removeItem('ironwood_waterfall_import');
+  _pendingImport = null;
+  dismissImportBanner();
+  calc();
+}
+
+function dismissImportBanner() {
+  document.getElementById('importBanner').style.display = 'none';
+  localStorage.removeItem('ironwood_waterfall_import');
+  _pendingImport = null;
+}
 
 function setDealType(type, el) {
   dealType = type;
@@ -506,7 +521,7 @@ function calc() {
   if (document.getElementById('jeff-pct-hint'))
     document.getElementById('jeff-pct-hint').textContent = `= ${fmt(jeffLabor)} (${jeffPct}% × ${fmt(grossProfit)} gross profit) → Landon Renovations`;
   document.getElementById('mgmt-calc-hint').textContent  = `= ${fmt(mgmtFee)} → Anchor Pro Solutions`;
-  document.getElementById('jordan-calc-hint').textContent = `= ${fmt(jordanFee)} → Jordan Sarabia / Landon Renovations`;
+  document.getElementById('jordan-calc-hint').textContent = `= ${fmt(jordanFee)} → Jordan Zoza / Landon Renovations`;
   document.getElementById('ty-calc-hint').textContent     = `= ${fmt(tyFee)} (${tyPct}% × ${fmt(gross)}) → Ty Jackson / Anchor Pro Solutions`;
   document.getElementById('ty-labor-hint').textContent    = `= ${fmt(tyLabor)} (${tyHours} hrs × $30/hr) → Ty Jackson / Anchor Pro Solutions`;
 
@@ -542,7 +557,7 @@ function calc() {
       { cls: 'section-head', label: 'STEP 2 — CONTRIBUTOR FEES',                         amt: null },
       { cls: 'deduct',       label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50/hr)` : `Jeff's Labor (${jeffPct}% of gross profit)`, sub: '→ Landon Renovations', amt: -jeffLabor },
       { cls: 'deduct',       label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`,                  sub: '→ Anchor Pro Solutions', amt: -mgmtFee },
-      { cls: 'deduct',       label: `Jordan Sarabia (${jordanPct}% of revenue)`,           sub: '→ Landon Renovations', amt: -jordanFee },
+      { cls: 'deduct',       label: `Jordan Zoza (${jordanPct}% of revenue)`,           sub: '→ Landon Renovations', amt: -jordanFee },
       { cls: 'deduct',       label: `Ty Jackson — Marketing (${tyPct}% of revenue)`,       sub: '→ Anchor Pro Solutions', amt: -tyFee },
       ...(tyLabor > 0   ? [{ cls: 'deduct', label: `Ty Jackson — Field Labor (${tyHours} hrs × $30/hr)`, sub: '→ Anchor Pro Solutions', amt: -tyLabor }] : []),
       ...(otherFees > 0 ? [{ cls: 'deduct', label: 'Other Fees / Overhead', sub: '', amt: -otherFees }] : []),
@@ -561,7 +576,7 @@ function calc() {
       { cls: 'section-head', label: 'STEP 2 — CONTRIBUTOR FEES',                 amt: null },
       { cls: 'deduct',       label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50/hr)` : `Jeff's Labor (${jeffPct}% of gross profit)`, sub: '→ Landon Renovations', amt: -jeffLabor },
       { cls: 'deduct',       label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`,          sub: '→ Anchor Pro Solutions', amt: -mgmtFee },
-      { cls: 'deduct',       label: `Jordan Sarabia (${jordanPct}% of revenue)`,  sub: '→ Landon Renovations', amt: -jordanFee },
+      { cls: 'deduct',       label: `Jordan Zoza (${jordanPct}% of revenue)`,  sub: '→ Landon Renovations', amt: -jordanFee },
       { cls: 'deduct',       label: `Ty Jackson — Marketing (${tyPct}% of revenue)`, sub: '→ Anchor Pro Solutions', amt: -tyFee },
       ...(tyLabor > 0 ? [{ cls: 'deduct', label: `Ty Jackson — Field Labor (${tyHours} hrs × $30/hr)`, sub: '→ Anchor Pro Solutions', amt: -tyLabor }] : []),
       ...(otherFees > 0 ? [{ cls: 'deduct', label: 'Other Fees / Overhead', sub: '', amt: -otherFees }] : []),
@@ -605,7 +620,7 @@ function calc() {
       ...(adSpend > 0    ? [{ label: 'Ad Spend', val: adSpend, color: '#e74c3c' }] : []),
       { label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50)` : `Jeff's Labor (${jeffPct}% gross profit)`, val: jeffLabor, color: '#3498db' },
       { label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`, val: mgmtFee, color: '#2ecc71' },
-      { label: `Jordan Sarabia (${jordanPct}%)`, val: jordanFee, color: '#ce93d8' },
+      { label: `Jordan Zoza (${jordanPct}%)`, val: jordanFee, color: '#ce93d8' },
       { label: `Ty Jackson — Marketing (${tyPct}%)`, val: tyFee, color: '#80cbc4' },
       ...(tyLabor > 0    ? [{ label: `Ty Jackson — Field Labor (${tyHours} hrs × $30)`, val: tyLabor, color: '#4db6ac' }] : []),
       { label: 'Anchor Pro Split (50%)', val: splitEach, color: '#27ae60' },
@@ -617,7 +632,7 @@ function calc() {
       ...(adSpend > 0 ? [{ label: 'Ad Spend', val: adSpend, color: '#e74c3c' }] : []),
       { label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50)` : `Jeff's Labor (${jeffPct}% gross profit)`, val: jeffLabor, color: '#3498db' },
       { label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`, val: mgmtFee, color: '#c9a84c' },
-      { label: `Jordan Sarabia (${jordanPct}%)`, val: jordanFee, color: '#ce93d8' },
+      { label: `Jordan Zoza (${jordanPct}%)`, val: jordanFee, color: '#ce93d8' },
       { label: `Ty Jackson — Marketing (${tyPct}%)`, val: tyFee, color: '#80cbc4' },
       ...(tyLabor > 0 ? [{ label: `Ty Jackson — Field Labor (${tyHours} hrs × $30)`, val: tyLabor, color: '#4db6ac' }] : []),
       { label: 'Other Fees', val: otherFees, color: '#7f8c8d' },

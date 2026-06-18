@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>BRRRR Deal Analyzer — Ironwood Homes and Renovations</title>
+<title>BRRRR Deal Analyzer — Ironwood Property Group</title>
 <meta name="description" content="Analyze any BRRRR real estate deal in minutes. Cash flow, equity, cash-on-cash return, and capital recycled. Ironwood handles the renovation."/>
 <link rel="stylesheet" href="iw-design.css"/>
 <style>
@@ -210,7 +210,7 @@
 .cta-section .iw-input:focus,
 .cta-section .iw-select:focus {
   border-color: var(--bronze);
-  box-shadow: 0 0 0 3px rgba(111,132,139,.25);
+  box-shadow: 0 0 0 3px rgba(156,123,74,.25);
 }
 .cta-section .iw-btn-secondary {
   color: rgba(255,255,255,.8);
@@ -261,10 +261,10 @@
 <!-- HEADER -->
 <div class="iw-header">
   <a class="iw-logo-area" href="index.html">
-    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:6px;">
+    <div class="iw-logo-box">I</div>
     <div>
-      <div class="iw-logo-text">Ironwood Homes and Renovations</div>
-      
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
     </div>
   </a>
   <div class="iw-header-right">
@@ -598,6 +598,17 @@
             <div class="mao-amount" id="maoAmount">—</div>
             <div class="mao-compare" id="maoCompare">Enter ARV and rehab cost to calculate.</div>
           </div>
+
+          <!-- AI Deal Analysis -->
+          <div style="padding: 0 0 4px;">
+            <button onclick="getAIDealAnalysis()" id="aiAnalysisBtn" style="width:100%;padding:12px;background:var(--bronze);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:.5px;">
+              ✦ Get AI Deal Analysis
+            </button>
+          </div>
+          <div id="aiAnalysisCard" style="display:none;background:#1a1a0e;border:1px solid var(--bronze);border-radius:10px;padding:16px;margin-top:4px;">
+            <div id="aiAnalysisLoading" style="text-align:center;color:var(--bronze);padding:20px 0;font-size:13px;">Analyzing deal with Claude...</div>
+            <div id="aiAnalysisContent" style="display:none;color:#f5f0e8;font-size:13px;line-height:1.65;"></div>
+          </div>
         </div>
 
       </div>
@@ -649,11 +660,19 @@
 </div><!-- /container -->
 
 <!-- FOOTER -->
-<div class="iw-footer">Ironwood Homes and Renovations · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+<div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
 
 <script>
-// ── GHL Webhook ──
-const GHL_WEBHOOK_URL = 'YOUR_GHL_WEBHOOK_URL';
+// ── GHL Webhook — stored in localStorage so Ty can set it once ──
+const ANTHROPIC_API_KEY = 'sk-ant-api03-zIJ7SqNWkNF6FnaMQZoZHSqCi2TP_X_0eBk4ILj1orRNygylZRdDm7k26Cge0OjhlWFINFwhw2if-uB_68jQ-X4Rn6AAA';
+
+function getGHLWebhook() {
+  return localStorage.getItem('ironwood_ghl_webhook') || '';
+}
+
+function setGHLWebhook(url) {
+  localStorage.setItem('ironwood_ghl_webhook', url);
+}
 
 // ── UTM ──
 function getUTM() {
@@ -747,7 +766,7 @@ function recalc() {
   const annualNOI        = NOI_monthly * 12;
   const capRate          = arv > 0 ? (annualNOI / arv) * 100 : 0;
 
-  // MAO
+  // MAO — 70% rule for improved properties
   const mao = arv * 0.70 - rehabCost;
   const maoVsPurchase = purchasePrice > 0 ? ((purchasePrice - mao) / mao) * 100 : null;
 
@@ -889,17 +908,122 @@ document.getElementById('leadForm').addEventListener('submit', async function(e)
   };
 
   try {
-    await fetch(GHL_WEBHOOK_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      mode: 'no-cors',
-      body: JSON.stringify(payload),
-    });
+    const webhookUrl = getGHLWebhook();
+    if (webhookUrl) {
+      await fetch(webhookUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        mode: 'no-cors',
+        body: JSON.stringify(payload),
+      });
+    }
   } catch(err) { /* silent fail */ }
 
   document.getElementById('leadForm').style.display = 'none';
   document.getElementById('formSuccess').style.display = '';
 });
+
+// ── AI Deal Analysis ──
+async function getAIDealAnalysis() {
+  const snap = window._dealSnapshot;
+  if (!snap || !snap.arv) {
+    alert('Fill in the deal numbers first, then run the AI analysis.');
+    return;
+  }
+
+  const card = document.getElementById('aiAnalysisCard');
+  const loading = document.getElementById('aiAnalysisLoading');
+  const content = document.getElementById('aiAnalysisContent');
+  const btn = document.getElementById('aiAnalysisBtn');
+
+  card.style.display = '';
+  loading.style.display = '';
+  content.style.display = 'none';
+  btn.disabled = true;
+  btn.textContent = 'Analyzing...';
+
+  const prompt = `You are a real estate investment advisor for Ironwood Property Group in the Atlanta Metro area.
+
+Analyze this BRRRR deal and give Ty Jackson a straight-talk assessment:
+
+DEAL NUMBERS:
+- Purchase Price: $${snap.purchasePrice?.toLocaleString()}
+- Rehab Cost: $${snap.rehabCost?.toLocaleString()}
+- Holding Costs (total): $${snap.holdingCostsTotal?.toLocaleString()}
+- All-In Cost: $${snap.allInCost?.toLocaleString()}
+- ARV (After Repair Value): $${snap.arv?.toLocaleString()}
+- Refi Loan: $${snap.refiProceeds?.toLocaleString()} (${snap.refiLTV_pct}% LTV)
+- Cash Left in Deal: $${snap.cashLeftInDeal?.toLocaleString()}
+- Capital Recycled: ${snap.capitalRecycledPct}%
+- Monthly Cash Flow: $${snap.monthlyCashFlow?.toLocaleString()}
+- Annual Cash Flow: $${snap.annualCashFlow?.toLocaleString()}
+- Cash-on-Cash Return: ${snap.cashOnCash}%
+- Cap Rate: ${snap.capRate}%
+- MAO (70% Rule): $${snap.mao?.toLocaleString()}
+- Deal Grade: ${snap.dealGrade} (${snap.dealScore}/100)
+
+Respond in this exact format (use plain text, no markdown symbols):
+
+SUMMARY
+2-3 sentences on whether this deal works and why.
+
+TOP STRENGTHS
+1. [strength]
+2. [strength]
+3. [strength]
+
+TOP RISKS
+1. [risk]
+2. [risk]
+3. [risk]
+
+NEGOTIATION
+One specific negotiating move Ty can make to improve the deal.
+
+NEXT STEP
+One clear action to take in the next 48 hours.`;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': ANTHROPIC_API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true',
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 600,
+        messages: [{ role: 'user', content: prompt }],
+      }),
+    });
+
+    const data = await res.json();
+    const text = data.content?.[0]?.text || 'No response received.';
+
+    // Format sections with gold headers
+    const formatted = text
+      .replace(/^(SUMMARY|TOP STRENGTHS|TOP RISKS|NEGOTIATION|NEXT STEP)$/gm,
+        '<div style="color:#C9A84C;font-weight:700;font-size:12px;letter-spacing:.8px;margin-top:14px;margin-bottom:4px;">$1</div>')
+      .replace(/\n/g, '<br>');
+
+    loading.style.display = 'none';
+    content.innerHTML = formatted;
+    content.style.display = '';
+  } catch (err) {
+    loading.style.display = 'none';
+    content.innerHTML = '<span style="color:#C0392B;">Error getting analysis. Check your API key.</span>';
+    content.style.display = '';
+  }
+
+  btn.disabled = false;
+  btn.textContent = '✦ Get AI Deal Analysis';
+}
+
+// ── GHL Webhook Settings (accessible via console or future settings screen) ──
+// Usage: setGHLWebhook('https://your-ghl-webhook-url')
+// Check: getGHLWebhook()
 
 // Init
 recalc();
