@@ -7,34 +7,15 @@
 <title>Ironwood LLC — Monthly P&L</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #EEF2F1; --surface: #F5F7F7; --surface-2: #FFFFFF;
-  --hairline: #D8E0DF; --gold: #c9a84c; --cream: #EEF2F1;
-  --muted: #888; --success: #27ae60; --danger: #c0392b;
-  --anchor-bg: #0d1a10; --anchor-border: #2a4a2a; --anchor-text: #5cb85c;
-  --landon-bg: #0d1520; --landon-border: #2a3a50; --landon-text: #64b5f6;
-}
-body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+
+body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui, -apple-system, sans-serif; font-size: 14px; min-height: 100vh; }
 
 /* ── TOPBAR ── */
-.topbar { background: linear-gradient(135deg,#1a1a1a,#0a0a0a); border-bottom: 2px solid var(--gold); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; position: sticky; top: 0; z-index: 100; }
-.topbar-brand { display: flex; align-items: center; gap: 12px; }
-.topbar-logo { width: 38px; height: 38px; background: var(--bronze); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 17px; color: #0a0a0a; letter-spacing: -1px; }
-.topbar-title { font-size: 15px; font-weight: 700; color: var(--ink); }
-.topbar-sub { font-size: 10px; color: var(--bronze); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
-.topbar-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+
 .month-selector { background: var(--surface2); border: 1px solid var(--border); color: var(--ink); border-radius: 6px; padding: 7px 10px; font-size: 13px; font-weight: 600; }
 .month-selector:focus { outline: 1px solid var(--gold); }
 
 /* ── BUTTONS ── */
-.btn { padding: 8px 16px; border: none; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; transition: opacity .15s, transform .1s; letter-spacing: .3px; }
-.btn:hover { opacity: .85; transform: translateY(-1px); }
-.btn:active { transform: translateY(0); }
-.btn-gold { background: var(--bronze); color: #0a0a0a; }
-.btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--bronze); }
-.btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--muted); }
-.btn-sm { padding: 5px 10px; font-size: 11px; }
-.btn-danger { background: transparent; border: 1px solid #c0392b44; color: #c0392b; }
 
 /* ── CONTAINER ── */
 .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px 60px; }
@@ -166,13 +147,7 @@ body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system
 @media print {
   .topbar, .save-bar, .btn, .btn-sm, .table-add-row { display: none !important; }
   body { background: #fff; color: #111; font-size: 12px; }
-  :root {
-    --bg: #fff; --surface: #fff; --surface2: #f7f7f7;
-    --border: #ddd; --gold: #b8860b; --cream: #111;
-    --muted: #555; --success: #1a6b2a; --danger: #b30000;
-    --anchor-bg: #e8f5e9; --anchor-border: #a5d6a7; --anchor-text: #1b5e20;
-    --landon-bg: #e3f2fd; --landon-border: #90caf9; --landon-text: #0d47a1;
-  }
+  
   .container { padding: 16px; max-width: 100%; }
   .section { border: 1px solid #ccc; break-inside: avoid; margin-bottom: 16px; }
   .waterfall { break-inside: avoid; }
@@ -190,7 +165,7 @@ body { background: var(--bg); color: var(--ink); font-family: 'Segoe UI', system
 <!-- ═══════════════════ TOPBAR ═══════════════════ -->
 <div class="topbar">
   <div class="topbar-brand">
-    <div class="topbar-logo">IW</div>
+    <div class="topbar-logo"><img src="ihr-logo.png" alt="IHR" style="width:32px;height:32px;object-fit:contain;border-radius:4px;"></div>
     <div>
       <div class="topbar-title">Ironwood LLC — Monthly P&amp;L</div>
       <div class="topbar-sub">Partner Financial Report</div>

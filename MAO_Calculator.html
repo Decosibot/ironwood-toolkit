@@ -7,7 +7,7 @@
   <title>MAO Calculator — Ironwood Homes and Renovations</title>
   <style>
     body {
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -21,19 +21,10 @@
       margin-bottom: 32px;
     }
 
-    .header .brand {
-      font-size: 11px;
-      letter-spacing: 4px;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 8px;
-      font-family: var(--sans);
-    }
-
     .header h1 {
       font-size: 28px;
       font-weight: 700;
-      font-family: var(--serif);
+      font-family: 'Instrument Serif', Georgia, serif;
       color: var(--ink);
       margin-bottom: 6px;
     }
@@ -61,7 +52,7 @@
       margin-bottom: 18px;
       padding-bottom: 12px;
       border-bottom: 1px solid var(--hairline);
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     /* PROPERTY TYPE TOGGLE */
@@ -82,7 +73,7 @@
       border: none;
       cursor: pointer;
       font-size: 13px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
       transition: all 0.2s;
       text-align: center;
     }
@@ -115,7 +106,7 @@
       color: var(--muted);
       margin-bottom: 8px;
       letter-spacing: 0.5px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .input-group label .hint {
@@ -145,7 +136,7 @@
       font-weight: 700;
       background: var(--surface);
       border-right: 1px solid var(--hairline);
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .input-row input {
@@ -155,7 +146,7 @@
       outline: none;
       color: var(--ink);
       font-size: 15px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
       padding: 12px 14px;
     }
 
@@ -172,7 +163,7 @@
       font-size: 12px;
       color: var(--muted);
       margin-bottom: 8px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .slider-value {
@@ -210,7 +201,7 @@
       border-radius: var(--radius);
       font-size: 15px;
       font-weight: 700;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
       cursor: pointer;
       letter-spacing: 1px;
       transition: opacity 0.2s;
@@ -239,7 +230,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid var(--bronze-border);
+      border-bottom: 1px solid var(--bronze-tint);
     }
 
     .results-header h2 {
@@ -247,7 +238,7 @@
       letter-spacing: 2px;
       text-transform: uppercase;
       color: var(--ink);
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .verdict {
@@ -256,12 +247,12 @@
       font-size: 12px;
       font-weight: 700;
       letter-spacing: 1px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
-    .verdict.go { background: var(--ok-bg); color: var(--ok); border: 1px solid rgba(79,122,74,.2); }
-    .verdict.no-go { background: var(--err-bg); color: var(--err); border: 1px solid rgba(176,70,60,.2); }
-    .verdict.caution { background: var(--warn-bg); color: var(--warn); border: 1px solid rgba(138,106,26,.2); }
+    .verdict.go { background: var(--green-tint); color: var(--green); border: 1px solid rgba(79,122,74,.2); }
+    .verdict.no-go { background: var(--red-tint); color: var(--red); border: 1px solid rgba(176,70,60,.2); }
+    .verdict.caution { background: #fef3e2; color: #c9843a; border: 1px solid rgba(138,106,26,.2); }
 
     .results-body { padding: 24px 28px; }
 
@@ -271,7 +262,7 @@
       background: var(--bronze-wash);
       border-radius: var(--radius);
       margin-bottom: 24px;
-      border: 1px solid var(--bronze-border);
+      border: 1px solid var(--bronze-tint);
     }
 
     .mao-label {
@@ -280,24 +271,24 @@
       text-transform: uppercase;
       color: var(--bronze);
       margin-bottom: 8px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .mao-amount {
       font-size: 42px;
       font-weight: 400;
-      color: var(--ok);
-      font-family: var(--serif);
+      color: var(--green);
+      font-family: 'Instrument Serif', Georgia, serif;
     }
 
-    .mao-amount.warning { color: var(--warn); }
-    .mao-amount.danger { color: var(--err); }
+    .mao-amount.warning { color: #c9843a; }
+    .mao-amount.danger { color: var(--red); }
 
     .mao-sub {
       font-size: 12px;
       color: var(--muted);
       margin-top: 6px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .breakdown-grid {
@@ -320,19 +311,19 @@
       text-transform: uppercase;
       color: var(--muted);
       margin-bottom: 6px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .breakdown-item .b-value {
       font-size: 17px;
       font-weight: 700;
       color: var(--ink);
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
-    .breakdown-item .b-value.positive { color: var(--ok); }
-    .breakdown-item .b-value.negative { color: var(--err); }
-    .breakdown-item .b-value.neutral { color: var(--warn); }
+    .breakdown-item .b-value.positive { color: var(--green); }
+    .breakdown-item .b-value.negative { color: var(--red); }
+    .breakdown-item .b-value.neutral { color: #c9843a; }
 
     .formula-trace {
       background: var(--surface-2);
@@ -348,8 +339,8 @@
 
     .formula-trace .ft-label { color: var(--muted); }
     .formula-trace .ft-value { color: var(--ink); }
-    .formula-trace .ft-result { color: var(--ok); font-weight: bold; }
-    .formula-trace .ft-rule { color: var(--warn); }
+    .formula-trace .ft-result { color: var(--green); font-weight: bold; }
+    .formula-trace .ft-rule { color: #c9843a; }
     .formula-trace .ft-sep {
       display: block;
       border-top: 1px solid var(--hairline);
@@ -361,12 +352,12 @@
       padding: 16px 18px;
       font-size: 13px;
       line-height: 1.6;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
-    .advice-box.go { background: var(--ok-bg); border: 1px solid rgba(79,122,74,.25); color: var(--ok); }
-    .advice-box.no-go { background: var(--err-bg); border: 1px solid rgba(176,70,60,.25); color: var(--err); }
-    .advice-box.caution { background: var(--warn-bg); border: 1px solid rgba(138,106,26,.25); color: var(--warn); }
+    .advice-box.go { background: var(--green-tint); border: 1px solid rgba(79,122,74,.25); color: var(--green); }
+    .advice-box.no-go { background: var(--red-tint); border: 1px solid rgba(176,70,60,.25); color: var(--red); }
+    .advice-box.caution { background: #fef3e2; border: 1px solid rgba(138,106,26,.25); color: #c9843a; }
 
     /* PRINT */
     .print-btn {
@@ -378,7 +369,7 @@
       border: 1px solid var(--hairline);
       border-radius: var(--radius);
       font-size: 13px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
       cursor: pointer;
       margin-top: 14px;
       letter-spacing: 1px;
@@ -401,7 +392,7 @@
       text-transform: uppercase;
       color: var(--muted);
       white-space: nowrap;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .section-divider::before,
@@ -442,7 +433,7 @@
       border: none;
       cursor: pointer;
       font-size: 13px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
       transition: all 0.2s;
       text-align: center;
     }
@@ -469,10 +460,10 @@
       padding: 10px 8px;
       background: var(--surface-2);
       border: 1px solid var(--hairline);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius);
       color: var(--muted);
       font-size: 12px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
       cursor: pointer;
       text-align: center;
       transition: all 0.2s;
@@ -481,7 +472,7 @@
 
     .bce-sel-btn .bsl { display: block; font-weight: 700; font-size: 12px; color: var(--ink); margin-bottom: 2px; }
     .bce-sel-btn .bss { display: block; font-size: 10px; color: var(--muted); }
-    .bce-sel-btn:hover { border-color: var(--bronze-border); }
+    .bce-sel-btn:hover { border-color: var(--bronze-tint); }
     .bce-sel-btn.active { background: var(--bronze-wash); border-color: var(--bronze); }
     .bce-sel-btn.active .bsl { color: var(--bronze-deep); }
     .bce-sel-btn.active .bss { color: var(--muted); }
@@ -493,7 +484,7 @@
       color: var(--muted);
       margin-bottom: 8px;
       margin-top: 2px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .bce-breakdown {
@@ -515,13 +506,13 @@
       color: var(--muted);
       padding: 5px 0;
       border-bottom: 1px solid var(--hairline);
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .bce-row:last-child { border-bottom: none; }
     .bce-row .bce-val { color: var(--ink); font-weight: 600; font-size: 13px; }
     .bce-row .bce-val.gold { color: var(--bronze-deep); }
-    .bce-row .bce-val.warn { color: var(--warn); }
+    .bce-row .bce-val.warn { color: #c9843a; }
 
     .bce-total-row {
       display: flex;
@@ -531,9 +522,9 @@
       font-weight: 700;
       color: var(--bronze-deep);
       padding: 10px 0 0;
-      border-top: 1px solid var(--bronze-border);
+      border-top: 1px solid var(--bronze-tint);
       margin-top: 6px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .bce-apply-btn {
@@ -542,9 +533,9 @@
       background: transparent;
       border: 1px solid var(--bronze);
       color: var(--bronze-deep);
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius);
       font-size: 12px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
       font-weight: 700;
       letter-spacing: 1px;
       text-transform: uppercase;
@@ -559,14 +550,14 @@
       display: inline-block;
       padding: 4px 10px;
       background: var(--bronze-wash);
-      border: 1px solid var(--bronze-border);
+      border: 1px solid var(--bronze-tint);
       color: var(--bronze-deep);
       font-size: 10px;
       letter-spacing: 1px;
       text-transform: uppercase;
       border-radius: 3px;
       margin-bottom: 14px;
-      font-family: var(--sans);
+      font-family: 'Geist', system-ui, sans-serif;
     }
 
     .reno-rate-row {
@@ -577,37 +568,49 @@
       border-bottom: 1px solid var(--hairline);
       cursor: pointer;
       transition: background 0.15s;
-      border-radius: var(--radius-sm);
+      border-radius: var(--radius);
     }
 
     .reno-rate-row:last-child { border-bottom: none; }
     .reno-rate-row:hover { background: var(--bronze-wash); }
-    .reno-rate-row .rr-name { font-size: 13px; color: var(--ink); font-family: var(--sans); }
-    .reno-rate-row .rr-range { font-size: 11px; color: var(--muted); font-family: var(--sans); }
-    .reno-rate-row .rr-apply { font-size: 11px; color: var(--bronze); font-weight: 700; letter-spacing: 1px; font-family: var(--sans); }
+    .reno-rate-row .rr-name { font-size: 13px; color: var(--ink); font-family: 'Geist', system-ui, sans-serif; }
+    .reno-rate-row .rr-range { font-size: 11px; color: var(--muted); font-family: 'Geist', system-ui, sans-serif; }
+    .reno-rate-row .rr-apply { font-size: 11px; color: var(--bronze); font-weight: 700; letter-spacing: 1px; font-family: 'Geist', system-ui, sans-serif; }
   </style>
 </head>
 <body>
 
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+    <div>
+      <div class="iw-logo-text">Ironwood Homes and Renovations</div>
+      <div class="iw-logo-sub">MAO CALCULATOR</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a href="index.html" class="iw-back-btn">← Toolkit</a>
+  </div>
+</div>
+
 <!-- LOAD DEAL BAR -->
-<div id="iw-deal-bar" style="width:100%;background:var(--ok-bg);border-bottom:1px solid rgba(79,122,74,.25);padding:10px 24px;display:flex;align-items:center;gap:12px;font-size:13px;flex-wrap:wrap;font-family:var(--sans);">
-  <span style="color:var(--ok);font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:11px;">Load Deal</span>
-  <select id="iw-deal-select" style="background:var(--surface);border:1px solid var(--hairline);color:var(--ink);padding:6px 12px;border-radius:6px;font-size:13px;min-width:260px;font-family:var(--sans);" onchange="iwLoadDeal()">
+<div id="iw-deal-bar" style="width:100%;background:var(--green-tint);border-bottom:1px solid rgba(79,122,74,.25);padding:10px 24px;display:flex;align-items:center;gap:12px;font-size:13px;flex-wrap:wrap;font-family:'Geist',system-ui,sans-serif;">
+  <span style="color:var(--green);font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:11px;">Load Deal</span>
+  <select id="iw-deal-select" style="background:var(--surface);border:1px solid var(--hairline);color:var(--ink);padding:6px 12px;border-radius:6px;font-size:13px;min-width:260px;font-family:'Geist',system-ui,sans-serif;" onchange="iwLoadDeal()">
     <option value="">— Select from Property Pipeline —</option>
   </select>
-  <span id="iw-deal-badge" style="display:none;background:var(--ok-bg);color:var(--ok);padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;border:1px solid rgba(79,122,74,.2);"></span>
-  <a href="Property_Pipeline.html" style="margin-left:auto;color:var(--ok);font-size:12px;text-decoration:none;opacity:.7;">Open Pipeline →</a>
+  <span id="iw-deal-badge" style="display:none;background:var(--green-tint);color:var(--green);padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;border:1px solid rgba(79,122,74,.2);"></span>
+  <a href="Property_Pipeline.html" style="margin-left:auto;color:var(--green);font-size:12px;text-decoration:none;opacity:.7;">Open Pipeline →</a>
 </div>
 
 <div class="header">
-  <div class="brand">Ironwood Homes and Renovations</div>
   <h1>MAO Calculator</h1>
   <p>Maximum Allowable Offer — BRRRR Deal Analyzer</p>
 </div>
 
 <!-- BUILD COST ESTIMATOR CARD -->
 <div class="card" id="bce-card">
-  <div class="card-title" style="color:var(--bronze-deep);border-color:var(--bronze-border);">Build Cost Estimator</div>
+  <div class="card-title" style="color:var(--bronze-deep);border-color:var(--bronze-tint);">Build Cost Estimator</div>
   <div class="bce-data-badge">Based on 5 Completed Dogwood Builds &mdash; Real Numbers</div>
 
   <!-- MODE TOGGLE -->
@@ -748,7 +751,7 @@
       <span class="hint">Used to estimate rehab cost at $125–$135/sqft</span>
     </label>
     <div class="input-row" style="gap:10px; flex-wrap:wrap; align-items:center;">
-      <input type="number" id="sqft" placeholder="1,500" min="0" step="50" oninput="calcRehabFromSqft()" style="background:var(--surface-2);border:1px solid var(--hairline);color:var(--ink);border-radius:var(--radius);padding:10px 14px;font-size:16px;width:130px;font-family:var(--sans);"/>
+      <input type="number" id="sqft" placeholder="1,500" min="0" step="50" oninput="calcRehabFromSqft()" style="background:var(--surface-2);border:1px solid var(--hairline);color:var(--ink);border-radius:var(--radius);padding:10px 14px;font-size:16px;width:130px;font-family:'Geist',system-ui,sans-serif;"/>
       <span style="color:var(--muted); font-size:12px;">sq ft</span>
       <span style="color:var(--bronze); font-size:12px; margin-left:4px;" id="sqft-range-label">× $130/sqft</span>
     </div>

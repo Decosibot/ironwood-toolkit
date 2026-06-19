@@ -6,165 +6,162 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Scope of Work Tool — Ironwood Homes and Renovations</title>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;}
-  body{font-family:Arial,sans-serif;background:#0a0a0a;color:#fff;min-height:100vh;}
-
-  /* ── HEADER ── */
-  #app-header{
-    background:#080808;border-bottom:2px solid #2a2a2a;
-    padding:12px 24px;display:flex;align-items:center;justify-content:space-between;
-    position:sticky;top:0;z-index:100;
-  }
-  #app-header .brand{font-size:10px;letter-spacing:4px;text-transform:uppercase;color:#b8b0a0;}
-  #app-header .title{font-size:17px;font-weight:bold;color:#fff;margin-top:2px;}
-  .hdr-btns{display:flex;gap:8px;flex-wrap:wrap;}
-  .hdr-btn{
-    padding:7px 14px;border-radius:6px;border:none;cursor:pointer;font-size:11px;
-    font-weight:bold;letter-spacing:1px;text-transform:uppercase;transition:opacity .2s;
-  }
-  .hdr-btn:hover{opacity:.82;}
-  .btn-new{background:#c9a84c;color:#fff;}
-  .btn-print{background:#2a2a2a;color:#f5f0e8;border:1px solid #c9a84c;}
-  .btn-save{background:#5a8a5a;color:#0a0a0a;}
-  .btn-load{background:#c9843a;color:#0a0a0a;}
+  body{font-family:'Geist', system-ui, sans-serif;min-height:100vh;}
 
   /* ── TAB BAR ── */
   #tab-bar{
-    background:#080808;border-bottom:2px solid #2a2a2a;
+    background:var(--surface);border-bottom:1px solid var(--hairline);
     display:flex;overflow-x:auto;
-    position:sticky;top:55px;z-index:99;
+    position:sticky;top:64px;z-index:99;
   }
   .tab-btn{
     padding:12px 20px;background:transparent;border:none;cursor:pointer;
-    color:#b8b0a0;font-size:12px;font-weight:bold;letter-spacing:.5px;
+    color:var(--muted);font-size:12px;font-weight:bold;letter-spacing:.5px;
     border-bottom:3px solid transparent;white-space:nowrap;transition:all .2s;
+    font-family:'Geist', system-ui, sans-serif;
   }
-  .tab-btn:hover{color:#f5f0e8;background:#0a0a0a;}
-  .tab-btn.active{color:#b8b0a0;border-bottom:3px solid #b8b0a0;background:#0a0a0a;}
+  .tab-btn:hover{color:var(--ink);background:var(--bg);}
+  .tab-btn.active{color:var(--bronze);border-bottom:3px solid var(--bronze);background:var(--bg);}
 
   /* ── TAB CONTENT ── */
   .tab-panel{display:none;padding:20px 22px;max-width:1700px;margin:0 auto;}
   .tab-panel.active{display:block;}
 
   /* ── CARDS ── */
-  .card{background:#111111;border-radius:10px;border:1px solid #2a2a2a;padding:18px 22px;margin-bottom:16px;}
-  .card-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:#b8b0a0;margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid #2a2a2a;}
+  .card{background:var(--surface);border-radius:10px;border:1px solid var(--hairline);padding:18px 22px;margin-bottom:16px;}
+  .card-title{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:12px;padding-bottom:9px;border-bottom:1px solid var(--hairline);}
+
+  /* ── HEADER ACTION BUTTONS ── */
+  .hdr-btns{display:flex;gap:8px;flex-wrap:wrap;}
+  .hdr-btn{
+    padding:7px 14px;border-radius:6px;border:none;cursor:pointer;font-size:11px;
+    font-weight:bold;letter-spacing:1px;text-transform:uppercase;transition:opacity .2s;
+    font-family:'Geist', system-ui, sans-serif;
+  }
+  .hdr-btn:hover{opacity:.82;}
+  .btn-new{background:var(--bronze);color:#fff;}
+  .btn-print{background:transparent;color:var(--muted);border:1px solid var(--hairline);}
+  .btn-save{background:var(--green);color:#fff;}
+  .btn-load{background:var(--bronze-tint);color:var(--bronze-deep);border:1px solid var(--bronze-tint);}
 
   /* ── FORMS ── */
   .form-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px 18px;}
   .form-group{display:flex;flex-direction:column;gap:4px;}
-  .form-group label{font-size:10px;color:#b8b0a0;text-transform:uppercase;letter-spacing:.5px;}
+  .form-group label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;}
   .form-group input,.form-group select,.form-group textarea{
-    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:6px;
-    color:#fff;padding:7px 9px;font-size:13px;font-family:Arial;transition:border-color .2s;
+    background:var(--surface-2);border:1px solid var(--hairline);border-radius:6px;
+    color:var(--ink);padding:7px 9px;font-size:13px;font-family:'Geist', system-ui, sans-serif;transition:border-color .2s;
   }
-  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:#c9a84c;}
-  .form-group select option{background:#111111;}
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--bronze);}
+  .form-group select option{background:var(--surface-2);}
   .form-group textarea{resize:vertical;min-height:75px;}
 
   /* ── SUMMARY STRIP ── */
   #summary-strip{display:flex;flex-wrap:wrap;gap:9px;margin-bottom:16px;}
-  .sum-box{background:#111111;border:1px solid #2a2a2a;border-radius:8px;padding:11px 14px;flex:1;min-width:120px;text-align:center;}
-  .sum-box .sum-label{font-size:9px;color:#b8b0a0;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
-  .sum-box .sum-val{font-size:17px;font-weight:bold;color:#b8b0a0;}
-  .sum-box.green .sum-val{color:#5a8a5a;}
-  .sum-box.red .sum-val{color:#8a3a3a;}
+  .sum-box{background:var(--surface);border:1px solid var(--hairline);border-radius:8px;padding:11px 14px;flex:1;min-width:120px;text-align:center;}
+  .sum-box .sum-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;}
+  .sum-box .sum-val{font-size:17px;font-weight:bold;color:var(--muted);}
+  .sum-box.green .sum-val{color:var(--green);}
+  .sum-box.red .sum-val{color:var(--red);}
   .sum-box.yellow .sum-val{color:#c9843a;}
 
   /* ── LAYOUT: sidebar + main ── */
   #budget-layout{display:flex;gap:18px;align-items:flex-start;}
   #cat-sidebar{
     width:210px;flex-shrink:0;
-    position:sticky;top:103px;
-    max-height:calc(100vh - 115px);overflow-y:auto;
+    position:sticky;top:120px;
+    max-height:calc(100vh - 132px);overflow-y:auto;
   }
   #cat-sidebar::-webkit-scrollbar{width:4px;}
-  #cat-sidebar::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:2px;}
+  #cat-sidebar::-webkit-scrollbar-thumb{background:var(--hairline);border-radius:2px;}
   #budget-main{flex:1;min-width:0;}
   .sidebar-item{
     display:flex;justify-content:space-between;align-items:center;
     padding:8px 10px;border-radius:6px;cursor:pointer;
-    color:#f5f0e8;font-size:11px;margin-bottom:3px;
+    color:var(--ink-soft);font-size:11px;margin-bottom:3px;
     border:1px solid transparent;transition:all .2s;
   }
-  .sidebar-item:hover{background:#2a2a2a;border-color:#c9a84c;}
-  .sidebar-item .si-total{color:#b8b0a0;font-size:10px;font-weight:bold;}
+  .sidebar-item:hover{background:var(--surface);border-color:var(--bronze);}
+  .sidebar-item .si-total{color:var(--muted);font-size:10px;font-weight:bold;}
 
   /* ── SECTION CARDS ── */
-  .section-card{background:#111111;border:1px solid #2a2a2a;border-radius:10px;margin-bottom:12px;overflow:hidden;}
+  .section-card{background:var(--surface);border:1px solid var(--hairline);border-radius:10px;margin-bottom:12px;overflow:hidden;}
   .section-header{
     display:flex;align-items:center;justify-content:space-between;
-    padding:11px 16px;cursor:pointer;background:#111111;border-bottom:1px solid #2a2a2a;
+    padding:11px 16px;cursor:pointer;background:var(--surface);border-bottom:1px solid var(--hairline);
   }
-  .section-header:hover{background:#111111;}
-  .section-header .sec-title{font-size:11px;font-weight:bold;color:#b8b0a0;letter-spacing:1px;text-transform:uppercase;}
-  .section-header .sec-total{font-size:12px;font-weight:bold;color:#5a8a5a;}
-  .section-header .toggle-icon{color:#b8b0a0;font-size:14px;transition:transform .2s;margin-left:10px;}
+  .section-header:hover{background:var(--bg);}
+  .section-header .sec-title{font-size:11px;font-weight:bold;color:var(--muted);letter-spacing:1px;text-transform:uppercase;}
+  .section-header .sec-total{font-size:12px;font-weight:bold;color:var(--green);}
+  .section-header .toggle-icon{color:var(--muted);font-size:14px;transition:transform .2s;margin-left:10px;}
   .section-body.collapsed{display:none;}
 
   /* ── BUDGET TABLE ── */
   .budget-table{width:100%;border-collapse:collapse;font-size:11.5px;}
   .budget-table th{
-    background:#0a0a0a;color:#b8b0a0;text-transform:uppercase;
+    background:var(--bg);color:var(--muted);text-transform:uppercase;
     letter-spacing:.5px;font-size:9.5px;padding:7px 7px;
-    border-bottom:1px solid #2a2a2a;text-align:left;white-space:nowrap;
+    border-bottom:1px solid var(--hairline);text-align:left;white-space:nowrap;
   }
-  .budget-table td{padding:4px 5px;border-bottom:1px solid #2a2a2a;vertical-align:middle;}
+  .budget-table td{padding:4px 5px;border-bottom:1px solid var(--hairline);vertical-align:middle;}
   .budget-table tr:last-child td{border-bottom:none;}
-  .budget-table tr:hover td{background:#111111;}
+  .budget-table tr:hover td{background:var(--bg);}
   .budget-table input{
-    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:4px;
-    color:#fff;padding:3px 5px;font-size:11.5px;width:100%;font-family:Arial;
+    background:var(--surface-2);border:1px solid var(--hairline);border-radius:4px;
+    color:var(--ink);padding:3px 5px;font-size:11.5px;width:100%;font-family:'Geist', system-ui, sans-serif;
   }
-  .budget-table input:focus{outline:none;border-color:#c9a84c;}
+  .budget-table input:focus{outline:none;border-color:var(--bronze);}
   .num-input{width:88px !important;text-align:right;}
   .desc-input{width:100%;min-width:170px;}
   .date-input{width:108px !important;}
   .line-total-cell{color:#c9843a;font-weight:bold;white-space:nowrap;font-size:11.5px;}
-  .actual-total-cell{color:#5a8a5a;font-weight:bold;font-size:11.5px;}
-  .del-btn{background:none;border:none;color:#8a3a3a;cursor:pointer;font-size:15px;padding:1px 5px;border-radius:4px;}
-  .del-btn:hover{background:#8a3a3a22;}
+  .actual-total-cell{color:var(--green);font-weight:bold;font-size:11.5px;}
+  .del-btn{background:none;border:none;color:var(--red);cursor:pointer;font-size:15px;padding:1px 5px;border-radius:4px;}
+  .del-btn:hover{background:var(--red-tint);}
   .add-row-btn{
-    margin:8px 12px;padding:5px 12px;background:#0a0a0a;
-    border:1px dashed #c9a84c;border-radius:5px;color:#b8b0a0;
+    margin:8px 12px;padding:5px 12px;background:var(--bg);
+    border:1px dashed var(--bronze);border-radius:5px;color:var(--muted);
     cursor:pointer;font-size:11px;display:inline-flex;align-items:center;gap:4px;
+    font-family:'Geist', system-ui, sans-serif;
   }
-  .add-row-btn:hover{background:#2a2a2a;}
+  .add-row-btn:hover{background:var(--surface);}
 
   /* ── CONTINGENCY / NOTES ── */
-  .conting-row{display:flex;align-items:center;gap:14px;padding:11px 16px;border-top:1px solid #2a2a2a;flex-wrap:wrap;}
-  .conting-row label{font-size:12px;color:#b8b0a0;}
+  .conting-row{display:flex;align-items:center;gap:14px;padding:11px 16px;border-top:1px solid var(--hairline);flex-wrap:wrap;}
+  .conting-row label{font-size:12px;color:var(--muted);}
   .conting-row input{
-    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:5px;
-    color:#fff;padding:5px 9px;font-size:14px;width:68px;text-align:right;
+    background:var(--surface-2);border:1px solid var(--hairline);border-radius:5px;
+    color:var(--ink);padding:5px 9px;font-size:14px;width:68px;text-align:right;
+    font-family:'Geist', system-ui, sans-serif;
   }
-  .conting-row input:focus{outline:none;border-color:#c9a84c;}
+  .conting-row input:focus{outline:none;border-color:var(--bronze);}
   .conting-row .conting-val{color:#c9843a;font-weight:bold;font-size:14px;}
 
   /* ── LEDGER TABLE ── */
   .ledger-table{width:100%;border-collapse:collapse;font-size:12px;}
   .ledger-table th{
-    background:#0a0a0a;color:#b8b0a0;text-transform:uppercase;
+    background:var(--bg);color:var(--muted);text-transform:uppercase;
     letter-spacing:.5px;font-size:9.5px;padding:8px 9px;
-    border-bottom:1px solid #2a2a2a;text-align:left;white-space:nowrap;
+    border-bottom:1px solid var(--hairline);text-align:left;white-space:nowrap;
     position:sticky;top:0;z-index:2;
   }
-  .ledger-table td{padding:6px 9px;border-bottom:1px solid #2a2a2a;vertical-align:middle;}
-  .ledger-table tr:hover td{background:#111111;}
+  .ledger-table td{padding:6px 9px;border-bottom:1px solid var(--hairline);vertical-align:middle;}
+  .ledger-table tr:hover td{background:var(--bg);}
   .ledger-table input,.ledger-table select{
-    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:4px;
-    color:#fff;padding:4px 6px;font-size:11.5px;width:100%;font-family:Arial;
+    background:var(--surface-2);border:1px solid var(--hairline);border-radius:4px;
+    color:var(--ink);padding:4px 6px;font-size:11.5px;width:100%;font-family:'Geist', system-ui, sans-serif;
   }
-  .ledger-table input:focus,.ledger-table select:focus{outline:none;border-color:#c9a84c;}
+  .ledger-table input:focus,.ledger-table select:focus{outline:none;border-color:var(--bronze);}
   .amount-cell{color:#c9843a;font-weight:bold;text-align:right;}
-  .total-row td{background:#080808;font-weight:bold;border-top:2px solid #2a2a2a;}
-  .total-row .amount-cell{color:#5a8a5a;font-size:14px;}
+  .total-row td{background:var(--bg);font-weight:bold;border-top:2px solid var(--hairline);}
+  .total-row .amount-cell{color:var(--green);font-size:14px;}
 
   .add-btn{
     display:inline-flex;align-items:center;gap:5px;
-    padding:7px 16px;background:#c9a84c;color:#fff;
+    padding:7px 16px;background:var(--bronze);color:#fff;
     border:none;border-radius:6px;cursor:pointer;font-size:11px;font-weight:bold;
     letter-spacing:.5px;text-transform:uppercase;transition:opacity .2s;margin-top:11px;
+    font-family:'Geist', system-ui, sans-serif;
   }
   .add-btn:hover{opacity:.85;}
 
@@ -175,68 +172,69 @@
   /* ── ACTION ITEMS ── */
   .filter-bar{display:flex;gap:7px;margin-bottom:13px;flex-wrap:wrap;}
   .filter-btn{
-    padding:5px 13px;border-radius:5px;border:1px solid #2a2a2a;
-    background:#111111;color:#b8b0a0;cursor:pointer;font-size:11px;
+    padding:5px 13px;border-radius:5px;border:1px solid var(--hairline);
+    background:var(--surface);color:var(--muted);cursor:pointer;font-size:11px;
     font-weight:bold;text-transform:uppercase;letter-spacing:.5px;transition:all .2s;
+    font-family:'Geist', system-ui, sans-serif;
   }
-  .filter-btn:hover{border-color:#c9a84c;color:#f5f0e8;}
-  .filter-btn.active{background:#c9a84c;color:#fff;border-color:#c9a84c;}
-  .status-new{color:#b8b0a0;}
+  .filter-btn:hover{border-color:var(--bronze);color:var(--bronze);}
+  .filter-btn.active{background:var(--bronze);color:#fff;border-color:var(--bronze);}
+  .status-new{color:var(--muted);}
   .status-inprogress{color:#c9843a;}
-  .status-complete{color:#5a8a5a;}
-  .status-blocked{color:#8a3a3a;}
-  tr.row-new td:first-child{border-left:3px solid #c9a84c;}
+  .status-complete{color:var(--green);}
+  .status-blocked{color:var(--red);}
+  tr.row-new td:first-child{border-left:3px solid var(--bronze);}
   tr.row-inprogress td:first-child{border-left:3px solid #c9843a;}
-  tr.row-complete td:first-child{border-left:3px solid #5a8a5a;}
-  tr.row-blocked td:first-child{border-left:3px solid #8a3a3a;}
+  tr.row-complete td:first-child{border-left:3px solid var(--green);}
+  tr.row-blocked td:first-child{border-left:3px solid var(--red);}
   .action-status-sel{
-    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:4px;
-    color:#fff;padding:4px 6px;font-size:11px;font-family:Arial;width:100%;
+    background:var(--surface-2);border:1px solid var(--hairline);border-radius:4px;
+    color:var(--ink);padding:4px 6px;font-size:11px;font-family:'Geist', system-ui, sans-serif;width:100%;
   }
-  .action-status-sel:focus{outline:none;border-color:#c9a84c;}
+  .action-status-sel:focus{outline:none;border-color:var(--bronze);}
 
   /* ── BUILD PROCESS ── */
   .overall-block{margin-bottom:22px;}
-  .prog-bar-outer{background:#0a0a0a;border-radius:8px;height:22px;border:1px solid #2a2a2a;overflow:hidden;}
-  .prog-bar-inner{height:100%;background:linear-gradient(90deg,#c9a84c,#5a8a5a);border-radius:8px;transition:width .4s;}
-  .prog-pct{font-size:21px;font-weight:bold;color:#5a8a5a;margin-top:6px;}
+  .prog-bar-outer{background:var(--hairline);border-radius:8px;height:22px;border:1px solid var(--hairline);overflow:hidden;}
+  .prog-bar-inner{height:100%;background:linear-gradient(90deg,var(--bronze),var(--green));border-radius:8px;transition:width .4s;}
+  .prog-pct{font-size:21px;font-weight:bold;color:var(--green);margin-top:6px;}
   .step-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;}
-  .step-card{background:#111111;border:1px solid #2a2a2a;border-radius:10px;padding:14px 16px;position:relative;}
-  .step-card.complete{border-color:#5a8a5a;}
+  .step-card{background:var(--surface);border:1px solid var(--hairline);border-radius:10px;padding:14px 16px;position:relative;}
+  .step-card.complete{border-color:var(--green);}
   .step-card.inprogress{border-color:#c9843a;}
-  .step-num{position:absolute;top:12px;right:14px;font-size:26px;font-weight:bold;color:#2a2a2a;}
-  .step-name{font-size:13px;font-weight:bold;color:#f5f0e8;margin-bottom:5px;padding-right:34px;}
-  .step-desc{font-size:10px;color:#b8b0a0;margin-bottom:10px;line-height:1.45;}
+  .step-num{position:absolute;top:12px;right:14px;font-size:26px;font-weight:bold;color:var(--hairline);}
+  .step-name{font-size:13px;font-weight:bold;color:var(--ink);margin-bottom:5px;padding-right:34px;}
+  .step-desc{font-size:10px;color:var(--muted);margin-bottom:10px;line-height:1.45;}
   .step-card select{
-    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:5px;
-    color:#fff;padding:5px 7px;font-size:11.5px;width:100%;margin-bottom:8px;font-family:Arial;
+    background:var(--surface-2);border:1px solid var(--hairline);border-radius:5px;
+    color:var(--ink);padding:5px 7px;font-size:11.5px;width:100%;margin-bottom:8px;font-family:'Geist', system-ui, sans-serif;
   }
-  .step-card select:focus{outline:none;border-color:#c9a84c;}
-  .step-prog-outer{background:#0a0a0a;border-radius:4px;height:5px;margin-bottom:9px;}
-  .step-prog-inner{height:100%;border-radius:4px;background:#c9a84c;transition:width .4s;}
-  .step-card.complete .step-prog-inner{background:#5a8a5a;}
+  .step-card select:focus{outline:none;border-color:var(--bronze);}
+  .step-prog-outer{background:var(--hairline);border-radius:4px;height:5px;margin-bottom:9px;}
+  .step-prog-inner{height:100%;border-radius:4px;background:var(--bronze);transition:width .4s;}
+  .step-card.complete .step-prog-inner{background:var(--green);}
   .step-card.inprogress .step-prog-inner{background:#c9843a;}
   .step-card textarea{
-    background:#0a0a0a;border:1px solid #2a2a2a;border-radius:5px;
-    color:#f5f0e8;padding:5px 7px;font-size:10.5px;width:100%;
-    font-family:Arial;resize:vertical;min-height:48px;
+    background:var(--surface-2);border:1px solid var(--hairline);border-radius:5px;
+    color:var(--ink);padding:5px 7px;font-size:10.5px;width:100%;
+    font-family:'Geist', system-ui, sans-serif;resize:vertical;min-height:48px;
   }
-  .step-card textarea:focus{outline:none;border-color:#c9a84c;}
+  .step-card textarea:focus{outline:none;border-color:var(--bronze);}
 
   /* ── DRAG DROP ── */
   #drop-zone{
-    position:fixed;inset:0;background:#0a0a0acc;
+    position:fixed;inset:0;background:rgba(244,239,230,.85);
     display:none;align-items:center;justify-content:center;
-    z-index:999;font-size:22px;color:#b8b0a0;
-    border:3px dashed #c9a84c;pointer-events:none;
+    z-index:999;font-size:22px;color:var(--ink);
+    border:3px dashed var(--bronze);pointer-events:none;
   }
 
   /* ── COMBO TOTAL ── */
   .combo-total{
     display:flex;justify-content:flex-end;align-items:center;gap:16px;
-    padding:11px 14px;border-top:2px solid #2a2a2a;font-size:13px;color:#f5f0e8;
+    padding:11px 14px;border-top:2px solid var(--hairline);font-size:13px;color:var(--ink);
   }
-  .combo-total span{color:#5a8a5a;font-size:15px;font-weight:bold;}
+  .combo-total span{color:var(--green);font-size:15px;font-weight:bold;}
 
   /* ── TABLE WRAP ── */
   .table-wrap{overflow-x:auto;}
@@ -244,7 +242,7 @@
   /* ── PRINT ── */
   @media print{
     body{background:#fff !important;color:#000 !important;}
-    #app-header,#tab-bar,#cat-sidebar,.hdr-btns,
+    .iw-header,#tab-bar,#cat-sidebar,.hdr-btns,
     .add-btn,.add-row-btn,.del-btn,.filter-bar,
     #drop-zone{display:none !important;}
     .tab-panel{display:none !important;}
@@ -280,49 +278,49 @@
 
   /* Scrollbars */
   ::-webkit-scrollbar{width:6px;height:6px;}
-  ::-webkit-scrollbar-track{background:#0a0a0a;}
-  ::-webkit-scrollbar-thumb{background:#2a2a2a;border-radius:3px;}
-  ::-webkit-scrollbar-thumb:hover{background:#c9a84c;}
+  ::-webkit-scrollbar-track{background:var(--bg);}
+  ::-webkit-scrollbar-thumb{background:var(--hairline);border-radius:3px;}
+  ::-webkit-scrollbar-thumb:hover{background:var(--bronze);}
 
   /* ── SUBCONTRACTOR LOOKUP ── */
   .sub-lookup-btn{
-    background:none;border:1px solid #3a3a3a;border-radius:4px;
-    color:#b8b0a0;cursor:pointer;font-size:13px;padding:2px 5px;
+    background:none;border:1px solid var(--hairline);border-radius:4px;
+    color:var(--muted);cursor:pointer;font-size:13px;padding:2px 5px;
     flex-shrink:0;transition:all .15s;line-height:1;
   }
-  .sub-lookup-btn:hover{background:#c9a84c22;border-color:#c9a84c;color:#c9a84c;}
+  .sub-lookup-btn:hover{background:var(--bronze-wash);border-color:var(--bronze);color:var(--bronze);}
 
   /* Popover */
   .sub-popover{
     position:fixed;z-index:9999;
-    background:#111111;border:1px solid #c9a84c44;border-radius:10px;
-    box-shadow:0 12px 40px -6px rgba(0,0,0,.7);
+    background:var(--surface);border:1px solid var(--bronze-tint);border-radius:10px;
+    box-shadow:var(--shadow-lg);
     width:290px;max-height:320px;display:flex;flex-direction:column;overflow:hidden;
   }
   .sub-pop-header{
     display:flex;align-items:center;justify-content:space-between;
-    padding:10px 14px 8px;border-bottom:1px solid #2a2a2a;flex-shrink:0;
+    padding:10px 14px 8px;border-bottom:1px solid var(--hairline);flex-shrink:0;
   }
-  .sub-pop-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:#b8b0a0;font-weight:bold;}
-  .sub-pop-close{background:none;border:none;color:#b8b0a0;cursor:pointer;font-size:17px;padding:0 2px;line-height:1;}
-  .sub-pop-close:hover{color:#fff;}
+  .sub-pop-title{font-size:10px;text-transform:uppercase;letter-spacing:1.5px;color:var(--muted);font-weight:bold;}
+  .sub-pop-close{background:none;border:none;color:var(--muted);cursor:pointer;font-size:17px;padding:0 2px;line-height:1;}
+  .sub-pop-close:hover{color:var(--ink);}
   .sub-pop-body{padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:7px;}
   .sub-trade-sel{
-    width:100%;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:5px;
-    color:#f5f0e8;padding:6px 8px;font-size:12px;font-family:Arial;
-    appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'><path d='M1 1l4 4 4-4' stroke='%23b8b0a0' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
+    width:100%;background:var(--surface-2);border:1px solid var(--hairline);border-radius:5px;
+    color:var(--ink);padding:6px 8px;font-size:12px;font-family:'Geist', system-ui, sans-serif;
+    appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'><path d='M1 1l4 4 4-4' stroke='%237A6F60' stroke-width='1.5' fill='none' stroke-linecap='round'/></svg>");
     background-repeat:no-repeat;background-position:right 8px center;padding-right:24px;
     cursor:pointer;
   }
-  .sub-trade-sel:focus{outline:none;border-color:#c9a84c;}
+  .sub-trade-sel:focus{outline:none;border-color:var(--bronze);}
   .sub-list{display:flex;flex-direction:column;gap:4px;overflow-y:auto;}
   .sub-list-item{
     padding:7px 10px;border-radius:6px;cursor:pointer;border:1px solid transparent;
     transition:all .15s;
   }
-  .sub-list-item:hover{background:#1a1a1a;border-color:#c9a84c44;}
-  .sub-item-company{font-size:12px;font-weight:bold;color:#f5f0e8;}
-  .sub-item-meta{font-size:10px;color:#b8b0a0;margin-top:1px;}
+  .sub-list-item:hover{background:var(--bg);border-color:var(--bronze-tint);}
+  .sub-item-company{font-size:12px;font-weight:bold;color:var(--ink);}
+  .sub-item-meta{font-size:10px;color:var(--muted);margin-top:1px;}
 </style>
 <link rel="stylesheet" href="iw-print.css">
 </head>
@@ -345,30 +343,36 @@
 <div class="iw-lh-bar"></div>
 
 <!-- LOAD DEAL BAR -->
-<div id="iw-deal-bar" style="width:100%;background:#1a2a1f;border-bottom:1px solid #2d4a35;padding:10px 24px;display:flex;align-items:center;gap:12px;font-size:13px;flex-wrap:wrap;">
-  <span style="color:#7EC98A;font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:11px;">Load Deal</span>
-  <select id="iw-deal-select" style="background:#0f1f14;border:1px solid #2d4a35;color:#e8f5e9;padding:6px 12px;border-radius:6px;font-size:13px;min-width:260px;" onchange="iwLoadDeal()">
+<div id="iw-deal-bar" style="width:100%;background:var(--green-tint);border-bottom:1px solid rgba(45,106,79,.2);padding:10px 24px;display:flex;align-items:center;gap:12px;font-size:13px;flex-wrap:wrap;">
+  <span style="color:var(--green);font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:11px;">Load Deal</span>
+  <select id="iw-deal-select" style="background:var(--surface-2);border:1px solid var(--hairline);color:var(--ink);padding:6px 12px;border-radius:6px;font-size:13px;min-width:260px;" onchange="iwLoadDeal()">
     <option value="">— Select from Property Pipeline —</option>
   </select>
-  <span id="iw-deal-badge" style="display:none;background:#2d4a35;color:#7EC98A;padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;"></span>
-  <a href="Property_Pipeline.html" style="margin-left:auto;color:#7EC98A;font-size:12px;text-decoration:none;opacity:.7;">Open Pipeline →</a>
+  <span id="iw-deal-badge" style="display:none;background:var(--green-tint);color:var(--green);padding:3px 10px;border-radius:12px;font-size:11px;font-weight:600;"></span>
+  <a href="Property_Pipeline.html" style="margin-left:auto;color:var(--green);font-size:12px;text-decoration:none;opacity:.7;">Open Pipeline →</a>
 </div>
 
 <div id="drop-zone">Drop JSON file to restore project data</div>
 
 <!-- HEADER -->
-<div id="app-header">
-  <div>
-    <div class="brand">Ironwood Homes and Renovations</div>
-    <div class="title">Construction Budget &amp; Scope of Work</div>
-  </div>
-  <div class="hdr-btns">
-    <button class="hdr-btn btn-new" onclick="newProject()">+ New Project</button>
-    <button class="hdr-btn btn-print" onclick="printActive()">Print / PDF (Internal)</button>
-    <button class="hdr-btn btn-print" onclick="printClientView()" style="background:#2a2a2a;color:#f5f0e8;border:1px solid #5a8a5a;">Print (Client View)</button>
-    <button class="hdr-btn btn-load" onclick="document.getElementById('file-load').click()">Load JSON</button>
-    <input type="file" id="file-load" accept=".json" style="display:none" onchange="loadFromFile(event)">
-    <button class="hdr-btn btn-save" onclick="saveProject()">Save JSON</button>
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+    <div>
+      <div class="iw-logo-text">Ironwood Homes and Renovations</div>
+      <div class="iw-logo-sub">SCOPE OF WORK</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <div class="hdr-btns">
+      <button class="hdr-btn btn-new" onclick="newProject()">+ New Project</button>
+      <button class="hdr-btn btn-print" onclick="printActive()">Print / PDF</button>
+      <button class="hdr-btn btn-print" onclick="printClientView()" style="border-color:var(--green);color:var(--green);">Print (Client)</button>
+      <button class="hdr-btn btn-load" onclick="document.getElementById('file-load').click()">Load JSON</button>
+      <input type="file" id="file-load" accept=".json" style="display:none" onchange="loadFromFile(event)">
+      <button class="hdr-btn btn-save" onclick="saveProject()">Save JSON</button>
+    </div>
+    <a href="index.html" class="iw-back-btn">← Toolkit</a>
   </div>
 </div>
 
@@ -386,19 +390,19 @@
 <div class="tab-panel active" id="tab0">
 
   <!-- Scope draft banner — shown when Free Estimate has a pending draft -->
-  <div id="scope-draft-banner" style="display:none;margin-bottom:16px;background:#1a1a0a;border:1.5px solid #c9a84c;border-radius:10px;padding:14px 18px;">
+  <div id="scope-draft-banner" style="display:none;margin-bottom:16px;background:var(--bronze-tint);border:1.5px solid var(--bronze);border-radius:10px;padding:14px 18px;">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;">
       <div style="flex:1;min-width:200px;">
-        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:#c9a84c;margin-bottom:5px;">Scope Draft Ready</div>
-        <div id="scope-draft-msg" style="font-size:13px;color:#f5f0e8;line-height:1.5;"></div>
+        <div style="font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--bronze-deep);margin-bottom:5px;">Scope Draft Ready</div>
+        <div id="scope-draft-msg" style="font-size:13px;color:var(--ink);line-height:1.5;"></div>
       </div>
       <div style="display:flex;gap:8px;align-items:center;flex-shrink:0;">
         <button type="button" onclick="applyDraftScope()"
-          style="background:#c9a84c;color:#0a0a0a;border:none;padding:9px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">
+          style="background:var(--bronze);color:#fff;border:none;padding:9px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">
           Load Line Items →
         </button>
         <button type="button" onclick="dismissDraftBanner()"
-          style="background:transparent;color:#b8b0a0;border:1px solid #333;padding:9px 12px;border-radius:6px;font-size:12px;cursor:pointer;">
+          style="background:transparent;color:var(--muted);border:1px solid var(--hairline);padding:9px 12px;border-radius:6px;font-size:12px;cursor:pointer;">
           Dismiss
         </button>
       </div>
@@ -466,7 +470,7 @@
     <div class="sum-box"><div class="sum-label">Internal Cost (Budget)</div><div class="sum-val" id="s-budget">$0</div></div>
     <div class="sum-box yellow"><div class="sum-label">+ Contingency</div><div class="sum-val" id="s-conting">$0</div></div>
     <div class="sum-box"><div class="sum-label">Internal Total w/ Contingency</div><div class="sum-val" id="s-total">$0</div></div>
-    <div class="sum-box" style="border-color:#5a8a5a;"><div class="sum-label">Client Price (w/ Mat Markup)</div><div class="sum-val" id="s-client-price" style="color:#c9a84c;">$0</div></div>
+    <div class="sum-box" style="border-color:var(--green);"><div class="sum-label">Client Price (w/ Mat Markup)</div><div class="sum-val" id="s-client-price" style="color:var(--bronze-deep);">$0</div></div>
     <div class="sum-box green"><div class="sum-label">Actual Spent</div><div class="sum-val" id="s-actual">$0</div></div>
     <div class="sum-box red"><div class="sum-label">Remaining</div><div class="sum-val" id="s-remain">$0</div></div>
     <div class="sum-box"><div class="sum-label">ARV Margin</div><div class="sum-val" id="s-arv">0%</div></div>
@@ -475,24 +479,24 @@
 
   <div id="budget-layout">
     <div id="cat-sidebar">
-      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#b8b0a0;padding:6px 4px 8px;border-bottom:1px solid #2a2a2a;margin-bottom:7px;">Categories</div>
+      <div style="font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--muted);padding:6px 4px 8px;border-bottom:1px solid var(--hairline);margin-bottom:7px;">Categories</div>
     </div>
     <div id="budget-main">
 
       <!-- ── SMART SCOPE PARSER ── -->
-      <div class="card" id="smart-scope-card" style="margin-bottom:16px;border:1px solid #c9a84c22;">
+      <div class="card" id="smart-scope-card" style="margin-bottom:16px;border:1px solid var(--bronze-tint);">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
           <div>
-            <div class="card-title" style="margin-bottom:2px;">📝 Smart Scope Builder</div>
-            <div style="font-size:11px;color:#b8b0a0;">Describe the work in plain English — we'll add the line items with Atlanta Metro pricing.</div>
+            <div class="card-title" style="margin-bottom:2px;">Smart Scope Builder</div>
+            <div style="font-size:11px;color:var(--muted);">Describe the work in plain English — we'll add the line items with Atlanta Metro pricing.</div>
           </div>
-          <button type="button" onclick="toggleSmartScope()" id="smart-scope-toggle" style="background:none;border:1px solid #2a2a2a;color:#b8b0a0;padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">Hide</button>
+          <button type="button" onclick="toggleSmartScope()" id="smart-scope-toggle" style="background:none;border:1px solid var(--hairline);color:var(--muted);padding:4px 10px;border-radius:4px;font-size:11px;cursor:pointer;">Hide</button>
         </div>
         <div id="smart-scope-body">
-          <textarea id="smart-scope-input" rows="3" placeholder="e.g. redo the floors, new backsplash, remove a wall, replace fixtures, new kitchen cabinets and countertops, paint throughout…" style="width:100%;background:#1a1a1a;border:1px solid #2a2a2a;color:#f5f0e8;padding:10px 12px;border-radius:6px;font-size:13px;font-family:inherit;resize:vertical;outline:none;line-height:1.6;"></textarea>
+          <textarea id="smart-scope-input" rows="3" placeholder="e.g. redo the floors, new backsplash, remove a wall, replace fixtures, new kitchen cabinets and countertops, paint throughout…" style="width:100%;background:var(--surface-2);border:1px solid var(--hairline);color:var(--ink);padding:10px 12px;border-radius:6px;font-size:13px;font-family:inherit;resize:vertical;outline:none;line-height:1.6;"></textarea>
           <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
-            <button type="button" onclick="runSmartScope()" style="background:#c9a84c;color:#0a0a0a;border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.04em;">Add Line Items →</button>
-            <button type="button" onclick="document.getElementById('smart-scope-input').value=''" style="background:none;border:1px solid #2a2a2a;color:#b8b0a0;padding:8px 14px;border-radius:4px;font-size:12px;cursor:pointer;">Clear</button>
+            <button type="button" onclick="runSmartScope()" style="background:var(--bronze);color:#fff;border:none;padding:8px 20px;border-radius:4px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:.04em;">Add Line Items →</button>
+            <button type="button" onclick="document.getElementById('smart-scope-input').value=''" style="background:none;border:1px solid var(--hairline);color:var(--muted);padding:8px 14px;border-radius:4px;font-size:12px;cursor:pointer;">Clear</button>
           </div>
           <div id="smart-scope-results" style="margin-top:12px;"></div>
         </div>
@@ -1205,7 +1209,7 @@ function buildBudgetUI(){
       <th class="internal-col" style="width:90px">Mat Cost <span style="color:#c9843a;font-size:8px;">(Internal)</span></th>
       <th class="internal-col" style="width:90px">Labor Budget</th>
       <th class="internal-col" style="width:88px">Internal Total</th>
-      <th class="client-price-col" style="width:100px;display:none;background:#1a2a1a;">Client Price</th>
+      <th class="client-price-col" style="width:100px;display:none;background:var(--green-tint);">Client Price</th>
       <th class="internal-col" style="width:90px">Mat Actual</th>
       <th class="internal-col" style="width:90px">Labor Actual</th>
       <th class="internal-col" style="width:88px">Actual Total</th>
@@ -1246,7 +1250,7 @@ function renderBudgetRows(catId){
       <td class="internal-col sub-col" id="sub-cell-${catId}-${i}">
         <div style="display:flex;align-items:center;gap:5px;min-width:130px;">
           <div style="flex:1;min-width:0;">
-            <div class="sub-display-company" style="font-size:11px;color:#f5f0e8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(subCo)}</div>
+            <div class="sub-display-company" style="font-size:11px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(subCo)}</div>
             <div class="sub-display-phone" style="font-size:10px;color:#b8b0a0;">${esc(subPh)}</div>
           </div>
           <button class="sub-lookup-btn" title="Find contractor" onclick="openSubLookup('${catId}',${i},this)">&#128100;</button>
@@ -1255,7 +1259,7 @@ function renderBudgetRows(catId){
       <td class="internal-col"><input class="num-input" type="number" value="${row.matBudget}" placeholder="0" oninput="S.budget['${catId}'][${i}].matBudget=this.value;updateBudgetRow(this,'${catId}',${i})"></td>
       <td class="internal-col"><input class="num-input" type="number" value="${row.labBudget}" placeholder="0" oninput="S.budget['${catId}'][${i}].labBudget=this.value;updateBudgetRow(this,'${catId}',${i})"></td>
       <td class="line-total-cell internal-col" id="lt-${catId}-${i}">${fmtSh(lt)}</td>
-      <td class="client-price-col" id="cp-${catId}-${i}" style="display:none;color:#c9a84c;font-weight:bold;white-space:nowrap;font-size:11.5px;">${fmtSh(clientPrice)}</td>
+      <td class="client-price-col" id="cp-${catId}-${i}" style="display:none;color:var(--bronze-deep);font-weight:bold;white-space:nowrap;font-size:11.5px;">${fmtSh(clientPrice)}</td>
       <td class="internal-col"><input class="num-input" type="number" value="${row.matActual}" placeholder="0" oninput="S.budget['${catId}'][${i}].matActual=this.value;updateBudgetRow(this,'${catId}',${i})"></td>
       <td class="internal-col"><input class="num-input" type="number" value="${row.labActual}" placeholder="0" oninput="S.budget['${catId}'][${i}].labActual=this.value;updateBudgetRow(this,'${catId}',${i})"></td>
       <td class="actual-total-cell internal-col" id="at-${catId}-${i}">${fmtSh(at)}</td>
@@ -2375,10 +2379,10 @@ function runSmartScope() {
 
   const resultEl = document.getElementById('smart-scope-results');
   resultEl.innerHTML = `
-    <div style="background:#1a2a1a;border:1px solid #2d4a2d;border-radius:6px;padding:10px 14px;font-size:12px;color:#7EC98A;">
+    <div style="background:var(--green-tint);border:1px solid var(--green);border-radius:6px;padding:10px 14px;font-size:12px;color:var(--green);">
       ✓ Added <strong>${added} line item${added !== 1 ? 's' : ''}</strong> — ${directItems.length} primary + ${added - directItems.length} supporting items (permits, demo, patch, waterproofing, etc.).
-      <div style="margin-top:6px;color:#b8b0a0;font-size:11px;">Primary work: ${directItems.map(i=>i.desc).join(' · ')}</div>
-      <div style="margin-top:4px;color:#666;font-size:10px;">Atlanta Metro mid-range estimates — update with actual bids before sharing with client.</div>
+      <div style="margin-top:6px;color:var(--muted);font-size:11px;">Primary work: ${directItems.map(i=>i.desc).join(' · ')}</div>
+      <div style="margin-top:4px;color:var(--muted);font-size:10px;">Atlanta Metro mid-range estimates — update with actual bids before sharing with client.</div>
     </div>`;
 
   document.getElementById('budget-main').scrollIntoView({ behavior:'smooth', block:'start' });

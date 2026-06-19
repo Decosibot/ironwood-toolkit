@@ -8,64 +8,32 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --bg:      #0a0a0a;
-    --surface: #111111;
-    --s2:      #1a1a1a;
-    --s3:      #222222;
-    --border:  #2a2a2a;
-    --gold:    #c9a84c;
-    --gold2:   #e8c96a;
-    --cream:   #f5f0e8;
-    --muted:   #888;
-    --dim:     #555;
-    --blue:    #4a9eda;
-    --green:   #4caf7d;
-    --orange:  #e0874a;
-    --purple:  #9b7fd4;
-    --teal:    #4ab8c1;
-  }
+  
 
   html { scroll-behavior: smooth; }
 
   body {
     background: var(--bg);
     color: var(--ink);
-    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
     font-size: 14px;
     min-height: 100vh;
     overflow-x: hidden;
   }
 
   /* ── TOPBAR ── */
-  .topbar {
-    background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
-    border-bottom: 1px solid var(--gold);
-    padding: 14px 32px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    position: sticky;
-    top: 0;
-    z-index: 200;
-  }
-  .topbar-brand { display: flex; align-items: center; gap: 12px; }
-  .topbar-logo {
-    width: 36px; height: 36px;
-    background: var(--bronze);
-    border-radius: 6px;
-    display: flex; align-items: center; justify-content: center;
-    font-weight: 900; font-size: 16px; color: #0a0a0a;
-  }
+  
+  
+  
   .topbar-name { font-size: 15px; font-weight: 700; letter-spacing: .05em; color: var(--ink); }
-  .topbar-sub  { font-size: 10px; color: var(--muted); letter-spacing: .06em; text-transform: uppercase; }
+  
   .btn-print { background: transparent; border: 1px solid var(--gold); color: var(--bronze); padding: 7px 18px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; letter-spacing: .04em; }
   .btn-print:hover { background: var(--bronze); color: var(--bg); }
 
   @media print {
     .topbar { display: none; }
     body { background: #fff; color: #0a0a0a; }
-    :root { --bg:#fff; --surface:#f9f9f9; --s2:#f2f2f2; --s3:#eee; --border:#ddd; --cream:#0a0a0a; --muted:#666; --dim:#999; }
+    
   }
 
   /* ── HERO ── */
@@ -385,7 +353,7 @@
 
 <div class="topbar">
   <div class="topbar-brand">
-    <div class="topbar-logo">IW</div>
+    <div class="topbar-logo"><img src="ihr-logo.png" alt="IHR" style="width:32px;height:32px;object-fit:contain;border-radius:4px;"></div>
     <div>
       <div class="topbar-name">Ironwood LLC</div>
       <div class="topbar-sub">Company Evolution Map · Anchor Pro Solutions × Landon Renovations</div>

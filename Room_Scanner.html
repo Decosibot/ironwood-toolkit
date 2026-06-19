@@ -2,24 +2,15 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Ironwood Room Scanner</title>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --bg: #0a0a0a; --surface: #141414; --surface2: #1e1e1e;
-  --border: #2a2a2a; --gold: #c9a84c; --gold-dim: #a07c30;
-  --cream: #f5f0e8; --muted: #888; --danger: #c0392b;
-  --success: #27ae60; --warn: #e67e22;
-}
-body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+
+body { background: var(--bg); color: var(--cream); font-family: 'Geist', system-ui, -apple-system, sans-serif; font-size: 14px; min-height: 100vh; }
 
 /* ── TOPBAR ── */
-.topbar { background: linear-gradient(135deg,#1a1a1a,#0a0a0a); border-bottom: 1px solid var(--gold); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-.topbar-brand { display: flex; align-items: center; gap: 12px; }
-.topbar-logo { width: 36px; height: 36px; background: var(--gold); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; flex-shrink: 0; }
-.topbar-title { font-size: 16px; font-weight: 700; color: var(--cream); }
-.topbar-sub { font-size: 11px; color: var(--gold); letter-spacing: 1px; text-transform: uppercase; }
 
 /* ── STEP TABS ── */
 .steps-nav { background: var(--surface); border-bottom: 1px solid var(--border); display: flex; padding: 0 24px; overflow-x: auto; }
@@ -38,17 +29,13 @@ body { background: var(--bg); color: var(--cream); font-family: 'Segoe UI', syst
 .step-panel.active { display: block; }
 
 /* ── BUTTONS ── */
-.btn { padding: 9px 18px; border: none; border-radius: 7px; font-size: 12px; font-weight: 600; cursor: pointer; letter-spacing: .5px; transition: opacity .15s, transform .1s; display: inline-flex; align-items: center; gap: 6px; }
-.btn:hover { opacity: .85; }
-.btn:active { transform: scale(.97); }
-.btn-gold { background: var(--gold); color: #0a0a0a; }
-.btn-outline { background: transparent; border: 1px solid var(--gold); color: var(--gold); }
+
 .btn-outline-muted { background: transparent; border: 1px solid var(--border); color: var(--muted); }
-.btn-danger { background: var(--danger); color: #fff; }
+
 .btn-success { background: var(--success); color: #fff; }
 .btn-warn { background: var(--warn); color: #fff; }
 .btn-lg { padding: 12px 28px; font-size: 14px; }
-.btn-sm { padding: 5px 10px; font-size: 11px; }
+
 .btn-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px; }
 
 /* ── FORMS ── */
@@ -290,7 +277,7 @@ body.field-mode .field-only.grid { display: grid; }
 }
 
 /* ── PRINT DOC STYLES ── */
-.print-doc { display: none; background: #fff; color: #111; font-family: 'Segoe UI', Arial, sans-serif; padding: 40px; max-width: 850px; margin: 0 auto; }
+.print-doc { display: none; background: #fff; color: #111; font-family: 'Geist', Arial, sans-serif; padding: 40px; max-width: 850px; margin: 0 auto; }
 .print-doc.show { display: block; }
 .pd-header { background: linear-gradient(135deg, #0a0a0a, #1a1410, #2a1f0a); color: #f5f0e8; padding: 30px 36px; border-radius: 8px 8px 0 0; }
 .pd-header .co-name { font-size: 10px; color: #c9a84c; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
@@ -423,7 +410,7 @@ body.field-mode .field-only.grid { display: grid; }
 <!-- ── TOPBAR ── -->
 <div class="topbar">
   <div class="topbar-brand">
-    <div class="topbar-logo">IW</div>
+    <div class="topbar-logo"><img src="ihr-logo.png" alt="IHR" style="width:32px;height:32px;object-fit:contain;border-radius:4px;"></div>
     <div>
       <div class="topbar-title" id="topbar-title">Room Scanner</div>
       <div class="topbar-sub" id="topbar-sub">Ironwood Renovations</div>

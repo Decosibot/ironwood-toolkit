@@ -8,14 +8,7 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  :root {
-    --ink:    #0a0a0a;
-    --cream:  #f5f0e8;
-    --gold:   #c9a84c;
-    --light:  #faf7f2;
-    --border: #d0c8b8;
-    --muted:  #777;
-  }
+  
 
   body {
     background: #e8e4dc;
@@ -39,9 +32,9 @@
     z-index: 100;
     print-color-adjust: exact;
   }
-  .toolbar-brand { font-family: 'Segoe UI', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--bronze); }
+  .toolbar-brand { font-family: 'Geist', sans-serif; font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--bronze); }
   .toolbar-actions { display: flex; gap: 8px; }
-  .btn { border: none; cursor: pointer; padding: 7px 16px; border-radius: 4px; font-family: 'Segoe UI', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .03em; }
+  .btn { border: none; cursor: pointer; padding: 7px 16px; border-radius: 4px; font-family: 'Geist', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: .03em; }
   .btn-gold { background: var(--bronze); color: var(--ink); }
   .btn-outline { background: transparent; border: 1px solid #555; color: var(--ink); }
 
@@ -74,7 +67,7 @@
   }
   .doc-logo-block { flex: 1; }
   .doc-logo-name {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Geist', sans-serif;
     font-size: 20px;
     font-weight: 900;
     color: var(--ink);
@@ -82,16 +75,16 @@
     text-transform: uppercase;
   }
   .doc-logo-sub {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Geist', sans-serif;
     font-size: 10px;
     color: var(--muted);
     letter-spacing: .08em;
     text-transform: uppercase;
     margin-top: 3px;
   }
-  .doc-meta { text-align: right; font-family: 'Segoe UI', sans-serif; font-size: 11px; color: var(--muted); line-height: 1.7; }
+  .doc-meta { text-align: right; font-family: 'Geist', sans-serif; font-size: 11px; color: var(--muted); line-height: 1.7; }
   .doc-type {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Geist', sans-serif;
     font-size: 16px;
     font-weight: 700;
     color: var(--ink);
@@ -104,17 +97,17 @@
   /* ── SECTION ── */
   .doc-title {
     text-align: center;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Geist', sans-serif;
     font-size: 20px;
     font-weight: 900;
     text-transform: uppercase;
     letter-spacing: .1em;
     margin-bottom: 6px;
   }
-  .doc-subtitle { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 28px; font-family: 'Segoe UI', sans-serif; }
+  .doc-subtitle { text-align: center; font-size: 12px; color: var(--muted); margin-bottom: 28px; font-family: 'Geist', sans-serif; }
 
   h2 {
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Geist', sans-serif;
     font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
@@ -137,7 +130,7 @@
     border-radius: 4px;
     overflow: hidden;
     margin-bottom: 20px;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Geist', sans-serif;
   }
   .info-grid .ig-row {
     display: contents;
@@ -176,7 +169,7 @@
     color: var(--ink);
     outline: none;
   }
-  .fill-label { font-family: 'Segoe UI', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 2px; }
+  .fill-label { font-family: 'Geist', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 2px; }
   .field-group { margin-bottom: 14px; }
   .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; }
   .field-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 14px; }
@@ -189,7 +182,7 @@
     font-size: 12px;
     line-height: 1.7;
     margin: 14px 0;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Geist', sans-serif;
   }
 
   /* ── SIGNATURE ── */
@@ -201,7 +194,7 @@
     padding-top: 20px;
     border-top: 1px solid var(--border);
   }
-  .sig-party { font-family: 'Segoe UI', sans-serif; }
+  .sig-party { font-family: 'Geist', sans-serif; }
   .sig-party-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 10px; }
   .sig-line { border-bottom: 1px solid var(--ink); margin-bottom: 4px; height: 36px; }
   .sig-sub { font-size: 10px; color: var(--muted); }
@@ -211,7 +204,7 @@
     margin-top: 32px;
     padding-top: 10px;
     border-top: 1px solid var(--border);
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Geist', sans-serif;
     font-size: 10px;
     color: var(--muted);
     text-align: center;
@@ -224,7 +217,7 @@
     justify-content: flex-end;
     gap: 24px;
     margin-top: 10px;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Geist', sans-serif;
   }
   .initials-block { text-align: center; }
   .initials-line { border-bottom: 1px solid #aaa; width: 60px; height: 22px; display: inline-block; }

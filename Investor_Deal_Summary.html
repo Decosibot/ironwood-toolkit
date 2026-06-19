@@ -6,12 +6,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Investor Deal Summary — Anchor Pro Solutions</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
 
 body {
-  font-family: Arial, sans-serif;
-  background: var(--bg);
-  color: #fff;
+  font-family: 'Geist', system-ui, sans-serif;
   min-height: 100vh;
   padding: 24px 16px 60px;
   display: flex;
@@ -22,8 +19,8 @@ body {
 /* ── EDIT MODE HEADER ── */
 .edit-bar {
   width: 100%; max-width: 860px;
-  background: #111111;
-  border: 1px solid #2a2a2a;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
   border-radius: 10px;
   padding: 14px 20px;
   margin-bottom: 20px;
@@ -34,26 +31,26 @@ body {
   gap: 10px;
 }
 
-.edit-bar .edit-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: #b8b0a0; }
+.edit-bar .edit-label { font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); }
 
 .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
 
 .btn {
   padding: 8px 18px; border-radius: 6px; border: none; cursor: pointer;
   font-size: 11px; font-weight: bold; letter-spacing: 1px;
-  text-transform: uppercase; font-family: Arial; transition: opacity .2s;
+  text-transform: uppercase; font-family: 'Geist', system-ui, sans-serif; transition: opacity .2s;
 }
 .btn:hover { opacity: .85; }
-.btn-preview { background: #c9a84c; color: #fff; }
-.btn-print   { background: #2a2a2a; color: #f5f0e8; border: 1px solid #c9a84c; }
-.btn-save    { background: #5a8a5a; color: #0a0a0a; }
-.btn-new     { background: #c9843a; color: #0a0a0a; }
+.btn-preview { background: var(--bronze); color: #fff; }
+.btn-print   { background: transparent; color: var(--muted); border: 1px solid var(--hairline); }
+.btn-save    { background: var(--green); color: #fff; }
+.btn-new     { background: var(--bronze-tint); color: var(--bronze-deep); border: 1px solid var(--bronze-tint); }
 
 /* ── FORM CARD ── */
 .form-card {
   width: 100%; max-width: 860px;
-  background: #111111;
-  border: 1px solid #2a2a2a;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
   border-radius: 10px;
   padding: 22px 26px;
   margin-bottom: 16px;
@@ -61,21 +58,21 @@ body {
 
 .form-card-title {
   font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
-  color: #b8b0a0; margin-bottom: 16px; padding-bottom: 10px;
-  border-bottom: 1px solid #2a2a2a;
+  color: var(--muted); margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--hairline);
 }
 
 .form-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 14px; }
 .form-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 
 .field { display: flex; flex-direction: column; gap: 5px; }
-.field label { font-size: 10px; color: #b8b0a0; text-transform: uppercase; letter-spacing: .5px; }
+.field label { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
 .field input, .field select, .field textarea {
-  background: var(--bg); border: 1px solid #2a2a2a; border-radius: 6px;
-  color: #fff; padding: 8px 10px; font-size: 13px; font-family: Arial;
+  background: var(--surface-2); border: 1px solid var(--hairline); border-radius: 6px;
+  color: var(--ink); padding: 8px 10px; font-size: 13px; font-family: 'Geist', system-ui, sans-serif;
 }
-.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: #c9a84c; }
-.field select option { background: var(--bg); }
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--bronze); }
+.field select option { background: var(--surface-2); }
 .field textarea { resize: vertical; min-height: 70px; }
 .field.full { grid-column: 1 / -1; }
 
@@ -88,29 +85,30 @@ body {
 #preview-wrap.visible { display: block; }
 
 .doc {
-  background: var(--bg);
-  color: #f5f0e8;
+  background: var(--surface);
+  color: var(--ink);
   border-radius: 10px;
   overflow: hidden;
-  font-family: Georgia, serif;
+  font-family: 'Instrument Serif', Georgia, serif;
   font-size: 13px;
   line-height: 1.65;
+  border: 1px solid var(--hairline);
 }
 
 /* Cover strip */
 .doc-cover {
-  background: linear-gradient(160deg, #0a0a0a 0%, #1a1410 60%, #2a1f0a 100%);
+  background: var(--ink);
   padding: 36px 44px 28px;
   color: #fff;
 }
 
 .doc-cover .co-label {
   font-size: 9px; letter-spacing: 5px; text-transform: uppercase;
-  color: #f5f0e8; font-family: Arial; margin-bottom: 6px;
+  color: rgba(255,255,255,.6); font-family: 'Geist', system-ui, sans-serif; margin-bottom: 6px;
 }
 
-.doc-cover h1 { font-size: 26px; font-weight: bold; margin-bottom: 6px; }
-.doc-cover .co-sub { font-size: 13px; color: #b8b0a0; font-family: Arial; }
+.doc-cover h1 { font-size: 26px; font-weight: bold; margin-bottom: 6px; color: #fff; }
+.doc-cover .co-sub { font-size: 13px; color: rgba(255,255,255,.6); font-family: 'Geist', system-ui, sans-serif; }
 
 .doc-cover .co-meta {
   margin-top: 22px;
@@ -120,18 +118,18 @@ body {
 }
 
 .co-stat { text-align: center; }
-.co-stat .cs-num { font-size: 22px; font-weight: bold; color: #5a8a5a; font-family: Arial; }
-.co-stat .cs-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #b8b0a0; font-family: Arial; }
+.co-stat .cs-num { font-size: 22px; font-weight: bold; color: #fff; font-family: 'Geist', system-ui, sans-serif; }
+.co-stat .cs-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: rgba(255,255,255,.55); font-family: 'Geist', system-ui, sans-serif; }
 
 /* Body */
-.doc-body { padding: 32px 44px; }
+.doc-body { padding: 32px 44px; background: var(--surface); }
 
 .doc-section { margin-bottom: 26px; }
 
 .doc-section h2 {
   font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
-  color: #c9a84c; font-family: Arial; margin-bottom: 10px;
-  padding-bottom: 6px; border-bottom: 2px solid #c9a84c;
+  color: var(--bronze); font-family: 'Geist', system-ui, sans-serif; margin-bottom: 10px;
+  padding-bottom: 6px; border-bottom: 2px solid var(--bronze);
 }
 
 /* Two column */
@@ -139,71 +137,73 @@ body {
 .doc-3col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
 
 .stat-box {
-  background: #1a1a1a;
-  border-left: 3px solid #c9a84c;
+  background: var(--bg);
+  border-left: 3px solid var(--bronze);
   border-radius: 0 6px 6px 0;
   padding: 12px 14px;
 }
-.stat-box .sb-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #6b6560; font-family: Arial; margin-bottom: 4px; }
-.stat-box .sb-val { font-size: 18px; font-weight: bold; color: #f5f0e8; font-family: Arial; }
-.stat-box .sb-sub { font-size: 10px; color: #6b6560; font-family: Arial; margin-top: 2px; }
+.stat-box .sb-label { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); font-family: 'Geist', system-ui, sans-serif; margin-bottom: 4px; }
+.stat-box .sb-val { font-size: 18px; font-weight: bold; color: var(--ink); font-family: 'Geist', system-ui, sans-serif; }
+.stat-box .sb-sub { font-size: 10px; color: var(--muted); font-family: 'Geist', system-ui, sans-serif; margin-top: 2px; }
 
-.stat-box.green { border-left-color: #5a8a5a; }
-.stat-box.green .sb-val { color: #5a8a5a; }
-.stat-box.blue { border-left-color: #c9a84c; }
+.stat-box.green { border-left-color: var(--green); }
+.stat-box.green .sb-val { color: var(--green); }
+.stat-box.blue { border-left-color: var(--bronze); }
 
-.doc-table { width: 100%; border-collapse: collapse; font-family: Arial; font-size: 12px; margin-top: 6px; }
-.doc-table th { background: var(--bg); color: #fff; padding: 8px 10px; text-align: left; font-size: 10px; letter-spacing: .5px; }
-.doc-table td { padding: 8px 10px; border-bottom: 1px solid #2a2a2a; color: #b8b0a0; }
-.doc-table tr:nth-child(even) td { background: #1a1a1a; }
-.doc-table td.val { font-weight: bold; color: #e8c97a; }
+.doc-table { width: 100%; border-collapse: collapse; font-family: 'Geist', system-ui, sans-serif; font-size: 12px; margin-top: 6px; }
+.doc-table th { background: var(--bg); color: var(--muted); padding: 8px 10px; text-align: left; font-size: 10px; letter-spacing: .5px; }
+.doc-table td { padding: 8px 10px; border-bottom: 1px solid var(--hairline); color: var(--ink-soft); }
+.doc-table tr:nth-child(even) td { background: var(--bg); }
+.doc-table td.val { font-weight: bold; color: var(--bronze-deep); }
 
 .formula-block {
-  background: #080808;
-  color: #b8b0a0;
+  background: var(--bg);
+  color: var(--muted);
   font-family: 'Courier New', monospace;
   font-size: 11px;
   padding: 16px 18px;
   border-radius: 6px;
+  border: 1px solid var(--hairline);
   line-height: 2;
 }
-.formula-block .f-sep { display: block; border-top: 1px solid #2a2a2a; margin: 4px 0; }
-.formula-block .f-result { color: #5a8a5a; font-weight: bold; }
-.formula-block .f-label { color: #b8b0a0; }
+.formula-block .f-sep { display: block; border-top: 1px solid var(--hairline); margin: 4px 0; }
+.formula-block .f-result { color: var(--green); font-weight: bold; }
+.formula-block .f-label { color: var(--muted); }
 
 .return-box {
   background: var(--bg);
-  color: #fff;
+  color: var(--ink);
   border-radius: 8px;
+  border: 1px solid var(--hairline);
   padding: 20px 24px;
   text-align: center;
 }
-.return-box .rb-num { font-size: 36px; font-weight: bold; color: #5a8a5a; font-family: Arial; }
-.return-box .rb-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: #b8b0a0; font-family: Arial; margin-top: 4px; }
+.return-box .rb-num { font-size: 36px; font-weight: bold; color: var(--green); font-family: 'Geist', system-ui, sans-serif; }
+.return-box .rb-label { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); font-family: 'Geist', system-ui, sans-serif; margin-top: 4px; }
 
-.risk-table { width: 100%; border-collapse: collapse; font-family: Arial; font-size: 11px; }
-.risk-table td { padding: 7px 10px; border-bottom: 1px solid #2a2a2a; }
-.risk-table td:first-child { font-weight: bold; color: #f5f0e8; width: 40%; }
-.risk-ok { color: #5a8a5a; font-weight: bold; }
+.risk-table { width: 100%; border-collapse: collapse; font-family: 'Geist', system-ui, sans-serif; font-size: 11px; }
+.risk-table td { padding: 7px 10px; border-bottom: 1px solid var(--hairline); }
+.risk-table td:first-child { font-weight: bold; color: var(--ink); width: 40%; }
+.risk-ok { color: var(--green); font-weight: bold; }
 .risk-caution { color: #c9843a; font-weight: bold; }
 
 .disclaimer {
-  font-size: 9px; color: #6b6560; font-family: Arial;
-  border-top: 1px solid #2a2a2a; padding-top: 12px; margin-top: 10px;
+  font-size: 9px; color: var(--muted); font-family: 'Geist', system-ui, sans-serif;
+  border-top: 1px solid var(--hairline); padding-top: 12px; margin-top: 10px;
   line-height: 1.5;
 }
 
 .sig-block {
   display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 20px;
 }
-.sig-line { border-bottom: 1px solid #6b6560; height: 40px; margin-bottom: 6px; }
-.sig-name { font-size: 11px; font-weight: bold; color: #f5f0e8; font-family: Arial; }
-.sig-title { font-size: 9px; color: #888; font-family: Arial; text-transform: uppercase; letter-spacing: 1px; }
+.sig-line { border-bottom: 1px solid var(--muted); height: 40px; margin-bottom: 6px; }
+.sig-name { font-size: 11px; font-weight: bold; color: var(--ink); font-family: 'Geist', system-ui, sans-serif; }
+.sig-title { font-size: 9px; color: var(--muted); font-family: 'Geist', system-ui, sans-serif; text-transform: uppercase; letter-spacing: 1px; }
 
 /* ── PRINT ── */
 @media print {
   body { background: var(--bg); padding: 0; }
-  .edit-bar, .form-card, .btn-row { display: none !important; }
+  .iw-header, .edit-bar, .form-card, .btn-row { display: none !important; }
   #preview-wrap { display: block !important; max-width: 100%; }
   .doc { border-radius: 0; }
   @page { margin: 0; size: letter; }
@@ -212,11 +212,24 @@ body {
 </head>
 <body>
 
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+    <div>
+      <div class="iw-logo-text">Ironwood Homes and Renovations</div>
+      <div class="iw-logo-sub">INVESTOR DEAL SUMMARY</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a href="index.html" class="iw-back-btn">← Toolkit</a>
+  </div>
+</div>
+
 <!-- EDIT BAR -->
 <div class="edit-bar">
   <div>
-    <div class="edit-label">Anchor Pro Solutions</div>
-    <div style="font-size:15px; font-weight:bold; margin-top:2px;">Investor Deal Summary Builder</div>
+    <div class="edit-label">Deal Summary Builder</div>
+    <div style="font-size:15px; font-weight:bold; margin-top:2px; color:var(--ink);">Build investor-ready deal documents</div>
   </div>
   <div class="btn-row">
     <button class="btn btn-new" onclick="newDeal()">New Deal</button>
@@ -499,14 +512,14 @@ function buildDoc() {
             <tr><td>Payment Structure</td><td class="val">${payment}</td></tr>
             <tr><td>Repayment Source</td><td class="val">${repay}</td></tr>
             <tr><td>Security</td><td class="val">${security}</td></tr>
-            <tr><td>Total Interest Earned</td><td class="val" style="color:#5a8a5a;">${fmt(c.invReturn)}</td></tr>
-            <tr><td>Total Returned to Investor</td><td class="val" style="color:#5a8a5a; font-size:15px;">${fmt(c.invTotal)}</td></tr>
+            <tr><td>Total Interest Earned</td><td class="val" style="color:var(--green);">${fmt(c.invReturn)}</td></tr>
+            <tr><td>Total Returned to Investor</td><td class="val" style="color:var(--green); font-size:15px;">${fmt(c.invTotal)}</td></tr>
           </table>
         </div>
         <div class="return-box">
           <div class="rb-num">${fmt(c.invReturn)}</div>
           <div class="rb-label">Total Return on ${fmt(c.invAmt)}</div>
-          <div style="margin-top:16px; font-size:11px; color:#b8b0a0; font-family:Arial;">
+          <div style="margin-top:16px; font-size:11px; color:var(--muted); font-family:'Geist',system-ui,sans-serif;">
             ${pct(c.invRate)} annualized · ${c.invTerm}-month term<br/>
             Repaid via: ${repay}<br/>
             Secured by: ${security}
@@ -520,7 +533,7 @@ function buildDoc() {
       <h2>Rehab Scope & Timeline</h2>
       <div class="doc-2col">
         <div>
-          <p style="color:#b8b0a0;">${scope}</p>
+          <p style="color:var(--muted);">${scope}</p>
         </div>
         <div>
           <table class="doc-table">
@@ -536,13 +549,13 @@ function buildDoc() {
     <!-- MARKET -->
     <div class="doc-section">
       <h2>Market Analysis</h2>
-      <p style="color:#b8b0a0;">${market}</p>
+      <p style="color:var(--muted);">${market}</p>
     </div>
 
     <!-- EXIT -->
     <div class="doc-section">
       <h2>Exit Strategy</h2>
-      <p style="color:#b8b0a0;">${exit}</p>
+      <p style="color:var(--muted);">${exit}</p>
     </div>
 
     <!-- RISK -->
@@ -572,7 +585,7 @@ function buildDoc() {
     <!-- SIGNATURE -->
     <div class="doc-section">
       <h2>Acknowledgment of Interest</h2>
-      <p style="color:#b8b0a0; font-size:12px; margin-bottom:16px;">To express interest in this investment opportunity, please sign below and return this page. A formal promissory note and investment agreement will be provided upon confirmation.</p>
+      <p style="color:var(--muted); font-size:12px; margin-bottom:16px;">To express interest in this investment opportunity, please sign below and return this page. A formal promissory note and investment agreement will be provided upon confirmation.</p>
       <div class="sig-block">
         <div>
           <div class="sig-line"></div>

@@ -115,6 +115,139 @@ p  { line-height: 1.7; }
   text-decoration: none;
 }
 
+/* ── TOPBAR (legacy component — maps to iw-header style) ── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--surface);
+  border-bottom: 1px solid var(--hairline);
+  padding: 0 32px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: var(--shadow-sm);
+  flex-wrap: wrap;
+  gap: 0;
+}
+.topbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+  height: 64px;
+}
+.topbar-logo {
+  width: 38px;
+  height: 38px;
+  background: var(--bronze);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Instrument Serif', serif;
+  font-size: 17px;
+  font-weight: 400;
+  color: #fff;
+  flex-shrink: 0;
+}
+.topbar-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -.01em;
+}
+.topbar-sub {
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: .04em;
+  text-transform: none;
+}
+.topbar-actions,
+.topbar-controls,
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  height: 64px;
+}
+
+/* btn classes used in legacy files */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-family: 'Geist', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: var(--radius);
+  cursor: pointer;
+  border: none;
+  transition: background .15s, opacity .15s, transform .1s;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn:hover { opacity: .88; transform: translateY(-1px); text-decoration: none; }
+.btn:active { transform: scale(.98); }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.btn-gold,
+.btn-primary { background: var(--bronze); color: #fff; }
+.btn-gold:hover,
+.btn-primary:hover { background: var(--bronze-deep); color: #fff; }
+.btn-outline { background: transparent; color: var(--bronze); border: 1.5px solid var(--bronze); }
+.btn-outline:hover { background: var(--bronze-wash); }
+.btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--hairline); }
+.btn-ghost:hover { border-color: var(--bronze); color: var(--bronze); background: transparent; }
+.btn-danger { background: transparent; color: var(--red); border: 1px solid rgba(181,52,26,.3); }
+.btn-danger:hover { background: var(--red-tint); }
+.btn-sm { padding: 5px 11px; font-size: 12px; }
+.btn-full { width: 100%; }
+.btn-icon { padding: 8px; }
+
+/* tabs used in many tools */
+.tabs, .cat-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.tab {
+  padding: 7px 16px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  background: var(--surface);
+  border: 1px solid var(--hairline);
+  color: var(--muted);
+  transition: all .15s;
+  font-family: 'Geist', system-ui, sans-serif;
+}
+.tab:hover:not(.active) { border-color: var(--bronze); color: var(--bronze); }
+.tab.active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+
+/* badge/pill */
+.iw-badge, .badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+  padding: 3px 9px;
+  border-radius: 20px;
+  background: var(--bronze-tint);
+  color: var(--bronze-deep);
+  border: 1px solid var(--bronze-tint);
+}
+.badge-green { background: var(--green-tint); color: var(--green); border-color: var(--green-tint); }
+.badge-red { background: var(--red-tint); color: var(--red); border-color: var(--red-tint); }
+.badge-dark { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
 /* ── HERO (dark banner) ── */
 .iw-hero {
   background: var(--ink);
