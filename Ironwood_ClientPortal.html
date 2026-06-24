@@ -13,43 +13,43 @@
   body {
     background: var(--bg);
     color: var(--ink);
-    font-family: var(--sans);
+    font-family: 'Geist', system-ui, sans-serif;
     font-size: 14px;
     line-height: 1.5;
     min-height: 100vh;
   }
 
   h1, h2, h3, h4 {
-    font-family: var(--serif);
+    font-family: 'Instrument Serif', Georgia, serif;
     font-weight: normal;
     letter-spacing: 0.04em;
   }
 
   /* ── SCROLLBAR ── */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
-  ::-webkit-scrollbar-track { background: var(--bg2); }
-  ::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
+  ::-webkit-scrollbar-track { background: var(--surface); }
+  ::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 3px; }
 
   /* ── UTILITIES ── */
   .hidden { display: none !important; }
-  .gold { color: var(--gold); }
-  .muted { color: var(--text-muted); }
+  .gold { color: var(--bronze); }
+  .muted { color: var(--muted); }
 
   /* ── BUTTONS ── */
   .btn {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 8px 16px; border-radius: 4px; border: none;
-    cursor: pointer; font-size: 13px; font-family: var(--sans);
+    cursor: pointer; font-size: 13px; font-family: 'Geist', system-ui, sans-serif;
     transition: background 0.15s, opacity 0.15s;
     white-space: nowrap;
   }
   .btn:disabled { opacity: 0.45; cursor: not-allowed; }
-  .btn-gold { background: var(--gold); color: #0a0a0a; font-weight: bold; }
-  .btn-gold:hover:not(:disabled) { background: var(--gold-hover); }
-  .btn-outline { background: transparent; color: var(--gold); border: 1px solid var(--gold); }
+  .btn-gold { background: var(--bronze); color: var(--bg); font-weight: 600; }
+  .btn-gold:hover:not(:disabled) { background: var(--bronze-deep); }
+  .btn-outline { background: transparent; color: var(--bronze); border: 1px solid var(--bronze); }
   .btn-outline:hover:not(:disabled) { background: rgba(201,168,76,0.1); }
-  .btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
-  .btn-ghost:hover:not(:disabled) { background: var(--card); color: var(--text); }
+  .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--hairline); }
+  .btn-ghost:hover:not(:disabled) { background: var(--surface); color: var(--ink); }
   .btn-danger { background: transparent; color: var(--red); border: 1px solid var(--red); }
   .btn-danger:hover:not(:disabled) { background: rgba(201,76,76,0.1); }
   .btn-green { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
@@ -60,24 +60,24 @@
   .form-group { margin-bottom: 14px; }
   .form-group label {
     display: block; font-size: 11px; letter-spacing: 0.08em;
-    text-transform: uppercase; color: var(--text-muted); margin-bottom: 5px;
+    text-transform: uppercase; color: var(--muted); margin-bottom: 5px;
   }
   .form-control {
-    width: 100%; background: #0f0f0f; border: 1px solid var(--border);
-    color: var(--text); padding: 8px 10px; border-radius: 4px;
-    font-size: 13px; font-family: var(--sans);
+    width: 100%; background: var(--surface-2); border: 1px solid var(--hairline);
+    color: var(--ink); padding: 8px 10px; border-radius: 4px;
+    font-size: 13px; font-family: 'Geist', system-ui, sans-serif;
     transition: border-color 0.15s;
   }
-  .form-control:focus { outline: none; border-color: var(--gold); }
-  .form-control::placeholder { color: var(--gray); }
+  .form-control:focus { outline: none; border-color: var(--bronze); }
+  .form-control::placeholder { color: var(--muted); }
   textarea.form-control { resize: vertical; min-height: 72px; }
   select.form-control { cursor: pointer; }
-  select.form-control option { background: #1a1a1a; }
+  select.form-control option { background: var(--surface); }
 
   /* ── LOAD DEAL BAR ── */
   #load-deal-bar {
-    background: linear-gradient(90deg, #0f1a0f, #111a0a);
-    border-bottom: 1px solid #2a3a1a;
+    background: var(--surface);
+    border-bottom: 1px solid var(--hairline);
     padding: 10px 20px;
     display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
   }
@@ -86,54 +86,38 @@
     color: var(--green); font-weight: bold;
   }
   #load-deal-bar select {
-    background: #0f1a0f; border: 1px solid #2a3a1a; color: var(--text);
+    background: var(--surface); border: 1px solid var(--hairline); color: var(--ink);
     padding: 6px 10px; border-radius: 4px; font-size: 13px;
     min-width: 220px; cursor: pointer;
   }
-  #load-deal-bar select option { background: #1a1a1a; }
+  #load-deal-bar select option { background: var(--surface); }
 
   /* ── ADMIN SHELL ── */
   #admin-shell { min-height: 100vh; display: flex; flex-direction: column; }
-
-  #admin-topbar {
-    background: var(--bg2); border-bottom: 1px solid var(--border);
-    padding: 0 20px; height: 60px;
-    display: flex; align-items: center; gap: 16px;
-  }
-  #admin-topbar .logo-area { flex: 0 0 auto; }
-  #admin-topbar .logo-area .wordmark {
-    font-family: var(--serif); font-size: 18px; letter-spacing: 0.14em;
-    color: var(--gold); line-height: 1;
-  }
-  #admin-topbar .logo-area .sub {
-    font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--text-muted); margin-top: 1px;
-  }
-  #admin-topbar .spacer { flex: 1; }
   #view-toggle {
-    display: flex; background: #0f0f0f; border: 1px solid var(--border);
+    display: flex; background: var(--surface-2); border: 1px solid var(--hairline);
     border-radius: 4px; overflow: hidden;
   }
   #view-toggle button {
     padding: 6px 14px; background: transparent; border: none;
-    color: var(--text-muted); cursor: pointer; font-size: 12px;
+    color: var(--muted); cursor: pointer; font-size: 12px;
     transition: background 0.15s, color 0.15s;
   }
-  #view-toggle button.active { background: var(--gold); color: #0a0a0a; font-weight: bold; }
+  #view-toggle button.active { background: var(--bronze); color: var(--bg); font-weight: 600; }
 
   /* ── DASHBOARD SUMMARY ── */
   #dashboard-bar {
-    background: var(--card); border-bottom: 1px solid var(--border);
+    background: var(--surface); border-bottom: 1px solid var(--hairline);
     padding: 12px 20px; display: flex; gap: 24px; flex-wrap: wrap;
   }
   .dash-stat { min-width: 120px; }
   .dash-stat .ds-label {
-    font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-muted);
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted);
   }
   .dash-stat .ds-value {
-    font-size: 22px; font-family: var(--serif); color: var(--gold); line-height: 1.1; margin-top: 2px;
+    font-size: 22px; font-family: 'Instrument Serif', Georgia, serif; color: var(--bronze); line-height: 1.1; margin-top: 2px;
   }
-  .dash-stat .ds-value.white { color: var(--text); }
+  .dash-stat .ds-value.white { color: var(--ink); }
   .dash-stat .ds-value.green { color: var(--green); }
   .dash-stat .ds-value.red { color: var(--red); }
 
@@ -142,30 +126,30 @@
     display: flex; flex: 1; overflow: hidden; min-height: 0;
   }
   #job-list-panel {
-    width: 320px; flex: 0 0 320px; border-right: 1px solid var(--border);
-    overflow-y: auto; background: var(--bg2);
+    width: 320px; flex: 0 0 320px; border-right: 1px solid var(--hairline);
+    overflow-y: auto; background: var(--surface);
   }
   #job-list-header {
-    padding: 14px 16px 10px; border-bottom: 1px solid var(--border);
+    padding: 14px 16px 10px; border-bottom: 1px solid var(--hairline);
     display: flex; align-items: center; justify-content: space-between;
   }
-  #job-list-header h3 { font-size: 13px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+  #job-list-header h3 { font-size: 13px; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; }
   #job-list { padding: 10px; display: flex; flex-direction: column; gap: 8px; }
 
   .job-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 6px;
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 6px;
     padding: 12px; cursor: pointer; transition: border-color 0.15s, background 0.15s;
     position: relative;
   }
-  .job-card:hover { border-color: #333; background: #1e1e1e; }
-  .job-card.selected { border-color: var(--gold); background: #1e1c14; }
-  .job-card .jc-name { font-family: var(--serif); font-size: 14px; margin-bottom: 3px; }
-  .job-card .jc-addr { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .job-card:hover { border-color: var(--hairline); background: var(--surface); }
+  .job-card.selected { border-color: var(--bronze); background: var(--bronze-wash); }
+  .job-card .jc-name { font-family: 'Instrument Serif', Georgia, serif; font-size: 14px; margin-bottom: 3px; }
+  .job-card .jc-addr { font-size: 11px; color: var(--muted); margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .job-card .jc-meta { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
-  .job-card .jc-price { font-size: 13px; color: var(--gold); font-weight: bold; }
+  .job-card .jc-price { font-size: 13px; color: var(--bronze); font-weight: bold; }
   .job-card .jc-phase-bar { margin-top: 8px; }
-  .job-card .jc-phase-bar .pb-label { font-size: 10px; color: var(--text-muted); margin-bottom: 3px; }
-  .phase-bar-track { height: 4px; background: #333; border-radius: 2px; overflow: hidden; }
+  .job-card .jc-phase-bar .pb-label { font-size: 10px; color: var(--muted); margin-bottom: 3px; }
+  .phase-bar-track { height: 4px; background: var(--hairline); border-radius: 2px; overflow: hidden; }
   .phase-bar-fill { height: 100%; background: var(--green); border-radius: 2px; transition: width 0.3s; }
 
   /* STATUS BADGES */
@@ -173,10 +157,10 @@
     display: inline-block; padding: 2px 8px; border-radius: 3px;
     font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: bold;
   }
-  .badge-draft { background: #222; color: var(--gray); border: 1px solid #333; }
-  .badge-sent { background: #0d1f35; color: var(--blue); border: 1px solid #1a3a5c; }
+  .badge-draft { background: var(--bg); color: var(--muted); border: 1px solid var(--hairline); }
+  .badge-sent { background: var(--bronze-wash); color: var(--blue); border: 1px solid #1a3a5c; }
   .badge-approved { background: transparent; color: var(--green); border: 1px solid var(--green); }
-  .badge-active { background: #2a1e08; color: var(--gold); border: 1px solid var(--amber); }
+  .badge-active { background: var(--bronze-wash); color: var(--bronze); border: 1px solid var(--bronze); }
   .badge-complete { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
 
   /* ── JOB DETAIL PANEL ── */
@@ -186,7 +170,7 @@
   }
   #job-detail-panel .empty-state {
     display: flex; flex-direction: column; align-items: center; justify-content: center;
-    height: 100%; min-height: 300px; color: var(--text-muted); gap: 12px;
+    height: 100%; min-height: 300px; color: var(--muted); gap: 12px;
   }
   #job-detail-panel .empty-state .big-icon { font-size: 48px; opacity: 0.3; }
   #job-detail-panel .empty-state p { font-size: 14px; }
@@ -195,18 +179,18 @@
     display: flex; align-items: flex-start; justify-content: space-between;
     margin-bottom: 24px; gap: 16px; flex-wrap: wrap;
   }
-  .detail-header h2 { font-size: 22px; color: var(--gold); margin-bottom: 4px; }
-  .detail-header .dh-sub { font-size: 13px; color: var(--text-muted); }
+  .detail-header h2 { font-size: 22px; color: var(--bronze); margin-bottom: 4px; }
+  .detail-header .dh-sub { font-size: 13px; color: var(--muted); }
   .detail-actions { display: flex; gap: 8px; flex-wrap: wrap; }
 
   .section-card {
-    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px;
     padding: 20px; margin-bottom: 20px;
   }
   .section-card h3 {
     font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--text-muted); margin-bottom: 16px; padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
+    color: var(--muted); margin-bottom: 16px; padding-bottom: 8px;
+    border-bottom: 1px solid var(--hairline);
   }
 
   .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -216,28 +200,28 @@
   .phase-table { width: 100%; border-collapse: collapse; }
   .phase-table th {
     font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em;
-    color: var(--text-muted); text-align: left; padding: 6px 8px;
-    border-bottom: 1px solid var(--border);
+    color: var(--muted); text-align: left; padding: 6px 8px;
+    border-bottom: 1px solid var(--hairline);
   }
   .phase-table td { padding: 8px; vertical-align: middle; }
   .phase-table tr:not(:last-child) td { border-bottom: 1px solid #191919; }
   .phase-table input[type="text"],
   .phase-table input[type="number"] {
-    background: #0f0f0f; border: 1px solid var(--border); color: var(--text);
-    padding: 6px 8px; border-radius: 3px; font-size: 12px; font-family: var(--sans);
+    background: var(--surface-2); border: 1px solid var(--hairline); color: var(--ink);
+    padding: 6px 8px; border-radius: 3px; font-size: 12px; font-family: 'Geist', system-ui, sans-serif;
     width: 100%;
   }
-  .phase-table input:focus { outline: none; border-color: var(--gold); }
+  .phase-table input:focus { outline: none; border-color: var(--bronze); }
   .phase-table .pct-warn { color: var(--red); font-size: 11px; margin-top: 4px; }
-  .phase-table .amount-display { color: var(--gold); font-weight: bold; font-size: 13px; min-width: 80px; }
+  .phase-table .amount-display { color: var(--bronze); font-weight: bold; font-size: 13px; min-width: 80px; }
 
   .phase-status-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .phase-status-row select {
-    background: #0f0f0f; border: 1px solid var(--border); color: var(--text);
+    background: var(--surface-2); border: 1px solid var(--hairline); color: var(--ink);
     padding: 5px 8px; border-radius: 3px; font-size: 12px; cursor: pointer;
   }
   .phase-status-row input[type="date"] {
-    background: #0f0f0f; border: 1px solid var(--border); color: var(--text);
+    background: var(--surface-2); border: 1px solid var(--hairline); color: var(--ink);
     padding: 5px 8px; border-radius: 3px; font-size: 12px;
   }
   .pct-total-row {
@@ -251,76 +235,76 @@
   /* ── CLIENT VIEW ── */
   #client-shell {
     min-height: 100vh;
-    background: #0a0a0a;
+    background: var(--bg);
   }
   #client-topbar {
-    background: #111; border-bottom: 2px solid var(--gold);
+    background: var(--surface); border-bottom: 2px solid var(--bronze);
     padding: 20px 24px;
     display: flex; align-items: center; justify-content: space-between; gap: 16px;
   }
   #client-topbar .ct-wordmark {
-    font-family: var(--serif); font-size: 22px; letter-spacing: 0.16em;
-    color: var(--gold); line-height: 1;
+    font-family: 'Instrument Serif', Georgia, serif; font-size: 22px; letter-spacing: 0.16em;
+    color: var(--bronze); line-height: 1;
   }
   #client-topbar .ct-sub {
     font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--text-muted); margin-top: 3px;
+    color: rgba(244,239,230,0.6); margin-top: 3px;
   }
   #client-back-btn {
-    background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+    background: transparent; border: 1px solid var(--hairline); color: var(--muted);
     padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px;
   }
-  #client-back-btn:hover { background: var(--card); color: var(--text); }
+  #client-back-btn:hover { background: var(--surface); color: var(--ink); }
 
   #client-content {
     max-width: 680px; margin: 0 auto; padding: 28px 16px 60px;
   }
 
   .client-info-bar {
-    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px;
     padding: 18px 20px; margin-bottom: 20px;
   }
-  .client-info-bar .cib-name { font-family: var(--serif); font-size: 20px; margin-bottom: 4px; }
-  .client-info-bar .cib-addr { color: var(--text-muted); font-size: 13px; }
+  .client-info-bar .cib-name { font-family: 'Instrument Serif', Georgia, serif; font-size: 20px; margin-bottom: 4px; }
+  .client-info-bar .cib-addr { color: var(--muted); font-size: 13px; }
 
   .status-banner {
     border-radius: 8px; padding: 16px 20px; margin-bottom: 20px;
     display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
-    background: #1a1a0a; border: 1px solid var(--amber);
+    background: #1a1a0a; border: 1px solid var(--bronze);
   }
   .status-banner.complete { background: #0a1a0a; border-color: var(--green); }
   .status-banner.draft { background: #141414; border-color: #444; }
   .status-pill {
-    font-family: var(--serif); font-size: 14px; letter-spacing: 0.08em;
+    font-family: 'Instrument Serif', Georgia, serif; font-size: 14px; letter-spacing: 0.08em;
     padding: 6px 16px; border-radius: 20px; font-weight: normal;
   }
-  .pill-active { background: var(--amber); color: #0a0a0a; }
+  .pill-active { background: var(--bronze); color: #0a0a0a; }
   .pill-complete { background: var(--green-bg); color: var(--green); border: 1px solid var(--green); }
-  .pill-draft { background: #222; color: var(--gray); }
-  .pill-sent { background: #0d1f35; color: var(--blue); }
+  .pill-draft { background: var(--bg); color: var(--muted); }
+  .pill-sent { background: var(--bronze-wash); color: var(--blue); }
   .pill-approved { background: transparent; color: var(--green); border: 1px solid var(--green); }
-  .sb-start { font-size: 13px; color: var(--text-muted); }
+  .sb-start { font-size: 13px; color: var(--muted); }
 
   /* Progress section */
   .progress-section {
-    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px;
     padding: 18px 20px; margin-bottom: 20px;
   }
   .progress-section h3 {
     font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--text-muted); margin-bottom: 12px;
+    color: var(--muted); margin-bottom: 12px;
   }
   .progress-track {
-    height: 8px; background: #333; border-radius: 4px; overflow: hidden; margin-bottom: 8px;
+    height: 8px; background: var(--hairline); border-radius: 4px; overflow: hidden; margin-bottom: 8px;
   }
   .progress-fill { height: 100%; background: var(--green); border-radius: 4px; transition: width 0.4s; }
-  .progress-label { font-size: 12px; color: var(--text-muted); display: flex; justify-content: space-between; }
+  .progress-label { font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
 
   /* Phase Timeline */
   .phase-timeline { margin-bottom: 24px; }
   .phase-timeline h3 {
     font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em;
-    color: var(--text-muted); margin-bottom: 16px;
+    color: var(--muted); margin-bottom: 16px;
   }
   .phase-item {
     display: flex; gap: 0; position: relative;
@@ -338,8 +322,8 @@
     border: 2px solid;
   }
   .pi-dot-paid { background: var(--green-bg); border-color: var(--green); color: var(--green); }
-  .pi-dot-current { background: #2a1a06; border-color: var(--amber); color: var(--amber); animation: pulseGlow 2s infinite; }
-  .pi-dot-upcoming { background: #1a1a1a; border-color: var(--gray); color: var(--gray); }
+  .pi-dot-current { background: #2a1a06; border-color: var(--bronze); color: var(--bronze); animation: pulseGlow 2s infinite; }
+  .pi-dot-upcoming { background: var(--surface); border-color: var(--muted); color: var(--muted); }
   @keyframes pulseGlow {
     0%, 100% { box-shadow: 0 0 0 0 rgba(201,132,58,0.4); }
     50% { box-shadow: 0 0 0 8px rgba(201,132,58,0); }
@@ -348,22 +332,22 @@
     width: 2px; flex: 1; min-height: 16px;
   }
   .pi-connector-paid { background: var(--green); }
-  .pi-connector-current { background: linear-gradient(var(--green), var(--amber)); }
-  .pi-connector-upcoming { background: #333; }
+  .pi-connector-current { background: linear-gradient(var(--green), var(--bronze)); }
+  .pi-connector-upcoming { background: var(--hairline); }
 
   .pi-card {
-    flex: 1; background: var(--card); border: 1px solid var(--border);
+    flex: 1; background: var(--surface); border: 1px solid var(--hairline);
     border-radius: 8px; padding: 16px; margin-bottom: 10px;
     transition: border-color 0.2s;
   }
   .pi-card-paid { border-color: var(--green-bg); }
-  .pi-card-current { border-color: var(--amber); background: #1a1208; }
+  .pi-card-current { border-color: var(--bronze); background: #1a1208; }
   .pi-card-upcoming { opacity: 0.7; }
 
   .pi-card .pic-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 8px; flex-wrap: wrap; }
-  .pi-card .pic-name { font-family: var(--serif); font-size: 16px; }
-  .pi-card .pic-amount { font-size: 20px; font-family: var(--serif); color: var(--gold); }
-  .pi-card .pic-trigger { font-size: 12px; color: var(--text-muted); margin-bottom: 10px; }
+  .pi-card .pic-name { font-family: 'Instrument Serif', Georgia, serif; font-size: 16px; }
+  .pi-card .pic-amount { font-size: 20px; font-family: 'Instrument Serif', Georgia, serif; color: var(--bronze); }
+  .pi-card .pic-trigger { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
   .pi-card .pic-status { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
   .pic-status-paid {
     display: inline-flex; align-items: center; gap: 5px;
@@ -372,7 +356,7 @@
   }
   .pic-status-current {
     display: inline-flex; align-items: center; gap: 5px;
-    background: #2a1a06; color: var(--amber); padding: 4px 10px;
+    background: #2a1a06; color: var(--bronze); padding: 4px 10px;
     border-radius: 4px; font-size: 11px; font-weight: bold; letter-spacing: 0.06em;
     animation: pulseBg 2s infinite;
   }
@@ -382,12 +366,12 @@
   }
   .pic-status-upcoming {
     display: inline-flex; align-items: center; gap: 5px;
-    background: #1a1a1a; color: var(--gray); padding: 4px 10px;
+    background: var(--surface); color: var(--muted); padding: 4px 10px;
     border-radius: 4px; font-size: 11px; letter-spacing: 0.06em;
   }
-  .pic-paid-date { font-size: 11px; color: var(--text-muted); }
+  .pic-paid-date { font-size: 11px; color: var(--muted); }
   .btn-pay-now {
-    background: var(--amber); color: #0a0a0a; border: none;
+    background: var(--bronze); color: #0a0a0a; border: none;
     padding: 8px 18px; border-radius: 4px; font-size: 12px; font-weight: bold;
     cursor: pointer; letter-spacing: 0.04em;
     transition: background 0.15s;
@@ -396,14 +380,14 @@
 
   /* Contact Block */
   .contact-block {
-    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px;
     padding: 20px; text-align: center; margin-top: 24px;
   }
-  .contact-block h3 { font-size: 14px; color: var(--gold); margin-bottom: 8px; }
-  .contact-block p { font-size: 13px; color: var(--text-muted); margin-bottom: 6px; }
+  .contact-block h3 { font-size: 14px; color: var(--bronze); margin-bottom: 8px; }
+  .contact-block p { font-size: 13px; color: var(--muted); margin-bottom: 6px; }
   .contact-block .contact-info { margin-top: 12px; display: flex; justify-content: center; gap: 24px; flex-wrap: wrap; }
-  .contact-block .ci-item { font-size: 13px; color: var(--text); }
-  .contact-block .ci-item span { color: var(--gold); }
+  .contact-block .ci-item { font-size: 13px; color: var(--ink); }
+  .contact-block .ci-item span { color: var(--bronze); }
 
   /* ── MODAL ── */
   .modal-overlay {
@@ -412,12 +396,12 @@
     z-index: 1000; padding: 16px;
   }
   .modal-box {
-    background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px;
     padding: 28px; max-width: 420px; width: 100%; text-align: center;
   }
   .modal-box .modal-icon { font-size: 36px; margin-bottom: 12px; }
-  .modal-box h3 { font-family: var(--serif); font-size: 18px; color: var(--gold); margin-bottom: 10px; }
-  .modal-box p { font-size: 13px; color: var(--text-muted); line-height: 1.6; margin-bottom: 18px; }
+  .modal-box h3 { font-family: 'Instrument Serif', Georgia, serif; font-size: 18px; color: var(--bronze); margin-bottom: 10px; }
+  .modal-box p { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
   .modal-box .modal-actions { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 
   /* ── CONFIRM MODAL ── */
@@ -426,7 +410,7 @@
   /* ── TOAST ── */
   #toast {
     position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
-    background: var(--card); border: 1px solid var(--green); color: var(--green);
+    background: var(--surface); border: 1px solid var(--green); color: var(--green);
     padding: 10px 20px; border-radius: 6px; font-size: 13px;
     z-index: 2000; opacity: 0; transition: opacity 0.3s;
     pointer-events: none;
@@ -453,7 +437,7 @@
   /* ── RESPONSIVE ── */
   @media (max-width: 700px) {
     #admin-main { flex-direction: column; }
-    #job-list-panel { width: 100%; flex: 0 0 auto; max-height: 260px; border-right: none; border-bottom: 1px solid var(--border); }
+    #job-list-panel { width: 100%; flex: 0 0 auto; max-height: 260px; border-right: none; border-bottom: 1px solid var(--hairline); }
     .form-grid { grid-template-columns: 1fr; }
     .detail-header { flex-direction: column; }
     #admin-topbar { gap: 10px; flex-wrap: wrap; height: auto; padding: 10px 16px; }
@@ -476,17 +460,22 @@
 <div id="admin-shell">
 
   <!-- TOPBAR -->
-  <div id="admin-topbar">
-    <div class="logo-area">
-      <div class="wordmark">IRONWOOD</div>
-      <div class="sub">Client Portal</div>
+  <div class="iw-header">
+    <a class="iw-logo-area" href="index.html">
+      <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+      <div>
+        <div class="iw-logo-text">Ironwood Homes and Renovations</div>
+        <div class="iw-logo-sub">Client Portal</div>
+      </div>
+    </a>
+    <div class="iw-header-right">
+      <div id="view-toggle">
+        <button id="btn-admin-view" class="active" onclick="switchToAdmin()">Admin View</button>
+        <button id="btn-client-view" onclick="switchToClientPreview()">Preview Client</button>
+      </div>
+      <button class="btn btn-gold" onclick="newJob()">+ New Job</button>
+      <a href="index.html" class="iw-back-btn">← Toolkit</a>
     </div>
-    <div class="spacer"></div>
-    <div id="view-toggle">
-      <button id="btn-admin-view" class="active" onclick="switchToAdmin()">Admin View</button>
-      <button id="btn-client-view" onclick="switchToClientPreview()">Preview Client View</button>
-    </div>
-    <button class="btn btn-gold" onclick="newJob()">+ New Job</button>
   </div>
 
   <!-- DASHBOARD BAR -->
@@ -886,7 +875,7 @@ function renderJobList() {
   document.getElementById('job-count').textContent = jobs.length + ' job' + (jobs.length !== 1 ? 's' : '');
 
   if (jobs.length === 0) {
-    list.innerHTML = '<div style="padding:20px;color:var(--text-muted);font-size:13px;text-align:center;">No jobs yet.<br>Click "+ New Job" to get started.</div>';
+    list.innerHTML = '<div style="padding:20px;color:var(--muted);font-size:13px;text-align:center;">No jobs yet.<br>Click "+ New Job" to get started.</div>';
     return;
   }
 
@@ -1038,9 +1027,9 @@ function updateActionButtons(job) {
   if (job && (status === 'Sent' || status === 'Approved' || status === 'Active' || status === 'Complete')) {
     const link = document.createElement('div');
     link.id = 'client-link-area';
-    link.style.cssText = 'background:#0f1a0f;border:1px solid #2a3a1a;border-radius:4px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--text-muted);';
+    link.style.cssText = 'background:#0f1a0f;border:1px solid #2a3a1a;border-radius:4px;padding:10px 14px;margin-bottom:12px;font-size:12px;color:var(--muted);';
     const url = window.location.pathname + window.location.search + '#client?job=' + encodeURIComponent(job.id);
-    link.innerHTML = `<span style="color:var(--green)">&#128279; Client Link:</span> <a href="${url}" style="color:var(--gold);word-break:break-all;" onclick="event.preventDefault();renderClientViewById('${job.id}')">${url}</a>`;
+    link.innerHTML = `<span style="color:var(--green)">&#128279; Client Link:</span> <a href="${url}" style="color:var(--bronze);word-break:break-all;" onclick="event.preventDefault();renderClientViewById('${job.id}')">${url}</a>`;
     document.getElementById('job-form-area').insertBefore(link, document.querySelector('.detail-header').nextSibling);
   }
 }
@@ -1156,21 +1145,21 @@ function renderPhaseStatus() {
   currentPhases.forEach((phase, i) => {
     const amt = calcPhaseAmount(i, total, currentPhases);
     const div = document.createElement('div');
-    div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--border);flex-wrap:wrap;';
+    div.style.cssText = 'display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--hairline);flex-wrap:wrap;';
     div.innerHTML = `
       <div style="min-width:120px;font-family:Georgia,serif;font-size:14px;">${escHtml(phase.name)}</div>
-      <div style="color:var(--gold);font-weight:bold;min-width:80px;">$${fmtMoney(amt)}</div>
+      <div style="color:var(--bronze);font-weight:bold;min-width:80px;">$${fmtMoney(amt)}</div>
       <select onchange="onPhaseStatusChange(${i}, this.value)"
-        style="background:#0f0f0f;border:1px solid var(--border);color:var(--text);padding:6px 8px;border-radius:3px;font-size:12px;cursor:pointer;">
+        style="background:#0f0f0f;border:1px solid var(--hairline);color:var(--ink);padding:6px 8px;border-radius:3px;font-size:12px;cursor:pointer;">
         <option value="pending" ${phase.status==='pending'?'selected':''}>Pending</option>
         <option value="invoiced" ${phase.status==='invoiced'?'selected':''}>Invoice Sent</option>
         <option value="paid" ${phase.status==='paid'?'selected':''}>Paid</option>
       </select>
       <div style="display:${phase.status==='paid'?'flex':'none'};align-items:center;gap:6px;" id="paid-date-row-${i}">
-        <label style="font-size:11px;color:var(--text-muted);">Paid Date:</label>
+        <label style="font-size:11px;color:var(--muted);">Paid Date:</label>
         <input type="date" value="${phase.paidDate || ''}"
           onchange="currentPhases[${i}].paidDate = this.value"
-          style="background:#0f0f0f;border:1px solid var(--border);color:var(--text);padding:5px 8px;border-radius:3px;font-size:12px;">
+          style="background:#0f0f0f;border:1px solid var(--hairline);color:var(--ink);padding:5px 8px;border-radius:3px;font-size:12px;">
       </div>
       ${phase.status==='paid'?`<span style="background:var(--green-bg);color:var(--green);padding:3px 8px;border-radius:3px;font-size:11px;font-weight:bold;">&#10003; PAID</span>`:''}
     `;

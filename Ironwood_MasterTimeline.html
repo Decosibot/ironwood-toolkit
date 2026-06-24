@@ -17,13 +17,13 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
 .tb-logo { width: 36px; height: 36px; background: var(--bronze); border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 16px; color: #0a0a0a; }
 .tb-name { font-size: 15px; font-weight: 700; color: var(--ink); }
 .tb-sub  { font-size: 10px; color: var(--muted); letter-spacing: .07em; text-transform: uppercase; }
-.btn-print { background: transparent; border: 1px solid var(--gold); color: var(--bronze); padding: 7px 18px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; }
+.btn-print { background: transparent; border: 1px solid var(--bronze); color: var(--bronze); padding: 7px 18px; border-radius: 5px; cursor: pointer; font-size: 12px; font-weight: 600; }
 .btn-print:hover { background: var(--bronze); color: #0a0a0a; }
 @media print { .topbar { display: none; } body { background: #fff; color: #0a0a0a; } }
 
 /* HERO */
 .hero { text-align: center; padding: 52px 24px 36px; }
-.hero-tag { display: inline-block; background: var(--s2); border: 1px solid var(--border); color: var(--bronze); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 5px 16px; border-radius: 20px; margin-bottom: 16px; }
+.hero-tag { display: inline-block; background: var(--s2); border: 1px solid var(--hairline); color: var(--bronze); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; padding: 5px 16px; border-radius: 20px; margin-bottom: 16px; }
 .hero h1 { font-size: 38px; font-weight: 900; color: var(--ink); margin-bottom: 8px; letter-spacing: .02em; }
 .hero h1 span { color: var(--bronze); }
 .hero-sub { font-size: 13px; color: var(--muted); max-width: 600px; margin: 0 auto 12px; line-height: 1.7; }
@@ -33,14 +33,14 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
 
 /* SECTION TITLES */
 .sec-title { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--bronze); display: flex; align-items: center; gap: 12px; margin: 48px 0 20px; }
-.sec-title::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+.sec-title::after { content: ''; flex: 1; height: 1px; background: var(--hairline); }
 
 /* ERA BAND */
 .era-band { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; border-radius: 10px; overflow: hidden; margin-bottom: 32px; }
 .era { padding: 14px 12px; text-align: center; }
 .era-label { font-size: 11px; font-weight: 900; letter-spacing: .07em; text-transform: uppercase; }
 .era-range { font-size: 10px; opacity: .7; margin-top: 3px; }
-.era.e1 { background: #1a1500; border-bottom: 3px solid var(--gold); }
+.era.e1 { background: #1a1500; border-bottom: 3px solid var(--bronze); }
 .era.e2 { background: #0d1e2a; border-bottom: 3px solid var(--blue); }
 .era.e3 { background: #0d1f16; border-bottom: 3px solid var(--green); }
 .era.e4 { background: #1a0e28; border-bottom: 3px solid var(--purple); }
@@ -54,16 +54,16 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
 .era.e6 .era-label { color: var(--teal); }
 
 /* SWIMLANE TIMELINE */
-.timeline-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 48px; }
+.timeline-wrap { overflow-x: auto; border: 1px solid var(--hairline); border-radius: 12px; margin-bottom: 48px; }
 .swimlane { display: grid; grid-template-columns: 160px repeat(6, 1fr); min-width: 900px; }
-.lane-label { background: var(--s2); border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 10px 14px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; }
-.lane-cell { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 8px; background: var(--s1); min-height: 54px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.lane-label { background: var(--s2); border-right: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); padding: 10px 14px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); display: flex; align-items: center; }
+.lane-cell { border-right: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); padding: 8px; background: var(--s1); min-height: 54px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
 .lane-cell:last-child { border-right: none; }
 .swimlane:last-child .lane-label,
 .swimlane:last-child .lane-cell { border-bottom: none; }
 
 .tl-chip { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 12px; white-space: nowrap; letter-spacing: .03em; }
-.tl-chip.gold   { background: #1a1500; color: var(--bronze);   border: 1px solid var(--gold); }
+.tl-chip.gold   { background: #1a1500; color: var(--bronze);   border: 1px solid var(--bronze); }
 .tl-chip.blue   { background: #0d1e2a; color: var(--blue);   border: 1px solid var(--blue); }
 .tl-chip.green  { background: #0d1f16; color: var(--green);  border: 1px solid var(--green); }
 .tl-chip.purple { background: #1a0e28; color: var(--purple); border: 1px solid var(--purple); }
@@ -72,7 +72,7 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
 
 /* DIFFICULTY BADGES */
 .diff { display: inline-block; font-size: 9px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; padding: 3px 9px; border-radius: 12px; }
-.diff-go     { background: #0d2010; color: #4caf7d; border: 1px solid #2a5a30; }
+.diff-go     { background: #0d2010; color: #4caf7d; border: 1px solid var(--hairline); }
 .diff-mod    { background: #1a1800; color: #e0c44a; border: 1px solid #4a4000; }
 .diff-hard   { background: #200d0d; color: #e05555; border: 1px solid #5a2020; }
 .diff-long   { background: #1a1a1a; color: #888;    border: 1px solid #333; }
@@ -82,16 +82,16 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
 @media (max-width: 900px) { .cards-grid { grid-template-columns: repeat(2,1fr); } }
 @media (max-width: 580px) { .cards-grid { grid-template-columns: 1fr; } }
 
-.init-card { background: var(--s1); border: 1px solid var(--border); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: border-color .15s; }
+.init-card { background: var(--s1); border: 1px solid var(--hairline); border-radius: 10px; padding: 18px; display: flex; flex-direction: column; gap: 10px; transition: border-color .15s; }
 .init-card:hover { border-color: var(--dim); }
-.init-card.cat-deal   { border-left: 3px solid var(--gold); }
+.init-card.cat-deal   { border-left: 3px solid var(--bronze); }
 .init-card.cat-ltr    { border-left: 3px solid var(--blue); }
 .init-card.cat-vr     { border-left: 3px solid var(--teal); }
 .init-card.cat-entity { border-left: 3px solid var(--purple); }
 .init-card.cat-mkt    { border-left: 3px solid var(--orange); }
 .init-card.cat-give   { border-left: 3px solid var(--green); }
 .init-card.cat-jeff   { border-left: 3px solid #e0874a; }
-.init-card.cat-ty     { border-left: 3px solid var(--gold); }
+.init-card.cat-ty     { border-left: 3px solid var(--bronze); }
 
 .ic-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
 .ic-name { font-size: 13px; font-weight: 700; color: var(--ink); line-height: 1.4; }
@@ -108,26 +108,26 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
 /* ANALYSIS GRID */
 .analysis-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 48px; }
 @media(max-width:700px) { .analysis-grid { grid-template-columns: 1fr 1fr; } }
-.analysis-card { background: var(--s2); border: 1px solid var(--border); border-radius: 10px; padding: 18px; }
+.analysis-card { background: var(--s2); border: 1px solid var(--hairline); border-radius: 10px; padding: 18px; }
 .ac-num { font-size: 32px; font-weight: 900; margin-bottom: 4px; }
 .ac-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 12px; }
 .ac-list { list-style: none; }
-.ac-list li { font-size: 11px; color: var(--muted); padding: 3px 0; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 6px; }
+.ac-list li { font-size: 11px; color: var(--muted); padding: 3px 0; border-bottom: 1px solid var(--hairline); display: flex; align-items: center; gap: 6px; }
 .ac-list li:last-child { border-bottom: none; }
 .ac-list li::before { content: '›'; flex-shrink: 0; }
 
 /* GIVING BACK */
-.give-banner { background: linear-gradient(135deg, #0d1f16, #0a0a0a); border: 1px solid #2a5a30; border-radius: 12px; padding: 28px 32px; margin-bottom: 48px; }
+.give-banner { background: var(--ink); border: 1px solid var(--hairline); border-radius: 12px; padding: 28px 32px; margin-bottom: 48px; }
 .give-mission { font-size: 15px; line-height: 1.8; color: var(--ink); font-style: italic; margin-bottom: 20px; border-left: 3px solid var(--green); padding-left: 16px; }
 .give-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
 @media(max-width:700px) { .give-grid { grid-template-columns: 1fr; } }
-.give-card { background: #0a1a0d; border: 1px solid #2a5a30; border-radius: 8px; padding: 14px 16px; }
+.give-card { background: #0a1a0d; border: 1px solid var(--hairline); border-radius: 8px; padding: 14px 16px; }
 .give-card .gc-title { font-size: 12px; font-weight: 700; color: var(--green); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
 .give-card .gc-body { font-size: 11px; color: var(--muted); line-height: 1.7; }
 .give-card .gc-action { margin-top: 8px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--green); }
 
 /* FOOTER */
-.doc-footer { text-align: center; padding: 24px; font-size: 11px; color: var(--dim); border-top: 1px solid var(--border); letter-spacing: .04em; }
+.doc-footer { text-align: center; padding: 24px; font-size: 11px; color: var(--dim); border-top: 1px solid var(--hairline); letter-spacing: .04em; }
 </style>
 </head>
 <body>
@@ -168,8 +168,8 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
 
     <!-- HEADER ROW -->
     <div class="swimlane">
-      <div class="lane-label" style="background:#0a0a0a;color:var(--dim);">Lane</div>
-      <div class="lane-cell" style="background:#1a1500;justify-content:center;"><span style="font-size:10px;font-weight:700;color:var(--gold);">LAUNCH · Mo 1–6</span></div>
+      <div class="lane-label" style="background:var(--ink);color:rgba(244,239,230,0.6);">Lane</div>
+      <div class="lane-cell" style="background:#1a1500;justify-content:center;"><span style="font-size:10px;font-weight:700;color:var(--bronze);">LAUNCH · Mo 1–6</span></div>
       <div class="lane-cell" style="background:#0d1e2a;justify-content:center;"><span style="font-size:10px;font-weight:700;color:var(--blue);">MOMENTUM · Mo 6–18</span></div>
       <div class="lane-cell" style="background:#0d1f16;justify-content:center;"><span style="font-size:10px;font-weight:700;color:var(--green);">PORTFOLIO · Yr 2–3</span></div>
       <div class="lane-cell" style="background:#1a0e28;justify-content:center;"><span style="font-size:10px;font-weight:700;color:var(--purple);">SCALE · Yr 3–5</span></div>
@@ -348,7 +348,7 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
   <div class="sec-title">All Initiatives — Detailed Breakdown</div>
 
   <!-- DEALS -->
-  <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Deals &amp; Revenue</div>
+  <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bronze);margin-bottom:12px;">Deals &amp; Revenue</div>
   <div class="cards-grid" style="margin-bottom:32px;">
 
     <div class="init-card cat-deal">
@@ -554,7 +554,7 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
   </div>
 
   <!-- TY LICENSE -->
-  <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;">Ty — License &amp; Skills</div>
+  <div style="font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--bronze);margin-bottom:12px;">Ty — License &amp; Skills</div>
   <div class="cards-grid" style="margin-bottom:32px;">
 
     <div class="init-card cat-ty">

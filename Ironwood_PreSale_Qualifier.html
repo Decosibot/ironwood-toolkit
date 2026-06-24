@@ -2,62 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="stylesheet" href="iw-design.css"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pre-Sale Renovation Qualifier — Ironwood</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Outfit:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@1,300;1,400;1,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
+    /* Uses iw-design.css vars */
     :root {
-      --forest:    #1a2e1a;
-      --bronze:    #8a6c3a;
-      --bronze-lt: #c4963e;
-      --cream:     #f5f0e8;
-      --ink:       #1a1a14;
-      --ink-soft:  #4a4438;
-      --muted:     #6b6352;
-      --border:    rgba(138,108,58,0.18);
-      --border-2:  rgba(138,108,58,0.32);
-      --surface:   #f7f4ee;
-      --green:     #22c55e;
-      --green-bg:  #dcfce7;
-      --green-bdr: #86efac;
-      --red:       #ef4444;
-      --red-bg:    #fee2e2;
-      --red-bdr:   #fca5a5;
-      --amber:     #d97706;
-      --amber-bg:  #fef3c7;
-      --amber-bdr: #fcd34d;
-      --radius:    10px;
+      --forest: var(--ink);
+      --bronze-lt: var(--bronze-deep);
+      --cream: var(--bg);
+      --text-sec: var(--muted);
+      --border: var(--hairline);
+      --border-2: var(--hairline);
+      --surface: #FBF8F2;
+      --green-bg: var(--green-tint);
+      --green-bdr: var(--green);
+      --red-bg: var(--red-tint);
+      --red-bdr: var(--red);
+      --amber: var(--bronze);
+      --amber-bg: var(--bronze-wash);
+      --amber-bdr: var(--bronze-tint);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+    body { font-family: 'Geist', system-ui, sans-serif; background: var(--cream); color: var(--ink); min-height: 100vh; -webkit-font-smoothing: antialiased; }
 
     /* ── HEADER ── */
-    .iw-header {
-      background: #fff; border-bottom: 1px solid var(--border);
-      padding: 0 24px; height: 58px;
-      display: flex; align-items: center; justify-content: space-between;
-      position: sticky; top: 0; z-index: 100;
-    }
-    .iw-logo-area { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .iw-logo-box {
-      width: 32px; height: 32px; background: var(--bronze);
-      border-radius: 6px; display: flex; align-items: center; justify-content: center;
-      font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 0.8rem; color: white;
-    }
-    .iw-logo-text { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 0.9rem; color: var(--ink); letter-spacing: -0.01em; }
-    .iw-logo-sub { font-size: 0.65rem; color: var(--muted); }
     .iw-header-right { display: flex; align-items: center; gap: 12px; }
-    .iw-badge { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-bdr); padding: 3px 8px; border-radius: 999px; }
+    .iw-badge { font-family: monospace, monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; background: var(--amber-bg); color: var(--amber); border: 1px solid var(--amber-bdr); padding: 3px 8px; border-radius: 999px; }
     .iw-back-btn { font-size: 0.78rem; color: var(--muted); text-decoration: none; border: 1px solid var(--border-2); padding: 5px 12px; border-radius: var(--radius); transition: color .2s, border-color .2s; }
     .iw-back-btn:hover { color: var(--ink); border-color: var(--bronze); }
 
     /* ── PAGE HERO ── */
     .page-hero { background: #fff; border-bottom: 3px solid var(--bronze); padding: 32px 24px 28px; text-align: center; }
-    .page-hero .eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bronze); margin-bottom: 8px; }
-    .page-hero h1 { font-family: 'Outfit', sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; color: var(--forest); letter-spacing: -0.02em; margin-bottom: 6px; }
+    .page-hero .eyebrow { font-family: monospace, monospace; font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--bronze); margin-bottom: 8px; }
+    .page-hero h1 { font-family: 'Geist', system-ui, sans-serif; font-size: clamp(1.4rem, 3vw, 2rem); font-weight: 700; color: var(--forest); letter-spacing: -0.02em; margin-bottom: 6px; }
     .page-hero .subtitle { font-size: 0.85rem; color: var(--muted); }
 
     /* ── LAYOUT ── */
@@ -66,7 +45,7 @@
     /* ── SECTIONS ── */
     .q-section { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px; margin-bottom: 20px; }
     .q-section-title {
-      font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem;
+      font-family: monospace, monospace; font-size: 0.65rem;
       letter-spacing: 0.14em; text-transform: uppercase; color: var(--bronze);
       margin-bottom: 18px; display: flex; align-items: center; gap: 8px;
     }
@@ -97,7 +76,7 @@
       border: 1px solid var(--border);
     }
     .calc-label { font-size: 0.8rem; color: var(--ink-soft); font-weight: 500; }
-    .calc-value { font-family: 'IBM Plex Mono', monospace; font-size: 0.88rem; font-weight: 600; color: var(--ink); }
+    .calc-value { font-family: monospace, monospace; font-size: 0.88rem; font-weight: 600; color: var(--ink); }
     .calc-row.highlight { background: var(--cream); border-color: var(--border-2); }
     .calc-row .status-icon { font-size: 1rem; margin-left: 10px; }
 
@@ -116,7 +95,7 @@
     }
     .checklist-item:last-child { border-bottom: none; }
     .checklist-text { font-size: 0.85rem; color: var(--ink); flex: 1; line-height: 1.4; }
-    .checklist-text .req { font-size: 0.65rem; font-family: 'IBM Plex Mono', monospace; color: var(--red); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 6px; }
+    .checklist-text .req { font-size: 0.65rem; font-family: monospace, monospace; color: var(--red); letter-spacing: 0.08em; text-transform: uppercase; margin-left: 6px; }
     .toggle-wrap { display: flex; gap: 6px; flex-shrink: 0; }
     .toggle-btn {
       padding: 5px 14px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;
@@ -146,7 +125,7 @@
     #verdict-box.nogo   { background: var(--red-bg);   border-color: var(--red-bdr);   }
     #verdict-box.review { background: var(--amber-bg); border-color: var(--amber-bdr); }
     #verdict-label {
-      font-family: 'Outfit', sans-serif; font-weight: 800;
+      font-family: 'Geist', system-ui, sans-serif; font-weight: 800;
       font-size: 2.6rem; letter-spacing: -0.02em; line-height: 1;
       color: var(--muted); margin-bottom: 6px;
     }
@@ -170,7 +149,7 @@
     #summary-card { display: none; }
     .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
     .summary-item { background: var(--surface); border-radius: var(--radius); padding: 12px 16px; border: 1px solid var(--border); }
-    .summary-item-label { font-family: 'IBM Plex Mono', monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
+    .summary-item-label { font-family: monospace, monospace; font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 4px; }
     .summary-item-value { font-size: 0.95rem; font-weight: 700; color: var(--ink); }
     .print-btn {
       display: inline-flex; align-items: center; gap: 8px;
