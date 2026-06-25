@@ -6,7 +6,7 @@
 <title>Draw Schedule — Ironwood Property Group</title>
 <link rel="stylesheet" href="iw-design.css"/>
 <style>
-.wrap { max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+.wrap { max-width: 960px; margin: 0 auto; padding: 32px 24px 60px; }
 
 /* ── DEAL PICKER ── */
 .deal-picker-bar { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
@@ -15,54 +15,83 @@
 .deal-picker-bar select:focus { outline: none; border-color: var(--bronze); }
 
 /* ── SUMMARY BAR ── */
-.sum-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; margin-bottom: 24px; }
+.sum-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
 .sum-cell { background: var(--surface); padding: 16px 18px; }
 .sum-cell-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 4px; }
 .sum-cell-value { font-size: 22px; font-weight: 700; font-family: 'Instrument Serif', serif; color: var(--ink); }
 .sum-cell-value.funded { color: #1a4d32; }
-.sum-cell-value.pending { color: var(--bronze); }
+.sum-cell-value.requested { color: var(--bronze); }
 
-/* ── ADD DRAW FORM ── */
-.add-draw-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 24px; }
-.add-draw-card h3 { font-family: 'Instrument Serif', serif; font-size: 18px; color: var(--ink); margin-bottom: 16px; }
-.draw-form-grid { display: grid; grid-template-columns: 1fr 1fr 140px; gap: 12px; align-items: end; }
-@media(max-width:640px){ .draw-form-grid { grid-template-columns: 1fr; } }
-.df-field { display: flex; flex-direction: column; gap: 5px; }
-.df-field label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
-.df-field input, .df-field select { background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 7px; padding: 9px 12px; font-size: 14px; font-family: inherit; transition: border-color .15s; }
-.df-field input:focus, .df-field select:focus { outline: none; border-color: var(--bronze); }
-.add-draw-btn { padding: 10px 20px; background: var(--bronze); color: #fff; border: none; border-radius: 7px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; white-space: nowrap; }
-.add-draw-btn:hover { background: var(--bronze-deep); }
+/* ── ADD DRAW BUTTON ── */
+.add-draw-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.add-draw-header h2 { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--ink); }
+.new-draw-btn { padding: 10px 20px; background: var(--bronze); color: #fff; border: none; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; }
+.new-draw-btn:hover { background: var(--bronze-deep); }
 
-/* ── DRAWS TABLE ── */
-.draws-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
-.draws-card-header { padding: 14px 20px; border-bottom: 1px solid var(--hairline); display: flex; justify-content: space-between; align-items: center; }
-.draws-card-header h3 { font-size: 13px; font-weight: 700; color: var(--ink); }
-.draws-table { width: 100%; border-collapse: collapse; }
-.draws-table th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--hairline); text-align: left; white-space: nowrap; }
-.draws-table td { padding: 12px 16px; border-bottom: 1px solid var(--hairline); font-size: 13px; color: var(--ink); vertical-align: middle; }
-.draws-table tr:last-child td { border-bottom: none; }
-.draws-table tr:hover td { background: var(--bg); }
+/* ── DRAW GROUP CARD ── */
+.draw-group { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); margin-bottom: 16px; overflow: hidden; }
+.draw-group-header { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--hairline); flex-wrap: wrap; }
+.draw-group-num { width: 28px; height: 28px; border-radius: 50%; background: var(--bronze); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; }
+.draw-group-name { font-weight: 700; font-size: 15px; color: var(--ink); flex: 1; min-width: 120px; }
+.draw-group-total { font-family: 'Instrument Serif', serif; font-size: 18px; font-weight: 700; color: var(--ink); white-space: nowrap; }
+.draw-group-badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 5px; white-space: nowrap; }
+.badge-pending   { background:#f0f0f0;color:#666; }
+.badge-requested { background:#fdf8ee;color:#8a6d1a;border:1px solid #e8c96a; }
+.badge-funded    { background:#eefaf3;color:#1a4d32; }
+.draw-group-actions { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+.dg-act { padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-soft); transition: all .15s; font-family: inherit; white-space: nowrap; }
+.dg-act:hover { border-color: var(--bronze); color: var(--bronze); }
+.dg-act.fund { background: #eefaf3; border-color: #1a4d32; color: #1a4d32; }
+.dg-act.fund:hover { background: #1a4d32; color: #fff; }
+.dg-act.del { color: var(--muted); }
+.dg-act.del:hover { border-color: #c0392b; color: #c0392b; }
 
-/* Status badges */
-.draw-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 5px; white-space: nowrap; }
-.badge-pending  { background: #f0f0f0; color: #666; }
-.badge-requested { background: #fdf8ee; color: #8a6d1a; border: 1px solid #e8c96a; }
-.badge-funded   { background: #eefaf3; color: #1a4d32; }
+/* ── LINE ITEMS ── */
+.line-items { padding: 8px 18px 4px; }
+.line-item-row { display: flex; align-items: center; gap: 12px; padding: 7px 0; border-bottom: 1px solid var(--hairline); }
+.line-item-row:last-child { border-bottom: none; }
+.li-desc { flex: 1; font-size: 13px; color: var(--ink); }
+.li-trade { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); padding: 2px 7px; border-radius: 4px; background: var(--bg); border: 1px solid var(--hairline); white-space: nowrap; }
+.li-amt { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; min-width: 80px; text-align: right; }
+.li-del { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 15px; padding: 0 4px; line-height: 1; transition: color .15s; }
+.li-del:hover { color: #c0392b; }
 
-/* Action buttons in table */
-.draw-act-btn { padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-soft); transition: all .15s; font-family: inherit; }
-.draw-act-btn:hover { border-color: var(--bronze); color: var(--bronze); }
-.draw-act-btn.fund { background: #eefaf3; border-color: #1a4d32; color: #1a4d32; }
-.draw-act-btn.fund:hover { background: #1a4d32; color: #fff; }
-.draw-act-btn.del { color: var(--muted); }
-.draw-act-btn.del:hover { border-color: #c0392b; color: #c0392b; }
+/* ── ADD LINE ITEM FORM ── */
+.add-li-row { display: flex; gap: 8px; padding: 10px 18px 14px; flex-wrap: wrap; align-items: flex-end; border-top: 1px solid var(--hairline); background: var(--bg); }
+.ali-field { display: flex; flex-direction: column; gap: 4px; }
+.ali-field label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+.ali-field input, .ali-field select { background: var(--surface); border: 1px solid var(--hairline); color: var(--ink); border-radius: 6px; padding: 7px 10px; font-size: 13px; font-family: inherit; }
+.ali-field input:focus, .ali-field select:focus { outline: none; border-color: var(--bronze); }
+.ali-field.desc { flex: 1; min-width: 200px; }
+.ali-field.amt { width: 120px; }
+.ali-field.trade { width: 150px; }
+.ali-add-btn { padding: 8px 14px; background: var(--ink); color: var(--bg); border: none; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; font-family: inherit; white-space: nowrap; align-self: flex-end; }
+.ali-add-btn:hover { opacity: .85; }
 
-.empty-draws { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
-.empty-draws p { margin-top: 6px; }
+/* ── DATE STAMPS ── */
+.draw-dates { font-size: 11px; color: var(--muted); padding: 6px 18px 10px; display: flex; gap: 20px; flex-wrap: wrap; }
 
-.no-deal-msg { text-align: center; padding: 60px 20px; color: var(--muted); }
-.no-deal-msg h3 { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); margin-bottom: 8px; }
+/* ── NEW DRAW MODAL ── */
+#new-draw-modal { display:none; position:fixed; inset:0; z-index:9000; background:rgba(28,24,20,.45); align-items:center; justify-content:center; }
+#new-draw-modal.open { display:flex; }
+.modal-box { background:var(--surface); border:1px solid var(--hairline); border-radius:var(--radius-lg); padding:28px 32px; width:400px; max-width:92vw; box-shadow:var(--shadow-lg); }
+.modal-box h3 { font-family:'Instrument Serif',serif; font-size:22px; color:var(--ink); margin-bottom:18px; }
+.mf { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+.mf label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); }
+.mf input { background:var(--bg); border:1px solid var(--hairline); color:var(--ink); border-radius:7px; padding:9px 12px; font-size:14px; font-family:inherit; }
+.mf input:focus { outline:none; border-color:var(--bronze); }
+.mf .hint { font-size:11px; color:var(--muted); margin-top:3px; }
+.modal-actions { display:flex; gap:10px; margin-top:20px; }
+.modal-btn { padding:10px 22px; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; border:none; font-family:inherit; }
+.modal-btn.save { background:var(--bronze); color:#fff; flex:1; }
+.modal-btn.save:hover { background:var(--bronze-deep); }
+.modal-btn.cancel { background:var(--surface); border:1px solid var(--hairline); color:var(--ink-soft); }
+.modal-btn.cancel:hover { border-color:var(--bronze); color:var(--bronze); }
+
+.empty-draws { text-align:center; padding:40px 20px; color:var(--muted); font-size:13px; }
+.empty-draws p { margin-top:6px; }
+.no-deal-msg { text-align:center; padding:60px 20px; color:var(--muted); }
+.no-deal-msg h3 { font-family:'Instrument Serif',serif; font-size:22px; color:var(--ink); margin-bottom:8px; }
 </style>
 </head>
 <body>
@@ -85,7 +114,7 @@
 <div class="iw-hero">
   <div class="iw-eyebrow">Ironwood · Anchor Pro</div>
   <h1>Draw Schedule</h1>
-  <p>Track construction draw requests and funding milestones per deal. Synced to Deal Pipeline.</p>
+  <p>Bundle multiple scopes into a single draw request — one fee per draw, not per line item.</p>
 </div>
 
 <div class="wrap">
@@ -102,17 +131,17 @@
   <!-- NO DEAL SELECTED -->
   <div id="no-deal-msg" class="no-deal-msg">
     <h3>Select a deal above</h3>
-    <p>Choose a deal from the pipeline to view or add draw milestones.</p>
+    <p>Choose a deal from the pipeline to view or manage draws.</p>
   </div>
 
-  <!-- DEAL CONTENT (hidden until deal selected) -->
+  <!-- DEAL CONTENT -->
   <div id="deal-content" style="display:none;">
 
     <!-- SUMMARY BAR -->
     <div class="sum-bar">
       <div class="sum-cell">
-        <div class="sum-cell-label">Total Draws</div>
-        <div class="sum-cell-value" id="stat-total-amt">$0</div>
+        <div class="sum-cell-label">Total Budget</div>
+        <div class="sum-cell-value" id="stat-total">$0</div>
       </div>
       <div class="sum-cell">
         <div class="sum-cell-label">Funded</div>
@@ -120,7 +149,7 @@
       </div>
       <div class="sum-cell">
         <div class="sum-cell-label">Requested</div>
-        <div class="sum-cell-value pending" id="stat-requested">$0</div>
+        <div class="sum-cell-value requested" id="stat-requested">$0</div>
       </div>
       <div class="sum-cell">
         <div class="sum-cell-label">Remaining</div>
@@ -128,40 +157,39 @@
       </div>
     </div>
 
-    <!-- ADD DRAW FORM -->
-    <div class="add-draw-card">
-      <h3>Add Milestone</h3>
-      <div class="draw-form-grid">
-        <div class="df-field">
-          <label>Milestone / Description</label>
-          <input type="text" id="f-milestone" placeholder="e.g. Foundation Complete, Rough Framing"/>
-        </div>
-        <div class="df-field">
-          <label>Draw Amount ($)</label>
-          <input type="number" id="f-amount" placeholder="0" min="0" step="500"/>
-        </div>
-        <div>
-          <button class="add-draw-btn" onclick="addDraw()">+ Add</button>
-        </div>
-      </div>
+    <!-- DRAWS HEADER -->
+    <div class="add-draw-header">
+      <h2>Draw Groups</h2>
+      <button class="new-draw-btn" onclick="openNewDrawModal()">+ New Draw</button>
     </div>
 
-    <!-- DRAWS TABLE -->
-    <div class="draws-card">
-      <div class="draws-card-header">
-        <h3>Milestones</h3>
-      </div>
-      <div id="draws-body">
-        <div class="empty-draws">
-          <strong>No milestones yet</strong>
-          <p>Add your first draw milestone above.</p>
-        </div>
+    <!-- DRAW GROUPS -->
+    <div id="draws-list">
+      <div class="empty-draws">
+        <strong>No draws yet</strong>
+        <p>Create a draw group, then add line items to bundle into one request.</p>
       </div>
     </div>
 
   </div><!-- /deal-content -->
 
 </div><!-- /wrap -->
+
+<!-- NEW DRAW MODAL -->
+<div id="new-draw-modal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h3>New Draw Group</h3>
+    <div class="mf">
+      <label>Draw Name</label>
+      <input type="text" id="m-name" placeholder="e.g. Draw 1 — Framing &amp; Rough-In"/>
+      <span class="hint">Bundle related scopes so the lender processes one fee for the whole group.</span>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn save" onclick="createDraw()">Create Draw</button>
+      <button class="modal-btn cancel" onclick="closeNewDrawModal()">Cancel</button>
+    </div>
+  </div>
+</div>
 
 <div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
 
@@ -179,14 +207,15 @@ firebase.initializeApp({
 });
 const db = firebase.firestore();
 
+const TRADES = ['Framing','Electrical','Plumbing','HVAC','Roofing','Drywall','Flooring','Tile','Painting','Concrete','Demo','Landscaping','Cabinets','Windows','Doors','Insulation','Siding','Other'];
+
 let currentDealId = null;
-let currentDeals = [];
 let drawsListener = null;
+let allDraws = []; // [{id, name, status, lineItems:[], requestedAt, fundedAt, createdAt, drawNum}]
 
 // ── INIT ──
 window.addEventListener('load', () => {
   loadDealPicker();
-  // Check if a deal was passed via localStorage
   try {
     const active = JSON.parse(localStorage.getItem('iw_active_deal') || 'null');
     if (active && active.id) {
@@ -202,23 +231,21 @@ window.addEventListener('load', () => {
 // ── DEAL PICKER ──
 function loadDealPicker() {
   db.collection('deals').orderBy('createdAt','desc').get().then(snap => {
-    currentDeals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     const sel = document.getElementById('deal-select');
     sel.innerHTML = '<option value="">— Select a deal —</option>';
-    currentDeals.forEach(d => {
+    snap.docs.forEach(doc => {
+      const d = doc.data();
       const opt = document.createElement('option');
-      opt.value = d.id;
+      opt.value = doc.id;
       opt.textContent = d.address + (d.status ? ' · ' + d.status : '');
       sel.appendChild(opt);
     });
   }).catch(() => {});
 }
 
-// ── LOAD DRAWS (realtime) ──
+// ── LOAD DRAWS ──
 function loadDraws() {
-  const sel = document.getElementById('deal-select');
-  const id = sel.value;
-
+  const id = document.getElementById('deal-select').value;
   if (drawsListener) { drawsListener(); drawsListener = null; }
 
   if (!id) {
@@ -234,75 +261,121 @@ function loadDraws() {
 
   drawsListener = db.collection('deals').doc(id)
     .collection('draws')
-    .orderBy('createdAt','asc')
+    .orderBy('drawNum','asc')
     .onSnapshot(snap => {
-      const draws = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-      renderDraws(draws);
-      renderStats(draws);
-      writebackTotals(draws, id);
+      allDraws = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAll();
     }, () => {
       db.collection('deals').doc(id).collection('draws').get().then(snap => {
-        const draws = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-        renderDraws(draws);
-        renderStats(draws);
+        allDraws = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderAll();
       });
     });
 }
 
-// ── RENDER ──
-function renderDraws(draws) {
-  const body = document.getElementById('draws-body');
-  if (!draws.length) {
-    body.innerHTML = '<div class="empty-draws"><strong>No milestones yet</strong><p>Add your first draw milestone above.</p></div>';
-    return;
-  }
-
-  body.innerHTML = `<table class="draws-table">
-    <thead>
-      <tr>
-        <th>Milestone</th>
-        <th>Amount</th>
-        <th>Status</th>
-        <th>Requested</th>
-        <th>Funded</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      ${draws.map(d => `
-        <tr>
-          <td style="font-weight:600;">${esc(d.milestone)}</td>
-          <td style="font-weight:700;">${fmtMoney(d.amount)}</td>
-          <td><span class="draw-badge badge-${(d.status||'pending').toLowerCase()}">${d.status || 'Pending'}</span></td>
-          <td style="color:var(--muted);font-size:12px;">${d.requestedAt ? fmtDate(d.requestedAt) : '—'}</td>
-          <td style="color:var(--muted);font-size:12px;">${d.fundedAt ? fmtDate(d.fundedAt) : '—'}</td>
-          <td style="display:flex;gap:6px;flex-wrap:wrap;">
-            ${d.status !== 'Requested' && d.status !== 'Funded' ? `<button class="draw-act-btn" onclick="requestDraw('${d.id}')">Request</button>` : ''}
-            ${d.status === 'Requested' ? `<button class="draw-act-btn fund" onclick="fundDraw('${d.id}')">Fund</button>` : ''}
-            <button class="draw-act-btn del" onclick="deleteDraw('${d.id}')">Del</button>
-          </td>
-        </tr>`).join('')}
-    </tbody>
-  </table>`;
+// ── RENDER ALL ──
+function renderAll() {
+  renderStats();
+  renderDrawGroups();
+  writebackTotals();
 }
 
-function renderStats(draws) {
-  const total = draws.reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
-  const funded = draws.filter(d => d.status === 'Funded').reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
-  const requested = draws.filter(d => d.status === 'Requested').reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
+function renderStats() {
+  let total = 0, funded = 0, requested = 0;
+  allDraws.forEach(d => {
+    const amt = groupTotal(d);
+    total += amt;
+    if (d.status === 'Funded') funded += amt;
+    else if (d.status === 'Requested') requested += amt;
+  });
   const remaining = total - funded - requested;
-
-  document.getElementById('stat-total-amt').textContent = fmtMoney(total);
+  document.getElementById('stat-total').textContent = fmtMoney(total);
   document.getElementById('stat-funded').textContent = fmtMoney(funded);
   document.getElementById('stat-requested').textContent = fmtMoney(requested);
   document.getElementById('stat-remaining').textContent = fmtMoney(Math.max(0, remaining));
 }
 
-function writebackTotals(draws, dealId) {
-  const total = draws.reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
-  const funded = draws.filter(d => d.status === 'Funded').reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
-  const pending = total - funded;
-  db.collection('deals').doc(dealId).update({
+function groupTotal(draw) {
+  return (draw.lineItems || []).reduce((s, li) => s + (parseFloat(li.amount) || 0), 0);
+}
+
+function renderDrawGroups() {
+  const list = document.getElementById('draws-list');
+  if (!allDraws.length) {
+    list.innerHTML = '<div class="empty-draws"><strong>No draws yet</strong><p>Create a draw group, then add line items to bundle into one request.</p></div>';
+    return;
+  }
+
+  list.innerHTML = allDraws.map((draw, idx) => {
+    const total = groupTotal(draw);
+    const status = draw.status || 'Pending';
+    const badgeClass = 'badge-' + status.toLowerCase().replace(/\s/g,'');
+    const lineItems = draw.lineItems || [];
+
+    const tradeOptions = TRADES.map(t => `<option>${t}</option>`).join('');
+
+    const liRows = lineItems.map((li, liIdx) => `
+      <div class="line-item-row">
+        <span class="li-desc">${esc(li.desc)}</span>
+        ${li.trade ? `<span class="li-trade">${esc(li.trade)}</span>` : ''}
+        <span class="li-amt">${fmtMoney(li.amount)}</span>
+        ${status === 'Pending' ? `<button class="li-del" onclick="removeLineItem('${draw.id}',${liIdx})" title="Remove">&times;</button>` : ''}
+      </div>`).join('');
+
+    const addLiForm = status === 'Pending' ? `
+      <div class="add-li-row">
+        <div class="ali-field desc">
+          <label>Scope / Service</label>
+          <input type="text" id="li-desc-${draw.id}" placeholder="e.g. Rough electrical wiring"/>
+        </div>
+        <div class="ali-field trade">
+          <label>Trade</label>
+          <select id="li-trade-${draw.id}"><option value="">— Trade —</option>${tradeOptions}</select>
+        </div>
+        <div class="ali-field amt">
+          <label>Amount ($)</label>
+          <input type="number" id="li-amt-${draw.id}" placeholder="0" min="0" step="100"/>
+        </div>
+        <button class="ali-add-btn" onclick="addLineItem('${draw.id}')">+ Add</button>
+      </div>` : '';
+
+    const dates = [
+      draw.requestedAt ? `Requested ${fmtDate(draw.requestedAt)}` : null,
+      draw.fundedAt    ? `Funded ${fmtDate(draw.fundedAt)}`       : null,
+    ].filter(Boolean).join(' · ');
+
+    return `
+      <div class="draw-group" id="dg-${draw.id}">
+        <div class="draw-group-header">
+          <div class="draw-group-num">${draw.drawNum || idx + 1}</div>
+          <div class="draw-group-name">${esc(draw.name)}</div>
+          <div class="draw-group-total">${fmtMoney(total)}</div>
+          <span class="draw-group-badge ${badgeClass}">${status}</span>
+          <div class="draw-group-actions">
+            ${status === 'Pending' ? `<button class="dg-act" onclick="requestDraw('${draw.id}')">Request Draw</button>` : ''}
+            ${status === 'Requested' ? `<button class="dg-act fund" onclick="fundDraw('${draw.id}')">Mark Funded</button>` : ''}
+            ${status === 'Pending' ? `<button class="dg-act del" onclick="deleteDrawGroup('${draw.id}')">Delete</button>` : ''}
+          </div>
+        </div>
+        <div class="line-items">
+          ${liRows || '<div style="padding:8px 0;font-size:12px;color:var(--muted);">No services added yet — use the form below.</div>'}
+        </div>
+        ${addLiForm}
+        ${dates ? `<div class="draw-dates">${dates}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+function writebackTotals() {
+  if (!currentDealId) return;
+  let total = 0, funded = 0, pending = 0;
+  allDraws.forEach(d => {
+    const amt = groupTotal(d);
+    total += amt;
+    if (d.status === 'Funded') funded += amt;
+    else pending += amt;
+  });
+  db.collection('deals').doc(currentDealId).update({
     drawsTotal: total,
     drawsFunded: funded,
     drawsPending: pending,
@@ -310,30 +383,80 @@ function writebackTotals(draws, dealId) {
   }).catch(() => {});
 }
 
-// ── ACTIONS ──
-async function addDraw() {
+// ── NEW DRAW MODAL ──
+function openNewDrawModal() {
   if (!currentDealId) { showToast('Select a deal first'); return; }
-  const milestone = document.getElementById('f-milestone').value.trim();
-  const amount = parseFloat(document.getElementById('f-amount').value) || 0;
-  if (!milestone) { showToast('Enter a milestone description'); return; }
+  document.getElementById('m-name').value = '';
+  // Suggest next draw name
+  const next = allDraws.length + 1;
+  document.getElementById('m-name').placeholder = `Draw ${next} — e.g. Framing & Rough-In`;
+  document.getElementById('new-draw-modal').classList.add('open');
+  setTimeout(() => document.getElementById('m-name').focus(), 50);
+}
 
+function closeNewDrawModal() {
+  document.getElementById('new-draw-modal').classList.remove('open');
+}
+
+async function createDraw() {
+  const name = document.getElementById('m-name').value.trim() || `Draw ${allDraws.length + 1}`;
   try {
     await db.collection('deals').doc(currentDealId).collection('draws').add({
-      milestone,
-      amount,
+      name,
+      drawNum: allDraws.length + 1,
       status: 'Pending',
+      lineItems: [],
       createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     });
-    document.getElementById('f-milestone').value = '';
-    document.getElementById('f-amount').value = '';
-    showToast('Milestone added');
+    closeNewDrawModal();
+    showToast('Draw group created');
+  } catch(e) {
+    showToast('Error creating draw');
+  }
+}
+
+// ── LINE ITEMS ──
+async function addLineItem(drawId) {
+  const desc  = document.getElementById(`li-desc-${drawId}`).value.trim();
+  const trade = document.getElementById(`li-trade-${drawId}`).value;
+  const amount = parseFloat(document.getElementById(`li-amt-${drawId}`).value) || 0;
+  if (!desc) { showToast('Enter a service description'); return; }
+
+  const draw = allDraws.find(d => d.id === drawId);
+  if (!draw) return;
+
+  const updated = [...(draw.lineItems || []), { desc, trade: trade || '', amount }];
+  try {
+    await db.collection('deals').doc(currentDealId).collection('draws').doc(drawId).update({
+      lineItems: updated,
+    });
+    document.getElementById(`li-desc-${drawId}`).value = '';
+    document.getElementById(`li-trade-${drawId}`).value = '';
+    document.getElementById(`li-amt-${drawId}`).value = '';
+    showToast('Service added');
   } catch(e) {
     showToast('Error saving');
   }
 }
 
+async function removeLineItem(drawId, liIdx) {
+  const draw = allDraws.find(d => d.id === drawId);
+  if (!draw) return;
+  const updated = (draw.lineItems || []).filter((_, i) => i !== liIdx);
+  try {
+    await db.collection('deals').doc(currentDealId).collection('draws').doc(drawId).update({
+      lineItems: updated,
+    });
+    showToast('Removed');
+  } catch(e) {
+    showToast('Error removing');
+  }
+}
+
+// ── DRAW ACTIONS ──
 async function requestDraw(drawId) {
-  if (!currentDealId) return;
+  const draw = allDraws.find(d => d.id === drawId);
+  if (!draw || !(draw.lineItems || []).length) { showToast('Add at least one service before requesting'); return; }
   try {
     await db.collection('deals').doc(currentDealId).collection('draws').doc(drawId).update({
       status: 'Requested',
@@ -346,7 +469,6 @@ async function requestDraw(drawId) {
 }
 
 async function fundDraw(drawId) {
-  if (!currentDealId) return;
   try {
     await db.collection('deals').doc(currentDealId).collection('draws').doc(drawId).update({
       status: 'Funded',
@@ -358,27 +480,35 @@ async function fundDraw(drawId) {
   }
 }
 
-async function deleteDraw(drawId) {
-  if (!currentDealId) return;
-  if (!confirm('Delete this milestone?')) return;
+async function deleteDrawGroup(drawId) {
+  if (!confirm('Delete this draw group and all its line items?')) return;
   try {
     await db.collection('deals').doc(currentDealId).collection('draws').doc(drawId).delete();
-    showToast('Deleted');
+    showToast('Draw deleted');
   } catch(e) {
     showToast('Error deleting');
   }
 }
 
+// Modal backdrop + escape
+document.addEventListener('click', e => {
+  if (e.target === document.getElementById('new-draw-modal')) closeNewDrawModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeNewDrawModal();
+  if (e.key === 'Enter' && document.getElementById('new-draw-modal').classList.contains('open')) createDraw();
+});
+
 // ── HELPERS ──
 function fmtMoney(n) {
   const num = parseFloat(n) || 0;
   if (num >= 1000000) return '$' + (num/1000000).toFixed(2) + 'M';
-  if (num >= 1000) return '$' + (num/1000).toFixed(0) + 'K';
+  if (num >= 1000)    return '$' + Math.round(num/1000) + 'K';
   return '$' + num.toLocaleString('en-US');
 }
 
 function fmtDate(ts) {
-  if (!ts) return '—';
+  if (!ts) return '';
   const d = ts.toDate ? ts.toDate() : new Date(ts);
   return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
 }
