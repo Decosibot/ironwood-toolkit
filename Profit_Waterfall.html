@@ -141,6 +141,18 @@
   </div>
 </div>
 
+<!-- Deal Pipeline Import Banner -->
+<div id="deal-wf-banner" style="display:none;background:#0a1a0a;border-bottom:2px solid #4caf7d;padding:14px 24px;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+  <div>
+    <span style="color:#4caf7d;font-weight:700;font-size:13px">Deal loaded from pipeline:</span>
+    <span id="deal-wf-banner-address" style="color:#fff;font-size:13px;margin-left:8px"></span>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button onclick="applyDealImportWaterfall()" style="background:#4caf7d;color:#000;border:none;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">Apply to Fields</button>
+    <button onclick="dismissDealImportWaterfall()" style="background:none;border:1px solid #4caf7d;color:#4caf7d;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer">Dismiss</button>
+  </div>
+</div>
+
 <div class="container">
 
   <!-- DEAL TYPE -->
@@ -357,6 +369,7 @@ window.onload = function() {
   renderHistory();
   calc();
   checkEstimatorImport();
+  checkDealImportWaterfall();
 };
 
 let _pendingImport = null;
@@ -743,6 +756,38 @@ function clearHistory() {
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
 function fmt(n) { return '$' + (parseFloat(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── DEAL PIPELINE IMPORT ──
+function checkDealImportWaterfall(){
+  const raw = localStorage.getItem('iw_active_deal');
+  if(!raw) return;
+  try{
+    const deal = JSON.parse(raw);
+    // Only show if there's no estimator import already pending
+    const estRaw = localStorage.getItem('ironwood_waterfall_import');
+    if(estRaw) return;
+    document.getElementById('deal-wf-banner-address').textContent = deal.address || 'Unknown address';
+    document.getElementById('deal-wf-banner').style.display = 'flex';
+  } catch(e){}
+}
+
+function applyDealImportWaterfall(){
+  const raw = localStorage.getItem('iw_active_deal');
+  if(!raw) return;
+  try{
+    const deal = JSON.parse(raw);
+    if(deal.address) document.getElementById('dealName').value = deal.address;
+    if(deal.salePrice) document.getElementById('grossRevenue').value = deal.salePrice;
+    if(deal.rehabCost) document.getElementById('hardCosts').value = deal.rehabCost;
+    calc();
+    dismissDealImportWaterfall();
+  } catch(e){}
+}
+
+function dismissDealImportWaterfall(){
+  document.getElementById('deal-wf-banner').style.display = 'none';
+  localStorage.removeItem('iw_active_deal');
+}
 </script>
 </body>
 </html>

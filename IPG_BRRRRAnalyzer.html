@@ -258,6 +258,18 @@
 </head>
 <body>
 
+<!-- DEAL IMPORT BANNER -->
+<div id="deal-import-banner" style="display:none;background:#1a3a0a;border-bottom:2px solid #4caf7d;padding:12px 24px;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+  <div>
+    <span style="color:#4caf7d;font-weight:700;font-size:13px">Deal loaded from pipeline:</span>
+    <span id="deal-banner-address" style="color:#fff;font-size:13px;margin-left:8px"></span>
+  </div>
+  <div style="display:flex;gap:8px">
+    <button onclick="applyDealImport()" style="background:#4caf7d;color:#000;border:none;padding:6px 14px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer">Apply to Fields</button>
+    <button onclick="dismissDealImport()" style="background:none;border:1px solid #4caf7d;color:#4caf7d;padding:6px 14px;border-radius:6px;font-size:12px;cursor:pointer">Dismiss</button>
+  </div>
+</div>
+
 <!-- HEADER -->
 <div class="iw-header">
   <a class="iw-logo-area" href="index.html">
@@ -1025,8 +1037,40 @@ One clear action to take in the next 48 hours.`;
 // Usage: setGHLWebhook('https://your-ghl-webhook-url')
 // Check: getGHLWebhook()
 
+// ── DEAL PIPELINE IMPORT ──
+function checkDealImport(){
+  const raw = localStorage.getItem('iw_active_deal');
+  if(!raw) return;
+  try{
+    const deal = JSON.parse(raw);
+    document.getElementById('deal-banner-address').textContent = deal.address || 'Unknown address';
+    const banner = document.getElementById('deal-import-banner');
+    banner.style.display = 'flex';
+  } catch(e){}
+}
+
+function applyDealImport(){
+  const raw = localStorage.getItem('iw_active_deal');
+  if(!raw) return;
+  try{
+    const deal = JSON.parse(raw);
+    if(deal.address) document.getElementById('address').value = deal.address;
+    if(deal.ARV) document.getElementById('arv').value = deal.ARV;
+    if(deal.rehabCost) document.getElementById('rehabCost').value = deal.rehabCost;
+    if(deal.purchasePrice || deal.MAO) document.getElementById('purchasePrice').value = deal.purchasePrice || deal.MAO;
+    recalc();
+    dismissDealImport();
+  } catch(e){}
+}
+
+function dismissDealImport(){
+  document.getElementById('deal-import-banner').style.display = 'none';
+  localStorage.removeItem('iw_active_deal');
+}
+
 // Init
 recalc();
+checkDealImport();
 </script>
 </body>
 </html>

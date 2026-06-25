@@ -172,6 +172,7 @@
     <button class="btn btn-outline btn-sm" onclick="toggleView()" id="view-toggle-btn">&#128196; Preview Proposal</button>
     <button class="btn btn-outline btn-sm" onclick="window.print()">&#128424; Print / PDF</button>
     <button class="btn btn-gold btn-sm" onclick="exportToWaterfall()">&#8594; Waterfall</button>
+    <button class="btn btn-gold btn-sm" onclick="saveBidToDeal()">&#8599; Save Bid to Pipeline</button>
     <button class="btn btn-gold btn-sm" onclick="saveJob()">&#10003; Save</button>
   </div>
 </div>
@@ -444,6 +445,25 @@
 
 <input type="file" id="fileInput" accept=".json" style="display:none" onchange="handleFileLoad(event)"/>
 
+<!-- FIREBASE (for Save Bid to Pipeline) -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ── FIREBASE INIT (Deal Pipeline) ──
+if (!firebase.apps.length) {
+  firebase.initializeApp({
+    apiKey:"AIzaSyCS6hfr0jIxDrn6IiTVXDtNI5y2huR7AiE",
+    authDomain:"workout-app-576c0.firebaseapp.com",
+    projectId:"workout-app-576c0",
+    storageBucket:"workout-app-576c0.firebasestorage.app",
+    messagingSenderId:"93802465651",
+    appId:"1:93802465651:web:e5453d53128bf6b8d25d06"
+  });
+}
+const db = firebase.firestore();
+</script>
+
 <script>
 // ─── STATE ───────────────────────────────────────────────────────────────────
 let job = newJobObj();
@@ -475,6 +495,7 @@ window.onload = function() {
   renderCatTabs();
   renderItems();
   recalc();
+  checkDealImportEstimator();
 };
 
 function populateSidebar() {
@@ -994,6 +1015,51 @@ function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').re
 function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
 function setVal(id, v) { const el = document.getElementById(id); if (el) el.value = v || ''; }
 function setText(id, v) { const el = document.getElementById(id); if (el) el.textContent = v; }
+
+// ─── DEAL PIPELINE INTEGRATION ───────────────────────────────────────────────
+function checkDealImportEstimator(){
+  const raw = localStorage.getItem('iw_active_deal');
+  if(!raw) return;
+  try{
+    const deal = JSON.parse(raw);
+    // pre-fill address/job name field
+    const addrEl = document.getElementById('jobAddress') || document.getElementById('address') || document.getElementById('jobName') || document.getElementById('projectName');
+    if(addrEl && deal.address) addrEl.value = deal.address;
+    // also pre-fill jobName if separate
+    const jobNameEl = document.getElementById('jobName');
+    if(jobNameEl && deal.address && !jobNameEl.value) jobNameEl.value = deal.address;
+  } catch(e){}
+}
+
+async function saveBidToDeal(){
+  const totalEl = document.getElementById('t-total');
+  const addrEl = document.getElementById('jobAddress') || document.getElementById('address') || document.getElementById('jobName') || document.getElementById('projectName');
+  const totalText = totalEl ? totalEl.textContent.replace(/[^0-9.]/g,'') : '0';
+  const total = parseFloat(totalText) || 0;
+  const address = addrEl ? addrEl.value.trim() : '';
+  if(!address){ showEstimatorToast('Enter a job address first'); return; }
+  if(!total){ showEstimatorToast('No total to save — add line items first'); return; }
+  try{
+    const snap = await db.collection('deals').where('address','==',address).limit(1).get();
+    if(snap.empty){ showEstimatorToast('No deal found — create one in Deal Pipeline first'); return; }
+    await snap.docs[0].ref.update({ rehabCost: total, updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+    showEstimatorToast('Bid saved to deal pipeline');
+  } catch(e){ showEstimatorToast('Error saving — check connection'); console.error(e); }
+}
+
+function showEstimatorToast(msg){
+  let t = document.getElementById('est-toast');
+  if(!t){
+    t = document.createElement('div');
+    t.id = 'est-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1C1814;color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(()=>t.style.opacity='0', 2500);
+}
 </script>
 </body>
 </html>

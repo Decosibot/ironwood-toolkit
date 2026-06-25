@@ -402,6 +402,7 @@
 <!-- PINNED QUICK LAUNCH -->
 <div class="pinned-row" id="pinnedRow">
   <span class="pinned-label">Quick Launch</span>
+  <a class="pin-chip" href="Deal_Pipeline.html"><span class="chip-icon">&#127968;</span> Deal Pipeline <span class="chip-badge">NEW</span></a>
   <a class="pin-chip" href="Room_Scanner.html"><span class="chip-icon">📷</span> Room Scanner <span class="chip-badge">NEW</span></a>
   <a class="pin-chip" href="IPG_BRRRRAnalyzer.html"><span class="chip-icon">🏠</span> BRRRR Analyzer</a>
   <a class="pin-chip" href="Remodel_Estimator.html"><span class="chip-icon">🔨</span> Remodel Estimator</a>
@@ -423,7 +424,7 @@
 
     <div class="sidebar-section-label">Deals & Finance</div>
     <a class="sidebar-link" onclick="scrollTo('deals')" href="#deals">
-      <span class="sl-icon">🏠</span> Acquisitions <span class="sl-count">5</span>
+      <span class="sl-icon">🏠</span> Acquisitions <span class="sl-count">6</span>
     </a>
     <a class="sidebar-link" onclick="scrollTo('finance')" href="#finance">
       <span class="sl-icon">💰</span> Finance & P&L <span class="sl-count">7</span>
@@ -547,11 +548,27 @@
       <div class="section-header" onclick="toggleSection('deals')">
         <span class="section-icon">🏠</span>
         <span class="section-title">Acquisitions</span>
-        <span class="section-count">5</span>
+        <span class="section-count">6</span>
         <button class="section-toggle" id="toggle-deals">▾ collapse</button>
       </div>
       <div class="section-body" id="body-deals">
         <div class="tool-grid">
+
+          <a class="tool-card featured" href="Deal_Pipeline.html" data-tags="finance field">
+            <div class="tool-card-top">
+              <div class="tool-card-icon">&#127968;</div>
+              <div class="tool-card-meta">
+                <div class="tool-card-eyebrow">All Companies</div>
+                <div class="tool-card-title">Deal Pipeline</div>
+              </div>
+            </div>
+            <div class="tool-card-desc">Track every deal across Peach to Palms, Anchor Pro, and Ironwood. One record per property — auto-connects to BRRRR, Waterfall, and Estimator.</div>
+            <div class="tool-card-tags">
+              <span class="tool-tag tag-finance">Finance</span>
+              <span class="tool-tag tag-field">Field</span>
+              <span class="tool-tag tag-new">NEW</span>
+            </div>
+          </a>
 
           <a class="tool-card featured" href="IPG_BRRRRAnalyzer.html" data-tags="finance ai">
             <div class="tool-card-top">
