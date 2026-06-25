@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lender Package — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+/* ── LAYOUT ── */
+.pkg-wrap { max-width: 1280px; margin: 0 auto; padding: 32px 24px 60px; }
+.pkg-cols { display: grid; grid-template-columns: 60fr 40fr; gap: 28px; align-items: start; }
+@media (max-width: 900px) { .pkg-cols { grid-template-columns: 1fr; } }
+
+/* ── FORM SECTIONS ── */
+.pkg-section { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius-lg); padding: 24px 28px; margin-bottom: 20px; }
+.pkg-section-title { font-family: 'Instrument Serif', serif; font-size: 18px; color: var(--ink); margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--hairline); display: flex; align-items: center; gap: 8px; }
+.pkg-section-title .section-num { width: 24px; height: 24px; border-radius: 50%; background: var(--bronze); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; font-family: 'Geist', sans-serif; flex-shrink: 0; }
+
+/* ── FORM GRID ── */
+.pkg-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media (max-width: 600px) { .pkg-form-grid { grid-template-columns: 1fr; } }
+.pkg-field { display: flex; flex-direction: column; gap: 4px; }
+.pkg-field.full { grid-column: span 2; }
+@media (max-width: 600px) { .pkg-field.full { grid-column: span 1; } }
+.pkg-field label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.pkg-field input,
+.pkg-field select,
+.pkg-field textarea {
+  background: var(--bg);
+  border: 1px solid var(--hairline);
+  color: var(--ink);
+  border-radius: 7px;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-family: inherit;
+  transition: border-color .15s;
+  width: 100%;
+}
+.pkg-field input:focus,
+.pkg-field select:focus,
+.pkg-field textarea:focus {
+  outline: none;
+  border-color: var(--bronze);
+  box-shadow: 0 0 0 3px rgba(107,141,181,.15);
+}
+.field-hint { font-size: 11px; color: var(--bronze-deep); background: var(--bronze-wash); border: 1px solid var(--bronze-tint); border-radius: 5px; padding: 5px 9px; margin-top: 3px; }
+
+/* ── RIGHT COLUMN — sticky ── */
+.preview-sticky { position: sticky; top: 88px; }
+.preview-card { background: var(--surface-2); border: 1px solid var(--hairline); border-radius: var(--radius-lg); padding: 28px; box-shadow: var(--shadow-md); margin-bottom: 16px; }
+.preview-card h3 { font-family: 'Instrument Serif', serif; font-size: 17px; color: var(--ink); margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--hairline); }
+#email-preview {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--ink-soft);
+  white-space: pre-wrap;
+  font-family: 'Geist', monospace;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+.preview-meta { font-size: 12px; color: var(--muted); margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--hairline); }
+.preview-meta strong { color: var(--ink); }
+
+/* ── BUTTONS ── */
+.pkg-btn-row { display: flex; gap: 10px; flex-wrap: wrap; }
+.pkg-btn { padding: 11px 22px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; transition: all .15s; font-family: inherit; }
+.pkg-btn.primary { background: var(--bronze); color: #fff; }
+.pkg-btn.primary:hover { background: var(--bronze-deep); }
+.pkg-btn.outline { background: transparent; border: 1.5px solid var(--hairline); color: var(--ink-soft); }
+.pkg-btn.outline:hover { border-color: var(--bronze); color: var(--bronze); }
+
+/* ── HEADER BACK LINKS ── */
+.iw-header-right { display: flex; gap: 10px; align-items: center; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="Deal_Pipeline.html">← Pipeline</a>
+    <a class="iw-back-btn" href="index.html">Toolkit</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="iw-hero">
+  <div class="iw-eyebrow">Lender Outreach</div>
+  <h1>Lender Package</h1>
+  <p>Fill out the deal details below, review the email preview on the right, then open in Gmail to send.</p>
+</div>
+
+<div class="pkg-wrap">
+  <div class="pkg-cols">
+
+    <!-- ══════════ LEFT — FORM ══════════ -->
+    <div class="pkg-form-col">
+
+      <!-- SECTION 1: BORROWER -->
+      <div class="pkg-section">
+        <div class="pkg-section-title"><span class="section-num">1</span>Borrower Info</div>
+        <div class="pkg-form-grid">
+          <div class="pkg-field">
+            <label>Borrower Name</label>
+            <input type="text" id="f-borrower-name" value="Ty Jackson" oninput="updatePreview()"/>
+          </div>
+          <div class="pkg-field">
+            <label>Entity Name</label>
+            <input type="text" id="f-entity-name" value="Ironwood Property Group LLC" oninput="updatePreview()"/>
+          </div>
+          <div class="pkg-field">
+            <label>Email</label>
+            <input type="email" id="f-borrower-email" value="tysellshomes96@gmail.com" oninput="updatePreview()"/>
+          </div>
+          <div class="pkg-field">
+            <label>Phone</label>
+            <input type="tel" id="f-borrower-phone" placeholder="(404) 555-0100" oninput="updatePreview()"/>
+          </div>
+          <div class="pkg-field">
+            <label>Years Experience</label>
+            <input type="text" id="f-experience" placeholder="e.g. 3 years" oninput="updatePreview()"/>
+          </div>
+          <div class="pkg-field">
+            <label>Deals Completed</label>
+            <input type="number" id="f-deals-completed" placeholder="0" min="0" oninput="updatePreview()"/>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: PROPERTY -->
+      <div class="pkg-section">
+        <div class="pkg-section-title"><span class="section-num">2</span>Property Info</div>
+        <div class="pkg-form-grid">
+          <div class="pkg-field full">
+            <label>Property Address</label>
+            <input type="text" id="f-prop-address" placeholder="123 Main St, Marietta, GA 30060" oninput="updatePreview(); autoFillDescription();"/>
+          </div>
+          <div class="pkg-field">
+            <label>Property Type</label>
+            <select id="f-prop-type" onchange="updatePreview()">
+              <option value="SFR">SFR</option>
+              <option value="2-4 Unit">2-4 Unit</option>
+              <option value="Condo">Condo</option>
+              <option value="Land">Land</option>
+              <option value="New Construction">New Construction</option>
+            </select>
+          </div>
+          <div class="pkg-field">
+            <label>Exit Strategy</label>
+            <select id="f-exit-strategy" onchange="updatePreview(); autoFillDescription();">
+              <option value="Fix &amp; Flip">Fix &amp; Flip</option>
+              <option value="BRRRR">BRRRR</option>
+              <option value="Wholesale">Wholesale</option>
+              <option value="New Construction">New Construction</option>
+              <option value="Hold/Rental">Hold/Rental</option>
+            </select>
+          </div>
+          <div class="pkg-field">
+            <label>Purchase Price ($)</label>
+            <input type="number" id="f-purchase-price" placeholder="0" min="0" step="1000" oninput="updatePreview(); autoFillDescription();"/>
+          </div>
+          <div class="pkg-field">
+            <label>After Repair Value — ARV ($)</label>
+            <input type="number" id="f-arv" placeholder="0" min="0" step="1000" oninput="updatePreview(); updateLoanHint(); autoFillDescription();"/>
+          </div>
+          <div class="pkg-field">
+            <label>Estimated Rehab Cost ($)</label>
+            <input type="number" id="f-rehab-cost" placeholder="0" min="0" step="1000" oninput="updatePreview(); autoFillDescription();"/>
+          </div>
+          <div class="pkg-field">
+            <label>Loan Type Requested</label>
+            <select id="f-loan-type" onchange="updatePreview(); autoFillSubject();">
+              <option value="Fix &amp; Flip">Fix &amp; Flip</option>
+              <option value="Bridge">Bridge</option>
+              <option value="New Construction">New Construction</option>
+              <option value="DSCR Rental">DSCR Rental</option>
+            </select>
+          </div>
+          <div class="pkg-field">
+            <label>Loan Amount Requested ($)</label>
+            <input type="number" id="f-loan-amount" placeholder="0" min="0" step="1000" oninput="updatePreview();"/>
+            <div class="field-hint" id="loan-hint">Enter ARV to see suggested loan amount (ARV × 75%)</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: DEAL SUMMARY -->
+      <div class="pkg-section">
+        <div class="pkg-section-title"><span class="section-num">3</span>Deal Summary</div>
+        <div class="pkg-form-grid">
+          <div class="pkg-field full">
+            <label>Project Description</label>
+            <textarea id="f-description" rows="4" placeholder="Describe the project..." oninput="updatePreview()"></textarea>
+          </div>
+          <div class="pkg-field full">
+            <label>Comparable Sales</label>
+            <textarea id="f-comps" rows="3" placeholder="123 Main St — sold $245K — 1,850 sqft — 30 days ago" oninput="updatePreview()"></textarea>
+          </div>
+          <div class="pkg-field full">
+            <label>Why This Deal</label>
+            <textarea id="f-why" rows="3" placeholder="Distressed seller, 15% below market, strong rental market, proven contractor in place" oninput="updatePreview()"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 4: LENDER TARGET -->
+      <div class="pkg-section">
+        <div class="pkg-section-title"><span class="section-num">4</span>Lender Target</div>
+        <div class="pkg-form-grid">
+          <div class="pkg-field">
+            <label>Lender Name</label>
+            <input type="text" id="f-lender-name" placeholder="ABL Funding" oninput="updatePreview()"/>
+          </div>
+          <div class="pkg-field">
+            <label>Lender Email</label>
+            <input type="email" id="f-lender-email" placeholder="lender@example.com" oninput="updatePreview()"/>
+          </div>
+          <div class="pkg-field full">
+            <label>Subject Line</label>
+            <input type="text" id="f-subject" placeholder="Loan Request — [address] — [loan type]" oninput="updatePreview()"/>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /pkg-form-col -->
+
+    <!-- ══════════ RIGHT — PREVIEW ══════════ -->
+    <div class="preview-sticky">
+      <div class="preview-card">
+        <h3>Email Preview</h3>
+        <div class="preview-meta">
+          <div><strong>To:</strong> <span id="prev-to">—</span></div>
+          <div><strong>Subject:</strong> <span id="prev-subject">—</span></div>
+        </div>
+        <div id="email-preview">Fill out the form to generate a preview...</div>
+      </div>
+
+      <div class="pkg-btn-row">
+        <button class="pkg-btn primary" onclick="openInGmail()">Open in Gmail</button>
+        <button class="pkg-btn outline" id="copy-btn" onclick="copyEmail()">Copy Email Text</button>
+      </div>
+    </div>
+
+  </div><!-- /pkg-cols -->
+</div><!-- /pkg-wrap -->
+
+<div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:tysellshomes96@gmail.com">tysellshomes96@gmail.com</a></div>
+
+<script>
+// ── HELPERS ──
+function fmtMoney(n) {
+  const num = parseFloat(n);
+  if (!n || isNaN(num)) return '';
+  return '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+function fmtMoneyRaw(n) {
+  const num = parseFloat(n);
+  if (!n || isNaN(num)) return '—';
+  return '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+function gv(id) { const el = document.getElementById(id); return el ? el.value.trim() : ''; }
+
+// ── LOAN HINT ──
+function updateLoanHint() {
+  const arv = parseFloat(gv('f-arv')) || 0;
+  const hint = document.getElementById('loan-hint');
+  if (arv > 0) {
+    const suggested = Math.round(arv * 0.75);
+    hint.textContent = 'Suggested loan (ARV × 75%): ' + fmtMoneyRaw(suggested);
+    const loanField = document.getElementById('f-loan-amount');
+    if (loanField && !loanField.value) {
+      loanField.value = suggested;
+    }
+  } else {
+    hint.textContent = 'Enter ARV to see suggested loan amount (ARV × 75%)';
+  }
+}
+
+// ── AUTO-FILL SUBJECT ──
+function autoFillSubject() {
+  const addr = gv('f-prop-address');
+  const loanType = gv('f-loan-type');
+  const subjectEl = document.getElementById('f-subject');
+  if (subjectEl && (!subjectEl.value || subjectEl.dataset.auto === 'true')) {
+    const addrShort = addr || '[Property Address]';
+    subjectEl.value = 'Loan Request — ' + addrShort + ' — ' + loanType;
+    subjectEl.dataset.auto = 'true';
+  }
+}
+
+// ── AUTO-GENERATE PROJECT DESCRIPTION ──
+function autoFillDescription() {
+  const descEl = document.getElementById('f-description');
+  if (!descEl || (descEl.value && descEl.dataset.auto !== 'true')) return;
+
+  const addr = gv('f-prop-address') || '[address]';
+  const price = fmtMoney(gv('f-purchase-price')) || '[purchase price]';
+  const rehab = fmtMoney(gv('f-rehab-cost')) || '[rehab cost]';
+  const arv = fmtMoney(gv('f-arv')) || '[ARV]';
+  const exit = gv('f-exit-strategy') || '[exit strategy]';
+  const loan = fmtMoney(gv('f-loan-amount')) || '[loan amount]';
+
+  descEl.value = `Acquiring ${addr} at ${price}. Property requires approximately ${rehab} in renovations. ARV of ${arv} supported by recent comps. Exit strategy: ${exit}. Requesting ${loan} to fund acquisition and renovation.`;
+  descEl.dataset.auto = 'true';
+}
+
+// ── BUILD EMAIL BODY ──
+function buildEmailBody() {
+  const borrowerName   = gv('f-borrower-name')    || '—';
+  const entityName     = gv('f-entity-name')       || '—';
+  const borrowerEmail  = gv('f-borrower-email')    || '—';
+  const borrowerPhone  = gv('f-borrower-phone')    || '—';
+  const experience     = gv('f-experience')         || '—';
+  const dealsCompleted = gv('f-deals-completed')    || '0';
+  const propAddress    = gv('f-prop-address')       || '—';
+  const propType       = gv('f-prop-type')          || '—';
+  const purchasePrice  = fmtMoneyRaw(gv('f-purchase-price'));
+  const arv            = fmtMoneyRaw(gv('f-arv'));
+  const rehabCost      = fmtMoneyRaw(gv('f-rehab-cost'));
+  const exitStrategy   = gv('f-exit-strategy')      || '—';
+  const loanType       = gv('f-loan-type')          || '—';
+  const loanAmount     = fmtMoneyRaw(gv('f-loan-amount'));
+  const lenderName     = gv('f-lender-name')        || 'Lender';
+  const description    = gv('f-description')        || '—';
+  const comps          = gv('f-comps')              || '—';
+  const why            = gv('f-why')                || '—';
+
+  // Calculate LTV at ARV
+  const arvNum    = parseFloat(gv('f-arv'))    || 0;
+  const loanNum   = parseFloat(gv('f-loan-amount')) || 0;
+  const ltvStr    = (arvNum > 0 && loanNum > 0) ? ((loanNum / arvNum * 100).toFixed(1) + '%') : '—';
+
+  return `Dear ${lenderName} Team,
+
+I'm reaching out to request financing on the following investment opportunity and would like to move quickly toward approval.
+
+────────────────────────
+BORROWER
+────────────────────────
+Name: ${borrowerName}
+Entity: ${entityName}
+Email: ${borrowerEmail} | Phone: ${borrowerPhone}
+Experience: ${experience}, ${dealsCompleted} deals completed
+
+────────────────────────
+PROPERTY
+────────────────────────
+Address: ${propAddress}
+Type: ${propType}
+Purchase Price: ${purchasePrice}
+ARV: ${arv}
+Rehab Estimate: ${rehabCost}
+Exit Strategy: ${exitStrategy}
+
+────────────────────────
+LOAN REQUEST
+────────────────────────
+Loan Type: ${loanType}
+Amount Requested: ${loanAmount}
+LTV at ARV: ${ltvStr}
+
+────────────────────────
+PROJECT SUMMARY
+────────────────────────
+${description}
+
+────────────────────────
+COMPARABLE SALES
+────────────────────────
+${comps}
+
+────────────────────────
+WHY THIS DEAL
+────────────────────────
+${why}
+
+I am prepared to move quickly and can provide any additional documentation needed. Please let me know the fastest path to a preliminary approval.
+
+Best regards,
+${borrowerName}
+${entityName}
+${borrowerPhone} | ${borrowerEmail}`;
+}
+
+// ── UPDATE PREVIEW ──
+function updatePreview() {
+  const lenderEmail = gv('f-lender-email');
+  const subject     = gv('f-subject');
+  const body        = buildEmailBody();
+
+  document.getElementById('prev-to').textContent      = lenderEmail || '—';
+  document.getElementById('prev-subject').textContent = subject     || '—';
+  document.getElementById('email-preview').textContent = body;
+}
+
+// ── OPEN IN GMAIL ──
+function openInGmail() {
+  const to      = gv('f-lender-email');
+  const subject = gv('f-subject');
+  const body    = buildEmailBody();
+
+  if (!to) {
+    alert('Please enter a lender email address before opening Gmail.');
+    document.getElementById('f-lender-email').focus();
+    return;
+  }
+
+  const url = 'https://mail.google.com/mail/?view=cm&fs=1'
+    + '&to='   + encodeURIComponent(to)
+    + '&su='   + encodeURIComponent(subject)
+    + '&body=' + encodeURIComponent(body);
+  window.open(url, '_blank');
+}
+
+// ── COPY EMAIL ──
+function copyEmail() {
+  const btn  = document.getElementById('copy-btn');
+  const body = buildEmailBody();
+  navigator.clipboard.writeText(body).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  }).catch(() => {
+    // fallback for older browsers
+    const ta = document.createElement('textarea');
+    ta.value = body;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    const orig = btn.textContent;
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = orig, 2000);
+  });
+}
+
+// ── ON LOAD: PRE-FILL FROM LOCALSTORAGE ──
+window.addEventListener('load', () => {
+
+  // Load active deal
+  try {
+    const dealRaw = localStorage.getItem('iw_active_deal');
+    if (dealRaw) {
+      const deal = JSON.parse(dealRaw);
+      if (deal.address)      setField('f-prop-address',   deal.address);
+      if (deal.ARV)          setField('f-arv',             deal.ARV);
+      if (deal.rehabCost)    setField('f-rehab-cost',      deal.rehabCost);
+      if (deal.askingPrice)  setField('f-purchase-price',  deal.askingPrice);
+      if (deal.MAO)          setField('f-purchase-price',  deal.MAO);  // prefer MAO as purchase price
+      if (deal.exitStrategy) {
+        // map deal pipeline values to lender package values
+        const exitMap = {
+          'Flip':             'Fix & Flip',
+          'BRRRR':            'BRRRR',
+          'Wholesale':        'Wholesale',
+          'New Build':        'New Construction',
+          'Creative Finance': 'Hold/Rental',
+        };
+        const mappedExit = exitMap[deal.exitStrategy] || deal.exitStrategy;
+        setSelectField('f-exit-strategy', mappedExit);
+        // also map to loan type
+        const loanMap = {
+          'Fix & Flip':     'Fix & Flip',
+          'BRRRR':          'Fix & Flip',
+          'Hold/Rental':    'DSCR Rental',
+          'New Construction': 'New Construction',
+          'Wholesale':      'Bridge',
+        };
+        setSelectField('f-loan-type', loanMap[mappedExit] || 'Fix & Flip');
+      }
+    }
+  } catch(e) { console.warn('Could not load deal from localStorage', e); }
+
+  // Load lender target
+  try {
+    const lenderRaw = localStorage.getItem('iw_lender_target');
+    if (lenderRaw) {
+      const lender = JSON.parse(lenderRaw);
+      if (lender.name)  setField('f-lender-name',  lender.name);
+      if (lender.email) setField('f-lender-email', lender.email);
+    }
+  } catch(e) { console.warn('Could not load lender from localStorage', e); }
+
+  // Calculate dependent hints
+  updateLoanHint();
+  autoFillSubject();
+  autoFillDescription();
+  updatePreview();
+});
+
+function setField(id, val) {
+  const el = document.getElementById(id);
+  if (el && val !== undefined && val !== null && val !== '') el.value = val;
+}
+
+function setSelectField(id, val) {
+  const el = document.getElementById(id);
+  if (!el || !val) return;
+  for (let i = 0; i < el.options.length; i++) {
+    if (el.options[i].value === val || el.options[i].text === val) {
+      el.selectedIndex = i;
+      return;
+    }
+  }
+}
+
+// Mark description & subject as user-edited if user types in them
+document.addEventListener('DOMContentLoaded', () => {
+  const descEl = document.getElementById('f-description');
+  const subEl  = document.getElementById('f-subject');
+  if (descEl) descEl.addEventListener('input', () => { descEl.dataset.auto = 'false'; });
+  if (subEl)  subEl.addEventListener('input',  () => { subEl.dataset.auto  = 'false'; });
+});
+</script>
+
+</body>
+</html>

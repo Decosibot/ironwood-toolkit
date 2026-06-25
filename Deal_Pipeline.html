@@ -59,6 +59,23 @@
 .da-btn.primary:hover { background: var(--bronze-deep); }
 .da-btn.close { background: #1a4d32; border-color: #1a4d32; color: #fff; }
 .da-btn.close:hover { background: #163d28; }
+.da-btn.lender { background: #fdf8ee; border-color: #e8c96a; color: #8a6d1a; }
+.da-btn.lender:hover { background: #fceebb; border-color: #c9a800; color: #6b5400; }
+
+/* ── LENDER PICKER MODAL ── */
+#lender-modal { display: none; position: fixed; inset: 0; z-index: 9000; background: rgba(28,24,20,.45); align-items: center; justify-content: center; }
+#lender-modal.open { display: flex; }
+.lender-modal-box { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius-lg); padding: 28px 32px; width: 340px; max-width: 92vw; box-shadow: var(--shadow-lg); }
+.lender-modal-box h3 { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--ink); margin-bottom: 6px; }
+.lender-modal-box p { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+.lender-modal-box select { width: 100%; background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 7px; padding: 9px 12px; font-size: 14px; font-family: inherit; margin-bottom: 18px; }
+.lender-modal-box select:focus { outline: none; border-color: var(--bronze); }
+.lender-modal-actions { display: flex; gap: 10px; }
+.lm-btn { padding: 9px 20px; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all .15s; }
+.lm-btn.primary { background: var(--bronze); color: #fff; flex: 1; }
+.lm-btn.primary:hover { background: var(--bronze-deep); }
+.lm-btn.cancel { background: var(--surface); border: 1px solid var(--hairline); color: var(--ink-soft); }
+.lm-btn.cancel:hover { border-color: var(--bronze); color: var(--bronze); }
 
 /* ── EMPTY STATE ── */
 .empty-state { text-align: center; padding: 60px 20px; color: var(--muted); font-size: 14px; }
@@ -263,6 +280,26 @@
 <!-- FOOTER -->
 <div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
 
+<!-- LENDER PICKER MODAL -->
+<div id="lender-modal" role="dialog" aria-modal="true" aria-labelledby="lender-modal-title">
+  <div class="lender-modal-box">
+    <h3 id="lender-modal-title">Select Lender</h3>
+    <p>Choose which lender to address this package to.</p>
+    <select id="lender-picker">
+      <option value="ABL Funding|legal@ablfunding.com">ABL Funding</option>
+      <option value="Duke Allen &amp; Co|">Duke Allen &amp; Co</option>
+      <option value="Ground Floor|">Ground Floor</option>
+      <option value="HK Lending|">HK Lending</option>
+      <option value="Fund the Flip|">Fund the Flip</option>
+      <option value="Vi Capital|">Vi Capital</option>
+    </select>
+    <div class="lender-modal-actions">
+      <button class="lm-btn primary" onclick="confirmLenderPkg()">Continue</button>
+      <button class="lm-btn cancel" onclick="closeLenderModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- FIREBASE -->
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
@@ -356,6 +393,7 @@ function renderDeals() {
           <button class="da-btn" onclick="openBRRRR('${deal.id}')">BRRRR</button>
           <button class="da-btn" onclick="openWaterfall('${deal.id}')">Waterfall</button>
           <button class="da-btn" onclick="openScope('${deal.id}')">Scope</button>
+          <button class="da-btn lender" onclick="openLenderModal('${deal.id}')">Lender Pkg</button>
           ${deal.status !== 'Closed' ? `<button class="da-btn close" onclick="markClosed('${deal.id}')">Mark Closed</button>` : ''}
         </div>
       </div>
@@ -582,6 +620,43 @@ function showToast(msg) {
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.style.opacity = '0', 2500);
 }
+
+// ── LENDER MODAL ──
+let _lenderDealId = null;
+
+function openLenderModal(dealId) {
+  _lenderDealId = dealId;
+  document.getElementById('lender-modal').classList.add('open');
+}
+
+function closeLenderModal() {
+  document.getElementById('lender-modal').classList.remove('open');
+  _lenderDealId = null;
+}
+
+function confirmLenderPkg() {
+  if (!_lenderDealId) return;
+  const deal = getDealById(_lenderDealId);
+  localStorage.setItem('iw_active_deal', JSON.stringify(deal));
+
+  const picker = document.getElementById('lender-picker');
+  const [name, email] = (picker.value || '').split('|');
+  localStorage.setItem('iw_lender_target', JSON.stringify({ name: name || '', email: email || '' }));
+
+  closeLenderModal();
+  window.open('Lender_Package.html', '_blank');
+}
+
+// Close modal on backdrop click
+document.addEventListener('click', (e) => {
+  const modal = document.getElementById('lender-modal');
+  if (e.target === modal) closeLenderModal();
+});
+
+// Close modal on Escape key
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeLenderModal();
+});
 </script>
 </body>
 </html>
