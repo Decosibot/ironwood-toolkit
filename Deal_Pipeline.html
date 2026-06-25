@@ -266,6 +266,16 @@
           <textarea id="f-notes" rows="3" placeholder="Motivated seller, condition notes, deal terms..."></textarea>
         </div>
 
+        <div class="form-field full">
+          <label>Document Links</label>
+          <div id="doc-links-list" style="display:flex;flex-direction:column;gap:6px;margin-bottom:8px;"></div>
+          <div style="display:flex;gap:8px;">
+            <input type="text" id="doc-link-label" placeholder="Label (e.g. PSA, Inspection Report)" style="flex:1;background:var(--bg);border:1px solid var(--hairline);color:var(--ink);border-radius:7px;padding:8px 12px;font-size:13px;font-family:inherit;"/>
+            <input type="url" id="doc-link-url" placeholder="https://..." style="flex:2;background:var(--bg);border:1px solid var(--hairline);color:var(--ink);border-radius:7px;padding:8px 12px;font-size:13px;font-family:inherit;"/>
+            <button type="button" onclick="addDocLink()" style="padding:8px 14px;background:var(--bronze);color:#fff;border:none;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">+ Add</button>
+          </div>
+        </div>
+
       </div>
 
       <div class="form-actions">
@@ -396,6 +406,7 @@ function renderDeals() {
           <button class="da-btn lender" onclick="openLenderModal('${deal.id}')">Lender Pkg</button>
           ${deal.status !== 'Closed' ? `<button class="da-btn close" onclick="markClosed('${deal.id}')">Mark Closed</button>` : ''}
         </div>
+        ${(deal.docLinks && deal.docLinks.length) ? `<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px;">${deal.docLinks.map(dl=>`<a href="${esc(dl.url)}" target="_blank" rel="noopener" style="font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px;background:var(--bg);border:1px solid var(--hairline);color:var(--bronze);text-decoration:none;">${esc(dl.label||dl.url)}</a>`).join('')}</div>` : ''}
       </div>
     `;
   }).join('');
@@ -456,6 +467,7 @@ function editDeal(id) {
   setf('f-rehabCost', deal.rehabCost);
   setf('f-assignmentFee', deal.assignmentFee);
   setf('f-notes', deal.notes);
+  loadDocLinks(deal.docLinks);
   updateMAOHint();
   showView('form');
 }
@@ -482,6 +494,7 @@ async function saveDeal() {
     assignmentFee: parseFloat(document.getElementById('f-assignmentFee').value) || 0,
     rehabCost,
     notes: document.getElementById('f-notes').value.trim(),
+    docLinks: getDocLinks(),
     updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
   };
 
@@ -579,11 +592,52 @@ function updateMAOHint() {
 // ── HELPERS ──
 function clearForm() {
   ['f-address','f-sellerName','f-sellerPhone','f-leadSource','f-status','f-exitStrategy',
-   'f-ARV','f-askingPrice','f-MAO','f-rehabCost','f-assignmentFee','f-notes'].forEach(id => {
+   'f-ARV','f-askingPrice','f-MAO','f-rehabCost','f-assignmentFee','f-notes',
+   'doc-link-label','doc-link-url'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = '';
   });
   document.getElementById('mao-hint').textContent = 'Enter ARV to see MAO (70% rule)';
+  document.getElementById('doc-links-list').innerHTML = '';
+  _editDocLinks = [];
+}
+
+// ── DOC LINKS ──
+let _editDocLinks = [];
+
+function addDocLink() {
+  const label = document.getElementById('doc-link-label').value.trim();
+  const url = document.getElementById('doc-link-url').value.trim();
+  if (!url) { showToast('Enter a URL first'); return; }
+  _editDocLinks.push({ label: label || url, url });
+  document.getElementById('doc-link-label').value = '';
+  document.getElementById('doc-link-url').value = '';
+  renderDocLinks();
+}
+
+function removeDocLink(idx) {
+  _editDocLinks.splice(idx, 1);
+  renderDocLinks();
+}
+
+function renderDocLinks() {
+  const list = document.getElementById('doc-links-list');
+  if (!_editDocLinks.length) { list.innerHTML = ''; return; }
+  list.innerHTML = _editDocLinks.map((dl, i) => `
+    <div style="display:flex;align-items:center;gap:8px;background:var(--bg);border:1px solid var(--hairline);border-radius:6px;padding:6px 10px;">
+      <span style="font-size:12px;font-weight:600;color:var(--bronze);flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${esc(dl.label)}</span>
+      <a href="${esc(dl.url)}" target="_blank" rel="noopener" style="font-size:11px;color:var(--muted);text-decoration:none;">open</a>
+      <button onclick="removeDocLink(${i})" style="background:none;border:none;cursor:pointer;color:var(--muted);font-size:14px;line-height:1;padding:0 2px;" title="Remove">&times;</button>
+    </div>`).join('');
+}
+
+function loadDocLinks(links) {
+  _editDocLinks = links ? JSON.parse(JSON.stringify(links)) : [];
+  renderDocLinks();
+}
+
+function getDocLinks() {
+  return JSON.parse(JSON.stringify(_editDocLinks));
 }
 
 function setf(id, val) {

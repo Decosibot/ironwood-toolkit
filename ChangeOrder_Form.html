@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Change Order Form — Landon Renovations</title>
+<title>Change Order Form — Anchor Pro Solutions</title>
 <link rel="stylesheet" href="iw-design.css"/>
 <style>
   
@@ -664,6 +664,24 @@
 </div>
 <div class="iw-lh-bar"></div>
 
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+if (!firebase.apps.length) {
+  firebase.initializeApp({
+    apiKey:"AIzaSyCS6hfr0jIxDrn6IiTVXDtNI5y2huR7AiE",
+    authDomain:"workout-app-576c0.firebaseapp.com",
+    projectId:"workout-app-576c0",
+    storageBucket:"workout-app-576c0.firebasestorage.app",
+    messagingSenderId:"93802465651",
+    appId:"1:93802465651:web:e5453d53128bf6b8d25d06"
+  });
+}
+const coDB = firebase.firestore();
+let _activeDealId = null;
+</script>
+
 <!-- LOAD DEAL BAR -->
 <div id="iw-deal-bar" style="width:100%;background:#1a2a1f;border-bottom:1px solid #2d4a35;padding:10px 24px;display:flex;align-items:center;gap:12px;font-size:13px;flex-wrap:wrap;">
   <span style="color:#7EC98A;font-weight:700;letter-spacing:.05em;text-transform:uppercase;font-size:11px;">Load Deal</span>
@@ -679,7 +697,7 @@
   <div id="logo-badge">L</div>
   <div id="topbar-titles">
     <h1>Change Order Form</h1>
-    <p>Landon Renovations &times; Anchor Pro Solutions</p>
+    <p>Anchor Pro Solutions &times; Anchor Pro Solutions</p>
   </div>
   <div id="topbar-actions">
     <button class="tb-btn" onclick="toggleView()" id="view-toggle-btn">Print View</button>
@@ -876,21 +894,23 @@
 </div>
 
 <script>
-  // ── DEAL LOADER ──
+  // ── DEAL LOADER (Firestore) ──
   function iwPopulateDeals() {
-    try {
-      const deals = JSON.parse(localStorage.getItem('ironwood_deals') || '[]');
-      const sel = document.getElementById('iw-deal-select');
-      sel.innerHTML = '<option value="">— Select from Property Pipeline —</option>';
-      deals.forEach(d => {
-        const label = [d.address, d.city, d.state].filter(Boolean).join(', ') || 'Unnamed Deal';
+    const sel = document.getElementById('iw-deal-select');
+    coDB.collection('deals').orderBy('createdAt','desc').get().then(snap => {
+      sel.innerHTML = '<option value="">— Select Deal from Pipeline —</option>';
+      snap.docs.forEach(doc => {
+        const d = doc.data();
+        const label = d.address || 'Unnamed Deal';
         const opt = document.createElement('option');
-        opt.value = d.id;
-        opt.textContent = `${label} · ${d.stage || ''}`;
-        opt.dataset.deal = JSON.stringify(d);
+        opt.value = doc.id;
+        opt.textContent = `${label}${d.status ? ' · ' + d.status : ''}`;
+        opt.dataset.deal = JSON.stringify({ ...d, id: doc.id });
         sel.appendChild(opt);
       });
-    } catch(e) {}
+    }).catch(() => {
+      // fallback: no deals or offline
+    });
   }
 
   function iwLoadDeal() {
@@ -898,18 +918,16 @@
     const opt = sel.options[sel.selectedIndex];
     if (!opt || !opt.dataset.deal) return;
     const d = JSON.parse(opt.dataset.deal);
+    _activeDealId = d.id || null;
     const badge = document.getElementById('iw-deal-badge');
-    badge.textContent = [d.address, d.city].filter(Boolean).join(', ');
-    badge.style.display = 'inline-block';
-    const addr = [d.address, d.city, d.state].filter(Boolean).join(', ');
-    if (addr) document.getElementById('job-address').value = addr;
-    if (d.clientName)  document.getElementById('client-name').value  = d.clientName;
-    if (d.clientPhone) document.getElementById('client-phone').value = d.clientPhone;
-    if (d.clientEmail) document.getElementById('client-email').value = d.clientEmail;
+    badge.textContent = d.address || '';
+    badge.style.display = d.address ? 'inline-block' : 'none';
+    if (d.address) document.getElementById('job-address').value = d.address;
+    if (d.sellerName)  document.getElementById('client-name').value  = d.sellerName;
+    if (d.sellerPhone) document.getElementById('client-phone').value = d.sellerPhone;
   }
 
   iwPopulateDeals();
-  window.addEventListener('storage', e => { if (e.key === 'ironwood_deals') iwPopulateDeals(); });
 
   /* ── HELPERS ── */
   function uid() {
@@ -1120,6 +1138,17 @@
     saveStorage(history);
     renderHistory();
     showToast('Change order saved.');
+
+    // Mirror to Firestore if a deal is loaded
+    if (_activeDealId) {
+      const coRef = coDB.collection('deals').doc(_activeDealId)
+        .collection('changeOrders').doc(currentCOId);
+      coRef.set({
+        ...data,
+        id: currentCOId,
+        savedAt: firebase.firestore.FieldValue.serverTimestamp(),
+      }).catch(() => {});
+    }
   }
 
   /* ── NEW CO ── */
@@ -1258,7 +1287,7 @@
       <div class="print-header">
         <div class="print-header-left">
           <div class="doc-type">Change Order</div>
-          <div class="company-name">Landon Renovations &times; Anchor Pro Solutions</div>
+          <div class="company-name">Anchor Pro Solutions &times; Anchor Pro Solutions</div>
         </div>
         <div class="print-header-right">
           <div class="co-num">CO #${esc(String(data.coNumber))}</div>
@@ -1286,7 +1315,7 @@
           <div class="print-info-block">
             <div class="pib-label">Lead Contractor</div>
             <div class="pib-val">Jeff Sarabia</div>
-            <div class="pib-sub">Landon Renovations</div>
+            <div class="pib-sub">Anchor Pro Solutions</div>
           </div>
         </div>
 
@@ -1350,7 +1379,7 @@
               <div class="sig-date-label">Date: _______________</div>
             </div>
             <div class="sig-block">
-              <div class="sig-role">Landon Renovations</div>
+              <div class="sig-role">Anchor Pro Solutions</div>
               <div class="sig-name">Jeff Sarabia</div>
               <div class="sig-line"></div>
               <div class="sig-date-label">Date: _______________</div>
@@ -1368,7 +1397,7 @@
 
       <div class="print-footer">
         <strong>Change Order #${esc(String(data.coNumber))}</strong> &mdash; This change order becomes part of the original contract upon signature by all parties.<br>
-        Landon Renovations &times; Anchor Pro Solutions &mdash; Contractor: Jeff Sarabia
+        Anchor Pro Solutions &times; Anchor Pro Solutions &mdash; Contractor: Jeff Sarabia
       </div>
     `;
   }

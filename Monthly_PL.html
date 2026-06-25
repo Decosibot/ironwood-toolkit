@@ -176,6 +176,7 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
     <button class="btn btn-outline" onclick="printReport()">Print Report</button>
     <button class="btn btn-outline" onclick="exportJSON()">Export JSON</button>
     <button class="btn btn-outline" onclick="importFromPipeline()" title="Pull closed deals from Property Pipeline into revenue rows">Import Pipeline Deals</button>
+    <button class="btn btn-outline" onclick="importFromFirestore()" title="Pull Closed deals from Deal Pipeline (Firestore) into revenue rows">Import from Deal Pipeline</button>
     <button class="btn btn-gold" onclick="newMonth()">New Month</button>
   </div>
 </div>
@@ -1003,6 +1004,58 @@ function newMonth() {
   }
 }
 
+// ── Firestore Import ─────────────────────────────────────
+
+async function importFromFirestore() {
+  const month = document.getElementById('monthPicker').value;
+  if (!month) { alert('Select a month first.'); return; }
+
+  if (!window._plDB) {
+    alert('Firestore not loaded. Refresh the page and try again.');
+    return;
+  }
+
+  try {
+    const snap = await window._plDB.collection('deals')
+      .where('status', '==', 'Closed')
+      .get();
+
+    if (snap.empty) {
+      alert('No Closed deals found in Deal Pipeline.');
+      return;
+    }
+
+    let added = 0;
+    snap.docs.forEach(doc => {
+      const d = doc.data();
+      // Check if closedAt / updatedAt falls in selected month
+      const ts = d.updatedAt?.toDate?.() || null;
+      if (ts) {
+        const dealMonth = ts.getFullYear() + '-' + String(ts.getMonth()+1).padStart(2,'0');
+        if (dealMonth !== month) return;
+      }
+      const label = d.address || 'Pipeline Deal';
+      if (d.salePrice > 0) {
+        addRow('revenue', `${label} — Closed`, d.salePrice, 'Flip Sale');
+        added++;
+      }
+      if (d.rehabCost > 0) {
+        addRow('costs', `Rehab — ${label}`, d.rehabCost, 'Materials', label);
+      }
+    });
+
+    recalcAll();
+    if (added === 0) {
+      alert(`No Closed deals with a close date in ${month} were found.\n\nAll closed deals were imported regardless — check the revenue rows.`);
+    } else {
+      alert(`Imported ${added} closed deal${added !== 1 ? 's' : ''} from Deal Pipeline.`);
+    }
+  } catch(e) {
+    alert('Could not connect to Deal Pipeline. Check your internet connection.');
+    console.error(e);
+  }
+}
+
 // ── Month picker change ──────────────────────────────────
 document.getElementById('monthPicker').addEventListener('change', updateHeader);
 
@@ -1014,6 +1067,23 @@ if (!localStorage.getItem(currentKey())) {
   addRow('costs');
   addRow('expenses');
 }
+</script>
+
+<!-- FIREBASE for Deal Pipeline import -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+  if (!firebase.apps.length) {
+    firebase.initializeApp({
+      apiKey:"AIzaSyCS6hfr0jIxDrn6IiTVXDtNI5y2huR7AiE",
+      authDomain:"workout-app-576c0.firebaseapp.com",
+      projectId:"workout-app-576c0",
+      storageBucket:"workout-app-576c0.firebasestorage.app",
+      messagingSenderId:"93802465651",
+      appId:"1:93802465651:web:e5453d53128bf6b8d25d06"
+    });
+  }
+  window._plDB = firebase.firestore();
 </script>
 </body>
 </html>

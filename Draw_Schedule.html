@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Draw Schedule — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+.wrap { max-width: 900px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* ── DEAL PICKER ── */
+.deal-picker-bar { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.deal-picker-bar label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); white-space: nowrap; }
+.deal-picker-bar select { flex: 1; min-width: 240px; background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 7px; padding: 9px 12px; font-size: 14px; font-family: inherit; }
+.deal-picker-bar select:focus { outline: none; border-color: var(--bronze); }
+
+/* ── SUMMARY BAR ── */
+.sum-bar { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; margin-bottom: 24px; }
+.sum-cell { background: var(--surface); padding: 16px 18px; }
+.sum-cell-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 4px; }
+.sum-cell-value { font-size: 22px; font-weight: 700; font-family: 'Instrument Serif', serif; color: var(--ink); }
+.sum-cell-value.funded { color: #1a4d32; }
+.sum-cell-value.pending { color: var(--bronze); }
+
+/* ── ADD DRAW FORM ── */
+.add-draw-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 20px 24px; margin-bottom: 24px; }
+.add-draw-card h3 { font-family: 'Instrument Serif', serif; font-size: 18px; color: var(--ink); margin-bottom: 16px; }
+.draw-form-grid { display: grid; grid-template-columns: 1fr 1fr 140px; gap: 12px; align-items: end; }
+@media(max-width:640px){ .draw-form-grid { grid-template-columns: 1fr; } }
+.df-field { display: flex; flex-direction: column; gap: 5px; }
+.df-field label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+.df-field input, .df-field select { background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 7px; padding: 9px 12px; font-size: 14px; font-family: inherit; transition: border-color .15s; }
+.df-field input:focus, .df-field select:focus { outline: none; border-color: var(--bronze); }
+.add-draw-btn { padding: 10px 20px; background: var(--bronze); color: #fff; border: none; border-radius: 7px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; white-space: nowrap; }
+.add-draw-btn:hover { background: var(--bronze-deep); }
+
+/* ── DRAWS TABLE ── */
+.draws-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
+.draws-card-header { padding: 14px 20px; border-bottom: 1px solid var(--hairline); display: flex; justify-content: space-between; align-items: center; }
+.draws-card-header h3 { font-size: 13px; font-weight: 700; color: var(--ink); }
+.draws-table { width: 100%; border-collapse: collapse; }
+.draws-table th { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding: 10px 16px; border-bottom: 1px solid var(--hairline); text-align: left; white-space: nowrap; }
+.draws-table td { padding: 12px 16px; border-bottom: 1px solid var(--hairline); font-size: 13px; color: var(--ink); vertical-align: middle; }
+.draws-table tr:last-child td { border-bottom: none; }
+.draws-table tr:hover td { background: var(--bg); }
+
+/* Status badges */
+.draw-badge { display: inline-block; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 5px; white-space: nowrap; }
+.badge-pending  { background: #f0f0f0; color: #666; }
+.badge-requested { background: #fdf8ee; color: #8a6d1a; border: 1px solid #e8c96a; }
+.badge-funded   { background: #eefaf3; color: #1a4d32; }
+
+/* Action buttons in table */
+.draw-act-btn { padding: 4px 10px; border-radius: 5px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-soft); transition: all .15s; font-family: inherit; }
+.draw-act-btn:hover { border-color: var(--bronze); color: var(--bronze); }
+.draw-act-btn.fund { background: #eefaf3; border-color: #1a4d32; color: #1a4d32; }
+.draw-act-btn.fund:hover { background: #1a4d32; color: #fff; }
+.draw-act-btn.del { color: var(--muted); }
+.draw-act-btn.del:hover { border-color: #c0392b; color: #c0392b; }
+
+.empty-draws { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
+.empty-draws p { margin-top: 6px; }
+
+.no-deal-msg { text-align: center; padding: 60px 20px; color: var(--muted); }
+.no-deal-msg h3 { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="iw-hero">
+  <div class="iw-eyebrow">Ironwood · Anchor Pro</div>
+  <h1>Draw Schedule</h1>
+  <p>Track construction draw requests and funding milestones per deal. Synced to Deal Pipeline.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- DEAL PICKER -->
+  <div class="deal-picker-bar">
+    <label>Deal</label>
+    <select id="deal-select" onchange="loadDraws()">
+      <option value="">— Select a deal —</option>
+    </select>
+    <a class="iw-back-btn" href="Deal_Pipeline.html" style="margin-left:auto;">View Pipeline</a>
+  </div>
+
+  <!-- NO DEAL SELECTED -->
+  <div id="no-deal-msg" class="no-deal-msg">
+    <h3>Select a deal above</h3>
+    <p>Choose a deal from the pipeline to view or add draw milestones.</p>
+  </div>
+
+  <!-- DEAL CONTENT (hidden until deal selected) -->
+  <div id="deal-content" style="display:none;">
+
+    <!-- SUMMARY BAR -->
+    <div class="sum-bar">
+      <div class="sum-cell">
+        <div class="sum-cell-label">Total Draws</div>
+        <div class="sum-cell-value" id="stat-total-amt">$0</div>
+      </div>
+      <div class="sum-cell">
+        <div class="sum-cell-label">Funded</div>
+        <div class="sum-cell-value funded" id="stat-funded">$0</div>
+      </div>
+      <div class="sum-cell">
+        <div class="sum-cell-label">Requested</div>
+        <div class="sum-cell-value pending" id="stat-requested">$0</div>
+      </div>
+      <div class="sum-cell">
+        <div class="sum-cell-label">Remaining</div>
+        <div class="sum-cell-value" id="stat-remaining">$0</div>
+      </div>
+    </div>
+
+    <!-- ADD DRAW FORM -->
+    <div class="add-draw-card">
+      <h3>Add Milestone</h3>
+      <div class="draw-form-grid">
+        <div class="df-field">
+          <label>Milestone / Description</label>
+          <input type="text" id="f-milestone" placeholder="e.g. Foundation Complete, Rough Framing"/>
+        </div>
+        <div class="df-field">
+          <label>Draw Amount ($)</label>
+          <input type="number" id="f-amount" placeholder="0" min="0" step="500"/>
+        </div>
+        <div>
+          <button class="add-draw-btn" onclick="addDraw()">+ Add</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRAWS TABLE -->
+    <div class="draws-card">
+      <div class="draws-card-header">
+        <h3>Milestones</h3>
+      </div>
+      <div id="draws-body">
+        <div class="empty-draws">
+          <strong>No milestones yet</strong>
+          <p>Add your first draw milestone above.</p>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /deal-content -->
+
+</div><!-- /wrap -->
+
+<div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyCS6hfr0jIxDrn6IiTVXDtNI5y2huR7AiE",
+  authDomain:"workout-app-576c0.firebaseapp.com",
+  projectId:"workout-app-576c0",
+  storageBucket:"workout-app-576c0.firebasestorage.app",
+  messagingSenderId:"93802465651",
+  appId:"1:93802465651:web:e5453d53128bf6b8d25d06"
+});
+const db = firebase.firestore();
+
+let currentDealId = null;
+let currentDeals = [];
+let drawsListener = null;
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  loadDealPicker();
+  // Check if a deal was passed via localStorage
+  try {
+    const active = JSON.parse(localStorage.getItem('iw_active_deal') || 'null');
+    if (active && active.id) {
+      setTimeout(() => {
+        const sel = document.getElementById('deal-select');
+        sel.value = active.id;
+        if (sel.value) loadDraws();
+      }, 800);
+    }
+  } catch(e) {}
+});
+
+// ── DEAL PICKER ──
+function loadDealPicker() {
+  db.collection('deals').orderBy('createdAt','desc').get().then(snap => {
+    currentDeals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const sel = document.getElementById('deal-select');
+    sel.innerHTML = '<option value="">— Select a deal —</option>';
+    currentDeals.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d.id;
+      opt.textContent = d.address + (d.status ? ' · ' + d.status : '');
+      sel.appendChild(opt);
+    });
+  }).catch(() => {});
+}
+
+// ── LOAD DRAWS (realtime) ──
+function loadDraws() {
+  const sel = document.getElementById('deal-select');
+  const id = sel.value;
+
+  if (drawsListener) { drawsListener(); drawsListener = null; }
+
+  if (!id) {
+    currentDealId = null;
+    document.getElementById('no-deal-msg').style.display = '';
+    document.getElementById('deal-content').style.display = 'none';
+    return;
+  }
+
+  currentDealId = id;
+  document.getElementById('no-deal-msg').style.display = 'none';
+  document.getElementById('deal-content').style.display = '';
+
+  drawsListener = db.collection('deals').doc(id)
+    .collection('draws')
+    .orderBy('createdAt','asc')
+    .onSnapshot(snap => {
+      const draws = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderDraws(draws);
+      renderStats(draws);
+      writebackTotals(draws, id);
+    }, () => {
+      db.collection('deals').doc(id).collection('draws').get().then(snap => {
+        const draws = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        renderDraws(draws);
+        renderStats(draws);
+      });
+    });
+}
+
+// ── RENDER ──
+function renderDraws(draws) {
+  const body = document.getElementById('draws-body');
+  if (!draws.length) {
+    body.innerHTML = '<div class="empty-draws"><strong>No milestones yet</strong><p>Add your first draw milestone above.</p></div>';
+    return;
+  }
+
+  body.innerHTML = `<table class="draws-table">
+    <thead>
+      <tr>
+        <th>Milestone</th>
+        <th>Amount</th>
+        <th>Status</th>
+        <th>Requested</th>
+        <th>Funded</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      ${draws.map(d => `
+        <tr>
+          <td style="font-weight:600;">${esc(d.milestone)}</td>
+          <td style="font-weight:700;">${fmtMoney(d.amount)}</td>
+          <td><span class="draw-badge badge-${(d.status||'pending').toLowerCase()}">${d.status || 'Pending'}</span></td>
+          <td style="color:var(--muted);font-size:12px;">${d.requestedAt ? fmtDate(d.requestedAt) : '—'}</td>
+          <td style="color:var(--muted);font-size:12px;">${d.fundedAt ? fmtDate(d.fundedAt) : '—'}</td>
+          <td style="display:flex;gap:6px;flex-wrap:wrap;">
+            ${d.status !== 'Requested' && d.status !== 'Funded' ? `<button class="draw-act-btn" onclick="requestDraw('${d.id}')">Request</button>` : ''}
+            ${d.status === 'Requested' ? `<button class="draw-act-btn fund" onclick="fundDraw('${d.id}')">Fund</button>` : ''}
+            <button class="draw-act-btn del" onclick="deleteDraw('${d.id}')">Del</button>
+          </td>
+        </tr>`).join('')}
+    </tbody>
+  </table>`;
+}
+
+function renderStats(draws) {
+  const total = draws.reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
+  const funded = draws.filter(d => d.status === 'Funded').reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
+  const requested = draws.filter(d => d.status === 'Requested').reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
+  const remaining = total - funded - requested;
+
+  document.getElementById('stat-total-amt').textContent = fmtMoney(total);
+  document.getElementById('stat-funded').textContent = fmtMoney(funded);
+  document.getElementById('stat-requested').textContent = fmtMoney(requested);
+  document.getElementById('stat-remaining').textContent = fmtMoney(Math.max(0, remaining));
+}
+
+function writebackTotals(draws, dealId) {
+  const total = draws.reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
+  const funded = draws.filter(d => d.status === 'Funded').reduce((s, d) => s + (parseFloat(d.amount) || 0), 0);
+  const pending = total - funded;
+  db.collection('deals').doc(dealId).update({
+    drawsTotal: total,
+    drawsFunded: funded,
+    drawsPending: pending,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+  }).catch(() => {});
+}
+
+// ── ACTIONS ──
+async function addDraw() {
+  if (!currentDealId) { showToast('Select a deal first'); return; }
+  const milestone = document.getElementById('f-milestone').value.trim();
+  const amount = parseFloat(document.getElementById('f-amount').value) || 0;
+  if (!milestone) { showToast('Enter a milestone description'); return; }
+
+  try {
+    await db.collection('deals').doc(currentDealId).collection('draws').add({
+      milestone,
+      amount,
+      status: 'Pending',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    document.getElementById('f-milestone').value = '';
+    document.getElementById('f-amount').value = '';
+    showToast('Milestone added');
+  } catch(e) {
+    showToast('Error saving');
+  }
+}
+
+async function requestDraw(drawId) {
+  if (!currentDealId) return;
+  try {
+    await db.collection('deals').doc(currentDealId).collection('draws').doc(drawId).update({
+      status: 'Requested',
+      requestedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    showToast('Draw requested');
+  } catch(e) {
+    showToast('Error updating');
+  }
+}
+
+async function fundDraw(drawId) {
+  if (!currentDealId) return;
+  try {
+    await db.collection('deals').doc(currentDealId).collection('draws').doc(drawId).update({
+      status: 'Funded',
+      fundedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    });
+    showToast('Draw funded');
+  } catch(e) {
+    showToast('Error updating');
+  }
+}
+
+async function deleteDraw(drawId) {
+  if (!currentDealId) return;
+  if (!confirm('Delete this milestone?')) return;
+  try {
+    await db.collection('deals').doc(currentDealId).collection('draws').doc(drawId).delete();
+    showToast('Deleted');
+  } catch(e) {
+    showToast('Error deleting');
+  }
+}
+
+// ── HELPERS ──
+function fmtMoney(n) {
+  const num = parseFloat(n) || 0;
+  if (num >= 1000000) return '$' + (num/1000000).toFixed(2) + 'M';
+  if (num >= 1000) return '$' + (num/1000).toFixed(0) + 'K';
+  return '$' + num.toLocaleString('en-US');
+}
+
+function fmtDate(ts) {
+  if (!ts) return '—';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function showToast(msg) {
+  let t = document.getElementById('ds-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'ds-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.opacity = '0', 2500);
+}
+</script>
+</body>
+</html>

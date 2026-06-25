@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Track Record — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+.wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* ── SUMMARY CARDS ── */
+.summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+@media(max-width:680px){ .summary-grid { grid-template-columns: 1fr 1fr; } }
+.sum-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 18px 20px; }
+.sum-card-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 6px; }
+.sum-card-value { font-size: 28px; font-weight: 700; font-family: 'Instrument Serif', serif; color: var(--ink); line-height: 1.1; }
+.sum-card-value.green { color: #1a4d32; }
+.sum-card-value.bronze { color: var(--bronze); }
+.sum-card-sub { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+/* ── FILTER BAR ── */
+.filter-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; align-items: center; }
+.filter-tab { padding: 6px 16px; border-radius: 20px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--muted); transition: all .15s; white-space: nowrap; }
+.filter-tab.active { background: var(--bronze); border-color: var(--bronze); color: #fff; }
+.filter-tab:hover:not(.active) { border-color: var(--bronze); color: var(--bronze); }
+
+/* ── DEAL CARDS GRID ── */
+.deals-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media(max-width:860px){ .deals-grid { grid-template-columns: 1fr 1fr; } }
+@media(max-width:560px){ .deals-grid { grid-template-columns: 1fr; } }
+
+/* ── CLOSED DEAL CARD ── */
+.closed-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 18px; transition: border-color .15s, box-shadow .15s; position: relative; overflow: hidden; }
+.closed-card:hover { border-color: var(--bronze); box-shadow: var(--shadow-md); }
+.closed-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--bronze); opacity: 0; transition: opacity .2s; }
+.closed-card:hover::before { opacity: 1; }
+
+.cc-exit { display: inline-block; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 4px; border: 1px solid var(--hairline); background: var(--bg); color: var(--muted); margin-bottom: 8px; }
+.cc-address { font-family: 'Instrument Serif', serif; font-size: 16px; color: var(--ink); line-height: 1.3; margin-bottom: 12px; }
+.cc-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px; padding: 10px 0; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); }
+.cc-stat-label { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .05em; }
+.cc-stat-value { font-size: 14px; font-weight: 700; color: var(--ink); margin-top: 2px; }
+.cc-stat-value.profit-pos { color: #1a4d32; }
+.cc-stat-value.profit-neg { color: #8a1a1a; }
+
+.cc-date { font-size: 11px; color: var(--muted); margin-top: 8px; }
+.cc-source { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+
+.empty-state { text-align: center; padding: 60px 20px; color: var(--muted); }
+.empty-state h3 { font-family: 'Instrument Serif', serif; font-size: 24px; color: var(--ink); margin-bottom: 8px; }
+.empty-state p { font-size: 13px; max-width: 380px; margin: 0 auto; }
+
+/* ── PRINT ── */
+@media print {
+  .iw-header, .iw-hero, .filter-bar, .iw-footer { display: none !important; }
+  body { background: #fff; color: #111; }
+  .closed-card { border: 1px solid #ccc; break-inside: avoid; }
+  .deals-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <button class="iw-back-btn" onclick="window.print()" style="cursor:pointer;">Print</button>
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="iw-hero">
+  <div class="iw-eyebrow">Ironwood Property Group</div>
+  <h1>Track Record</h1>
+  <p>Every closed deal across Peach to Palms, Anchor Pro, and Ironwood. Auto-pulled from the Deal Pipeline.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- SUMMARY CARDS -->
+  <div class="summary-grid">
+    <div class="sum-card">
+      <div class="sum-card-label">Deals Closed</div>
+      <div class="sum-card-value" id="stat-count">0</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-card-label">Total Revenue</div>
+      <div class="sum-card-value bronze" id="stat-revenue">$0</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-card-label">Total Profit</div>
+      <div class="sum-card-value green" id="stat-profit">$0</div>
+    </div>
+    <div class="sum-card">
+      <div class="sum-card-label">Avg Profit / Deal</div>
+      <div class="sum-card-value" id="stat-avg">$0</div>
+      <div class="sum-card-sub">across closed deals</div>
+    </div>
+  </div>
+
+  <!-- FILTER BAR -->
+  <div class="filter-bar">
+    <button class="filter-tab active" onclick="setFilter('All', this)">All</button>
+    <button class="filter-tab" onclick="setFilter('Wholesale', this)">Wholesale</button>
+    <button class="filter-tab" onclick="setFilter('Flip', this)">Flip</button>
+    <button class="filter-tab" onclick="setFilter('BRRRR', this)">BRRRR</button>
+    <button class="filter-tab" onclick="setFilter('Creative Finance', this)">Creative Finance</button>
+    <button class="filter-tab" onclick="setFilter('New Build', this)">New Build</button>
+  </div>
+
+  <!-- DEALS GRID -->
+  <div class="deals-grid" id="deals-grid"></div>
+  <div id="empty-state" class="empty-state" style="display:none;">
+    <h3>No closed deals yet</h3>
+    <p>When you mark deals as Closed in the Deal Pipeline, they'll appear here automatically.</p>
+  </div>
+
+</div>
+
+<div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyCS6hfr0jIxDrn6IiTVXDtNI5y2huR7AiE",
+  authDomain:"workout-app-576c0.firebaseapp.com",
+  projectId:"workout-app-576c0",
+  storageBucket:"workout-app-576c0.firebasestorage.app",
+  messagingSenderId:"93802465651",
+  appId:"1:93802465651:web:e5453d53128bf6b8d25d06"
+});
+const db = firebase.firestore();
+
+let allDeals = [];
+let currentFilter = 'All';
+
+// ── INIT ──
+window.addEventListener('load', loadDeals);
+
+function loadDeals() {
+  db.collection('deals')
+    .where('status', '==', 'Closed')
+    .orderBy('updatedAt', 'desc')
+    .onSnapshot(snap => {
+      allDeals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      render();
+    }, () => {
+      // Fallback without ordering if index not ready
+      db.collection('deals').where('status','==','Closed').get().then(snap => {
+        allDeals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+        render();
+      });
+    });
+}
+
+function setFilter(f, el) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  render();
+}
+
+function render() {
+  const filtered = currentFilter === 'All'
+    ? allDeals
+    : allDeals.filter(d => d.exitStrategy === currentFilter);
+
+  renderStats(filtered);
+  renderGrid(filtered);
+}
+
+function renderStats(deals) {
+  const count = deals.length;
+  const revenue = deals.reduce((s, d) => s + (parseFloat(d.salePrice) || 0), 0);
+  const profit = deals.reduce((s, d) => s + (parseFloat(d.netProfit) || 0), 0);
+  const avg = count > 0 ? profit / count : 0;
+
+  document.getElementById('stat-count').textContent = count;
+  document.getElementById('stat-revenue').textContent = fmtMoney(revenue);
+  document.getElementById('stat-profit').textContent = fmtMoney(profit);
+  document.getElementById('stat-avg').textContent = fmtMoney(avg);
+}
+
+function renderGrid(deals) {
+  const grid = document.getElementById('deals-grid');
+  const empty = document.getElementById('empty-state');
+
+  if (!deals.length) {
+    grid.innerHTML = '';
+    empty.style.display = '';
+    return;
+  }
+  empty.style.display = 'none';
+
+  grid.innerHTML = deals.map(d => {
+    const profit = parseFloat(d.netProfit) || 0;
+    const salePrice = parseFloat(d.salePrice) || 0;
+    const rehabCost = parseFloat(d.rehabCost) || 0;
+    const purchasePx = parseFloat(d.MAO || d.askingPrice) || 0;
+    const isPos = profit >= 0;
+    const closedDate = d.updatedAt ? fmtDate(d.updatedAt) : '';
+
+    return `
+      <div class="closed-card">
+        ${d.exitStrategy ? `<span class="cc-exit">${esc(d.exitStrategy)}</span>` : ''}
+        <div class="cc-address">${esc(d.address || 'No address')}</div>
+        <div class="cc-stats">
+          ${salePrice ? `<div><div class="cc-stat-label">Sale Price</div><div class="cc-stat-value">${fmtMoney(salePrice)}</div></div>` : ''}
+          ${rehabCost ? `<div><div class="cc-stat-label">Rehab</div><div class="cc-stat-value">${fmtMoney(rehabCost)}</div></div>` : ''}
+          ${purchasePx ? `<div><div class="cc-stat-label">Purchase</div><div class="cc-stat-value">${fmtMoney(purchasePx)}</div></div>` : ''}
+          <div>
+            <div class="cc-stat-label">Net Profit</div>
+            <div class="cc-stat-value ${isPos ? 'profit-pos' : 'profit-neg'}">${fmtMoney(profit)}</div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <span class="cc-date">${closedDate ? 'Closed ' + closedDate : ''}</span>
+          ${d.leadSource ? `<span class="cc-source">${esc(d.leadSource)}</span>` : ''}
+        </div>
+        ${(d.docLinks && d.docLinks.length) ? `<div style="margin-top:10px;display:flex;flex-wrap:wrap;gap:5px;">${d.docLinks.map(dl=>`<a href="${esc(dl.url)}" target="_blank" rel="noopener" style="font-size:11px;font-weight:600;padding:2px 8px;border-radius:4px;background:var(--bg);border:1px solid var(--hairline);color:var(--bronze);text-decoration:none;">${esc(dl.label||dl.url)}</a>`).join('')}</div>` : ''}
+      </div>`;
+  }).join('');
+}
+
+// ── HELPERS ──
+function fmtMoney(n) {
+  const num = parseFloat(n) || 0;
+  const neg = num < 0;
+  const abs = Math.abs(num);
+  let str;
+  if (abs >= 1000000) str = '$' + (abs/1000000).toFixed(2) + 'M';
+  else if (abs >= 1000) str = '$' + Math.round(abs/1000) + 'K';
+  else str = '$' + abs.toLocaleString('en-US');
+  return neg ? '-' + str : str;
+}
+
+function fmtDate(ts) {
+  if (!ts) return '';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+</script>
+</body>
+</html>

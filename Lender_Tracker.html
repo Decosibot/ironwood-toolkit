@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Lender Tracker — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+.wrap { max-width: 960px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* ── DEAL PICKER ── */
+.deal-picker-bar { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 16px 20px; margin-bottom: 24px; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.deal-picker-bar label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); white-space: nowrap; }
+.deal-picker-bar select { flex: 1; min-width: 240px; background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 7px; padding: 9px 12px; font-size: 14px; font-family: inherit; }
+.deal-picker-bar select:focus { outline: none; border-color: var(--bronze); }
+
+/* ── REMINDERS BANNER ── */
+.reminder-banner { background: #fdf8ee; border: 1px solid #e8c96a; border-radius: var(--radius); padding: 14px 18px; margin-bottom: 20px; }
+.reminder-banner h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: #8a6d1a; margin-bottom: 10px; }
+.reminder-item { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--ink); padding: 5px 0; border-bottom: 1px solid #f0e6c0; }
+.reminder-item:last-child { border-bottom: none; }
+.reminder-addr { font-weight: 600; flex: 1; }
+.reminder-lender { color: var(--muted); font-size: 12px; }
+.reminder-days { font-size: 11px; font-weight: 700; color: #c05c00; white-space: nowrap; }
+
+/* ── LOG BUTTON ── */
+.log-btn { padding: 10px 20px; background: var(--bronze); color: #fff; border: none; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; white-space: nowrap; }
+.log-btn:hover { background: var(--bronze-deep); }
+
+/* ── APP CARDS ── */
+.apps-grid { display: flex; flex-direction: column; gap: 12px; }
+.app-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 16px 18px; transition: border-color .15s; }
+.app-card:hover { border-color: var(--bronze); }
+.app-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+.app-lender-name { font-family: 'Instrument Serif', serif; font-size: 17px; color: var(--ink); }
+.app-deal-addr { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.app-badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 5px; white-space: nowrap; }
+.badge-draft      { background:#f0f0f0;color:#666; }
+.badge-sent       { background:#e8f0fe;color:#1a56c4; }
+.badge-followup   { background:#fdf8ee;color:#8a6d1a;border:1px solid #e8c96a; }
+.badge-approved   { background:#eefaf3;color:#1a4d32; }
+.badge-declined   { background:#fdf0ee;color:#8a1a1a; }
+.badge-withdrawn  { background:#f0f0f0;color:#888; }
+.app-meta { display: flex; gap: 20px; flex-wrap: wrap; font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.app-meta strong { color: var(--ink); font-weight: 600; }
+.app-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+.app-act-btn { padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-soft); transition: all .15s; font-family: inherit; }
+.app-act-btn:hover { border-color: var(--bronze); color: var(--bronze); }
+.app-act-btn.approve { background: #eefaf3; border-color: #1a4d32; color: #1a4d32; }
+.app-act-btn.approve:hover { background: #1a4d32; color: #fff; }
+.app-act-btn.decline { color: var(--muted); }
+.app-act-btn.decline:hover { border-color: #c0392b; color: #c0392b; }
+
+/* ── MODAL ── */
+#log-modal { display: none; position: fixed; inset: 0; z-index: 9000; background: rgba(28,24,20,.45); align-items: center; justify-content: center; }
+#log-modal.open { display: flex; }
+.modal-box { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius-lg); padding: 28px 32px; width: 420px; max-width: 92vw; box-shadow: var(--shadow-lg); }
+.modal-box h3 { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); margin-bottom: 18px; }
+.mf { display: flex; flex-direction: column; gap: 5px; margin-bottom: 14px; }
+.mf label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .07em; color: var(--muted); }
+.mf input, .mf select, .mf textarea { background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 7px; padding: 9px 12px; font-size: 14px; font-family: inherit; }
+.mf input:focus, .mf select:focus, .mf textarea:focus { outline: none; border-color: var(--bronze); }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; }
+.modal-btn { padding: 10px 22px; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all .15s; }
+.modal-btn.save { background: var(--bronze); color: #fff; flex: 1; }
+.modal-btn.save:hover { background: var(--bronze-deep); }
+.modal-btn.cancel { background: var(--surface); border: 1px solid var(--hairline); color: var(--ink-soft); }
+.modal-btn.cancel:hover { border-color: var(--bronze); color: var(--bronze); }
+
+.empty-apps { text-align: center; padding: 40px 20px; color: var(--muted); font-size: 13px; }
+.empty-apps p { margin-top: 6px; }
+.no-deal-msg { text-align: center; padding: 60px 20px; color: var(--muted); }
+.no-deal-msg h3 { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); margin-bottom: 8px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="iw-hero">
+  <div class="iw-eyebrow">All Companies</div>
+  <h1>Lender Tracker</h1>
+  <p>Log lender applications per deal, track statuses, and catch follow-up reminders before deals go cold.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- FOLLOW-UP REMINDERS (cross-all-deals) -->
+  <div id="reminders-section" style="display:none;">
+    <div class="reminder-banner">
+      <h4>Follow-Up Needed</h4>
+      <div id="reminders-list"></div>
+    </div>
+  </div>
+
+  <!-- DEAL PICKER -->
+  <div class="deal-picker-bar">
+    <label>Deal</label>
+    <select id="deal-select" onchange="selectDeal()">
+      <option value="">— Select a deal —</option>
+    </select>
+    <button class="log-btn" onclick="openLogModal()">+ Log Application</button>
+    <a class="iw-back-btn" href="Deal_Pipeline.html" style="margin-left:auto;">View Pipeline</a>
+  </div>
+
+  <!-- NO DEAL SELECTED -->
+  <div id="no-deal-msg" class="no-deal-msg">
+    <h3>Select a deal above</h3>
+    <p>Choose a deal to view or log lender applications.</p>
+  </div>
+
+  <!-- DEAL CONTENT -->
+  <div id="deal-content" style="display:none;">
+    <div class="apps-grid" id="apps-grid"></div>
+  </div>
+
+</div>
+
+<!-- LOG APPLICATION MODAL -->
+<div id="log-modal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h3>Log Lender Application</h3>
+    <div class="mf">
+      <label>Lender Name *</label>
+      <input type="text" id="m-lender" placeholder="ABL Funding, Duke Allen &amp; Co..."/>
+    </div>
+    <div class="mf">
+      <label>Lender Email</label>
+      <input type="email" id="m-email" placeholder="contact@lender.com"/>
+    </div>
+    <div class="mf">
+      <label>Loan Type</label>
+      <select id="m-loanType">
+        <option>Fix &amp; Flip</option>
+        <option>BRRRR / Bridge</option>
+        <option>New Construction</option>
+        <option>DSCR</option>
+        <option>Hard Money</option>
+        <option>Other</option>
+      </select>
+    </div>
+    <div class="mf">
+      <label>Amount Requested ($)</label>
+      <input type="number" id="m-amount" placeholder="0" min="0" step="1000"/>
+    </div>
+    <div class="mf">
+      <label>Status</label>
+      <select id="m-status">
+        <option>Draft</option>
+        <option>Sent</option>
+        <option>Follow-Up</option>
+        <option>Approved</option>
+        <option>Declined</option>
+        <option>Withdrawn</option>
+      </select>
+    </div>
+    <div class="mf">
+      <label>Notes</label>
+      <textarea id="m-notes" rows="2" placeholder="Rate quoted, conditions, next steps..."></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn save" onclick="saveApplication()">Save</button>
+      <button class="modal-btn cancel" onclick="closeLogModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyCS6hfr0jIxDrn6IiTVXDtNI5y2huR7AiE",
+  authDomain:"workout-app-576c0.firebaseapp.com",
+  projectId:"workout-app-576c0",
+  storageBucket:"workout-app-576c0.firebasestorage.app",
+  messagingSenderId:"93802465651",
+  appId:"1:93802465651:web:e5453d53128bf6b8d25d06"
+});
+const db = firebase.firestore();
+
+let currentDealId = null;
+let currentDealAddress = '';
+let allDeals = [];
+let appsListener = null;
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  loadDealPicker();
+  loadReminders();
+  // Check localStorage for pre-selected deal
+  try {
+    const active = JSON.parse(localStorage.getItem('iw_active_deal') || 'null');
+    if (active && active.id) {
+      setTimeout(() => {
+        const sel = document.getElementById('deal-select');
+        sel.value = active.id;
+        if (sel.value) selectDeal();
+      }, 800);
+    }
+    // Pre-fill lender from iw_lender_target
+    const target = JSON.parse(localStorage.getItem('iw_lender_target') || 'null');
+    if (target && target.name) {
+      document.getElementById('m-lender').value = target.name;
+      document.getElementById('m-email').value = target.email || '';
+    }
+  } catch(e) {}
+});
+
+// ── DEAL PICKER ──
+function loadDealPicker() {
+  db.collection('deals').orderBy('createdAt','desc').get().then(snap => {
+    allDeals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const sel = document.getElementById('deal-select');
+    sel.innerHTML = '<option value="">— Select a deal —</option>';
+    allDeals.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d.id;
+      opt.textContent = d.address + (d.status ? ' · ' + d.status : '');
+      sel.appendChild(opt);
+    });
+  }).catch(() => {});
+}
+
+// ── REMINDERS (cross-all-deals: Sent apps older than 3 days) ──
+function loadReminders() {
+  db.collectionGroup('lenderApps')
+    .where('status', '==', 'Sent')
+    .get()
+    .then(snap => {
+      if (snap.empty) return;
+      const now = Date.now();
+      const stale = snap.docs.filter(doc => {
+        const ts = doc.data().sentAt?.toDate?.();
+        if (!ts) return false;
+        return (now - ts.getTime()) > 3 * 24 * 60 * 60 * 1000; // 3 days
+      });
+      if (!stale.length) return;
+
+      const sec = document.getElementById('reminders-section');
+      const list = document.getElementById('reminders-list');
+      sec.style.display = '';
+
+      list.innerHTML = stale.map(doc => {
+        const d = doc.data();
+        const dealId = doc.ref.parent.parent.id;
+        const deal = allDeals.find(x => x.id === dealId);
+        const addr = deal ? deal.address : 'Unknown deal';
+        const ts = d.sentAt?.toDate?.();
+        const days = ts ? Math.floor((now - ts.getTime()) / 86400000) : '?';
+        return `<div class="reminder-item">
+          <span class="reminder-addr">${esc(addr)}</span>
+          <span class="reminder-lender">${esc(d.lender)}</span>
+          <span class="reminder-days">${days}d no response</span>
+          <button class="app-act-btn" onclick="selectDealById('${dealId}')">View</button>
+        </div>`;
+      }).join('');
+    }).catch(() => {});
+}
+
+function selectDealById(id) {
+  const sel = document.getElementById('deal-select');
+  sel.value = id;
+  selectDeal();
+  window.scrollTo({ top: sel.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' });
+}
+
+// ── SELECT DEAL ──
+function selectDeal() {
+  const sel = document.getElementById('deal-select');
+  const id = sel.value;
+
+  if (appsListener) { appsListener(); appsListener = null; }
+
+  if (!id) {
+    currentDealId = null;
+    document.getElementById('no-deal-msg').style.display = '';
+    document.getElementById('deal-content').style.display = 'none';
+    return;
+  }
+
+  currentDealId = id;
+  const deal = allDeals.find(d => d.id === id);
+  currentDealAddress = deal ? (deal.address || '') : '';
+  document.getElementById('no-deal-msg').style.display = 'none';
+  document.getElementById('deal-content').style.display = '';
+
+  appsListener = db.collection('deals').doc(id)
+    .collection('lenderApps')
+    .orderBy('createdAt','desc')
+    .onSnapshot(snap => {
+      renderApps(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+    }, () => {
+      db.collection('deals').doc(id).collection('lenderApps').get().then(snap => {
+        renderApps(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      });
+    });
+}
+
+// ── RENDER APPS ──
+function renderApps(apps) {
+  const grid = document.getElementById('apps-grid');
+  if (!apps.length) {
+    grid.innerHTML = '<div class="empty-apps"><strong>No applications logged yet</strong><p>Click "+ Log Application" to add one.</p></div>';
+    return;
+  }
+
+  grid.innerHTML = apps.map(app => `
+    <div class="app-card">
+      <div class="app-card-top">
+        <div>
+          <div class="app-lender-name">${esc(app.lender)}</div>
+          <div class="app-deal-addr">${esc(currentDealAddress)} · ${esc(app.loanType || '')}</div>
+        </div>
+        <span class="app-badge badge-${(app.status||'draft').toLowerCase().replace(/[^a-z]/g,'')}">${esc(app.status || 'Draft')}</span>
+      </div>
+      <div class="app-meta">
+        ${app.amount ? `<span>Requested: <strong>${fmtMoney(app.amount)}</strong></span>` : ''}
+        ${app.createdAt ? `<span>Logged: <strong>${fmtDate(app.createdAt)}</strong></span>` : ''}
+        ${app.sentAt ? `<span>Sent: <strong>${fmtDate(app.sentAt)}</strong></span>` : ''}
+        ${app.email ? `<span>Contact: <strong><a href="mailto:${esc(app.email)}" style="color:var(--bronze);">${esc(app.email)}</a></strong></span>` : ''}
+      </div>
+      ${app.notes ? `<div style="font-size:12px;color:var(--muted);margin-bottom:10px;">${esc(app.notes)}</div>` : ''}
+      <div class="app-actions">
+        ${app.status !== 'Sent' ? `<button class="app-act-btn" onclick="updateStatus('${app.id}','Sent')">Mark Sent</button>` : ''}
+        ${app.status === 'Sent' || app.status === 'Follow-Up' ? `<button class="app-act-btn" onclick="updateStatus('${app.id}','Follow-Up')">Follow-Up</button>` : ''}
+        ${app.status !== 'Approved' ? `<button class="app-act-btn approve" onclick="updateStatus('${app.id}','Approved')">Approved</button>` : ''}
+        ${app.status !== 'Declined' ? `<button class="app-act-btn decline" onclick="updateStatus('${app.id}','Declined')">Declined</button>` : ''}
+        <button class="app-act-btn" onclick="deleteApp('${app.id}')">Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+// ── MODAL ──
+function openLogModal() {
+  if (!currentDealId) { showToast('Select a deal first'); return; }
+  document.getElementById('log-modal').classList.add('open');
+}
+
+function closeLogModal() {
+  document.getElementById('log-modal').classList.remove('open');
+}
+
+async function saveApplication() {
+  const lender = document.getElementById('m-lender').value.trim();
+  if (!lender) { showToast('Lender name required'); return; }
+
+  const data = {
+    lender,
+    email: document.getElementById('m-email').value.trim(),
+    loanType: document.getElementById('m-loanType').value,
+    amount: parseFloat(document.getElementById('m-amount').value) || 0,
+    status: document.getElementById('m-status').value,
+    notes: document.getElementById('m-notes').value.trim(),
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+  };
+
+  if (data.status === 'Sent') {
+    data.sentAt = firebase.firestore.FieldValue.serverTimestamp();
+  }
+
+  try {
+    await db.collection('deals').doc(currentDealId).collection('lenderApps').add(data);
+    showToast('Application logged');
+    closeLogModal();
+    // Clear fields
+    ['m-lender','m-email','m-amount','m-notes'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('m-status').value = 'Draft';
+  } catch(e) {
+    showToast('Error saving');
+  }
+}
+
+async function updateStatus(appId, status) {
+  try {
+    const update = { status, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+    if (status === 'Sent') update.sentAt = firebase.firestore.FieldValue.serverTimestamp();
+    await db.collection('deals').doc(currentDealId).collection('lenderApps').doc(appId).update(update);
+    showToast('Status updated');
+  } catch(e) {
+    showToast('Error updating');
+  }
+}
+
+async function deleteApp(appId) {
+  if (!confirm('Delete this application record?')) return;
+  try {
+    await db.collection('deals').doc(currentDealId).collection('lenderApps').doc(appId).delete();
+    showToast('Deleted');
+  } catch(e) {
+    showToast('Error deleting');
+  }
+}
+
+// Backdrop close
+document.addEventListener('click', e => {
+  if (e.target === document.getElementById('log-modal')) closeLogModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLogModal(); });
+
+// ── HELPERS ──
+function fmtMoney(n) {
+  const num = parseFloat(n) || 0;
+  if (num >= 1000000) return '$' + (num/1000000).toFixed(2) + 'M';
+  if (num >= 1000) return '$' + (num/1000).toFixed(0) + 'K';
+  return '$' + num.toLocaleString('en-US');
+}
+
+function fmtDate(ts) {
+  if (!ts) return '—';
+  const d = ts.toDate ? ts.toDate() : new Date(ts);
+  return d.toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function showToast(msg) {
+  let t = document.getElementById('lt-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'lt-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.opacity = '0', 2500);
+}
+</script>
+</body>
+</html>
