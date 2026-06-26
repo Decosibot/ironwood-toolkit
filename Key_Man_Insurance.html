@@ -286,41 +286,59 @@
 
 <div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
 
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
-const STORAGE_KEY = 'iw_key_man_policies';
+firebase.initializeApp({
+  apiKey:"AIzaSyCS6hfr0jIxDrn6IiTVXDtNI5y2huR7AiE",
+  authDomain:"workout-app-576c0.firebaseapp.com",
+  projectId:"workout-app-576c0",
+  storageBucket:"workout-app-576c0.firebasestorage.app",
+  messagingSenderId:"93802465651",
+  appId:"1:93802465651:web:e5453d53128bf6b8d25d06"
+});
+const db = firebase.firestore();
 
-function loadPolicies() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); } catch(e) { return []; } }
-function savePolicies(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
-function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+// ── REALTIME LISTENER ──
+window.addEventListener('load', () => {
+  db.collection('keyManPolicies')
+    .orderBy('createdAt', 'asc')
+    .onSnapshot(snap => {
+      const policies = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      renderAll(policies);
+    }, () => {
+      // Fallback without ordering if index not ready
+      db.collection('keyManPolicies').get().then(snap => {
+        renderAll(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+      });
+    });
+});
 
 // ── STATUS ──
 function policyStatus(policy) {
   if (!policy.expiry) return 'active';
-  const now = new Date();
-  const exp = new Date(policy.expiry);
-  const daysLeft = Math.ceil((exp - now) / 86400000);
-  if (daysLeft < 0) return 'expired';
-  if (daysLeft <= 60) return 'expiring';
+  const days = Math.ceil((new Date(policy.expiry) - new Date()) / 86400000);
+  if (days < 0) return 'expired';
+  if (days <= 60) return 'expiring';
   return 'active';
 }
 
 function statusLabel(s) {
-  return { active:'Active', expiring:'Expiring Soon', expired:'Expired', none:'Not Set' }[s] || 'Active';
+  return { active:'Active', expiring:'Expiring Soon', expired:'Expired' }[s] || 'Active';
 }
 
 function daysUntilRenewal(expiry) {
   if (!expiry) return null;
-  const d = Math.ceil((new Date(expiry) - new Date()) / 86400000);
-  return d;
+  return Math.ceil((new Date(expiry) - new Date()) / 86400000);
 }
 
 // ── RENDER ──
-function renderAll() {
-  const policies = loadPolicies();
+function renderAll(policies) {
   const companies = {
     'Ironwood Property Group': 'list-ironwood',
-    'Anchor Pro Solutions': 'list-anchor-pro',
-    'Peach to Palms': 'list-peach-to-palms',
+    'Anchor Pro Solutions':    'list-anchor-pro',
+    'Peach to Palms':          'list-peach-to-palms',
   };
 
   let totalCoverage = 0, activeCount = 0, expiringCount = 0;
@@ -348,9 +366,7 @@ function renderAll() {
               <div class="policy-insured">${esc(p.insured)}</div>
               <div class="policy-type">${esc(p.type||'Term Life')}</div>
             </div>
-            <div class="policy-status">
-              <span class="status-badge badge-${status}">${statusLabel(status)}</span>
-            </div>
+            <span class="status-badge badge-${status}">${statusLabel(status)}</span>
           </div>
           <div class="policy-stats">
             <div class="ps-item">
@@ -367,15 +383,12 @@ function renderAll() {
             </div>
             <div class="ps-item">
               <div class="ps-label">${days !== null && days >= 0 ? 'Renews In' : 'Renewal'}</div>
-              <div class="ps-value ${status === 'expiring' ? 'expiring' : ''}">${
-                days === null ? '—'
-                : days < 0 ? 'Expired'
-                : days === 0 ? 'Today'
-                : days + ' days'
+              <div class="ps-value ${status==='expiring'?'expiring':''}">${
+                days===null ? '—' : days<0 ? 'Expired' : days===0 ? 'Today' : days+' days'
               }</div>
             </div>
           </div>
-          ${p.policyNum ? `<div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Policy # <strong style="color:var(--ink);">${esc(p.policyNum)}</strong>${p.beneficiary ? ' &nbsp;·&nbsp; Beneficiary: <strong style="color:var(--ink);">' + esc(p.beneficiary) + '</strong>' : ''}</div>` : ''}
+          ${p.policyNum ? `<div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Policy # <strong style="color:var(--ink);">${esc(p.policyNum)}</strong>${p.beneficiary ? ' &nbsp;·&nbsp; Beneficiary: <strong style="color:var(--ink);">'+esc(p.beneficiary)+'</strong>' : ''}</div>` : ''}
           ${p.notes ? `<div class="policy-notes">${esc(p.notes)}</div>` : ''}
           <div class="policy-actions">
             <button class="p-act" onclick="editPolicy('${p.id}')">Edit</button>
@@ -392,71 +405,96 @@ function renderAll() {
 }
 
 // ── MODAL ──
+let _editId = null;
+
 function openModal(id) {
-  const policies = loadPolicies();
-  const p = id ? policies.find(x => x.id === id) : null;
-  document.getElementById('modal-title').textContent = p ? 'Edit Policy' : 'Add Key Man Policy';
-  document.getElementById('m-id').value = p ? p.id : '';
-  document.getElementById('m-company').value = p ? p.company : 'Ironwood Property Group';
-  document.getElementById('m-insured').value = p ? p.insured : '';
-  document.getElementById('m-type').value = p ? p.type : 'Term Life';
-  document.getElementById('m-coverage').value = p ? p.coverage : '';
-  document.getElementById('m-premium').value = p ? p.premium : '';
-  document.getElementById('m-provider').value = p ? p.provider : '';
-  document.getElementById('m-policy-num').value = p ? p.policyNum : '';
-  document.getElementById('m-start').value = p ? p.start : '';
-  document.getElementById('m-expiry').value = p ? p.expiry : '';
-  document.getElementById('m-beneficiary').value = p ? p.beneficiary : '';
-  document.getElementById('m-notes').value = p ? p.notes : '';
+  _editId = id || null;
+  document.getElementById('modal-title').textContent = id ? 'Edit Policy' : 'Add Key Man Policy';
+  document.getElementById('m-id').value = id || '';
+  if (!id) {
+    ['m-insured','m-coverage','m-premium','m-provider','m-policy-num','m-start','m-expiry','m-beneficiary','m-notes']
+      .forEach(f => document.getElementById(f).value = '');
+    document.getElementById('m-company').value = 'Ironwood Property Group';
+    document.getElementById('m-type').value = 'Term Life';
+  }
   document.getElementById('policy-modal').classList.add('open');
   setTimeout(() => document.getElementById('m-insured').focus(), 50);
 }
 
-function closeModal() { document.getElementById('policy-modal').classList.remove('open'); }
+function closeModal() {
+  document.getElementById('policy-modal').classList.remove('open');
+  _editId = null;
+}
 
-function savePolicy() {
+async function savePolicy() {
   const insured = document.getElementById('m-insured').value.trim();
   if (!insured) { showToast('Insured person is required'); return; }
 
-  const policies = loadPolicies();
-  const id = document.getElementById('m-id').value;
-
   const data = {
-    id: id || uid(),
-    company: document.getElementById('m-company').value,
+    company:     document.getElementById('m-company').value,
     insured,
-    type: document.getElementById('m-type').value,
-    coverage: parseFloat(document.getElementById('m-coverage').value) || 0,
-    premium: parseFloat(document.getElementById('m-premium').value) || 0,
-    provider: document.getElementById('m-provider').value.trim(),
-    policyNum: document.getElementById('m-policy-num').value.trim(),
-    start: document.getElementById('m-start').value,
-    expiry: document.getElementById('m-expiry').value,
+    type:        document.getElementById('m-type').value,
+    coverage:    parseFloat(document.getElementById('m-coverage').value) || 0,
+    premium:     parseFloat(document.getElementById('m-premium').value) || 0,
+    provider:    document.getElementById('m-provider').value.trim(),
+    policyNum:   document.getElementById('m-policy-num').value.trim(),
+    start:       document.getElementById('m-start').value,
+    expiry:      document.getElementById('m-expiry').value,
     beneficiary: document.getElementById('m-beneficiary').value.trim(),
-    notes: document.getElementById('m-notes').value.trim(),
+    notes:       document.getElementById('m-notes').value.trim(),
+    updatedAt:   firebase.firestore.FieldValue.serverTimestamp(),
   };
 
-  if (id) {
-    const idx = policies.findIndex(p => p.id === id);
-    if (idx >= 0) policies[idx] = data; else policies.push(data);
-  } else {
-    policies.push(data);
+  try {
+    if (_editId) {
+      await db.collection('keyManPolicies').doc(_editId).update(data);
+      showToast('Policy updated');
+    } else {
+      data.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection('keyManPolicies').add(data);
+      showToast('Policy saved');
+    }
+    closeModal();
+  } catch(e) {
+    showToast('Error saving — check connection');
+    console.error(e);
   }
-
-  savePolicies(policies);
-  closeModal();
-  renderAll();
-  showToast('Policy saved');
 }
 
-function editPolicy(id) { openModal(id); }
+async function editPolicy(id) {
+  try {
+    const doc = await db.collection('keyManPolicies').doc(id).get();
+    if (!doc.exists) return;
+    const p = doc.data();
+    _editId = id;
+    document.getElementById('modal-title').textContent = 'Edit Policy';
+    document.getElementById('m-id').value = id;
+    document.getElementById('m-company').value   = p.company || 'Ironwood Property Group';
+    document.getElementById('m-insured').value   = p.insured || '';
+    document.getElementById('m-type').value      = p.type || 'Term Life';
+    document.getElementById('m-coverage').value  = p.coverage || '';
+    document.getElementById('m-premium').value   = p.premium || '';
+    document.getElementById('m-provider').value  = p.provider || '';
+    document.getElementById('m-policy-num').value = p.policyNum || '';
+    document.getElementById('m-start').value     = p.start || '';
+    document.getElementById('m-expiry').value    = p.expiry || '';
+    document.getElementById('m-beneficiary').value = p.beneficiary || '';
+    document.getElementById('m-notes').value     = p.notes || '';
+    document.getElementById('policy-modal').classList.add('open');
+    setTimeout(() => document.getElementById('m-insured').focus(), 50);
+  } catch(e) {
+    showToast('Error loading policy');
+  }
+}
 
-function deletePolicy(id) {
+async function deletePolicy(id) {
   if (!confirm('Delete this policy record?')) return;
-  const policies = loadPolicies().filter(p => p.id !== id);
-  savePolicies(policies);
-  renderAll();
-  showToast('Deleted');
+  try {
+    await db.collection('keyManPolicies').doc(id).delete();
+    showToast('Deleted');
+  } catch(e) {
+    showToast('Error deleting');
+  }
 }
 
 // Backdrop + escape
@@ -486,9 +524,6 @@ function showToast(msg) {
   clearTimeout(t._timer);
   t._timer = setTimeout(() => t.style.opacity = '0', 2500);
 }
-
-// ── INIT ──
-renderAll();
 </script>
 </body>
 </html>
