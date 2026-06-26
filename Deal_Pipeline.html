@@ -200,6 +200,15 @@
         </div>
 
         <div class="form-field">
+          <label>Company</label>
+          <select id="f-company">
+            <option value="">Select company...</option>
+            <option value="Peach to Palms">Peach to Palms</option>
+            <option value="Anchor Pro">Anchor Pro</option>
+            <option value="Ironwood">Ironwood</option>
+          </select>
+        </div>
+        <div class="form-field">
           <label>Lead Source</label>
           <select id="f-leadSource">
             <option value="">Select source...</option>
@@ -366,6 +375,15 @@ function statusStyle(s) {
   return map[s] || 'background:#f0f0f0;color:#666';
 }
 
+function companyTagStyle(c) {
+  const map = {
+    'Ironwood':       'background:#f0ece3;border-color:#6B8DB5;color:#3a5a7a',
+    'Anchor Pro':     'background:#eef6f1;border-color:#1a4d32;color:#1a4d32',
+    'Peach to Palms': 'background:#fff3e8;border-color:#c05c00;color:#c05c00',
+  };
+  return map[c] || '';
+}
+
 // ── RENDER DEALS ──
 function renderDeals() {
   const grid = document.getElementById('deal-grid');
@@ -390,6 +408,7 @@ function renderDeals() {
         <div>
           <span class="status-badge" style="${statusStyle(deal.status)}">${esc(deal.status || 'Lead')}</span>
           ${deal.exitStrategy ? `<span class="exit-tag">${esc(deal.exitStrategy)}</span>` : ''}
+          ${deal.company ? `<span class="exit-tag" style="${companyTagStyle(deal.company)}">${esc(deal.company)}</span>` : ''}
         </div>
         <div class="deal-stats">
           ${deal.ARV ? `<div class="deal-stat"><span class="ds-label">ARV</span><span class="ds-value">${fmt(deal.ARV)}</span></div>` : ''}
@@ -458,6 +477,7 @@ function editDeal(id) {
   setf('f-address', deal.address);
   setf('f-sellerName', deal.sellerName);
   setf('f-sellerPhone', deal.sellerPhone);
+  setf('f-company', deal.company);
   setf('f-leadSource', deal.leadSource);
   setf('f-status', deal.status);
   setf('f-exitStrategy', deal.exitStrategy);
@@ -483,6 +503,7 @@ async function saveDeal() {
 
   const data = {
     address,
+    company: document.getElementById('f-company').value || '',
     status: document.getElementById('f-status').value || 'Lead',
     exitStrategy: document.getElementById('f-exitStrategy').value || '',
     leadSource: document.getElementById('f-leadSource').value || '',
@@ -591,7 +612,7 @@ function updateMAOHint() {
 
 // ── HELPERS ──
 function clearForm() {
-  ['f-address','f-sellerName','f-sellerPhone','f-leadSource','f-status','f-exitStrategy',
+  ['f-address','f-sellerName','f-sellerPhone','f-company','f-leadSource','f-status','f-exitStrategy',
    'f-ARV','f-askingPrice','f-MAO','f-rehabCost','f-assignmentFee','f-notes',
    'doc-link-label','doc-link-url'].forEach(id => {
     const el = document.getElementById(id);
