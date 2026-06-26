@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Key Man Insurance — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+.wrap { max-width: 960px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* ── SUMMARY ── */
+.summary-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; background: var(--hairline); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
+@media(max-width:640px){ .summary-grid { grid-template-columns: 1fr 1fr; } }
+.sum-cell { background: var(--surface); padding: 16px 18px; }
+.sum-cell-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 4px; }
+.sum-cell-value { font-size: 22px; font-weight: 700; font-family: 'Instrument Serif', serif; color: var(--ink); }
+.sum-cell-value.warn { color: var(--bronze); }
+.sum-cell-value.ok { color: #1a4d32; }
+
+/* ── ADD BUTTON ── */
+.add-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.add-bar h2 { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--ink); }
+.add-btn { padding: 10px 20px; background: var(--bronze); color: #fff; border: none; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: background .15s; }
+.add-btn:hover { background: var(--bronze-deep); }
+
+/* ── COMPANY FOLDERS ── */
+.company-folder { margin-bottom: 28px; }
+.folder-header { display: flex; align-items: center; gap: 10px; padding: 10px 4px 12px; margin-bottom: 14px; }
+.folder-badge { width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 900; color: #fff; flex-shrink: 0; }
+.folder-badge.iw { background: var(--bronze); color: #0a0a0a; }
+.folder-badge.ap { background: #1a4d32; }
+.folder-badge.p2p { background: #c05c00; }
+.folder-title { font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .1em; color: var(--ink); }
+.folder-divider-iw  { border-bottom: 2px solid var(--bronze); }
+.folder-divider-ap  { border-bottom: 2px solid #1a4d32; }
+.folder-divider-p2p { border-bottom: 2px solid #c05c00; }
+
+/* ── POLICY CARDS ── */
+.policies-list { display: flex; flex-direction: column; gap: 12px; }
+.policy-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 16px 20px; transition: border-color .15s; }
+.policy-card:hover { border-color: var(--bronze); }
+.policy-card-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 12px; flex-wrap: wrap; }
+.policy-insured { font-family: 'Instrument Serif', serif; font-size: 17px; color: var(--ink); }
+.policy-type { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-top: 2px; }
+.policy-status { display: flex; align-items: center; gap: 8px; }
+.status-badge { font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 5px; white-space: nowrap; }
+.badge-active   { background: #eefaf3; color: #1a4d32; }
+.badge-expiring { background: #fdf8ee; color: #8a6d1a; border: 1px solid #e8c96a; }
+.badge-expired  { background: #fdf0ee; color: #8a1a1a; }
+.badge-none     { background: #f0f0f0; color: #666; }
+
+.policy-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 10px; }
+@media(max-width:560px){ .policy-stats { grid-template-columns: 1fr 1fr; } }
+.ps-item { }
+.ps-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); margin-bottom: 2px; }
+.ps-value { font-size: 14px; font-weight: 700; color: var(--ink); }
+.ps-value.coverage { color: #1a4d32; }
+.ps-value.premium { color: var(--bronze); }
+.ps-value.expiring { color: #8a6d1a; }
+
+.policy-notes { font-size: 12px; color: var(--muted); border-top: 1px solid var(--hairline); padding-top: 10px; margin-top: 4px; }
+.policy-actions { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.p-act { padding: 5px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-soft); transition: all .15s; font-family: inherit; }
+.p-act:hover { border-color: var(--bronze); color: var(--bronze); }
+.p-act.del:hover { border-color: #c0392b; color: #c0392b; }
+
+.empty-policies { text-align: center; padding: 28px 20px; color: var(--muted); font-size: 13px; background: var(--surface); border: 1px dashed var(--hairline); border-radius: var(--radius); }
+
+/* ── WHY SECTION ── */
+.why-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 24px 28px; margin-bottom: 28px; }
+.why-card h3 { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--ink); margin-bottom: 14px; }
+.why-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+@media(max-width:560px){ .why-grid { grid-template-columns: 1fr; } }
+.why-item { }
+.why-item-title { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.why-item-body { font-size: 12px; color: var(--muted); line-height: 1.6; }
+
+/* ── MODAL ── */
+#policy-modal { display:none; position:fixed; inset:0; z-index:9000; background:rgba(28,24,20,.45); align-items:center; justify-content:center; }
+#policy-modal.open { display:flex; }
+.modal-box { background:var(--surface); border:1px solid var(--hairline); border-radius:var(--radius-lg); padding:28px 32px; width:520px; max-width:92vw; max-height:90vh; overflow-y:auto; box-shadow:var(--shadow-lg); }
+.modal-box h3 { font-family:'Instrument Serif',serif; font-size:22px; color:var(--ink); margin-bottom:18px; }
+.mf { display:flex; flex-direction:column; gap:5px; margin-bottom:14px; }
+.mf label { font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.07em; color:var(--muted); }
+.mf input, .mf select, .mf textarea { background:var(--bg); border:1px solid var(--hairline); color:var(--ink); border-radius:7px; padding:9px 12px; font-size:14px; font-family:inherit; }
+.mf input:focus, .mf select:focus, .mf textarea:focus { outline:none; border-color:var(--bronze); }
+.mf-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.modal-actions { display:flex; gap:10px; margin-top:20px; }
+.modal-btn { padding:10px 22px; border-radius:7px; font-size:13px; font-weight:600; cursor:pointer; border:none; font-family:inherit; }
+.modal-btn.save { background:var(--bronze); color:#fff; flex:1; }
+.modal-btn.save:hover { background:var(--bronze-deep); }
+.modal-btn.cancel { background:var(--surface); border:1px solid var(--hairline); color:var(--ink-soft); }
+.modal-btn.cancel:hover { border-color:var(--bronze); color:var(--bronze); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <button class="iw-back-btn" onclick="window.print()" style="cursor:pointer;">Print</button>
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="iw-hero">
+  <div class="iw-eyebrow">All Companies</div>
+  <h1>Key Man Insurance</h1>
+  <p>Track key person life and disability policies across Ironwood, Anchor Pro, and Peach to Palms. Protects the business if a key operator is lost.</p>
+</div>
+
+<div class="wrap">
+
+  <!-- WHY KEY MAN -->
+  <div class="why-card">
+    <h3>Why Key Man Insurance</h3>
+    <div class="why-grid">
+      <div class="why-item">
+        <div class="why-item-title">Business Continuity</div>
+        <div class="why-item-body">If a key person dies or becomes disabled, the policy pays the business — not the family — so operations can continue, debts can be serviced, and replacements can be hired.</div>
+      </div>
+      <div class="why-item">
+        <div class="why-item-title">Lender Requirement</div>
+        <div class="why-item-body">Hard money lenders and SBA lenders often require key man coverage on principals before funding. Having it in place speeds up approvals.</div>
+      </div>
+      <div class="why-item">
+        <div class="why-item-title">Partner Protection</div>
+        <div class="why-item-body">In a partnership like Ironwood (Jeff + Ty), key man coverage on each partner funds the buy-sell agreement if one partner can no longer operate.</div>
+      </div>
+      <div class="why-item">
+        <div class="why-item-title">Recommended Coverage</div>
+        <div class="why-item-body">Industry standard is 5–10× the key person's annual economic contribution to the business. For sole operators, start at $250K–$500K minimum.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SUMMARY -->
+  <div class="summary-grid">
+    <div class="sum-cell">
+      <div class="sum-cell-label">Total Policies</div>
+      <div class="sum-cell-value" id="stat-total">0</div>
+    </div>
+    <div class="sum-cell">
+      <div class="sum-cell-label">Active</div>
+      <div class="sum-cell-value ok" id="stat-active">0</div>
+    </div>
+    <div class="sum-cell">
+      <div class="sum-cell-label">Expiring Soon</div>
+      <div class="sum-cell-value warn" id="stat-expiring">0</div>
+    </div>
+    <div class="sum-cell">
+      <div class="sum-cell-label">Total Coverage</div>
+      <div class="sum-cell-value" id="stat-coverage">$0</div>
+    </div>
+  </div>
+
+  <!-- ADD BUTTON -->
+  <div class="add-bar">
+    <h2>Policies</h2>
+    <button class="add-btn" onclick="openModal()">+ Add Policy</button>
+  </div>
+
+  <!-- IRONWOOD FOLDER -->
+  <div class="company-folder">
+    <div class="folder-header folder-divider-iw">
+      <div class="folder-badge iw">IW</div>
+      <span class="folder-title">Ironwood Property Group</span>
+    </div>
+    <div class="policies-list" id="list-ironwood">
+      <div class="empty-policies">No policies logged yet — click "+ Add Policy" above.</div>
+    </div>
+  </div>
+
+  <!-- ANCHOR PRO FOLDER -->
+  <div class="company-folder">
+    <div class="folder-header folder-divider-ap">
+      <div class="folder-badge ap">AP</div>
+      <span class="folder-title">Anchor Pro Solutions</span>
+    </div>
+    <div class="policies-list" id="list-anchor-pro">
+      <div class="empty-policies">No policies logged yet — click "+ Add Policy" above.</div>
+    </div>
+  </div>
+
+  <!-- PEACH TO PALMS FOLDER -->
+  <div class="company-folder">
+    <div class="folder-header folder-divider-p2p">
+      <div class="folder-badge p2p">P2P</div>
+      <span class="folder-title">Peach to Palms</span>
+    </div>
+    <div class="policies-list" id="list-peach-to-palms">
+      <div class="empty-policies">No policies logged yet — click "+ Add Policy" above.</div>
+    </div>
+  </div>
+
+</div><!-- /wrap -->
+
+<!-- ADD POLICY MODAL -->
+<div id="policy-modal" role="dialog" aria-modal="true">
+  <div class="modal-box">
+    <h3 id="modal-title">Add Key Man Policy</h3>
+    <input type="hidden" id="m-id"/>
+
+    <div class="mf">
+      <label>Company *</label>
+      <select id="m-company">
+        <option value="Ironwood Property Group">Ironwood Property Group</option>
+        <option value="Anchor Pro Solutions">Anchor Pro Solutions</option>
+        <option value="Peach to Palms">Peach to Palms</option>
+      </select>
+    </div>
+
+    <div class="mf">
+      <label>Insured Person *</label>
+      <input type="text" id="m-insured" placeholder="e.g. Ty Jackson, Jeff Sarabia"/>
+    </div>
+
+    <div class="mf">
+      <label>Policy Type</label>
+      <select id="m-type">
+        <option>Term Life</option>
+        <option>Whole Life</option>
+        <option>Universal Life</option>
+        <option>Short-Term Disability</option>
+        <option>Long-Term Disability</option>
+        <option>Life + Disability</option>
+      </select>
+    </div>
+
+    <div class="mf-row">
+      <div class="mf">
+        <label>Coverage Amount ($)</label>
+        <input type="number" id="m-coverage" placeholder="500000" min="0" step="10000"/>
+      </div>
+      <div class="mf">
+        <label>Annual Premium ($)</label>
+        <input type="number" id="m-premium" placeholder="0" min="0" step="100"/>
+      </div>
+    </div>
+
+    <div class="mf">
+      <label>Insurance Provider</label>
+      <input type="text" id="m-provider" placeholder="e.g. Northwestern Mutual, MassMutual"/>
+    </div>
+
+    <div class="mf">
+      <label>Policy Number</label>
+      <input type="text" id="m-policy-num" placeholder="e.g. NM-2024-00123"/>
+    </div>
+
+    <div class="mf-row">
+      <div class="mf">
+        <label>Start Date</label>
+        <input type="date" id="m-start"/>
+      </div>
+      <div class="mf">
+        <label>Renewal / Expiry Date</label>
+        <input type="date" id="m-expiry"/>
+      </div>
+    </div>
+
+    <div class="mf">
+      <label>Beneficiary (Business)</label>
+      <input type="text" id="m-beneficiary" placeholder="e.g. Ironwood LLC"/>
+    </div>
+
+    <div class="mf">
+      <label>Notes</label>
+      <textarea id="m-notes" rows="2" placeholder="Agent contact, lender requirement, buy-sell trigger..."></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="modal-btn save" onclick="savePolicy()">Save Policy</button>
+      <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+
+<script>
+const STORAGE_KEY = 'iw_key_man_policies';
+
+function loadPolicies() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]'); } catch(e) { return []; } }
+function savePolicies(arr) { localStorage.setItem(STORAGE_KEY, JSON.stringify(arr)); }
+function uid() { return Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+
+// ── STATUS ──
+function policyStatus(policy) {
+  if (!policy.expiry) return 'active';
+  const now = new Date();
+  const exp = new Date(policy.expiry);
+  const daysLeft = Math.ceil((exp - now) / 86400000);
+  if (daysLeft < 0) return 'expired';
+  if (daysLeft <= 60) return 'expiring';
+  return 'active';
+}
+
+function statusLabel(s) {
+  return { active:'Active', expiring:'Expiring Soon', expired:'Expired', none:'Not Set' }[s] || 'Active';
+}
+
+function daysUntilRenewal(expiry) {
+  if (!expiry) return null;
+  const d = Math.ceil((new Date(expiry) - new Date()) / 86400000);
+  return d;
+}
+
+// ── RENDER ──
+function renderAll() {
+  const policies = loadPolicies();
+  const companies = {
+    'Ironwood Property Group': 'list-ironwood',
+    'Anchor Pro Solutions': 'list-anchor-pro',
+    'Peach to Palms': 'list-peach-to-palms',
+  };
+
+  let totalCoverage = 0, activeCount = 0, expiringCount = 0;
+
+  Object.entries(companies).forEach(([company, listId]) => {
+    const list = document.getElementById(listId);
+    const compPolicies = policies.filter(p => p.company === company);
+
+    if (!compPolicies.length) {
+      list.innerHTML = '<div class="empty-policies">No policies logged yet — click "+ Add Policy" above.</div>';
+      return;
+    }
+
+    list.innerHTML = compPolicies.map(p => {
+      const status = policyStatus(p);
+      const days = daysUntilRenewal(p.expiry);
+      totalCoverage += parseFloat(p.coverage) || 0;
+      if (status === 'active') activeCount++;
+      if (status === 'expiring') expiringCount++;
+
+      return `
+        <div class="policy-card">
+          <div class="policy-card-top">
+            <div>
+              <div class="policy-insured">${esc(p.insured)}</div>
+              <div class="policy-type">${esc(p.type||'Term Life')}</div>
+            </div>
+            <div class="policy-status">
+              <span class="status-badge badge-${status}">${statusLabel(status)}</span>
+            </div>
+          </div>
+          <div class="policy-stats">
+            <div class="ps-item">
+              <div class="ps-label">Coverage</div>
+              <div class="ps-value coverage">${fmtMoney(p.coverage)}</div>
+            </div>
+            <div class="ps-item">
+              <div class="ps-label">Annual Premium</div>
+              <div class="ps-value premium">${p.premium ? fmtMoney(p.premium)+'/yr' : '—'}</div>
+            </div>
+            <div class="ps-item">
+              <div class="ps-label">Provider</div>
+              <div class="ps-value">${esc(p.provider||'—')}</div>
+            </div>
+            <div class="ps-item">
+              <div class="ps-label">${days !== null && days >= 0 ? 'Renews In' : 'Renewal'}</div>
+              <div class="ps-value ${status === 'expiring' ? 'expiring' : ''}">${
+                days === null ? '—'
+                : days < 0 ? 'Expired'
+                : days === 0 ? 'Today'
+                : days + ' days'
+              }</div>
+            </div>
+          </div>
+          ${p.policyNum ? `<div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Policy # <strong style="color:var(--ink);">${esc(p.policyNum)}</strong>${p.beneficiary ? ' &nbsp;·&nbsp; Beneficiary: <strong style="color:var(--ink);">' + esc(p.beneficiary) + '</strong>' : ''}</div>` : ''}
+          ${p.notes ? `<div class="policy-notes">${esc(p.notes)}</div>` : ''}
+          <div class="policy-actions">
+            <button class="p-act" onclick="editPolicy('${p.id}')">Edit</button>
+            <button class="p-act del" onclick="deletePolicy('${p.id}')">Delete</button>
+          </div>
+        </div>`;
+    }).join('');
+  });
+
+  document.getElementById('stat-total').textContent = policies.length;
+  document.getElementById('stat-active').textContent = activeCount;
+  document.getElementById('stat-expiring').textContent = expiringCount;
+  document.getElementById('stat-coverage').textContent = fmtMoney(totalCoverage);
+}
+
+// ── MODAL ──
+function openModal(id) {
+  const policies = loadPolicies();
+  const p = id ? policies.find(x => x.id === id) : null;
+  document.getElementById('modal-title').textContent = p ? 'Edit Policy' : 'Add Key Man Policy';
+  document.getElementById('m-id').value = p ? p.id : '';
+  document.getElementById('m-company').value = p ? p.company : 'Ironwood Property Group';
+  document.getElementById('m-insured').value = p ? p.insured : '';
+  document.getElementById('m-type').value = p ? p.type : 'Term Life';
+  document.getElementById('m-coverage').value = p ? p.coverage : '';
+  document.getElementById('m-premium').value = p ? p.premium : '';
+  document.getElementById('m-provider').value = p ? p.provider : '';
+  document.getElementById('m-policy-num').value = p ? p.policyNum : '';
+  document.getElementById('m-start').value = p ? p.start : '';
+  document.getElementById('m-expiry').value = p ? p.expiry : '';
+  document.getElementById('m-beneficiary').value = p ? p.beneficiary : '';
+  document.getElementById('m-notes').value = p ? p.notes : '';
+  document.getElementById('policy-modal').classList.add('open');
+  setTimeout(() => document.getElementById('m-insured').focus(), 50);
+}
+
+function closeModal() { document.getElementById('policy-modal').classList.remove('open'); }
+
+function savePolicy() {
+  const insured = document.getElementById('m-insured').value.trim();
+  if (!insured) { showToast('Insured person is required'); return; }
+
+  const policies = loadPolicies();
+  const id = document.getElementById('m-id').value;
+
+  const data = {
+    id: id || uid(),
+    company: document.getElementById('m-company').value,
+    insured,
+    type: document.getElementById('m-type').value,
+    coverage: parseFloat(document.getElementById('m-coverage').value) || 0,
+    premium: parseFloat(document.getElementById('m-premium').value) || 0,
+    provider: document.getElementById('m-provider').value.trim(),
+    policyNum: document.getElementById('m-policy-num').value.trim(),
+    start: document.getElementById('m-start').value,
+    expiry: document.getElementById('m-expiry').value,
+    beneficiary: document.getElementById('m-beneficiary').value.trim(),
+    notes: document.getElementById('m-notes').value.trim(),
+  };
+
+  if (id) {
+    const idx = policies.findIndex(p => p.id === id);
+    if (idx >= 0) policies[idx] = data; else policies.push(data);
+  } else {
+    policies.push(data);
+  }
+
+  savePolicies(policies);
+  closeModal();
+  renderAll();
+  showToast('Policy saved');
+}
+
+function editPolicy(id) { openModal(id); }
+
+function deletePolicy(id) {
+  if (!confirm('Delete this policy record?')) return;
+  const policies = loadPolicies().filter(p => p.id !== id);
+  savePolicies(policies);
+  renderAll();
+  showToast('Deleted');
+}
+
+// Backdrop + escape
+document.addEventListener('click', e => { if (e.target === document.getElementById('policy-modal')) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+// ── HELPERS ──
+function fmtMoney(n) {
+  const num = parseFloat(n) || 0;
+  if (num >= 1000000) return '$' + (num/1000000).toFixed(1) + 'M';
+  if (num >= 1000)    return '$' + Math.round(num/1000) + 'K';
+  return '$' + num.toLocaleString('en-US');
+}
+
+function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function showToast(msg) {
+  let t = document.getElementById('km-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'km-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;opacity:0;transition:opacity .3s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.style.opacity = '0', 2500);
+}
+
+// ── INIT ──
+renderAll();
+</script>
+</body>
+</html>
