@@ -235,9 +235,11 @@ function loadDealPicker() {
     sel.innerHTML = '<option value="">— Select a deal —</option>';
     snap.docs.forEach(doc => {
       const d = doc.data();
+      if (d.company === 'Peach to Palms') return;
       const opt = document.createElement('option');
       opt.value = doc.id;
-      opt.textContent = d.address + (d.status ? ' · ' + d.status : '');
+      const co = d.company ? ` [${d.company}]` : '';
+      opt.textContent = d.address + (d.status ? ' · ' + d.status : '') + co;
       sel.appendChild(opt);
     });
   }).catch(() => {});

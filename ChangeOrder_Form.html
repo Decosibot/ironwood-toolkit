@@ -901,10 +901,12 @@ let _activeDealId = null;
       sel.innerHTML = '<option value="">— Select Deal from Pipeline —</option>';
       snap.docs.forEach(doc => {
         const d = doc.data();
+        if (d.company && d.company !== 'Anchor Pro' && d.company !== 'Ironwood') return;
         const label = d.address || 'Unnamed Deal';
         const opt = document.createElement('option');
         opt.value = doc.id;
-        opt.textContent = `${label}${d.status ? ' · ' + d.status : ''}`;
+        const co = d.company ? ` [${d.company}]` : '';
+        opt.textContent = `${label}${d.status ? ' · ' + d.status : ''}${co}`;
         opt.dataset.deal = JSON.stringify({ ...d, id: doc.id });
         sel.appendChild(opt);
       });

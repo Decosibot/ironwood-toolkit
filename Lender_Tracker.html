@@ -231,7 +231,8 @@ function loadDealPicker() {
     allDeals.forEach(d => {
       const opt = document.createElement('option');
       opt.value = d.id;
-      opt.textContent = d.address + (d.status ? ' · ' + d.status : '');
+      const co = d.company ? ` [${d.company}]` : '';
+      opt.textContent = d.address + (d.status ? ' · ' + d.status : '') + co;
       sel.appendChild(opt);
     });
   }).catch(() => {});
