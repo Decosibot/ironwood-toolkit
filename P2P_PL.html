@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Peach to Palms — Monthly P&L</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+
+/* ── TOPBAR ── */
+.topbar { background: var(--surface); border-bottom: 1px solid var(--hairline); padding: 0 24px; height: 60px; display: flex; align-items: center; gap: 16px; position: sticky; top: 0; z-index: 100; }
+.topbar-brand { display: flex; align-items: center; gap: 12px; }
+.topbar-logo { width: 32px; height: 32px; background: #c05c00; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; color: #fff; flex-shrink: 0; }
+.topbar-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+.topbar-sub { font-size: 11px; color: var(--muted); }
+.topbar-controls { margin-left: auto; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.month-selector { background: var(--surface); border: 1px solid var(--hairline); color: var(--ink); border-radius: 6px; padding: 7px 10px; font-size: 13px; font-weight: 600; }
+.month-selector:focus { outline: 1px solid #c05c00; }
+
+/* ── BUTTONS ── */
+.btn { padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: none; font-family: inherit; transition: all .15s; }
+.btn-outline { background: transparent; border: 1px solid var(--hairline); color: var(--ink-soft); }
+.btn-outline:hover { border-color: #c05c00; color: #c05c00; }
+.btn-orange { background: #c05c00; color: #fff; }
+.btn-orange:hover { background: #a04a00; }
+.btn-ghost { background: transparent; color: var(--muted); }
+.btn-ghost:hover { color: var(--ink); }
+.btn-sm { padding: 5px 10px; font-size: 11px; }
+.btn-danger { background: #c0392b; color: #fff; font-size: 11px; padding: 4px 8px; border-radius: 4px; }
+
+/* ── CONTAINER ── */
+.container { max-width: 1000px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* ── REPORT HEADER ── */
+.report-header { background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; padding: 28px 32px; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px; }
+.rh-title { font-size: 26px; font-weight: 800; color: var(--ink); letter-spacing: -.5px; }
+.rh-period { font-size: 18px; color: #c05c00; font-weight: 700; margin-top: 4px; }
+.rh-meta { margin-top: 12px; display: flex; flex-direction: column; gap: 4px; }
+.rh-meta span { font-size: 12px; color: var(--muted); }
+.rh-meta span strong { color: var(--ink); font-weight: 600; }
+.rh-logo-lg { width: 52px; height: 52px; background: #c05c00; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 18px; color: #fff; margin-left: auto; }
+.rh-company { font-size: 13px; font-weight: 700; color: var(--ink); margin-top: 8px; text-align: right; }
+.rh-tagline { font-size: 10px; color: #c05c00; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; text-align: right; }
+
+/* ── SECTION ── */
+.section { background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; margin-bottom: 20px; overflow: hidden; }
+.section-header { background: var(--surface); border-bottom: 1px solid var(--hairline); padding: 13px 20px; display: flex; justify-content: space-between; align-items: center; }
+.section-title { font-size: 11px; color: #c05c00; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; display: flex; align-items: center; gap: 8px; }
+.section-num { background: #c05c00; color: #fff; width: 20px; height: 20px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 900; }
+
+/* ── INPUT TABLE ── */
+.input-table { width: 100%; border-collapse: collapse; }
+.input-table th { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; padding: 6px 10px; border-bottom: 1px solid var(--hairline); text-align: left; }
+.input-table th.amt-col { text-align: right; width: 160px; }
+.input-table th.type-col { width: 180px; }
+.input-table th.deal-col { width: 160px; }
+.input-table th.del-col { width: 44px; }
+.input-table td { padding: 6px 6px; border-bottom: 1px solid var(--hairline); vertical-align: middle; }
+.input-table tr:last-child td { border-bottom: none; }
+.input-table input[type="text"], .input-table input[type="number"], .input-table select { background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 5px; padding: 7px 9px; font-size: 13px; width: 100%; }
+.input-table input[type="number"] { text-align: right; }
+.input-table input:focus, .input-table select:focus { outline: 1px solid #c05c00; }
+.table-footer { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-top: 1px solid var(--hairline); }
+.table-footer .total-label { font-size: 12px; color: var(--muted); font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.table-footer .total-val { font-size: 18px; font-weight: 800; color: #c05c00; }
+
+/* ── WATERFALL ── */
+.waterfall { border-radius: 10px; overflow: hidden; border: 1px solid var(--hairline); }
+.wf-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-bottom: 1px solid var(--hairline); }
+.wf-row:last-child { border-bottom: none; }
+.wf-row.wf-head { background: var(--ink); font-size: 10px; color: rgba(244,239,230,.6); text-transform: uppercase; letter-spacing: 1px; padding: 7px 20px; }
+.wf-row .wf-label { font-size: 13px; color: var(--ink); }
+.wf-row .wf-amt { font-size: 13px; font-weight: 700; color: var(--ink); }
+.wf-row.deduct .wf-label { color: #aaa; }
+.wf-row.deduct .wf-amt { color: var(--danger); }
+.wf-row.gross-profit { background: #1a1008; }
+.wf-row.gross-profit .wf-label { font-weight: 700; color: var(--ink); }
+.wf-row.gross-profit .wf-amt { font-weight: 800; color: #e8a060; font-size: 16px; }
+.wf-row.reserve-row { background: #1a1208; }
+.wf-row.reserve-row .wf-label { font-weight: 600; color: #d4a870; }
+.wf-row.reserve-row .wf-amt { font-weight: 700; color: #e8a060; }
+.wf-row.reinvest-row { background: #1a1005; }
+.wf-row.reinvest-row .wf-label { font-weight: 600; color: #d4a870; }
+.wf-row.reinvest-row .wf-amt { font-weight: 700; color: #e8a060; }
+.wf-row.ty-row { background: #1a1508; }
+.wf-row.ty-row .wf-label { font-weight: 700; color: var(--ink); font-size: 14px; }
+.wf-row.ty-row .wf-amt { font-weight: 800; color: #e8a060; font-size: 16px; }
+.wf-row.net-row { background: #1a1204; }
+.wf-row.net-row .wf-label { font-weight: 800; color: var(--ink); font-size: 14px; }
+.wf-row.net-row .wf-amt { font-weight: 800; font-size: 18px; }
+
+/* ── BUCKETS ── */
+.buckets-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+@media(max-width:600px){ .buckets-grid { grid-template-columns: 1fr; } }
+.bucket-card { border-radius: 10px; padding: 20px; border: 1px solid var(--hairline); }
+.bucket-card.ops { background: linear-gradient(135deg, #1a1a10, #1a180a); border-color: #3a3010; }
+.bucket-card.reserve { background: linear-gradient(135deg, #1a1008, #2a1a08); border-color: #4d3010; }
+.bucket-card.reinvest { background: linear-gradient(135deg, #1a0f08, #2a1508); border-color: #4d2010; }
+.bucket-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 12px; }
+.ops .bucket-label { color: #c8c070; }
+.reserve .bucket-label { color: #e8a060; }
+.reinvest .bucket-label { color: #e88060; }
+.bucket-amount { font-size: 28px; font-weight: 900; color: var(--ink); font-family: 'Instrument Serif', serif; }
+.bucket-sub { font-size: 11px; color: #aaa; margin-top: 4px; }
+.bucket-ytd { font-size: 13px; font-weight: 700; margin-top: 10px; color: var(--ink); }
+
+/* ── YTD ── */
+.ytd-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.ytd-table th { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; padding: 9px 12px; border-bottom: 1px solid var(--hairline); text-align: right; }
+.ytd-table th:first-child { text-align: left; }
+.ytd-table td { padding: 9px 12px; border-bottom: 1px solid var(--hairline); text-align: right; color: var(--ink); }
+.ytd-table td:first-child { text-align: left; color: #c05c00; font-weight: 700; }
+.ytd-table tfoot td { border-top: 2px solid var(--hairline); font-weight: 800; color: #c05c00; background: var(--ink); }
+.ytd-table tfoot td:first-child { color: var(--ink); }
+.ytd-empty { color: var(--muted); font-size: 13px; text-align: center; padding: 24px; }
+
+/* ── SAVE BAR ── */
+.save-bar { display: flex; align-items: center; justify-content: flex-end; gap: 10px; margin-bottom: 20px; }
+.save-status { font-size: 11px; color: var(--muted); }
+.save-status.saved { color: #c05c00; }
+.save-status.unsaved { color: var(--bronze); }
+
+@media print {
+  .topbar, .save-bar, .btn, .btn-sm, .table-add-row { display: none !important; }
+  body { background: #fff; color: #111; font-size: 12px; }
+  .container { padding: 16px; max-width: 100%; }
+  .section { border: 1px solid #ccc; break-inside: avoid; margin-bottom: 16px; }
+  input, select { border: 1px solid #ccc !important; background: #fff !important; color: #111 !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-brand">
+    <div class="topbar-logo">P2P</div>
+    <div>
+      <div class="topbar-title">Peach to Palms — Monthly P&amp;L</div>
+      <div class="topbar-sub">Ty Jackson · Owner</div>
+    </div>
+  </div>
+  <div class="topbar-controls">
+    <input type="month" id="monthPicker" class="month-selector"/>
+    <button class="btn btn-outline" onclick="printReport()">Print</button>
+    <button class="btn btn-outline" onclick="exportJSON()">Export</button>
+    <button class="btn btn-outline" onclick="importFromFirestore()">Import Deals</button>
+    <button class="btn btn-orange" onclick="newMonth()">New Month</button>
+    <a class="btn btn-outline" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<div class="container">
+
+  <div class="save-bar">
+    <span class="save-status" id="saveStatus">All changes auto-saved</span>
+    <button class="btn btn-ghost btn-sm" onclick="saveData()">Save Now</button>
+  </div>
+
+  <!-- REPORT HEADER -->
+  <div class="report-header">
+    <div>
+      <div class="rh-title">Monthly P&amp;L Report</div>
+      <div class="rh-period" id="headerPeriod">— —</div>
+      <div class="rh-meta">
+        <span>Generated: <strong id="headerGenerated">—</strong></span>
+        <span>Report No: <strong id="headerReportNo">P2P-0001</strong></span>
+      </div>
+    </div>
+    <div>
+      <div class="rh-logo-lg">P2P</div>
+      <div class="rh-company">Peach to Palms</div>
+      <div class="rh-tagline">Wholesale &amp; Acquisitions</div>
+    </div>
+  </div>
+
+  <!-- SECTION 1 — REVENUE -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">1</span> Deal Revenue</div>
+    </div>
+    <div style="padding:0;">
+      <table class="input-table" id="revenueTable">
+        <thead><tr>
+          <th>Description / Address</th>
+          <th class="type-col">Deal Type</th>
+          <th class="amt-col">Amount ($)</th>
+          <th class="del-col"></th>
+        </tr></thead>
+        <tbody id="revenueBody"></tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <button class="btn btn-outline btn-sm table-add-row" onclick="addRow('revenue')">+ Add Revenue</button>
+      <div><span class="total-label">Total Revenue &nbsp;</span><span class="total-val" id="totalRevenue">$0.00</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 — DEAL COSTS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">2</span> Deal Costs (Per Transaction)</div>
+    </div>
+    <div style="padding:0;">
+      <table class="input-table" id="dealCostsTable">
+        <thead><tr>
+          <th>Description</th>
+          <th class="deal-col">Deal / Address</th>
+          <th class="type-col">Type</th>
+          <th class="amt-col">Amount ($)</th>
+          <th class="del-col"></th>
+        </tr></thead>
+        <tbody id="dealCostsBody"></tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <button class="btn btn-outline btn-sm table-add-row" onclick="addRow('dealCosts')">+ Add Deal Cost</button>
+      <div><span class="total-label">Total Deal Costs &nbsp;</span><span class="total-val" id="totalDealCosts">$0.00</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION 3 — OPERATING EXPENSES -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">3</span> Operating Expenses</div>
+    </div>
+    <div style="padding:0;">
+      <table class="input-table" id="opExpTable">
+        <thead><tr>
+          <th>Description</th>
+          <th class="type-col">Category</th>
+          <th class="amt-col">Amount ($)</th>
+          <th class="del-col"></th>
+        </tr></thead>
+        <tbody id="opExpBody"></tbody>
+      </table>
+    </div>
+    <div class="table-footer">
+      <button class="btn btn-outline btn-sm table-add-row" onclick="addRow('opExp')">+ Add Expense</button>
+      <div><span class="total-label">Total Op Expenses &nbsp;</span><span class="total-val" id="totalOpExp">$0.00</span></div>
+    </div>
+  </div>
+
+  <!-- SECTION 4 — WATERFALL -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">4</span> Cash Waterfall</div>
+    </div>
+    <div style="padding:20px;">
+      <div class="waterfall">
+        <div class="wf-row wf-head"><span>Category</span><span>Amount</span></div>
+        <div class="wf-row"><span class="wf-label">Total Revenue</span><span class="wf-amt" id="wf_revenue">$0.00</span></div>
+        <div class="wf-row deduct"><span class="wf-label">− Deal Costs</span><span class="wf-amt" id="wf_dealcosts">($0.00)</span></div>
+        <div class="wf-row deduct"><span class="wf-label">− Operating Expenses</span><span class="wf-amt" id="wf_opexp">($0.00)</span></div>
+        <div class="wf-row gross-profit"><span class="wf-label">Gross Profit</span><span class="wf-amt" id="wf_gross">$0.00</span></div>
+        <div class="wf-row reserve-row"><span class="wf-label">Reserve Fund (25%)</span><span class="wf-amt" id="wf_reserve">$0.00</span></div>
+        <div class="wf-row reinvest-row"><span class="wf-label">Portfolio / Reinvestment (10%)</span><span class="wf-amt" id="wf_reinvest">$0.00</span></div>
+        <div class="wf-row ty-row"><span class="wf-label">Ty's Draw ($2,000/mo)</span><span class="wf-amt" id="wf_ty">$2,000.00</span></div>
+        <div class="wf-row net-row"><span class="wf-label">Stays in Business</span><span class="wf-amt" id="wf_net">$0.00</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 5 — CASH BUCKETS -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">5</span> This Month's Allocation</div>
+    </div>
+    <div style="padding:20px;">
+      <div class="buckets-grid">
+        <div class="bucket-card ops">
+          <div class="bucket-label">Operations</div>
+          <div class="bucket-amount" id="b_ops">$0</div>
+          <div class="bucket-sub">Deal costs + op expenses</div>
+        </div>
+        <div class="bucket-card reserve">
+          <div class="bucket-label">Reserve Fund (25%)</div>
+          <div class="bucket-amount" id="b_reserve">$0</div>
+          <div class="bucket-sub">Emergency / opportunity buffer</div>
+          <div class="bucket-ytd">YTD: <span id="b_reserve_ytd">$0</span></div>
+        </div>
+        <div class="bucket-card reinvest">
+          <div class="bucket-label">Portfolio Fund (10%)</div>
+          <div class="bucket-amount" id="b_reinvest">$0</div>
+          <div class="bucket-sub">Acquisitions &amp; portfolio growth</div>
+          <div class="bucket-ytd">YTD: <span id="b_reinvest_ytd">$0</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 — YTD -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-title"><span class="section-num">6</span> Year-to-Date Summary</div>
+    </div>
+    <div style="padding:20px;" id="ytdContainer">
+      <div class="ytd-empty">No saved months yet.</div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+<script>
+if (!firebase.apps.length) {
+  firebase.initializeApp({
+    apiKey:"AIzaSyCS6hfr0jIxDrn6IiTVXDtNI5y2huR7AiE",
+    authDomain:"workout-app-576c0.firebaseapp.com",
+    projectId:"workout-app-576c0",
+    storageBucket:"workout-app-576c0.firebasestorage.app",
+    messagingSenderId:"93802465651",
+    appId:"1:93802465651:web:e5453d53128bf6b8d25d06"
+  });
+}
+const db = firebase.firestore();
+
+const TY_DRAW = 2000;
+const RESERVE_PCT = 0.25;
+const REINVEST_PCT = 0.10;
+const STORAGE_PREFIX = 'p2p_pl_';
+
+const REVENUE_TYPES  = ['Assignment Fee','Creative Finance','Subject-To','Seller Finance','Wholesale','Wrap','Earnest Money','Other'];
+const DEAL_COST_TYPES = ['Earnest Money','Marketing','Buyer Costs','Title/Closing','Option Fee','Attorney','Other'];
+const OP_EXP_CATS    = ['REI Reply','Marketing','Software/CRM','Vehicle','Phone','Training','Office','Other'];
+
+let saveTimer = null;
+
+function fmt(n) {
+  if (isNaN(n)||n==null) return '$0.00';
+  return '$'+Math.abs(n).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
+}
+function fmtNeg(n) { return '($'+Math.abs(parseFloat(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})+')'; }
+function fmtShort(n) { const num=parseFloat(n)||0; if(num>=1000) return '$'+Math.round(num/1000)+'K'; return '$'+Math.round(num); }
+function v(id) { return parseFloat(document.getElementById(id)?.value)||0; }
+function set(id,val) { const el=document.getElementById(id); if(el) el.textContent=val; }
+function currentKey() { return STORAGE_PREFIX+document.getElementById('monthPicker').value; }
+
+function initMonthPicker() {
+  const now = new Date();
+  document.getElementById('monthPicker').value = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  updateHeader();
+}
+
+function updateHeader() {
+  const val = document.getElementById('monthPicker').value;
+  if (!val) return;
+  const [yr,mo] = val.split('-');
+  const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+  set('headerPeriod', months[parseInt(mo)-1]+' '+yr);
+  set('headerGenerated', new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}));
+  updateReportNo(); loadData(); renderYTD();
+}
+
+function updateReportNo() {
+  const key = currentKey();
+  const existing = JSON.parse(localStorage.getItem(key)||'null');
+  if (existing && existing.reportNo) { set('headerReportNo', existing.reportNo); return; }
+  let maxNo = 0;
+  for (let i=0;i<localStorage.length;i++) {
+    const k=localStorage.key(i);
+    if (k&&k.startsWith(STORAGE_PREFIX)) {
+      const d=JSON.parse(localStorage.getItem(k)||'{}');
+      if (d.reportNo) { const n=parseInt(d.reportNo.replace('P2P-',''))||0; if(n>maxNo) maxNo=n; }
+    }
+  }
+  set('headerReportNo','P2P-'+String(maxNo+1).padStart(4,'0'));
+}
+
+function makeSelect(options) {
+  return '<select onchange="recalcAll()">'+options.map(o=>`<option>${o}</option>`).join('')+'</select>';
+}
+
+function addRow(type, desc, amt, t1, deal) {
+  let tbody, html;
+  if (type==='revenue') {
+    tbody = document.getElementById('revenueBody');
+    html = `<tr><td><input type="text" value="${desc||''}" placeholder="e.g. 123 Oak St — Wholesale" oninput="recalcAll()"/></td>
+      <td>${makeSelect(REVENUE_TYPES)}</td>
+      <td><input type="number" min="0" step="0.01" value="${amt||''}" placeholder="0.00" oninput="recalcAll()"/></td>
+      <td><button class="btn btn-danger" onclick="delRow(this)">✕</button></td></tr>`;
+    tbody.insertAdjacentHTML('beforeend',html);
+    if (t1) tbody.lastElementChild.querySelector('select').value=t1;
+  } else if (type==='dealCosts') {
+    tbody = document.getElementById('dealCostsBody');
+    html = `<tr><td><input type="text" value="${desc||''}" placeholder="e.g. EMD for 123 Oak" oninput="recalcAll()"/></td>
+      <td><input type="text" value="${deal||''}" placeholder="Deal / Address" oninput="recalcAll()"/></td>
+      <td>${makeSelect(DEAL_COST_TYPES)}</td>
+      <td><input type="number" min="0" step="0.01" value="${amt||''}" placeholder="0.00" oninput="recalcAll()"/></td>
+      <td><button class="btn btn-danger" onclick="delRow(this)">✕</button></td></tr>`;
+    tbody.insertAdjacentHTML('beforeend',html);
+    if (t1) tbody.lastElementChild.querySelector('select').value=t1;
+  } else if (type==='opExp') {
+    tbody = document.getElementById('opExpBody');
+    html = `<tr><td><input type="text" value="${desc||''}" placeholder="e.g. REI Reply subscription" oninput="recalcAll()"/></td>
+      <td>${makeSelect(OP_EXP_CATS)}</td>
+      <td><input type="number" min="0" step="0.01" value="${amt||''}" placeholder="0.00" oninput="recalcAll()"/></td>
+      <td><button class="btn btn-danger" onclick="delRow(this)">✕</button></td></tr>`;
+    tbody.insertAdjacentHTML('beforeend',html);
+    if (t1) tbody.lastElementChild.querySelector('select').value=t1;
+  }
+  recalcAll();
+}
+
+function delRow(btn) { btn.closest('tr').remove(); recalcAll(); }
+
+function sumBody(id) {
+  let total=0;
+  document.getElementById(id).querySelectorAll('tr').forEach(r=>{
+    const inputs=r.querySelectorAll('input[type="number"]');
+    if(inputs.length) total+=parseFloat(inputs[inputs.length-1].value)||0;
+  });
+  return total;
+}
+
+function recalcAll() {
+  const rev      = sumBody('revenueBody');
+  const dealCost = sumBody('dealCostsBody');
+  const opExp    = sumBody('opExpBody');
+  const gross    = rev - dealCost - opExp;
+  const reserve  = Math.max(0,gross)*RESERVE_PCT;
+  const reinvest = Math.max(0,gross)*REINVEST_PCT;
+  const net      = gross - reserve - reinvest - TY_DRAW;
+
+  set('totalRevenue', fmt(rev));
+  set('totalDealCosts', fmt(dealCost));
+  set('totalOpExp', fmt(opExp));
+
+  set('wf_revenue', fmt(rev));
+  set('wf_dealcosts', fmtNeg(dealCost));
+  set('wf_opexp', fmtNeg(opExp));
+  set('wf_gross', fmt(gross));
+  set('wf_reserve', fmt(reserve));
+  set('wf_reinvest', fmt(reinvest));
+  set('wf_ty', fmt(TY_DRAW));
+  set('wf_net', fmt(net));
+  const netEl = document.getElementById('wf_net');
+  if (netEl) netEl.style.color = net<0 ? 'var(--danger)' : '#e8a060';
+
+  set('b_ops', fmtShort(dealCost+opExp));
+  set('b_reserve', fmtShort(reserve));
+  set('b_reinvest', fmtShort(reinvest));
+
+  let ytdReserve=0, ytdReinvest=0;
+  for (let i=0;i<localStorage.length;i++) {
+    const k=localStorage.key(i);
+    if (k&&k.startsWith(STORAGE_PREFIX)) {
+      const d=JSON.parse(localStorage.getItem(k)||'{}');
+      ytdReserve+=parseFloat(d.reserve)||0;
+      ytdReinvest+=parseFloat(d.reinvest)||0;
+    }
+  }
+  set('b_reserve_ytd', fmtShort(ytdReserve+reserve));
+  set('b_reinvest_ytd', fmtShort(ytdReinvest+reinvest));
+
+  markUnsaved(); scheduleSave();
+}
+
+function markUnsaved() {
+  const el=document.getElementById('saveStatus');
+  el.textContent='Unsaved changes'; el.className='save-status unsaved';
+}
+function scheduleSave() { clearTimeout(saveTimer); saveTimer=setTimeout(saveData,1500); }
+
+function collectData() {
+  const revRows=[], dealRows=[], opRows=[];
+  document.getElementById('revenueBody').querySelectorAll('tr').forEach(r=>{
+    const inputs=r.querySelectorAll('input'); const sel=r.querySelector('select');
+    revRows.push({desc:inputs[0]?.value||'',type:sel?.value||'',amt:inputs[1]?.value||''});
+  });
+  document.getElementById('dealCostsBody').querySelectorAll('tr').forEach(r=>{
+    const inputs=r.querySelectorAll('input'); const sel=r.querySelector('select');
+    dealRows.push({desc:inputs[0]?.value||'',deal:inputs[1]?.value||'',type:sel?.value||'',amt:inputs[2]?.value||''});
+  });
+  document.getElementById('opExpBody').querySelectorAll('tr').forEach(r=>{
+    const inputs=r.querySelectorAll('input'); const sel=r.querySelector('select');
+    opRows.push({desc:inputs[0]?.value||'',type:sel?.value||'',amt:inputs[1]?.value||''});
+  });
+  const rev=sumBody('revenueBody'), dealCost=sumBody('dealCostsBody'), opExp=sumBody('opExpBody');
+  const gross=rev-dealCost-opExp;
+  const reserve=Math.max(0,gross)*RESERVE_PCT;
+  const reinvest=Math.max(0,gross)*REINVEST_PCT;
+  return {
+    reportNo:document.getElementById('headerReportNo').textContent,
+    month:document.getElementById('monthPicker').value,
+    revenue:revRows, dealCosts:dealRows, opExp:opRows,
+    reserve, reinvest,
+  };
+}
+
+function saveData() {
+  const data=collectData();
+  localStorage.setItem(currentKey(),JSON.stringify(data));
+  const el=document.getElementById('saveStatus');
+  el.textContent='Saved '+new Date().toLocaleTimeString(); el.className='save-status saved';
+  renderYTD();
+}
+
+function loadData() {
+  const raw=localStorage.getItem(currentKey());
+  document.getElementById('revenueBody').innerHTML='';
+  document.getElementById('dealCostsBody').innerHTML='';
+  document.getElementById('opExpBody').innerHTML='';
+  if (!raw) { recalcAll(); return; }
+  const d=JSON.parse(raw);
+  (d.revenue||[]).forEach(r=>addRow('revenue',r.desc,r.amt,r.type));
+  (d.dealCosts||[]).forEach(r=>addRow('dealCosts',r.desc,r.amt,r.type,r.deal));
+  (d.opExp||[]).forEach(r=>addRow('opExp',r.desc,r.amt,r.type));
+  if (d.reportNo) set('headerReportNo',d.reportNo);
+  recalcAll();
+  const el=document.getElementById('saveStatus');
+  el.textContent='Loaded'; el.className='save-status saved';
+}
+
+function renderYTD() {
+  const container=document.getElementById('ytdContainer');
+  const months=[];
+  for (let i=0;i<localStorage.length;i++) {
+    const k=localStorage.key(i);
+    if (k&&k.startsWith(STORAGE_PREFIX)) {
+      const d=JSON.parse(localStorage.getItem(k)||'{}');
+      if (d.month) months.push({key:k,data:d});
+    }
+  }
+  if (!months.length) { container.innerHTML='<div class="ytd-empty">No saved months yet.</div>'; return; }
+  months.sort((a,b)=>a.data.month.localeCompare(b.data.month));
+  const mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  function fmtM(ym) { if(!ym) return '—'; const [y,m]=ym.split('-'); return mn[parseInt(m)-1]+' '+y; }
+  function calc(d) {
+    const rev=(d.revenue||[]).reduce((s,r)=>s+(parseFloat(r.amt)||0),0);
+    const dc=(d.dealCosts||[]).reduce((s,r)=>s+(parseFloat(r.amt)||0),0);
+    const op=(d.opExp||[]).reduce((s,r)=>s+(parseFloat(r.amt)||0),0);
+    const gross=rev-dc-op;
+    const reserve=Math.max(0,gross)*RESERVE_PCT;
+    const reinvest=Math.max(0,gross)*REINVEST_PCT;
+    return {rev,gross,reserve,reinvest,net:gross-reserve-reinvest-TY_DRAW};
+  }
+  let totals={rev:0,gross:0,reserve:0,reinvest:0,net:0};
+  let rows='';
+  months.forEach(m=>{
+    const c=calc(m.data);
+    Object.keys(totals).forEach(k=>totals[k]+=c[k]);
+    rows+=`<tr><td>${fmtM(m.data.month)}</td><td>${fmt(c.rev)}</td><td>${fmt(c.gross)}</td>
+      <td style="color:#e8a060">${fmt(c.reserve)}</td><td style="color:#e88060">${fmt(c.reinvest)}</td><td>${fmt(c.net)}</td></tr>`;
+  });
+  container.innerHTML=`<table class="ytd-table"><thead><tr>
+    <th>Month</th><th>Revenue</th><th>Gross Profit</th><th>Reserve</th><th>Portfolio</th><th>In Business</th>
+  </tr></thead><tbody>${rows}</tbody><tfoot><tr>
+    <td>YTD TOTAL</td><td>${fmt(totals.rev)}</td><td>${fmt(totals.gross)}</td>
+    <td style="color:#e8a060">${fmt(totals.reserve)}</td><td style="color:#e88060">${fmt(totals.reinvest)}</td><td>${fmt(totals.net)}</td>
+  </tr></tfoot></table>`;
+}
+
+function printReport() { saveData(); window.print(); }
+function exportJSON() {
+  const data=collectData();
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download='P2P_PL_'+(data.month||'export')+'.json'; a.click();
+}
+function newMonth() {
+  const cur=document.getElementById('monthPicker').value; if(!cur) return;
+  const [yr,mo]=cur.split('-').map(Number);
+  let nm=mo+1,ny=yr; if(nm>12){nm=1;ny++;}
+  const next=ny+'-'+String(nm).padStart(2,'0');
+  if(confirm('Start new blank report for '+next+'?')) {
+    document.getElementById('monthPicker').value=next;
+    ['revenueBody','dealCostsBody','opExpBody'].forEach(id=>document.getElementById(id).innerHTML='');
+    recalcAll(); updateHeader();
+  }
+}
+
+async function importFromFirestore() {
+  const month=document.getElementById('monthPicker').value;
+  if (!month) { alert('Select a month first.'); return; }
+  try {
+    const snap=await db.collection('deals')
+      .where('status','==','Closed')
+      .where('company','in',['Peach to Palms','peach-to-palms'])
+      .get();
+    if (snap.empty) { alert('No closed Peach to Palms deals found in Deal Pipeline.'); return; }
+    let added=0;
+    snap.docs.forEach(doc=>{
+      const d=doc.data();
+      const ts=d.updatedAt?.toDate?.();
+      if (ts) {
+        const dm=ts.getFullYear()+'-'+String(ts.getMonth()+1).padStart(2,'0');
+        if (dm!==month) return;
+      }
+      if (d.assignmentFee>0) { addRow('revenue',d.address+' — Assignment Fee',d.assignmentFee,'Assignment Fee'); added++; }
+      else if (d.salePrice>0) { addRow('revenue',d.address+' — Closed',d.salePrice,'Wholesale'); added++; }
+    });
+    recalcAll();
+    alert(added ? `Imported ${added} deal(s).` : 'No P2P deals closed in '+month+'.');
+  } catch(e) { alert('Could not connect. Check your connection.'); }
+}
+
+document.getElementById('monthPicker').addEventListener('change', updateHeader);
+initMonthPicker();
+if (!localStorage.getItem(currentKey())) {
+  addRow('revenue'); addRow('dealCosts'); addRow('opExp');
+}
+</script>
+</body>
+</html>
