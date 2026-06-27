@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Deal Memo — Peach to Palms</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--cream); font-family: 'Geist', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+.container { max-width: 1060px; margin: 0 auto; padding: 28px 20px; }
+
+/* ── PAGE HEADER ── */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; gap: 16px; flex-wrap: wrap; }
+.page-title { font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--cream); line-height: 1.2; }
+.page-sub { font-size: 12px; color: var(--muted); margin-top: 4px; }
+.btn { padding: 9px 18px; border-radius: 7px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; transition: all .15s; }
+.btn-gold { background: var(--bronze); color: #0a0a0a; }
+.btn-gold:hover { opacity: .88; }
+.btn-ghost { background: var(--surface); border: 1px solid var(--hairline); color: var(--cream); }
+.btn-ghost:hover { border-color: var(--bronze); color: var(--bronze); }
+.btn-sm { padding: 6px 13px; font-size: 12px; }
+.btn-danger { background: #7f1d1d; color: #fca5a5; border: 1px solid #991b1b; }
+.btn-danger:hover { background: #991b1b; }
+.hdr-actions { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+
+/* ── TOAST ── */
+#toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--bronze); color: #0a0a0a; padding: 10px 22px; border-radius: 8px; font-weight: 700; font-size: 13px; z-index: 9999; transition: transform .3s; pointer-events: none; }
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ── LAYOUT ── */
+.layout { display: grid; grid-template-columns: 340px 1fr; gap: 20px; }
+@media(max-width:780px){ .layout { grid-template-columns: 1fr; } }
+
+/* ── INPUT PANEL ── */
+.panel { background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px; padding: 20px; }
+.panel h3 { font-size: 11px; color: var(--bronze); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 14px; }
+.field { margin-bottom: 12px; }
+.field label { display: block; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 4px; font-weight: 600; }
+.field input, .field select, .field textarea { background: var(--surface2); border: 1px solid var(--hairline); color: var(--cream); border-radius: 6px; padding: 8px 10px; font-size: 13px; font-weight: 500; width: 100%; }
+.field input:focus, .field select:focus, .field textarea:focus { outline: 1px solid var(--bronze); }
+.field textarea { resize: vertical; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.field-row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+.prefix-wrap { position: relative; }
+.prefix-wrap .pfx { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-size: 13px; pointer-events: none; }
+.prefix-wrap input { padding-left: 22px; }
+.calc-row { display: flex; justify-content: space-between; align-items: center; background: var(--surface2); border: 1px solid var(--hairline); border-radius: 6px; padding: 7px 10px; margin-bottom: 8px; }
+.calc-row .cl { font-size: 11px; color: var(--muted); }
+.calc-row .cv { font-size: 14px; font-weight: 700; color: var(--bronze); }
+.divider { border: none; border-top: 1px solid var(--hairline); margin: 14px 0; }
+
+.photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+.photo-thumb { position: relative; aspect-ratio: 1; border-radius: 5px; overflow: hidden; background: var(--surface2); border: 1px solid var(--hairline); cursor: pointer; }
+.photo-thumb img { width: 100%; height: 100%; object-fit: cover; }
+.photo-thumb .rm { position: absolute; top: 3px; right: 3px; background: rgba(0,0,0,.7); color: #fff; border: none; border-radius: 4px; font-size: 10px; padding: 2px 5px; cursor: pointer; }
+.photo-add { border: 1.5px dashed var(--hairline); display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--muted); cursor: pointer; aspect-ratio: 1; border-radius: 5px; background: var(--surface2); }
+.photo-add:hover { border-color: var(--bronze); color: var(--bronze); }
+
+/* ── MEMO PREVIEW ── */
+.preview-wrap { background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px; overflow: hidden; }
+.preview-toolbar { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; border-bottom: 1px solid var(--hairline); gap: 10px; flex-wrap: wrap; }
+.preview-toolbar span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; font-weight: 700; }
+.preview-toolbar .tbar-right { display: flex; gap: 8px; }
+
+/* ── MEMO SHEET (print-ready) ── */
+#memoSheet { padding: 28px; }
+.memo-logo { font-family: 'Instrument Serif', serif; font-size: 19px; color: var(--bronze); margin-bottom: 2px; letter-spacing: .5px; }
+.memo-tagline { font-size: 10px; color: var(--muted); letter-spacing: .5px; text-transform: uppercase; margin-bottom: 18px; }
+.memo-address { font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--cream); line-height: 1.2; margin-bottom: 6px; }
+.memo-sub { font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+
+.memo-highlights { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 22px; }
+@media(max-width:600px){ .memo-highlights { grid-template-columns: repeat(2,1fr); } }
+.hl-card { background: var(--surface2); border: 1px solid var(--hairline); border-radius: 8px; padding: 12px 14px; }
+.hl-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; font-weight: 700; margin-bottom: 4px; }
+.hl-value { font-size: 18px; font-weight: 800; color: var(--bronze); }
+.hl-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+.memo-section { margin-bottom: 20px; }
+.memo-section h4 { font-size: 10px; color: var(--bronze); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; border-bottom: 1px solid var(--hairline); padding-bottom: 5px; margin-bottom: 10px; }
+
+.memo-props { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.memo-prop { background: var(--surface2); border-radius: 6px; padding: 8px 10px; }
+.memo-prop .lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+.memo-prop .val { font-size: 13px; font-weight: 700; color: var(--cream); margin-top: 2px; }
+
+.memo-photo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.memo-photo-grid img { width: 100%; border-radius: 6px; aspect-ratio: 4/3; object-fit: cover; }
+
+.memo-numbers { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.num-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; border-bottom: 1px solid var(--hairline); }
+.num-row:last-child { border: none; font-weight: 700; color: var(--bronze); }
+.num-row .nl { font-size: 12px; color: var(--muted); }
+.num-row .nv { font-size: 13px; font-weight: 600; color: var(--cream); }
+.num-row.highlight .nl { color: var(--cream); font-weight: 700; }
+.num-row.highlight .nv { color: var(--bronze); font-size: 15px; }
+
+.memo-desc { font-size: 13px; line-height: 1.65; color: rgba(244,239,230,.85); white-space: pre-wrap; }
+
+.memo-cta { background: linear-gradient(135deg, #3a2a10 0%, #1a1509 100%); border: 1px solid var(--bronze); border-radius: 10px; padding: 18px 20px; text-align: center; margin-top: 22px; }
+.memo-cta .cta-title { font-family: 'Instrument Serif', serif; font-size: 17px; color: var(--bronze); margin-bottom: 6px; }
+.memo-cta .cta-sub { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+.memo-cta .cta-contact { font-size: 15px; font-weight: 700; color: var(--cream); }
+.memo-cta .cta-deadline { display: inline-block; margin-top: 10px; background: var(--bronze); color: #0a0a0a; border-radius: 6px; padding: 5px 14px; font-size: 11px; font-weight: 800; letter-spacing: .5px; }
+
+.memo-footer { margin-top: 20px; font-size: 9px; color: rgba(244,239,230,.35); border-top: 1px solid var(--hairline); padding-top: 10px; }
+.badge { display: inline-block; padding: 3px 9px; border-radius: 4px; font-size: 10px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; }
+.badge-wholesale { background: #7c3aed22; color: #c4b5fd; border: 1px solid #7c3aed44; }
+.badge-flip { background: #0891b222; color: #67e8f9; border: 1px solid #0891b244; }
+.badge-brrrr { background: #15803d22; color: #86efac; border: 1px solid #15803d44; }
+.badge-creative { background: #b4530022; color: #fdba74; border: 1px solid #b4530044; }
+
+/* ── DEAL IMPORT BAR ── */
+.import-bar { background: #1a2a1a; border: 1px solid #2d5a2d; border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; display: none; }
+.import-bar span { font-size: 13px; color: #86efac; }
+
+/* ── HISTORY ── */
+.hist-section { margin-top: 24px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 10px; padding: 20px; }
+.hist-section h3 { font-size: 11px; color: var(--bronze); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+.hist-list { display: flex; flex-direction: column; gap: 6px; }
+.hist-item { background: var(--surface2); border: 1px solid var(--hairline); border-radius: 7px; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; cursor: pointer; }
+.hist-item:hover { border-color: var(--bronze); }
+.hi-left { flex: 1; }
+.hi-address { font-weight: 700; font-size: 13px; }
+.hi-meta { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.hi-price { font-weight: 700; color: var(--bronze); font-size: 13px; white-space: nowrap; }
+.empty-state { text-align: center; color: var(--muted); padding: 30px; font-size: 13px; }
+
+/* ── PRINT ── */
+@media print {
+  body { background: #fff !important; color: #111 !important; }
+  .container { padding: 0; }
+  .layout, .page-header, .hist-section, .import-bar { display: none !important; }
+  .preview-wrap { border: none; box-shadow: none; }
+  .preview-toolbar { display: none !important; }
+  #memoSheet { padding: 16px; }
+  .memo-logo, .memo-address, .memo-cta .cta-title { color: #7a5c00 !important; }
+  .hl-value { color: #7a5c00 !important; }
+  .hl-card, .memo-prop, .memo-cta { background: #f9f6ef !important; border-color: #d4b87a !important; }
+  .memo-desc { color: #333 !important; }
+  .num-row .nl { color: #555 !important; }
+  .num-row .nv { color: #111 !important; }
+  .memo-footer { color: #aaa !important; border-color: #ddd !important; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div>
+      <div class="page-title">Deal Memo Generator</div>
+      <div class="page-sub">Build a one-page buyer blast for any wholesale deal — print or share as PDF</div>
+    </div>
+    <div class="hdr-actions">
+      <button class="btn btn-ghost btn-sm" onclick="clearForm()">Clear</button>
+      <button class="btn btn-ghost btn-sm" onclick="copyText()">Copy as Text</button>
+      <button class="btn btn-gold" onclick="window.print()">Print / Save PDF</button>
+    </div>
+  </div>
+
+  <!-- DEAL IMPORT BANNER -->
+  <div class="import-bar" id="importBar">
+    <span id="importMsg">📋 Deal data available from Connected Dashboard</span>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-gold btn-sm" onclick="applyImport()">Load Deal</button>
+      <button class="btn btn-ghost btn-sm" onclick="dismissImport()">Dismiss</button>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- ── LEFT: INPUT PANEL ── -->
+    <div>
+      <div class="panel" style="margin-bottom:16px">
+        <h3>Property Info</h3>
+        <div class="field">
+          <label>Address</label>
+          <input type="text" id="f-address" placeholder="123 Oak Drive, Marietta GA 30060" oninput="render()"/>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Property Type</label>
+            <select id="f-type" onchange="render()">
+              <option value="Single Family">Single Family</option>
+              <option value="Duplex">Duplex</option>
+              <option value="Triplex">Triplex</option>
+              <option value="Quadplex">Quadplex</option>
+              <option value="Townhome">Townhome</option>
+              <option value="Condo">Condo</option>
+              <option value="Commercial">Commercial</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Year Built</label>
+            <input type="number" id="f-year" placeholder="1985" oninput="render()"/>
+          </div>
+        </div>
+        <div class="field-row3">
+          <div class="field">
+            <label>Beds</label>
+            <input type="number" id="f-beds" placeholder="3" oninput="render()"/>
+          </div>
+          <div class="field">
+            <label>Baths</label>
+            <input type="number" id="f-baths" placeholder="2" step="0.5" oninput="render()"/>
+          </div>
+          <div class="field">
+            <label>Sq Ft</label>
+            <input type="number" id="f-sqft" placeholder="1400" oninput="render()"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>Neighborhood / Area</label>
+          <input type="text" id="f-area" placeholder="East Cobb, Marietta" oninput="render()"/>
+        </div>
+        <div class="field">
+          <label>Condition / Scope</label>
+          <select id="f-condition" onchange="render()">
+            <option value="">— Select —</option>
+            <option value="Light Cosmetic (paint, carpet, fixtures)">Light Cosmetic</option>
+            <option value="Moderate (kitchen, baths, flooring)">Moderate</option>
+            <option value="Full Gut / Heavy Rehab">Heavy Rehab / Full Gut</option>
+            <option value="Turnkey — Minimal Work Needed">Turnkey</option>
+            <option value="Fire / Water Damage">Fire / Water Damage</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px">
+        <h3>Deal Numbers</h3>
+        <div class="field-row">
+          <div class="field">
+            <label>ARV</label>
+            <div class="prefix-wrap"><span class="pfx">$</span>
+              <input type="number" id="f-arv" placeholder="280000" oninput="calcNumbers()"/>
+            </div>
+          </div>
+          <div class="field">
+            <label>Rehab Estimate</label>
+            <div class="prefix-wrap"><span class="pfx">$</span>
+              <input type="number" id="f-rehab" placeholder="35000" oninput="calcNumbers()"/>
+            </div>
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Asking / Contract Price</label>
+            <div class="prefix-wrap"><span class="pfx">$</span>
+              <input type="number" id="f-asking" placeholder="155000" oninput="calcNumbers()"/>
+            </div>
+          </div>
+          <div class="field">
+            <label>Assignment Fee</label>
+            <div class="prefix-wrap"><span class="pfx">$</span>
+              <input type="number" id="f-assignfee" placeholder="10000" oninput="calcNumbers()"/>
+            </div>
+          </div>
+        </div>
+
+        <div class="calc-row">
+          <span class="cl">Buyer's All-In (Price + Rehab)</span>
+          <span class="cv" id="c-allin">$0</span>
+        </div>
+        <div class="calc-row">
+          <span class="cl">Buyer's Equity at ARV</span>
+          <span class="cv" id="c-equity">$0</span>
+        </div>
+        <div class="calc-row">
+          <span class="cl">Equity % of ARV</span>
+          <span class="cv" id="c-equitypct">0%</span>
+        </div>
+
+        <hr class="divider"/>
+        <div class="field-row">
+          <div class="field">
+            <label>Exit Strategy</label>
+            <select id="f-exit" onchange="render()">
+              <option value="Wholesale">Wholesale</option>
+              <option value="Flip">Flip</option>
+              <option value="BRRRR">BRRRR</option>
+              <option value="Creative Finance">Creative Finance</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Closing Timeline</label>
+            <select id="f-closing" onchange="render()">
+              <option value="7–10 Days">7–10 Days</option>
+              <option value="14 Days">14 Days</option>
+              <option value="21 Days">21 Days</option>
+              <option value="30 Days">30 Days</option>
+              <option value="Flexible">Flexible</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Offer Deadline (optional)</label>
+          <input type="text" id="f-deadline" placeholder="e.g. Friday 5pm or Offers due June 30" oninput="render()"/>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px">
+        <h3>Description &amp; Selling Points</h3>
+        <div class="field">
+          <label>Deal Description (appears on memo)</label>
+          <textarea id="f-desc" rows="5" placeholder="Describe the property, location highlights, comp strength, seller situation, and why this is a deal..." oninput="render()"></textarea>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:16px">
+        <h3>Contact Info</h3>
+        <div class="field-row">
+          <div class="field">
+            <label>Your Name</label>
+            <input type="text" id="f-name" placeholder="Ty Jackson" oninput="render()"/>
+          </div>
+          <div class="field">
+            <label>Phone / Text</label>
+            <input type="text" id="f-phone" placeholder="(404) 555-0100" oninput="render()"/>
+          </div>
+        </div>
+        <div class="field">
+          <label>Email</label>
+          <input type="text" id="f-email" placeholder="ty@peach2palms.com" oninput="render()"/>
+        </div>
+        <div class="field">
+          <label>Company</label>
+          <input type="text" id="f-company" placeholder="Peach to Palms Property Group" oninput="render()"/>
+        </div>
+      </div>
+
+      <div class="panel">
+        <h3>Photos <span style="font-weight:400;font-size:10px;color:var(--muted)">(up to 6 shown)</span></h3>
+        <div class="photo-grid" id="photoGrid"></div>
+        <label style="cursor:pointer;display:block;margin-top:8px">
+          <input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="addPhotos(this)"/>
+          <div class="photo-add">+</div>
+        </label>
+        <p style="font-size:10px;color:var(--muted);margin-top:6px">Photos appear in the memo PDF. Best with 3 or 6 for clean layout.</p>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <button class="btn btn-gold" style="flex:1" onclick="saveMemo()">Save to History</button>
+        <button class="btn btn-ghost btn-sm" onclick="clearForm()">Clear All</button>
+      </div>
+    </div>
+
+    <!-- ── RIGHT: MEMO PREVIEW ── -->
+    <div>
+      <div class="preview-wrap">
+        <div class="preview-toolbar">
+          <span>Live Preview</span>
+          <div class="tbar-right">
+            <button class="btn btn-ghost btn-sm" onclick="copyText()">Copy Text</button>
+            <button class="btn btn-gold btn-sm" onclick="window.print()">Print / PDF</button>
+          </div>
+        </div>
+        <div id="memoSheet"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORY -->
+  <div class="hist-section">
+    <h3>
+      Saved Memos
+      <button class="btn btn-danger btn-sm" onclick="clearHistory()">Clear History</button>
+    </h3>
+    <div id="historyList"><div class="empty-state">No memos saved yet.</div></div>
+  </div>
+</div>
+
+<div id="toast">Saved!</div>
+
+<input type="file" id="photoInput" accept="image/*" multiple style="display:none" onchange="addPhotos(this)"/>
+
+<script>
+// ── STATE ──
+let photos = [];   // array of data URLs
+let history = JSON.parse(localStorage.getItem('p2p_deal_memos') || '[]');
+let _pendingDeal = null;
+
+const fmt = n => '$' + (parseFloat(n)||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+const fmtFull = n => '$' + (parseFloat(n)||0).toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0});
+const esc = s => (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const v = id => document.getElementById(id)?.value?.trim() || '';
+const n = id => parseFloat(document.getElementById(id)?.value) || 0;
+
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+
+function showToast(msg = 'Saved!') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+
+// ── CALC NUMBERS ──
+function calcNumbers() {
+  const arv    = n('f-arv');
+  const rehab  = n('f-rehab');
+  const asking = n('f-asking');
+  const allin  = asking + rehab;
+  const equity = arv - allin;
+  const equityPct = arv > 0 ? ((equity / arv) * 100).toFixed(1) : 0;
+
+  document.getElementById('c-allin').textContent  = fmt(allin);
+  document.getElementById('c-equity').textContent = fmt(equity);
+  document.getElementById('c-equitypct').textContent = equityPct + '%';
+  render();
+}
+
+// ── PHOTOS ──
+function addPhotos(input) {
+  const files = Array.from(input.files).slice(0, 6 - photos.length);
+  files.forEach(f => {
+    const reader = new FileReader();
+    reader.onload = e => { photos.push(e.target.result); renderPhotoGrid(); render(); };
+    reader.readAsDataURL(f);
+  });
+  input.value = '';
+}
+
+function removePhoto(i) {
+  photos.splice(i, 1);
+  renderPhotoGrid();
+  render();
+}
+
+function renderPhotoGrid() {
+  const grid = document.getElementById('photoGrid');
+  grid.innerHTML = photos.map((src, i) => `
+    <div class="photo-thumb">
+      <img src="${src}" alt="Photo ${i+1}"/>
+      <button class="rm" onclick="removePhoto(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+// ── EXIT BADGE ──
+function exitBadge(exit) {
+  const map = {
+    'Wholesale': 'badge-wholesale',
+    'Flip': 'badge-flip',
+    'BRRRR': 'badge-brrrr',
+    'Creative Finance': 'badge-creative',
+  };
+  return `<span class="badge ${map[exit]||'badge-wholesale'}">${esc(exit||'Wholesale')}</span>`;
+}
+
+// ── MAIN RENDER ──
+function render() {
+  const address  = v('f-address') || 'Property Address';
+  const area     = v('f-area');
+  const propType = v('f-type') || 'Single Family';
+  const year     = v('f-year');
+  const beds     = v('f-beds');
+  const baths    = v('f-baths');
+  const sqft     = v('f-sqft');
+  const condition = v('f-condition');
+  const arv      = n('f-arv');
+  const rehab    = n('f-rehab');
+  const asking   = n('f-asking');
+  const assignFee = n('f-assignfee');
+  const exit     = v('f-exit') || 'Wholesale';
+  const closing  = v('f-closing') || '14 Days';
+  const deadline = v('f-deadline');
+  const desc     = v('f-desc');
+  const ctaName  = v('f-name') || 'Ty Jackson';
+  const ctaPhone = v('f-phone') || '';
+  const ctaEmail = v('f-email') || '';
+  const ctaComp  = v('f-company') || 'Peach to Palms Property Group';
+
+  const allin    = asking + rehab;
+  const equity   = arv > 0 ? arv - allin : 0;
+  const equityPct = arv > 0 ? ((equity / arv) * 100).toFixed(1) : '—';
+  const profit   = exit === 'Flip' ? (arv * 0.85 - allin) : (arv > 0 ? equity : 0);
+  const propSub  = [propType, beds ? `${beds}bd` : '', baths ? `${baths}ba` : '', sqft ? `${Number(sqft).toLocaleString()} sf` : '', year ? `Built ${year}` : '', area].filter(Boolean).join(' · ');
+
+  const numLeft = `
+    <div>
+      ${arv ? `<div class="num-row"><span class="nl">After Repair Value (ARV)</span><span class="nv">${fmt(arv)}</span></div>` : ''}
+      ${asking ? `<div class="num-row"><span class="nl">Purchase Price</span><span class="nv">${fmt(asking)}</span></div>` : ''}
+      ${rehab  ? `<div class="num-row"><span class="nl">Est. Rehab Cost</span><span class="nv">${fmt(rehab)}</span></div>` : ''}
+      ${allin  ? `<div class="num-row highlight"><span class="nl">All-In Cost</span><span class="nv">${fmt(allin)}</span></div>` : ''}
+    </div>`;
+
+  const numRight = `
+    <div>
+      ${equity  ? `<div class="num-row"><span class="nl">Equity at ARV</span><span class="nv">${fmt(equity)}</span></div>` : ''}
+      ${equityPct !== '—' ? `<div class="num-row"><span class="nl">Equity %</span><span class="nv">${equityPct}%</span></div>` : ''}
+      ${exit === 'Flip' && profit ? `<div class="num-row"><span class="nl">Est. Flip Profit (at 85% ARV)</span><span class="nv">${fmt(profit)}</span></div>` : ''}
+      ${assignFee ? `<div class="num-row highlight"><span class="nl">Assignment Fee</span><span class="nv">${fmt(assignFee)}</span></div>` : ''}
+    </div>`;
+
+  const photoSection = photos.length > 0 ? `
+    <div class="memo-section">
+      <h4>Property Photos</h4>
+      <div class="memo-photo-grid">
+        ${photos.slice(0,6).map(src => `<img src="${src}" alt="property"/>`).join('')}
+      </div>
+    </div>` : '';
+
+  document.getElementById('memoSheet').innerHTML = `
+    <div class="memo-logo">🌿 Peach to Palms Property Group</div>
+    <div class="memo-tagline">Deal Memo — Confidential Buyer Opportunity</div>
+
+    <div class="memo-address">${esc(address)}</div>
+    <div class="memo-sub">${esc(propSub)} ${exitBadge(exit)}</div>
+
+    <div class="memo-highlights">
+      ${arv    ? `<div class="hl-card"><div class="hl-label">ARV</div><div class="hl-value">${fmt(arv)}</div><div class="hl-sub">After Repair Value</div></div>` : ''}
+      ${asking ? `<div class="hl-card"><div class="hl-label">Purchase Price</div><div class="hl-value">${fmt(asking)}</div><div class="hl-sub">Contract price</div></div>` : ''}
+      ${rehab  ? `<div class="hl-card"><div class="hl-label">Est. Rehab</div><div class="hl-value">${fmt(rehab)}</div><div class="hl-sub">${condition || 'Scope TBD'}</div></div>` : ''}
+      ${allin  ? `<div class="hl-card"><div class="hl-label">All-In Cost</div><div class="hl-value">${fmt(allin)}</div><div class="hl-sub">${equityPct !== '—' ? equityPct + '% equity at ARV' : ''}</div></div>` : ''}
+    </div>
+
+    ${photoSection}
+
+    ${(arv || asking || rehab || assignFee) ? `
+    <div class="memo-section">
+      <h4>Deal Numbers</h4>
+      <div class="memo-numbers">
+        ${numLeft}
+        ${numRight}
+      </div>
+    </div>` : ''}
+
+    ${(beds || baths || sqft || condition) ? `
+    <div class="memo-section">
+      <h4>Property Details</h4>
+      <div class="memo-props">
+        ${beds    ? `<div class="memo-prop"><div class="lbl">Bedrooms</div><div class="val">${esc(beds)}</div></div>` : ''}
+        ${baths   ? `<div class="memo-prop"><div class="lbl">Bathrooms</div><div class="val">${esc(baths)}</div></div>` : ''}
+        ${sqft    ? `<div class="memo-prop"><div class="lbl">Square Feet</div><div class="val">${Number(sqft).toLocaleString()}</div></div>` : ''}
+        ${year    ? `<div class="memo-prop"><div class="lbl">Year Built</div><div class="val">${esc(year)}</div></div>` : ''}
+        ${propType? `<div class="memo-prop"><div class="lbl">Property Type</div><div class="val">${esc(propType)}</div></div>` : ''}
+        ${closing ? `<div class="memo-prop"><div class="lbl">Closing Timeline</div><div class="val">${esc(closing)}</div></div>` : ''}
+        ${condition ? `<div class="memo-prop" style="grid-column:1/-1"><div class="lbl">Condition</div><div class="val">${esc(condition)}</div></div>` : ''}
+      </div>
+    </div>` : ''}
+
+    ${desc ? `
+    <div class="memo-section">
+      <h4>Deal Overview</h4>
+      <div class="memo-desc">${esc(desc)}</div>
+    </div>` : ''}
+
+    <div class="memo-cta">
+      <div class="cta-title">Ready to move? Let's talk.</div>
+      <div class="cta-sub">${esc(ctaComp)} · Cash buyers and investors only · First come, first served</div>
+      <div class="cta-contact">${esc(ctaName)}${ctaPhone ? ' · ' + esc(ctaPhone) : ''}${ctaEmail ? ' · ' + esc(ctaEmail) : ''}</div>
+      ${deadline ? `<div class="cta-deadline">⏱ ${esc(deadline)}</div>` : ''}
+    </div>
+
+    <div class="memo-footer">
+      This memo is for informational purposes only and is intended for accredited investors and cash buyers. All numbers are estimates.
+      Buyer to perform own due diligence. ${ctaComp} · tysellshomes96@gmail.com · Generated ${new Date().toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'})}
+    </div>`;
+}
+
+// ── COPY AS TEXT ──
+function copyText() {
+  const address  = v('f-address') || 'Property Address';
+  const arv      = n('f-arv');
+  const asking   = n('f-asking');
+  const rehab    = n('f-rehab');
+  const assignFee = n('f-assignfee');
+  const allin    = asking + rehab;
+  const equity   = arv > 0 ? arv - allin : 0;
+  const equityPct = arv > 0 ? ((equity / arv) * 100).toFixed(1) : '—';
+  const beds     = v('f-beds');
+  const baths    = v('f-baths');
+  const sqft     = v('f-sqft');
+  const propType = v('f-type');
+  const condition = v('f-condition');
+  const exit     = v('f-exit');
+  const closing  = v('f-closing');
+  const deadline = v('f-deadline');
+  const desc     = v('f-desc');
+  const ctaName  = v('f-name');
+  const ctaPhone = v('f-phone');
+  const ctaEmail = v('f-email');
+
+  const lines = [
+    `🌿 DEAL MEMO — PEACH TO PALMS PROPERTY GROUP`,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `📍 ${address}`,
+    ``,
+    `🏠 ${[propType, beds && beds+'bd', baths && baths+'ba', sqft && Number(sqft).toLocaleString()+' sf', condition].filter(Boolean).join(' · ')}`,
+    ``,
+    `💰 DEAL NUMBERS`,
+    arv    ? `   ARV:              ${fmt(arv)}` : '',
+    asking ? `   Purchase Price:   ${fmt(asking)}` : '',
+    rehab  ? `   Est. Rehab:       ${fmt(rehab)}` : '',
+    allin  ? `   All-In Cost:      ${fmt(allin)}` : '',
+    equity ? `   Equity at ARV:    ${fmt(equity)} (${equityPct}%)` : '',
+    assignFee ? `   Assignment Fee:   ${fmt(assignFee)}` : '',
+    ``,
+    exit   ? `📋 Exit Strategy: ${exit}` : '',
+    closing ? `⏰ Closing: ${closing}` : '',
+    deadline ? `🔴 Deadline: ${deadline}` : '',
+    ``,
+    desc   ? `📝 OVERVIEW\n${desc}` : '',
+    ``,
+    `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
+    `📞 Contact: ${[ctaName, ctaPhone, ctaEmail].filter(Boolean).join(' · ')}`,
+    `Cash buyers only. First come, first served.`,
+  ].filter(s => s !== undefined && s !== false);
+
+  navigator.clipboard.writeText(lines.join('\n')).then(() => showToast('Copied to clipboard!'));
+}
+
+// ── SAVE / HISTORY ──
+function saveMemo() {
+  const address = v('f-address');
+  if (!address) { showToast('Enter an address first'); return; }
+  const record = {
+    id: uid(),
+    date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+    address,
+    exit: v('f-exit'),
+    arv: n('f-arv'),
+    asking: n('f-asking'),
+    rehab: n('f-rehab'),
+    assignFee: n('f-assignfee'),
+    beds: v('f-beds'), baths: v('f-baths'), sqft: v('f-sqft'),
+    propType: v('f-type'), year: v('f-year'), area: v('f-area'),
+    condition: v('f-condition'), closing: v('f-closing'),
+    deadline: v('f-deadline'), desc: v('f-desc'),
+    name: v('f-name'), phone: v('f-phone'), email: v('f-email'), company: v('f-company'),
+    photos: photos.slice(0, 6),
+  };
+  history.unshift(record);
+  localStorage.setItem('p2p_deal_memos', JSON.stringify(history));
+  renderHistory();
+  showToast(`"${address}" saved!`);
+}
+
+function loadMemo(id) {
+  const d = history.find(h => h.id === id);
+  if (!d) return;
+  const set = (el, val) => { const e = document.getElementById(el); if (e) e.value = val || ''; };
+  set('f-address', d.address); set('f-type', d.propType); set('f-year', d.year);
+  set('f-beds', d.beds); set('f-baths', d.baths); set('f-sqft', d.sqft);
+  set('f-area', d.area); set('f-condition', d.condition);
+  set('f-arv', d.arv); set('f-rehab', d.rehab); set('f-asking', d.asking);
+  set('f-assignfee', d.assignFee); set('f-exit', d.exit); set('f-closing', d.closing);
+  set('f-deadline', d.deadline); set('f-desc', d.desc);
+  set('f-name', d.name); set('f-phone', d.phone); set('f-email', d.email); set('f-company', d.company);
+  photos = d.photos || [];
+  renderPhotoGrid();
+  calcNumbers();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  showToast('Memo loaded');
+}
+
+function renderHistory() {
+  const el = document.getElementById('historyList');
+  if (!history.length) { el.innerHTML = '<div class="empty-state">No memos saved yet. Fill in a deal and click "Save to History".</div>'; return; }
+  el.innerHTML = `<div class="hist-list">${history.map(d => `
+    <div class="hist-item" onclick="loadMemo('${d.id}')">
+      <div class="hi-left">
+        <div class="hi-address">${esc(d.address)}</div>
+        <div class="hi-meta">${d.date} · ${esc(d.exit||'Wholesale')} · ${d.beds||'?'}bd/${d.baths||'?'}ba</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="hi-price">${d.arv ? fmt(d.arv) : '—'}</div>
+        <button class="btn btn-ghost btn-sm" onclick="event.stopPropagation();deleteMemo('${d.id}')">✕</button>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+function deleteMemo(id) {
+  if (!confirm('Delete this memo?')) return;
+  history = history.filter(h => h.id !== id);
+  localStorage.setItem('p2p_deal_memos', JSON.stringify(history));
+  renderHistory();
+}
+
+function clearHistory() {
+  if (!confirm('Clear all saved memos?')) return;
+  history = [];
+  localStorage.removeItem('p2p_deal_memos');
+  renderHistory();
+}
+
+// ── CLEAR FORM ──
+function clearForm() {
+  ['f-address','f-type','f-year','f-beds','f-baths','f-sqft','f-area','f-condition',
+   'f-arv','f-rehab','f-asking','f-assignfee','f-deadline','f-desc',
+   'f-name','f-phone','f-email','f-company'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.value = id === 'f-type' ? 'Single Family' : id === 'f-exit' ? 'Wholesale' : id === 'f-closing' ? '14 Days' : '';
+  });
+  photos = [];
+  renderPhotoGrid();
+  calcNumbers();
+}
+
+// ── CONNECTED DASHBOARD IMPORT ──
+function checkDashboardImport() {
+  const raw = localStorage.getItem('iw_active_deal');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    if (!d || !d.address) return;
+    _pendingDeal = d;
+    document.getElementById('importMsg').textContent = `📋 Load deal from dashboard: "${d.address}"`;
+    document.getElementById('importBar').style.display = 'flex';
+  } catch(e) {}
+}
+
+function applyImport() {
+  if (!_pendingDeal) return;
+  const d = _pendingDeal;
+  const p2p = d.p2p || {};
+  const set = (el, val) => { const e = document.getElementById(el); if (e && val) e.value = val; };
+  set('f-address', d.address);
+  set('f-arv', d.arv || d.ARV);
+  set('f-asking', p2p.askingPrice || p2p.offeredPrice);
+  set('f-assignfee', p2p.assignmentFee);
+  set('f-exit', d.exitStrategy);
+  calcNumbers();
+  dismissImport();
+  showToast('Deal loaded from dashboard');
+}
+
+function dismissImport() {
+  document.getElementById('importBar').style.display = 'none';
+  localStorage.removeItem('iw_active_deal');
+  _pendingDeal = null;
+}
+
+// ── PRE-FILL CONTACT DEFAULTS ──
+function prefillDefaults() {
+  if (!v('f-name')) document.getElementById('f-name').value = 'Ty Jackson';
+  if (!v('f-company')) document.getElementById('f-company').value = 'Peach to Palms Property Group';
+  if (!v('f-email')) document.getElementById('f-email').value = 'tysellshomes96@gmail.com';
+}
+
+// ── INIT ──
+prefillDefaults();
+checkDashboardImport();
+renderHistory();
+render();
+</script>
+</body>
+</html>
