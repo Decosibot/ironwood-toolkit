@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Capital Engine — Deal Machine</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+.ce-wrap { max-width: 1280px; margin: 0 auto; padding: 28px 24px 80px; }
+
+/* ── TABS ── */
+.ce-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--hairline); margin-bottom: 28px; flex-wrap: wrap; }
+.ce-tab { padding: 11px 28px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .15s; letter-spacing: .02em; }
+.ce-tab:hover { color: var(--ink); }
+.ce-tab.active { color: var(--ink); border-bottom-color: var(--bronze); }
+
+/* ── SUMMARY STRIP ── */
+.sum-strip { display: flex; gap: 0; border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; flex-wrap: wrap; }
+.sum-cell { flex: 1; min-width: 140px; padding: 16px 20px; background: var(--surface); border-right: 1px solid var(--hairline); }
+.sum-cell:last-child { border-right: none; }
+.sum-cell-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 4px; }
+.sum-cell-value { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); }
+.sum-cell-value.green { color: #1a4d32; }
+.sum-cell-value.amber { color: #8a6d1a; }
+.sum-cell-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+
+/* ── SECTION LABEL ── */
+.ce-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--hairline); display: flex; align-items: center; justify-content: space-between; }
+
+/* ── TWO COL ── */
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+@media(max-width:780px){ .two-col { grid-template-columns: 1fr; } }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+@media(max-width:780px){ .three-col { grid-template-columns: 1fr; } }
+
+/* ── CARDS ── */
+.ce-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 20px; }
+.ce-card h3 { font-family: 'Instrument Serif', serif; font-size: 18px; color: var(--ink); margin-bottom: 4px; }
+.ce-card-sub { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+
+/* ── PHASE CARDS ── */
+.phase-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 20px; position: relative; overflow: hidden; }
+.phase-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+.phase-card.phase-1::before { background: #b85c00; }
+.phase-card.phase-2::before { background: #1a4d32; }
+.phase-card.phase-3::before { background: #1a3a5c; }
+.phase-num { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 6px; }
+.phase-title { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--ink); margin-bottom: 4px; }
+.phase-capital { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+.phase-output { font-size: 14px; font-weight: 700; color: #1a4d32; margin-bottom: 14px; }
+.phase-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+.phase-list li { font-size: 13px; color: var(--ink-soft); padding-left: 16px; position: relative; }
+.phase-list li::before { content: '→'; position: absolute; left: 0; color: var(--bronze); font-weight: 700; }
+
+/* ── FLOW DIAGRAM ── */
+.flow-wrap { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 24px; margin-bottom: 24px; overflow-x: auto; }
+.flow-row { display: flex; align-items: center; gap: 0; min-width: 600px; }
+.flow-node { background: var(--bg); border: 1px solid var(--hairline); border-radius: 8px; padding: 12px 16px; text-align: center; flex-shrink: 0; min-width: 120px; }
+.flow-node-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 3px; }
+.flow-node-value { font-family: 'Instrument Serif', serif; font-size: 16px; color: var(--ink); }
+.flow-node-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+.flow-arrow { font-size: 18px; color: var(--bronze); padding: 0 8px; flex-shrink: 0; }
+.flow-node.highlight { background: #eefaf3; border-color: #1a4d32; }
+.flow-node.highlight .flow-node-value { color: #1a4d32; }
+.flow-split { display: flex; flex-direction: column; gap: 8px; }
+.flow-split-row { display: flex; align-items: center; gap: 0; }
+
+/* ── DEAL FLOW TRACKER ── */
+.dft-row { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--hairline); }
+.dft-row:last-child { border-bottom: none; }
+.dft-num { width: 28px; height: 28px; border-radius: 50%; background: var(--bronze); color: #fff; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.dft-info { flex: 1; }
+.dft-address { font-size: 14px; font-weight: 600; color: var(--ink); }
+.dft-detail { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.dft-amounts { display: flex; gap: 20px; flex-wrap: wrap; }
+.dft-amt { display: flex; flex-direction: column; gap: 1px; }
+.dft-amt-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.dft-amt-value { font-size: 14px; font-weight: 700; color: var(--ink); }
+.dft-amt-value.pos { color: #1a4d32; }
+.dft-amt-value.neg { color: #b5341a; }
+.dft-badge { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; white-space: nowrap; }
+
+/* ── BUYER LIST ── */
+.buyer-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-top: 4px; }
+.buyer-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 16px; transition: border-color .15s; }
+.buyer-card:hover { border-color: var(--bronze); }
+.buyer-name { font-family: 'Instrument Serif', serif; font-size: 17px; color: var(--ink); margin-bottom: 2px; }
+.buyer-company { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.buyer-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 10px; }
+.buyer-tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+.buyer-tag-cash  { background: #eefaf3; color: #1a4d32; border: 1px solid #a8d8b8; }
+.buyer-tag-hm    { background: #e8f0f8; color: #1a3a5c; border: 1px solid #aac0d8; }
+.buyer-tag-pref  { background: #fdf8ee; color: #8a6d1a; border: 1px solid #e8c96a; }
+.buyer-stats { display: flex; gap: 14px; flex-wrap: wrap; padding: 8px 0; border-top: 1px solid var(--hairline); }
+.buyer-stat { display: flex; flex-direction: column; gap: 1px; }
+.buyer-stat-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.buyer-stat-value { font-size: 13px; font-weight: 700; color: var(--ink); }
+.buyer-actions { display: flex; gap: 6px; margin-top: 10px; }
+.buyer-btn { padding: 5px 11px; border-radius: 6px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-soft); transition: all .15s; font-family: inherit; }
+.buyer-btn:hover { border-color: var(--bronze); color: var(--bronze); }
+.buyer-btn.primary { background: var(--bronze); border-color: var(--bronze); color: #fff; }
+.buyer-btn.primary:hover { background: var(--bronze-deep); }
+.buyer-del { background: none; border: none; cursor: pointer; color: var(--muted); font-size: 16px; padding: 0 4px; margin-left: auto; }
+.buyer-del:hover { color: var(--red); }
+
+/* ── LENDER CARDS ── */
+.lender-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; margin-top: 4px; }
+.lender-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 16px; }
+.lender-name { font-family: 'Instrument Serif', serif; font-size: 16px; color: var(--ink); margin-bottom: 2px; }
+.lender-type { font-size: 11px; color: var(--muted); margin-bottom: 10px; }
+.lender-terms { display: flex; flex-direction: column; gap: 5px; padding: 10px 0; border-top: 1px solid var(--hairline); border-bottom: 1px solid var(--hairline); margin-bottom: 10px; }
+.lender-term { display: flex; justify-content: space-between; font-size: 12px; }
+.lender-term-label { color: var(--muted); }
+.lender-term-value { font-weight: 700; color: var(--ink); }
+.lender-status { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 4px; display: inline-block; }
+.lender-status.active   { background: #eefaf3; color: #1a4d32; }
+.lender-status.prospect { background: #fdf8ee; color: #8a6d1a; }
+.lender-status.inactive { background: var(--bg); color: var(--muted); }
+
+/* ── CAPITAL STACK ── */
+.stack-bar { height: 32px; border-radius: 6px; overflow: hidden; display: flex; margin: 10px 0; }
+.stack-seg { display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 700; color: #fff; transition: flex .4s; overflow: hidden; white-space: nowrap; padding: 0 4px; }
+.stack-legend { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 8px; }
+.legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--ink-soft); }
+.legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+/* ── FORM ── */
+.ce-form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:600px){ .ce-form-grid { grid-template-columns: 1fr; } }
+.ce-field { display: flex; flex-direction: column; gap: 4px; }
+.ce-field.full { grid-column: span 2; }
+@media(max-width:600px){ .ce-field.full { grid-column: span 1; } }
+.ce-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.ce-input { background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 7px; padding: 8px 11px; font-size: 13px; font-family: inherit; transition: border-color .15s; }
+.ce-input:focus { outline: none; border-color: var(--bronze); box-shadow: 0 0 0 3px rgba(107,141,181,.15); }
+.ce-actions { display: flex; gap: 8px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--hairline); }
+.ce-btn { padding: 9px 20px; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-soft); font-family: inherit; transition: all .15s; }
+.ce-btn:hover { border-color: var(--bronze); color: var(--bronze); }
+.ce-btn.primary { background: var(--bronze); border-color: var(--bronze); color: #fff; }
+.ce-btn.primary:hover { background: var(--bronze-deep); }
+.ce-btn.sm { padding: 6px 14px; font-size: 12px; }
+
+/* ── MODAL ── */
+#ce-modal { display: none; position: fixed; inset: 0; z-index: 9000; background: rgba(28,24,20,.5); align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+#ce-modal.open { display: flex; }
+.ce-modal-box { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius-lg); width: 100%; max-width: 600px; box-shadow: var(--shadow-lg); margin: auto; }
+.ce-modal-header { padding: 22px 26px 18px; border-bottom: 1px solid var(--hairline); display: flex; align-items: center; justify-content: space-between; }
+.ce-modal-title { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); }
+.ce-modal-close { background: none; border: none; font-size: 22px; color: var(--muted); cursor: pointer; }
+.ce-modal-body { padding: 22px 26px; }
+.ce-modal-footer { padding: 16px 26px; border-top: 1px solid var(--hairline); display: flex; gap: 8px; }
+
+/* ── RUNWAY METER ── */
+.runway-wrap { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 20px; margin-bottom: 20px; }
+.runway-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 12px; }
+.runway-bar-wrap { height: 12px; background: var(--bg); border-radius: 6px; overflow: hidden; margin-bottom: 6px; }
+.runway-bar { height: 100%; border-radius: 6px; transition: width .4s; }
+.runway-caption { font-size: 12px; color: var(--muted); }
+
+/* ── DEAL CHAIN ── */
+.chain-wrap { display: flex; flex-direction: column; gap: 0; }
+.chain-deal { display: flex; align-items: stretch; gap: 0; }
+.chain-line { display: flex; flex-direction: column; align-items: center; margin-right: 16px; }
+.chain-dot { width: 14px; height: 14px; border-radius: 50%; background: var(--bronze); flex-shrink: 0; margin-top: 18px; }
+.chain-dot.done { background: #1a4d32; }
+.chain-dot.active { background: var(--bronze); box-shadow: 0 0 0 3px rgba(107,141,181,.25); }
+.chain-dot.future { background: var(--hairline); }
+.chain-connector { flex: 1; width: 2px; background: var(--hairline); margin: 0 auto; min-height: 20px; }
+.chain-content { flex: 1; padding: 14px 0 20px; }
+.chain-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+.chain-title { font-family: 'Instrument Serif', serif; font-size: 16px; color: var(--ink); }
+.chain-badge { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; }
+.chain-badge.wholesale { background: #fdf8ee; color: #8a6d1a; }
+.chain-badge.flip { background: #f0e8f8; color: #5a1a7a; }
+.chain-badge.brrrr { background: #e8f0f8; color: #1a3a5c; }
+.chain-badge.done { background: #eefaf3; color: #1a4d32; }
+.chain-badge.active { background: var(--bronze-wash); color: var(--bronze-deep); border: 1px solid var(--bronze-tint); }
+.chain-detail { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+.chain-numbers { display: flex; gap: 20px; flex-wrap: wrap; }
+.chain-num { display: flex; flex-direction: column; gap: 1px; }
+.chain-num-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); }
+.chain-num-value { font-size: 14px; font-weight: 700; color: var(--ink); }
+.chain-num-value.pos { color: #1a4d32; }
+.chain-funds { font-size: 11px; color: var(--bronze-deep); font-weight: 600; margin-top: 6px; background: var(--bronze-wash); border-radius: 4px; padding: 3px 8px; display: inline-block; }
+
+/* ── EMPTY ── */
+.ce-empty { text-align: center; padding: 40px 20px; color: var(--muted); }
+.ce-empty h3 { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--ink); margin-bottom: 6px; }
+
+/* ── ADD BTN ── */
+.add-row { display: flex; justify-content: flex-end; margin-bottom: 16px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+    <div>
+      <div class="iw-logo-text">Deal Machine</div>
+      <div class="iw-logo-sub">Capital Engine</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="iw-hero">
+  <div class="iw-eyebrow">Investment Strategy</div>
+  <h1>Capital Engine</h1>
+  <p>Cash buyer list, lender stack, deal-funds-next-deal chain, and investment phase roadmap — all in one place.</p>
+</div>
+
+<div class="ce-wrap">
+
+  <!-- TABS -->
+  <div class="ce-tabs">
+    <button class="ce-tab active" id="tab-overview"  onclick="setTab('overview')">Overview</button>
+    <button class="ce-tab" id="tab-buyers"   onclick="setTab('buyers')">Cash Buyers</button>
+    <button class="ce-tab" id="tab-lenders"  onclick="setTab('lenders')">Lenders</button>
+    <button class="ce-tab" id="tab-chain"    onclick="setTab('chain')">Deal Chain</button>
+  </div>
+
+  <!-- SUMMARY STRIP -->
+  <div class="sum-strip" id="sum-strip">
+    <div class="sum-cell">
+      <div class="sum-cell-label">Cash Buyers</div>
+      <div class="sum-cell-value" id="s-buyers">0</div>
+      <div class="sum-cell-sub">on list</div>
+    </div>
+    <div class="sum-cell">
+      <div class="sum-cell-label">Active Lenders</div>
+      <div class="sum-cell-value" id="s-lenders">0</div>
+      <div class="sum-cell-sub">relationships</div>
+    </div>
+    <div class="sum-cell">
+      <div class="sum-cell-label">Deals in Chain</div>
+      <div class="sum-cell-value" id="s-chain">0</div>
+      <div class="sum-cell-sub">logged</div>
+    </div>
+    <div class="sum-cell">
+      <div class="sum-cell-label">Total Profit</div>
+      <div class="sum-cell-value green" id="s-profit">$0</div>
+      <div class="sum-cell-sub">all closed deals</div>
+    </div>
+    <div class="sum-cell">
+      <div class="sum-cell-label">Available Capital</div>
+      <div class="sum-cell-value amber" id="s-capital">$0</div>
+      <div class="sum-cell-sub">for next deal</div>
+    </div>
+  </div>
+
+  <!-- ══ OVERVIEW TAB ══ -->
+  <div id="view-overview">
+
+    <div class="two-col" style="margin-bottom:8px;">
+      <div>
+        <div class="ce-section-label">Investment Phase Roadmap</div>
+        <div style="display:flex;flex-direction:column;gap:14px;">
+          <div class="phase-card phase-1">
+            <div class="phase-num">Phase 1 — Now</div>
+            <div class="phase-title">Wholesale</div>
+            <div class="phase-capital">Capital needed: $1K–$5K EMD only</div>
+            <div class="phase-output">Output: $10K–$25K per deal</div>
+            <ul class="phase-list">
+              <li>REI Reply generates motivated seller leads</li>
+              <li>Lock up deal with small EMD deposit</li>
+              <li>Assign contract to cash buyer on your list</li>
+              <li>Collect assignment fee at close — no rehab</li>
+              <li>Stack 2–3 wholesale deals to build capital</li>
+            </ul>
+          </div>
+          <div class="phase-card phase-2">
+            <div class="phase-num">Phase 2 — Month 3–6</div>
+            <div class="phase-title">Flip</div>
+            <div class="phase-capital">Capital needed: $30K–$50K down + hard money</div>
+            <div class="phase-output">Output: $40K–$80K per deal</div>
+            <ul class="phase-list">
+              <li>Use wholesale profits as down payment</li>
+              <li>Hard money lender funds the rest (12–15%)</li>
+              <li>Anchor Pro scopes — Ironwood executes</li>
+              <li>Waterfall split: Ty 30% / Jeff 35% / IW 35%</li>
+              <li>Recycle capital into the next deal</li>
+            </ul>
+          </div>
+          <div class="phase-card phase-3">
+            <div class="phase-num">Phase 3 — Year 1+</div>
+            <div class="phase-title">BRRRR</div>
+            <div class="phase-capital">Capital needed: same flip capital, recycled</div>
+            <div class="phase-output">Output: Rental income + equity + capital returned</div>
+            <ul class="phase-list">
+              <li>Buy distressed → rehab → rent → refi at ARV</li>
+              <li>Pull original capital back out via cash-out refi</li>
+              <li>Repeat without adding new capital</li>
+              <li>Build rental portfolio alongside flip pipeline</li>
+              <li>Compounding — each deal funds the next</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="ce-section-label">Deal Flow — How Capital Moves</div>
+        <div class="flow-wrap">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Wholesale path — generates operating capital</div>
+          <div class="flow-row" style="margin-bottom:20px;">
+            <div class="flow-node"><div class="flow-node-label">REI Reply</div><div class="flow-node-value">Lead</div><div class="flow-node-sub">Motivated seller</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node"><div class="flow-node-label">P2P</div><div class="flow-node-value">Contract</div><div class="flow-node-sub">EMD $500–$2.5K</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node"><div class="flow-node-label">Buyer List</div><div class="flow-node-value">Assign</div><div class="flow-node-sub">Assignment fee</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node highlight"><div class="flow-node-label">Close</div><div class="flow-node-value">+$10–25K</div><div class="flow-node-sub">Net to P2P</div></div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Flip path — builds wealth</div>
+          <div class="flow-row" style="margin-bottom:20px;">
+            <div class="flow-node"><div class="flow-node-label">P2P</div><div class="flow-node-value">Contract</div><div class="flow-node-sub">30K–50K down</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node"><div class="flow-node-label">Anchor Pro</div><div class="flow-node-value">Scope</div><div class="flow-node-sub">Fixed bid</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node"><div class="flow-node-label">Ironwood</div><div class="flow-node-value">Execute</div><div class="flow-node-sub">Rehab</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node highlight"><div class="flow-node-label">Sale</div><div class="flow-node-value">+$40–80K</div><div class="flow-node-sub">Split 3 ways</div></div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">BRRRR path — compounding</div>
+          <div class="flow-row">
+            <div class="flow-node"><div class="flow-node-label">Buy</div><div class="flow-node-value">Distressed</div><div class="flow-node-sub">HML funded</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node"><div class="flow-node-label">Rehab</div><div class="flow-node-value">Anchor+IW</div><div class="flow-node-sub">Fixed scope</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node"><div class="flow-node-label">Rent</div><div class="flow-node-value">Cash Flow</div><div class="flow-node-sub">Tenant in</div></div>
+            <div class="flow-arrow">→</div>
+            <div class="flow-node highlight"><div class="flow-node-label">Refi</div><div class="flow-node-value">Pull Cash</div><div class="flow-node-sub">Repeat</div></div>
+          </div>
+        </div>
+
+        <div class="ce-section-label" style="margin-top:24px;">What You Need Before First Deal</div>
+        <div class="ce-card">
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div id="checklist-items"></div>
+          </div>
+        </div>
+
+        <div class="ce-section-label" style="margin-top:20px;">Capital Stack — First Flip</div>
+        <div class="ce-card">
+          <div class="ce-form-grid" style="margin-bottom:14px;">
+            <div class="ce-field">
+              <div class="ce-label">Purchase Price ($)</div>
+              <input class="ce-input" id="cs-purchase" type="number" value="180000" oninput="updateStack()"/>
+            </div>
+            <div class="ce-field">
+              <div class="ce-label">Rehab Cost ($)</div>
+              <input class="ce-input" id="cs-rehab" type="number" value="55000" oninput="updateStack()"/>
+            </div>
+            <div class="ce-field">
+              <div class="ce-label">Your Down % (of purchase)</div>
+              <input class="ce-input" id="cs-down-pct" type="number" value="20" oninput="updateStack()"/>
+            </div>
+            <div class="ce-field">
+              <div class="ce-label">HML Rate (%)</div>
+              <input class="ce-input" id="cs-rate" type="number" value="13" oninput="updateStack()"/>
+            </div>
+          </div>
+          <div class="stack-legend" id="stack-legend"></div>
+          <div class="stack-bar" id="stack-bar"></div>
+          <div id="stack-detail" style="margin-top:12px;font-size:13px;color:var(--ink-soft);line-height:1.8;"></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /overview -->
+
+  <!-- ══ BUYERS TAB ══ -->
+  <div id="view-buyers" style="display:none;">
+    <div class="add-row">
+      <button class="ce-btn primary" onclick="openModal('buyer')">+ Add Buyer</button>
+    </div>
+    <div id="buyer-list"></div>
+  </div>
+
+  <!-- ══ LENDERS TAB ══ -->
+  <div id="view-lenders" style="display:none;">
+    <div class="add-row">
+      <button class="ce-btn primary" onclick="openModal('lender')">+ Add Lender</button>
+    </div>
+    <div id="lender-list"></div>
+  </div>
+
+  <!-- ══ CHAIN TAB ══ -->
+  <div id="view-chain" style="display:none;">
+    <div class="add-row">
+      <button class="ce-btn primary" onclick="openModal('chain')">+ Log Deal</button>
+    </div>
+    <div class="ce-card" style="margin-bottom:20px;">
+      <div class="ce-section-label">How Each Deal Funds the Next</div>
+      <div class="chain-wrap" id="chain-list"></div>
+    </div>
+  </div>
+
+</div><!-- /ce-wrap -->
+
+<!-- MODAL -->
+<div id="ce-modal" role="dialog" aria-modal="true">
+  <div class="ce-modal-box">
+    <div class="ce-modal-header">
+      <div class="ce-modal-title" id="modal-title">Add</div>
+      <button class="ce-modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="ce-modal-body" id="modal-body"></div>
+    <div class="ce-modal-footer" id="modal-footer"></div>
+  </div>
+</div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+firebase.initializeApp({
+  apiKey:"AIzaSyCS6hfr0jIxDrn6IiTVXDtNI5y2huR7AiE",
+  authDomain:"workout-app-576c0.firebaseapp.com",
+  projectId:"workout-app-576c0",
+  storageBucket:"workout-app-576c0.firebasestorage.app",
+  messagingSenderId:"93802465651",
+  appId:"1:93802465651:web:e5453d53128bf6b8d25d06"
+});
+const db = firebase.firestore();
+
+// ── STATE ──
+let buyers = [], lenders = [], chainDeals = [];
+let editId = null, modalType = null;
+let activeTab = 'overview';
+
+const CHECKLIST = [
+  { id:'rei', label:'REI Reply sequences live — outbound seller outreach running', done: false },
+  { id:'ghl', label:'GHL pipeline active — 3 pipelines (Wholesale / Design / Build)', done: false },
+  { id:'buyers', label:'10+ cash buyers on list — before you lock up first deal', done: false },
+  { id:'hml', label:'Hard money lender relationship confirmed — call before you need them', done: false },
+  { id:'emd', label:'$2,500 liquid EMD fund — ready to deploy fast', done: false },
+  { id:'entity', label:'Business banking separate from personal — all 3 entities', done: false },
+];
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  loadChecklist();
+  updateStack();
+
+  db.collection('capital_buyers').orderBy('createdAt','desc').onSnapshot(s => {
+    buyers = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderBuyers(); updateStats();
+  }, () => db.collection('capital_buyers').get().then(s => { buyers = s.docs.map(d=>({id:d.id,...d.data()})); renderBuyers(); updateStats(); }));
+
+  db.collection('capital_lenders').orderBy('createdAt','desc').onSnapshot(s => {
+    lenders = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderLenders(); updateStats();
+  }, () => db.collection('capital_lenders').get().then(s => { lenders = s.docs.map(d=>({id:d.id,...d.data()})); renderLenders(); updateStats(); }));
+
+  db.collection('capital_chain').orderBy('createdAt','asc').onSnapshot(s => {
+    chainDeals = s.docs.map(d => ({ id: d.id, ...d.data() }));
+    renderChain(); updateStats();
+  }, () => db.collection('capital_chain').get().then(s => { chainDeals = s.docs.map(d=>({id:d.id,...d.data()})); renderChain(); updateStats(); }));
+});
+
+// ── TAB ──
+function setTab(t) {
+  activeTab = t;
+  ['overview','buyers','lenders','chain'].forEach(v => {
+    document.getElementById('view-' + v).style.display = v === t ? '' : 'none';
+    document.getElementById('tab-' + v).classList.toggle('active', v === t);
+  });
+}
+
+// ── CHECKLIST ──
+function loadChecklist() {
+  const saved = JSON.parse(localStorage.getItem('ce_checklist') || '{}');
+  const el = document.getElementById('checklist-items');
+  el.innerHTML = CHECKLIST.map(item => {
+    const done = saved[item.id] || false;
+    return `<label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;padding:6px 0;border-bottom:1px solid var(--hairline);">
+      <input type="checkbox" id="chk-${item.id}" ${done?'checked':''} onchange="saveChecklist('${item.id}', this.checked)"
+        style="margin-top:2px;accent-color:var(--bronze);width:15px;height:15px;flex-shrink:0;cursor:pointer;"/>
+      <span style="font-size:13px;color:${done?'var(--muted)':'var(--ink)'};${done?'text-decoration:line-through;':''}">${item.label}</span>
+    </label>`;
+  }).join('');
+}
+
+function saveChecklist(id, val) {
+  const saved = JSON.parse(localStorage.getItem('ce_checklist') || '{}');
+  saved[id] = val;
+  localStorage.setItem('ce_checklist', JSON.stringify(saved));
+  loadChecklist();
+}
+
+// ── CAPITAL STACK ──
+function updateStack() {
+  const purchase = parseFloat(document.getElementById('cs-purchase')?.value) || 0;
+  const rehab    = parseFloat(document.getElementById('cs-rehab')?.value) || 0;
+  const downPct  = parseFloat(document.getElementById('cs-down-pct')?.value) || 20;
+  const rate     = parseFloat(document.getElementById('cs-rate')?.value) || 13;
+  const down     = purchase * downPct / 100;
+  const hml      = purchase - down;
+  const total    = purchase + rehab;
+  const monthlyInt = hml * (rate/100/12);
+  const carry6   = monthlyInt * 6;
+
+  const seg = (label, val, color, total) => {
+    const pct = total > 0 ? Math.max(4, (val/total)*100) : 0;
+    return `<div class="stack-seg" style="flex:${pct};background:${color};">${val > total*0.08 ? fmt(val) : ''}</div>`;
+  };
+
+  const bar = document.getElementById('stack-bar');
+  const legend = document.getElementById('stack-legend');
+  const detail = document.getElementById('stack-detail');
+  if (!bar) return;
+
+  bar.innerHTML = seg('Down', down, '#1a4d32', total) + seg('HML', hml, '#1a3a5c', total) + seg('Rehab', rehab, '#b85c00', total);
+  legend.innerHTML = `
+    <div class="legend-item"><div class="legend-dot" style="background:#1a4d32"></div>Your Down (${downPct}%) — ${fmt(down)}</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#1a3a5c"></div>Hard Money — ${fmt(hml)}</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#b85c00"></div>Rehab Budget — ${fmt(rehab)}</div>`;
+  detail.innerHTML = `
+    <strong>All-in:</strong> ${fmt(total)} &nbsp;·&nbsp;
+    <strong>Your capital needed:</strong> ${fmt(down + rehab)} &nbsp;·&nbsp;
+    <strong>HML monthly interest:</strong> ${fmt(monthlyInt)} &nbsp;·&nbsp;
+    <strong>6-mo carry:</strong> ${fmt(carry6)}<br>
+    <strong>Break-even sale:</strong> ${fmt(total + carry6)} &nbsp;·&nbsp;
+    <strong>ARV needed for profit:</strong> ${fmt((total + carry6) / 0.85)} (at 15% margin)`;
+}
+
+// ── STATS ──
+function updateStats() {
+  document.getElementById('s-buyers').textContent  = buyers.length;
+  document.getElementById('s-lenders').textContent = lenders.filter(l => l.status === 'Active').length;
+  document.getElementById('s-chain').textContent   = chainDeals.length;
+  const totalProfit = chainDeals.filter(d => d.status === 'Closed').reduce((s,d) => s + (parseFloat(d.profit)||0), 0);
+  const availCap    = chainDeals.length > 0 ? chainDeals[chainDeals.length-1].capitalAfter || 0 : 0;
+  document.getElementById('s-profit').textContent  = fmtK(totalProfit);
+  document.getElementById('s-capital').textContent = fmtK(availCap);
+}
+
+// ── BUYERS ──
+function renderBuyers() {
+  const el = document.getElementById('buyer-list');
+  if (!buyers.length) {
+    el.innerHTML = `<div class="ce-empty"><h3>No buyers yet</h3><p>Add cash buyers before you start marketing deals — you need a list ready before you lock up your first wholesale deal.</p></div>`;
+    return;
+  }
+  el.innerHTML = `<div class="buyer-grid">${buyers.map(b => buyerCard(b)).join('')}</div>`;
+}
+
+function buyerCard(b) {
+  const types = (b.buyerTypes || []);
+  return `<div class="buyer-card">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+      <div>
+        <div class="buyer-name">${esc(b.name||'—')}</div>
+        <div class="buyer-company">${esc(b.company||'')}</div>
+      </div>
+      <button class="buyer-del" onclick="deleteBuyer('${b.id}')">×</button>
+    </div>
+    <div class="buyer-tags">
+      ${types.includes('Cash') ? '<span class="buyer-tag buyer-tag-cash">Cash</span>' : ''}
+      ${types.includes('Hard Money') ? '<span class="buyer-tag buyer-tag-hm">Hard Money</span>' : ''}
+      ${b.preferred ? `<span class="buyer-tag buyer-tag-pref">${esc(b.preferred)}</span>` : ''}
+    </div>
+    <div class="buyer-stats">
+      ${b.minBudget||b.maxBudget ? `<div class="buyer-stat"><div class="buyer-stat-label">Budget</div><div class="buyer-stat-value">${b.minBudget?fmt(b.minBudget):'?'} – ${b.maxBudget?fmt(b.maxBudget):'?'}</div></div>` : ''}
+      ${b.markets ? `<div class="buyer-stat"><div class="buyer-stat-label">Markets</div><div class="buyer-stat-value">${esc(b.markets)}</div></div>` : ''}
+      ${b.dealsPerYear ? `<div class="buyer-stat"><div class="buyer-stat-label">Deals/yr</div><div class="buyer-stat-value">${esc(b.dealsPerYear)}</div></div>` : ''}
+    </div>
+    <div class="buyer-actions">
+      ${b.phone ? `<a class="buyer-btn" href="tel:${esc(b.phone)}">${esc(b.phone)}</a>` : ''}
+      ${b.email ? `<a class="buyer-btn" href="mailto:${esc(b.email)}">Email</a>` : ''}
+      <button class="buyer-btn primary" onclick="openModal('buyer','${b.id}')">Edit</button>
+    </div>
+  </div>`;
+}
+
+async function deleteBuyer(id) {
+  if (!confirm('Remove this buyer?')) return;
+  await db.collection('capital_buyers').doc(id).delete();
+  showToast('Buyer removed');
+}
+
+// ── LENDERS ──
+function renderLenders() {
+  const el = document.getElementById('lender-list');
+  if (!lenders.length) {
+    el.innerHTML = `<div class="ce-empty"><h3>No lenders yet</h3><p>Add your hard money lenders and private money contacts. Call them before you need them — relationship first.</p></div>`;
+    return;
+  }
+  el.innerHTML = `<div class="lender-grid">${lenders.map(l => lenderCard(l)).join('')}</div>`;
+}
+
+function lenderCard(l) {
+  const statusCls = { Active:'active', Prospect:'prospect', Inactive:'inactive' }[l.status] || 'prospect';
+  return `<div class="lender-card">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;">
+      <div>
+        <div class="lender-name">${esc(l.name||'—')}</div>
+        <div class="lender-type">${esc(l.type||'Hard Money')} · <span class="lender-status ${statusCls}">${esc(l.status||'Prospect')}</span></div>
+      </div>
+      <button class="buyer-del" onclick="deleteLender('${l.id}')">×</button>
+    </div>
+    <div class="lender-terms">
+      ${l.rate   ? `<div class="lender-term"><span class="lender-term-label">Rate</span><span class="lender-term-value">${esc(l.rate)}%</span></div>` : ''}
+      ${l.points ? `<div class="lender-term"><span class="lender-term-label">Points</span><span class="lender-term-value">${esc(l.points)}</span></div>` : ''}
+      ${l.ltv    ? `<div class="lender-term"><span class="lender-term-label">Max LTV</span><span class="lender-term-value">${esc(l.ltv)}%</span></div>` : ''}
+      ${l.maxLoan? `<div class="lender-term"><span class="lender-term-label">Max Loan</span><span class="lender-term-value">${fmt(l.maxLoan)}</span></div>` : ''}
+      ${l.term   ? `<div class="lender-term"><span class="lender-term-label">Term</span><span class="lender-term-value">${esc(l.term)} mo</span></div>` : ''}
+    </div>
+    ${l.contact ? `<div style="font-size:12px;color:var(--muted);margin-bottom:8px;">${esc(l.contact)}</div>` : ''}
+    <div style="display:flex;gap:6px;">
+      ${l.phone ? `<a class="buyer-btn" href="tel:${esc(l.phone)}" style="font-size:11px;padding:5px 10px;border-radius:6px;border:1px solid var(--hairline);background:var(--surface);color:var(--ink-soft);text-decoration:none;">${esc(l.phone)}</a>` : ''}
+      <button class="buyer-btn primary" style="font-size:11px;padding:5px 10px;" onclick="openModal('lender','${l.id}')">Edit</button>
+    </div>
+  </div>`;
+}
+
+async function deleteLender(id) {
+  if (!confirm('Remove this lender?')) return;
+  await db.collection('capital_lenders').doc(id).delete();
+  showToast('Lender removed');
+}
+
+// ── CHAIN ──
+function renderChain() {
+  const el = document.getElementById('chain-list');
+  if (!chainDeals.length) {
+    el.innerHTML = `<div class="ce-empty"><h3>No deals logged yet</h3><p>Log each deal as you close it. The chain shows how profit from each deal funds the next one.</p></div>`;
+    return;
+  }
+  let runningCapital = 0;
+  el.innerHTML = chainDeals.map((d, i) => {
+    const profit = parseFloat(d.profit) || 0;
+    const capitalIn = parseFloat(d.capitalIn) || runningCapital;
+    const capitalOut = capitalIn + profit - (parseFloat(d.capitalDeployed) || 0);
+    runningCapital = capitalOut;
+    const isLast = i === chainDeals.length - 1;
+    const dotCls = d.status === 'Closed' ? 'done' : d.status === 'Active' ? 'active' : 'future';
+    const [bg, fg] = { Wholesale:'#fdf8ee|#8a6d1a', Flip:'#f0e8f8|#5a1a7a', BRRRR:'#e8f0f8|#1a3a5c' }[d.type] || '#f0f0f0|#666';
+    return `<div class="chain-deal">
+      <div class="chain-line">
+        <div class="chain-dot ${dotCls}" style="margin-top:20px;"></div>
+        ${!isLast ? '<div class="chain-connector" style="min-height:40px;"></div>' : ''}
+      </div>
+      <div class="chain-content">
+        <div class="chain-header">
+          <div class="chain-title">${esc(d.address||'Deal ' + (i+1))}</div>
+          <span class="chain-badge ${(d.type||'').toLowerCase()}">${esc(d.type||'Wholesale')}</span>
+          <span class="chain-badge ${dotCls}">${esc(d.status||'Planned')}</span>
+        </div>
+        <div class="chain-detail">${esc(d.notes||'')}</div>
+        <div class="chain-numbers">
+          ${d.capitalDeployed ? `<div class="chain-num"><div class="chain-num-label">Capital In</div><div class="chain-num-value">${fmt(d.capitalDeployed)}</div></div>` : ''}
+          ${profit ? `<div class="chain-num"><div class="chain-num-label">Profit</div><div class="chain-num-value pos">${fmt(profit)}</div></div>` : ''}
+          ${d.status==='Closed' ? `<div class="chain-num"><div class="chain-num-label">Capital After</div><div class="chain-num-value pos">${fmt(capitalOut)}</div></div>` : ''}
+        </div>
+        ${!isLast && d.status === 'Closed' ? `<div class="chain-funds">↓ ${fmt(capitalOut)} available for next deal</div>` : ''}
+        <div style="margin-top:8px;display:flex;gap:6px;">
+          <button class="ce-btn sm" onclick="openModal('chain','${d.id}')">Edit</button>
+          <button class="ce-btn sm" style="color:var(--red);border-color:var(--red);" onclick="deleteChain('${d.id}')">Delete</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+async function deleteChain(id) {
+  if (!confirm('Remove this deal from the chain?')) return;
+  await db.collection('capital_chain').doc(id).delete();
+  showToast('Deal removed');
+}
+
+// ── MODAL ──
+function openModal(type, id) {
+  modalType = type;
+  editId = id || null;
+  const existing = id ? (type==='buyer' ? buyers : type==='lender' ? lenders : chainDeals).find(x => x.id === id) : null;
+  const titles = { buyer:'Cash Buyer', lender:'Hard Money Lender', chain:'Deal in Chain' };
+  document.getElementById('modal-title').textContent = (id ? 'Edit ' : 'Add ') + titles[type];
+  document.getElementById('modal-body').innerHTML = modalBody(type, existing);
+  document.getElementById('modal-footer').innerHTML = `
+    <button class="ce-btn primary" onclick="saveModal()">Save</button>
+    <button class="ce-btn" onclick="closeModal()">Cancel</button>`;
+  document.getElementById('ce-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('ce-modal').classList.remove('open');
+  modalType = null; editId = null;
+}
+
+function modalBody(type, d) {
+  d = d || {};
+  if (type === 'buyer') return `
+    <div class="ce-form-grid">
+      <div class="ce-field"><div class="ce-label">Full Name *</div><input class="ce-input" id="m-name" value="${esc(d.name||'')}" placeholder="John Smith"/></div>
+      <div class="ce-field"><div class="ce-label">Company</div><input class="ce-input" id="m-company" value="${esc(d.company||'')}"/></div>
+      <div class="ce-field"><div class="ce-label">Phone</div><input class="ce-input" id="m-phone" value="${esc(d.phone||'')}" type="tel"/></div>
+      <div class="ce-field"><div class="ce-label">Email</div><input class="ce-input" id="m-email" value="${esc(d.email||'')}" type="email"/></div>
+      <div class="ce-field"><div class="ce-label">Buyer Type</div>
+        <select class="ce-input" id="m-type" multiple style="height:72px;">
+          ${['Cash','Hard Money','Owner Finance','Conventional'].map(o=>`<option${(d.buyerTypes||[]).includes(o)?' selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+      <div class="ce-field"><div class="ce-label">Preferred Exit</div><input class="ce-input" id="m-pref" value="${esc(d.preferred||'')}" placeholder="Wholesale, Flip, BRRRR"/></div>
+      <div class="ce-field"><div class="ce-label">Min Budget ($)</div><input class="ce-input" id="m-min" type="number" value="${d.minBudget||''}"/></div>
+      <div class="ce-field"><div class="ce-label">Max Budget ($)</div><input class="ce-input" id="m-max" type="number" value="${d.maxBudget||''}"/></div>
+      <div class="ce-field"><div class="ce-label">Target Markets</div><input class="ce-input" id="m-markets" value="${esc(d.markets||'')}" placeholder="Cobb, Cherokee, Fulton"/></div>
+      <div class="ce-field"><div class="ce-label">Deals / Year</div><input class="ce-input" id="m-deals" value="${esc(d.dealsPerYear||'')}"/></div>
+      <div class="ce-field full"><div class="ce-label">Notes</div><textarea class="ce-input" id="m-notes" rows="2">${esc(d.notes||'')}</textarea></div>
+    </div>`;
+
+  if (type === 'lender') return `
+    <div class="ce-form-grid">
+      <div class="ce-field"><div class="ce-label">Lender Name *</div><input class="ce-input" id="m-name" value="${esc(d.name||'')}" placeholder="ABL Funding"/></div>
+      <div class="ce-field"><div class="ce-label">Type</div>
+        <select class="ce-input" id="m-ltype">
+          ${['Hard Money','Private Money','Bank','Credit Union','Other'].map(o=>`<option${d.type===o?' selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+      <div class="ce-field"><div class="ce-label">Interest Rate (%)</div><input class="ce-input" id="m-rate" type="number" value="${d.rate||''}"/></div>
+      <div class="ce-field"><div class="ce-label">Points</div><input class="ce-input" id="m-points" value="${esc(d.points||'')}"/></div>
+      <div class="ce-field"><div class="ce-label">Max LTV (%)</div><input class="ce-input" id="m-ltv" type="number" value="${d.ltv||''}"/></div>
+      <div class="ce-field"><div class="ce-label">Max Loan ($)</div><input class="ce-input" id="m-maxloan" type="number" value="${d.maxLoan||''}"/></div>
+      <div class="ce-field"><div class="ce-label">Term (months)</div><input class="ce-input" id="m-term" type="number" value="${d.term||''}"/></div>
+      <div class="ce-field"><div class="ce-label">Status</div>
+        <select class="ce-input" id="m-status">
+          ${['Prospect','Active','Inactive'].map(o=>`<option${d.status===o?' selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+      <div class="ce-field"><div class="ce-label">Contact Name</div><input class="ce-input" id="m-contact" value="${esc(d.contact||'')}"/></div>
+      <div class="ce-field"><div class="ce-label">Phone</div><input class="ce-input" id="m-phone" value="${esc(d.phone||'')}" type="tel"/></div>
+      <div class="ce-field full"><div class="ce-label">Notes</div><textarea class="ce-input" id="m-notes" rows="2">${esc(d.notes||'')}</textarea></div>
+    </div>`;
+
+  if (type === 'chain') return `
+    <div class="ce-form-grid">
+      <div class="ce-field full"><div class="ce-label">Property Address *</div><input class="ce-input" id="m-address" value="${esc(d.address||'')}" placeholder="123 Main St, Marietta GA"/></div>
+      <div class="ce-field"><div class="ce-label">Deal Type</div>
+        <select class="ce-input" id="m-dtype">
+          ${['Wholesale','Flip','BRRRR'].map(o=>`<option${d.type===o?' selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+      <div class="ce-field"><div class="ce-label">Status</div>
+        <select class="ce-input" id="m-status">
+          ${['Planned','Active','Closed'].map(o=>`<option${d.status===o?' selected':''}>${o}</option>`).join('')}
+        </select>
+      </div>
+      <div class="ce-field"><div class="ce-label">Capital Deployed ($)</div><input class="ce-input" id="m-cap" type="number" value="${d.capitalDeployed||''}"/></div>
+      <div class="ce-field"><div class="ce-label">Profit / Loss ($)</div><input class="ce-input" id="m-profit" type="number" value="${d.profit||''}"/></div>
+      <div class="ce-field"><div class="ce-label">Capital After Close ($)</div><input class="ce-input" id="m-after" type="number" value="${d.capitalAfter||''}"/></div>
+      <div class="ce-field full"><div class="ce-label">Notes (what funded what)</div><textarea class="ce-input" id="m-notes" rows="2">${esc(d.notes||'')}</textarea></div>
+    </div>`;
+}
+
+async function saveModal() {
+  if (modalType === 'buyer') {
+    const name = document.getElementById('m-name')?.value?.trim();
+    if (!name) { showToast('Name is required'); return; }
+    const typeEl = document.getElementById('m-type');
+    const buyerTypes = typeEl ? Array.from(typeEl.selectedOptions).map(o => o.value) : [];
+    const data = {
+      name, company: v('m-company'), phone: v('m-phone'), email: v('m-email'),
+      buyerTypes, preferred: v('m-pref'),
+      minBudget: n('m-min'), maxBudget: n('m-max'),
+      markets: v('m-markets'), dealsPerYear: v('m-deals'), notes: v('m-notes'),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    try {
+      if (editId) { await db.collection('capital_buyers').doc(editId).update(data); showToast('Buyer updated'); }
+      else { data.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await db.collection('capital_buyers').add(data); showToast('Buyer added'); }
+      closeModal();
+    } catch(e) { showToast('Error saving'); console.error(e); }
+
+  } else if (modalType === 'lender') {
+    const name = document.getElementById('m-name')?.value?.trim();
+    if (!name) { showToast('Name is required'); return; }
+    const data = {
+      name, type: v('m-ltype'), rate: n('m-rate'), points: v('m-points'),
+      ltv: n('m-ltv'), maxLoan: n('m-maxloan'), term: n('m-term'),
+      status: v('m-status'), contact: v('m-contact'), phone: v('m-phone'), notes: v('m-notes'),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    try {
+      if (editId) { await db.collection('capital_lenders').doc(editId).update(data); showToast('Lender updated'); }
+      else { data.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await db.collection('capital_lenders').add(data); showToast('Lender added'); }
+      closeModal();
+    } catch(e) { showToast('Error saving'); console.error(e); }
+
+  } else if (modalType === 'chain') {
+    const address = document.getElementById('m-address')?.value?.trim();
+    if (!address) { showToast('Address is required'); return; }
+    const data = {
+      address, type: v('m-dtype'), status: v('m-status'),
+      capitalDeployed: n('m-cap'), profit: n('m-profit'), capitalAfter: n('m-after'),
+      notes: v('m-notes'),
+      updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    };
+    try {
+      if (editId) { await db.collection('capital_chain').doc(editId).update(data); showToast('Deal updated'); }
+      else { data.createdAt = firebase.firestore.FieldValue.serverTimestamp(); await db.collection('capital_chain').add(data); showToast('Deal added'); }
+      closeModal();
+    } catch(e) { showToast('Error saving'); console.error(e); }
+  }
+}
+
+// ── HELPERS ──
+function v(id) { return document.getElementById(id)?.value?.trim() || ''; }
+function n(id) { return parseFloat(document.getElementById(id)?.value) || 0; }
+
+function fmt(n) {
+  if (n === null || n === undefined || isNaN(parseFloat(n))) return '—';
+  return '$' + parseFloat(n).toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+function fmtK(n) {
+  if (!n) return '$0';
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000)    return '$' + (n/1000).toFixed(0) + 'K';
+  return '$' + Math.round(n).toLocaleString();
+}
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function showToast(msg) {
+  let t = document.getElementById('ce-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'ce-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;z-index:99999;opacity:0;transition:opacity .3s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg; t.style.opacity = '1';
+  clearTimeout(t._t); t._t = setTimeout(() => t.style.opacity = '0', 2500);
+}
+
+document.getElementById('ce-modal').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+
+<div class="iw-footer">Peach to Palms · Anchor Pro Solutions · Ironwood Inc. · Capital Engine</div>
+</body>
+</html>
