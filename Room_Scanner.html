@@ -851,7 +851,15 @@ body.field-mode .field-only.grid { display: grid; }
 // ════════════════════════════════════════════════════════════
 // CONSTANTS
 // ════════════════════════════════════════════════════════════
-const CLAUDE_API_KEY = 'sk-ant-api03-zIJ7SqNWkNF6FnaMQZoZHSqCi2TP_X_0eBk4ILj1orRNygylZRdDm7k26Cge0OjhlWFINFwhw2if-uB_68jQ-X4Rn6AAA';
+function getClaudeKey() {
+  let k = localStorage.getItem('iw_claude_api_key') || '';
+  if (!k) {
+    k = prompt('Enter your Claude API key to enable AI scanning:') || '';
+    if (k) localStorage.setItem('iw_claude_api_key', k);
+  }
+  return k;
+}
+const CLAUDE_API_KEY = null; // loaded at call time via getClaudeKey()
 const SERP_API_KEY   = '55bd666233cc412d71857a00e929d4a2717a15310dad128829befa324af9bd8b';
 const LABOR_RATE     = 50;   // Jeff's rate $/hr
 const MATERIAL_MARKUP = 0.20;
@@ -1280,7 +1288,7 @@ Return ONLY valid JSON with these fields (use empty string "" if not mentioned, 
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'x-api-key': CLAUDE_API_KEY,
+        'x-api-key': getClaudeKey(),
         'anthropic-version': '2023-06-01',
         'anthropic-dangerous-direct-browser-access': 'true',
       },
