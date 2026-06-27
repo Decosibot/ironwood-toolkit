@@ -1,0 +1,1150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Connected Deal Dashboard — Deal Machine</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+/* ── LAYOUT ── */
+.cdd-wrap { max-width: 1280px; margin: 0 auto; padding: 28px 24px 80px; }
+
+/* ── COMPANY TABS ── */
+.co-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--hairline); margin-bottom: 28px; flex-wrap: wrap; }
+.co-tab { padding: 11px 28px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -2px; transition: all .15s; letter-spacing: .02em; }
+.co-tab:hover { color: var(--ink); }
+.co-tab.active-p2p  { color: #b85c00; border-bottom-color: #b85c00; }
+.co-tab.active-ap   { color: #1a4d32; border-bottom-color: #1a4d32; }
+.co-tab.active-iw   { color: #1a3a5c; border-bottom-color: #1a3a5c; }
+.co-tab.active-all  { color: var(--ink); border-bottom-color: var(--ink); }
+
+/* ── STAGE KANBAN ── */
+.kanban { display: flex; gap: 12px; overflow-x: auto; padding-bottom: 12px; }
+.kanban::-webkit-scrollbar { height: 4px; }
+.kanban::-webkit-scrollbar-thumb { background: var(--hairline); border-radius: 2px; }
+.stage-col { min-width: 220px; flex-shrink: 0; }
+.stage-head { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); padding: 10px 12px 8px; border: 1px solid var(--hairline); border-radius: var(--radius) var(--radius) 0 0; background: var(--surface); display: flex; align-items: center; justify-content: space-between; }
+.stage-count { font-size: 11px; font-weight: 700; background: var(--hairline); color: var(--muted); border-radius: 20px; padding: 1px 8px; }
+.stage-body { border: 1px solid var(--hairline); border-top: none; border-radius: 0 0 var(--radius) var(--radius); background: var(--bg); min-height: 180px; padding: 8px; display: flex; flex-direction: column; gap: 8px; }
+
+/* ── KANBAN CARD ── */
+.k-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; padding: 12px 12px 10px; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
+.k-card:hover { border-color: var(--bronze); box-shadow: var(--shadow-md); }
+.k-address { font-family: 'Instrument Serif', serif; font-size: 14px; color: var(--ink); line-height: 1.3; margin-bottom: 6px; }
+.k-tags { display: flex; gap: 5px; flex-wrap: wrap; margin-bottom: 6px; }
+.k-tag { font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 4px; letter-spacing: .03em; }
+.k-tag-p2p  { background: #fff3e8; color: #b85c00; border: 1px solid #f0c080; }
+.k-tag-ap   { background: #eefaf3; color: #1a4d32; border: 1px solid #a8d8b8; }
+.k-tag-iw   { background: #e8f0f8; color: #1a3a5c; border: 1px solid #aac0d8; }
+.k-tag-wholesale { background: #fdf8ee; color: #8a6d1a; }
+.k-tag-flip      { background: #f0e8f8; color: #5a1a7a; }
+.k-tag-brrrr     { background: #e8f4fd; color: #1a4a7a; }
+.k-tag-default   { background: var(--bg); color: var(--muted); border: 1px solid var(--hairline); }
+.k-stat { font-size: 11px; color: var(--muted); }
+.k-stat strong { color: var(--ink); font-weight: 600; }
+.k-alert { font-size: 10px; font-weight: 700; color: #b85c00; background: #fff3e8; border-radius: 4px; padding: 2px 6px; margin-top: 4px; display: inline-block; }
+
+/* ── SUMMARY BAR ── */
+.summary-bar { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 24px; padding: 16px 20px; background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); align-items: center; }
+.sum-stat { display: flex; flex-direction: column; gap: 2px; }
+.sum-label { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.sum-value { font-size: 20px; font-weight: 700; font-family: 'Instrument Serif', serif; color: var(--ink); }
+.sum-divider { width: 1px; height: 36px; background: var(--hairline); flex-shrink: 0; }
+.sum-spacer { flex: 1; }
+
+/* ── LIST VIEW ── */
+.list-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.list-table th { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); padding: 8px 12px; text-align: left; border-bottom: 2px solid var(--hairline); white-space: nowrap; }
+.list-table td { padding: 10px 12px; border-bottom: 1px solid var(--hairline); vertical-align: middle; }
+.list-table tr:hover td { background: var(--surface); cursor: pointer; }
+.list-table tr:last-child td { border-bottom: none; }
+.tbl-address { font-family: 'Instrument Serif', serif; font-size: 14px; color: var(--ink); }
+.tbl-sub { font-size: 11px; color: var(--muted); }
+.profit-pos { color: #1a4d32; font-weight: 700; }
+.profit-neg { color: #b5341a; font-weight: 700; }
+
+/* ── VIEW CONTROLS ── */
+.view-controls { display: flex; gap: 10px; align-items: center; margin-bottom: 20px; flex-wrap: wrap; }
+.view-btn { padding: 7px 18px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--muted); transition: all .15s; }
+.view-btn.active { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+.search-box { flex: 1; min-width: 160px; background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 7px; padding: 7px 12px; font-size: 13px; font-family: inherit; }
+.search-box:focus { outline: none; border-color: var(--bronze); }
+.add-btn { padding: 8px 20px; border-radius: 7px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; background: var(--bronze); color: #fff; transition: background .15s; margin-left: auto; }
+.add-btn:hover { background: var(--bronze-deep); }
+
+/* ── DEAL DETAIL MODAL ── */
+#deal-modal { display: none; position: fixed; inset: 0; z-index: 9000; background: rgba(28,24,20,.5); align-items: flex-start; justify-content: center; padding: 40px 16px; overflow-y: auto; }
+#deal-modal.open { display: flex; }
+.dm-box { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius-lg); width: 100%; max-width: 780px; box-shadow: var(--shadow-lg); margin: auto; }
+.dm-header { padding: 24px 28px 20px; border-bottom: 1px solid var(--hairline); display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.dm-address { font-family: 'Instrument Serif', serif; font-size: 24px; color: var(--ink); line-height: 1.2; }
+.dm-close { background: none; border: none; font-size: 22px; color: var(--muted); cursor: pointer; padding: 0 4px; line-height: 1; }
+.dm-close:hover { color: var(--ink); }
+.dm-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--hairline); padding: 0 28px; }
+.dm-tab { padding: 10px 18px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; background: none; color: var(--muted); border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .15s; }
+.dm-tab.active { color: var(--ink); border-bottom-color: var(--bronze); }
+.dm-body { padding: 24px 28px; }
+.dm-section { margin-bottom: 24px; }
+.dm-section-title { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .12em; color: var(--muted); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--hairline); }
+.dm-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:600px){ .dm-grid { grid-template-columns: 1fr; } }
+.dm-field { display: flex; flex-direction: column; gap: 4px; }
+.dm-field.full { grid-column: span 2; }
+@media(max-width:600px){ .dm-field.full { grid-column: span 1; } }
+.dm-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.dm-input { background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 7px; padding: 8px 11px; font-size: 14px; font-family: inherit; transition: border-color .15s; }
+.dm-input:focus { outline: none; border-color: var(--bronze); box-shadow: 0 0 0 3px rgba(107,141,181,.15); }
+.dm-input[readonly] { color: var(--muted); cursor: default; background: var(--surface); }
+textarea.dm-input { resize: vertical; min-height: 72px; }
+.dm-actions { display: flex; gap: 8px; padding: 20px 28px; border-top: 1px solid var(--hairline); flex-wrap: wrap; }
+.dm-btn { padding: 9px 20px; border-radius: 7px; font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-soft); font-family: inherit; transition: all .15s; }
+.dm-btn:hover { border-color: var(--bronze); color: var(--bronze); }
+.dm-btn.primary { background: var(--bronze); border-color: var(--bronze); color: #fff; }
+.dm-btn.primary:hover { background: var(--bronze-deep); }
+.dm-btn.danger { background: none; border-color: var(--red); color: var(--red); }
+.dm-btn.danger:hover { background: var(--red-tint); }
+.dm-btn.green { background: #1a4d32; border-color: #1a4d32; color: #fff; }
+.dm-btn.green:hover { background: #163d28; }
+.hint-box { background: var(--bronze-wash); border: 1px solid var(--bronze-tint); border-radius: 7px; padding: 10px 14px; font-size: 12px; color: var(--ink-soft); margin-bottom: 14px; }
+
+/* ── WATERFALL PANEL ── */
+.wf-panel { background: var(--bg); border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; }
+.wf-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 14px; border-bottom: 1px solid var(--hairline); font-size: 13px; }
+.wf-row:last-child { border-bottom: none; }
+.wf-row.head { background: var(--ink); color: #fff; font-size: 10px; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; padding: 6px 14px; }
+.wf-row.head .wf-amt { color: rgba(255,255,255,.6); }
+.wf-row.deduct .wf-amt { color: var(--red); }
+.wf-row.result { background: var(--surface); font-weight: 700; }
+.wf-row.result .wf-lbl { color: var(--ink); }
+.wf-row.result .wf-amt { color: #1a4d32; font-size: 15px; }
+.wf-row.split { background: #f4fff8; }
+.wf-lbl { color: var(--ink-soft); }
+.wf-amt { font-weight: 600; }
+.wf-company-share { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+.wf-share-card { background: var(--surface); border: 1px solid var(--hairline); border-radius: 8px; padding: 12px; text-align: center; }
+.wf-share-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 4px; }
+.wf-share-pct { font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 2px; }
+.wf-share-amt { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); }
+.wf-share-amt.positive { color: #1a4d32; }
+
+/* ── STAGE HANDOFF BUTTON ── */
+.stage-handoff { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 14px 16px; }
+.handoff-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 10px; }
+.handoff-stages { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.handoff-step { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid var(--hairline); background: var(--bg); color: var(--muted); white-space: nowrap; }
+.handoff-step.current { background: var(--bronze); border-color: var(--bronze); color: #fff; }
+.handoff-step.done { background: #1a4d32; border-color: #1a4d32; color: #fff; opacity: .7; }
+.handoff-arrow { color: var(--muted); font-size: 14px; flex-shrink: 0; }
+.handoff-actions { margin-top: 12px; display: flex; gap: 8px; }
+.handoff-btn { padding: 7px 16px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; border: none; font-family: inherit; transition: background .15s; }
+.handoff-btn.advance { background: var(--bronze); color: #fff; }
+.handoff-btn.advance:hover { background: var(--bronze-deep); }
+.handoff-btn.back { background: var(--bg); border: 1px solid var(--hairline); color: var(--muted); cursor: pointer; }
+.handoff-btn.back:hover { border-color: var(--bronze); color: var(--bronze); }
+
+/* ── SCOPE ITEMS ── */
+.scope-item-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.scope-item-row input { background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 6px; padding: 7px 10px; font-size: 13px; font-family: inherit; }
+.scope-item-row .desc { flex: 3; }
+.scope-item-row .qty  { flex: 1; min-width: 60px; }
+.scope-item-row .unit { flex: 1; min-width: 80px; }
+.scope-item-row .cost { flex: 1; min-width: 80px; }
+.scope-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 16px; padding: 0 4px; }
+.scope-del:hover { color: var(--red); }
+.scope-total { font-size: 14px; font-weight: 700; color: var(--ink); text-align: right; margin-top: 8px; }
+.scope-add-btn { padding: 6px 14px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer; border: 1px dashed var(--hairline); background: var(--surface); color: var(--muted); margin-top: 4px; transition: all .15s; }
+.scope-add-btn:hover { border-color: var(--bronze); color: var(--bronze); }
+
+/* ── DRAW SCHEDULE ── */
+.draw-row { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.draw-row input, .draw-row select { background: var(--bg); border: 1px solid var(--hairline); color: var(--ink); border-radius: 6px; padding: 7px 10px; font-size: 13px; font-family: inherit; }
+.draw-row .draw-desc { flex: 3; }
+.draw-row .draw-pct  { flex: 1; min-width: 80px; }
+.draw-row .draw-status { flex: 1; min-width: 100px; }
+
+/* ── ALERT BANNER ── */
+.alert-banner { background: #fff3e8; border: 1px solid #f0c080; border-radius: var(--radius); padding: 12px 16px; font-size: 13px; color: #7a4010; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+.alert-banner strong { font-weight: 700; }
+
+/* ── EMPTY ── */
+.empty-kanban { text-align: center; color: var(--muted); font-size: 12px; padding: 24px 8px; }
+
+/* ── SCROLLABLE TABLE WRAP ── */
+.table-wrap { overflow-x: auto; border: 1px solid var(--hairline); border-radius: var(--radius); background: var(--surface); }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+    <div>
+      <div class="iw-logo-text">Deal Machine</div>
+      <div class="iw-logo-sub">Connected Deal Dashboard</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="iw-hero">
+  <div class="iw-eyebrow">All Three Companies</div>
+  <h1>Connected Deal Dashboard</h1>
+  <p>One deal record shared across Peach to Palms, Anchor Pro, and Ironwood. Each company sees their layer. Profit waterfall auto-calculates at close.</p>
+</div>
+
+<div class="cdd-wrap">
+
+  <!-- COMPANY TABS -->
+  <div class="co-tabs">
+    <button class="co-tab" id="co-tab-all"  onclick="setCoTab('all')">All Deals</button>
+    <button class="co-tab" id="co-tab-p2p"  onclick="setCoTab('p2p')">Peach to Palms</button>
+    <button class="co-tab" id="co-tab-ap"   onclick="setCoTab('ap')">Anchor Pro</button>
+    <button class="co-tab" id="co-tab-iw"   onclick="setCoTab('iw')">Ironwood</button>
+  </div>
+
+  <!-- SUMMARY BAR -->
+  <div class="summary-bar">
+    <div class="sum-stat">
+      <span class="sum-label">Total Deals</span>
+      <span class="sum-value" id="s-total">0</span>
+    </div>
+    <div class="sum-divider"></div>
+    <div class="sum-stat">
+      <span class="sum-label">Active</span>
+      <span class="sum-value" id="s-active">0</span>
+    </div>
+    <div class="sum-divider"></div>
+    <div class="sum-stat">
+      <span class="sum-label">Pipeline ARV</span>
+      <span class="sum-value" id="s-arv">$0</span>
+    </div>
+    <div class="sum-divider"></div>
+    <div class="sum-stat">
+      <span class="sum-label">Projected Profit</span>
+      <span class="sum-value" id="s-profit">$0</span>
+    </div>
+    <div class="sum-divider"></div>
+    <div class="sum-stat">
+      <span class="sum-label">Closed This Year</span>
+      <span class="sum-value" id="s-closed">0</span>
+    </div>
+    <div class="sum-spacer"></div>
+    <button class="add-btn" onclick="openNewDeal()">+ New Deal</button>
+  </div>
+
+  <!-- VIEW CONTROLS -->
+  <div class="view-controls">
+    <button class="view-btn active" id="vbtn-kanban" onclick="setView('kanban')">Kanban</button>
+    <button class="view-btn" id="vbtn-list" onclick="setView('list')">List</button>
+    <input class="search-box" id="search-box" type="text" placeholder="Search by address or seller…" oninput="render()"/>
+  </div>
+
+  <!-- KANBAN VIEW -->
+  <div id="view-kanban">
+    <div class="kanban" id="kanban-cols"></div>
+  </div>
+
+  <!-- LIST VIEW -->
+  <div id="view-list" style="display:none;">
+    <div class="table-wrap">
+      <table class="list-table" id="list-table">
+        <thead>
+          <tr>
+            <th>Address</th>
+            <th>Stage</th>
+            <th>Exit</th>
+            <th>ARV</th>
+            <th>Purchase</th>
+            <th>Rehab</th>
+            <th>Sale Price</th>
+            <th>Net Profit</th>
+            <th>Ty</th>
+            <th>Jeff</th>
+            <th>Days</th>
+          </tr>
+        </thead>
+        <tbody id="list-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+</div><!-- /cdd-wrap -->
+
+<!-- DEAL DETAIL MODAL -->
+<div id="deal-modal" role="dialog" aria-modal="true">
+  <div class="dm-box">
+    <div class="dm-header">
+      <div>
+        <div class="dm-address" id="dm-address">New Deal</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;" id="dm-meta"></div>
+      </div>
+      <button class="dm-close" onclick="closeModal()">×</button>
+    </div>
+
+    <!-- MODAL TABS -->
+    <div class="dm-tabs">
+      <button class="dm-tab active" id="mtab-overview"  onclick="setModalTab('overview')">Overview</button>
+      <button class="dm-tab" id="mtab-p2p"              onclick="setModalTab('p2p')">P2P</button>
+      <button class="dm-tab" id="mtab-anchor"           onclick="setModalTab('anchor')">Anchor Pro</button>
+      <button class="dm-tab" id="mtab-ironwood"         onclick="setModalTab('ironwood')">Ironwood</button>
+      <button class="dm-tab" id="mtab-waterfall"        onclick="setModalTab('waterfall')">Waterfall</button>
+    </div>
+
+    <div class="dm-body" id="dm-body"></div>
+
+    <div class="dm-actions" id="dm-actions">
+      <button class="dm-btn primary" onclick="saveDeal()">Save</button>
+      <button class="dm-btn" onclick="closeModal()">Cancel</button>
+      <button class="dm-btn danger" id="dm-delete-btn" onclick="deleteDeal()" style="margin-left:auto;">Delete</button>
+    </div>
+  </div>
+</div>
+
+<!-- FIREBASE -->
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+<script>
+// ── FIREBASE ──
+firebase.initializeApp({
+  apiKey:"AIzaSyCS6hfr0jIxDrn6IiTVXDtNI5y2huR7AiE",
+  authDomain:"workout-app-576c0.firebaseapp.com",
+  projectId:"workout-app-576c0",
+  storageBucket:"workout-app-576c0.firebasestorage.app",
+  messagingSenderId:"93802465651",
+  appId:"1:93802465651:web:e5453d53128bf6b8d25d06"
+});
+const db = firebase.firestore();
+
+// ── STAGES ──
+const STAGES = ['Lead','Under Contract','Scoped','Decision','Active','Closed','Dead'];
+const STAGE_COLORS = {
+  'Lead':             '#f0f0f0|#666',
+  'Under Contract':   '#fdf8ee|#8a6d1a',
+  'Scoped':           '#e8f0fe|#1a56c4',
+  'Decision':         '#f8eef8|#6a1a7a',
+  'Active':           '#eefaf3|#1a4d32',
+  'Closed':           '#1a4d32|#fff',
+  'Dead':             '#fdf0ee|#8a1a1a',
+};
+
+// ── SPLIT CONFIG (from pay structure) ──
+const SPLIT = { jeff: 0.35, ty: 0.30, ironwood: 0.35 };
+
+// ── STATE ──
+let allDeals = [];
+let activeDeal = null;  // deal being edited in modal
+let scopeItems = [];
+let drawItems = [];
+let activeCoTab = 'all';
+let activeView = 'kanban';
+let activeModalTab = 'overview';
+
+// ── INIT ──
+window.addEventListener('load', () => {
+  setCoTab('all');
+  db.collection('deals').orderBy('createdAt','desc').onSnapshot(snap => {
+    allDeals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+    render();
+    renderStats();
+  }, () => {
+    db.collection('deals').get().then(snap => {
+      allDeals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      render();
+      renderStats();
+    });
+  });
+});
+
+// ── FILTERS ──
+function filteredDeals() {
+  const q = (document.getElementById('search-box')?.value || '').toLowerCase();
+  return allDeals.filter(d => {
+    const matchCo = activeCoTab === 'all'
+      || (activeCoTab === 'p2p'  && d.p2p)
+      || (activeCoTab === 'ap'   && (d.anchorpro || d.status === 'Scoped' || d.status === 'Decision'))
+      || (activeCoTab === 'iw'   && (d.ironwood  || d.status === 'Active'));
+    const matchQ = !q || (d.address||'').toLowerCase().includes(q) || (d.sellerName||'').toLowerCase().includes(q);
+    return matchCo && matchQ;
+  });
+}
+
+// ── SET CO TAB ──
+function setCoTab(tab) {
+  activeCoTab = tab;
+  ['all','p2p','ap','iw'].forEach(t => {
+    const el = document.getElementById('co-tab-' + t);
+    el.className = 'co-tab' + (t === tab ? ' active-' + t : '');
+  });
+  render();
+  renderStats();
+}
+
+// ── SET VIEW ──
+function setView(v) {
+  activeView = v;
+  document.getElementById('view-kanban').style.display = v === 'kanban' ? '' : 'none';
+  document.getElementById('view-list').style.display   = v === 'list'   ? '' : 'none';
+  document.getElementById('vbtn-kanban').classList.toggle('active', v === 'kanban');
+  document.getElementById('vbtn-list').classList.toggle('active', v === 'list');
+  render();
+}
+
+// ── RENDER DISPATCH ──
+function render() {
+  if (activeView === 'kanban') renderKanban();
+  else renderList();
+}
+
+// ── KANBAN ──
+function renderKanban() {
+  const cols = document.getElementById('kanban-cols');
+  const deals = filteredDeals();
+  const visibleStages = activeCoTab === 'p2p'
+    ? ['Lead','Under Contract','Scoped','Decision','Dead']
+    : activeCoTab === 'ap'
+    ? ['Scoped','Decision','Active','Closed']
+    : activeCoTab === 'iw'
+    ? ['Active','Closed']
+    : STAGES;
+
+  cols.innerHTML = visibleStages.map(stage => {
+    const sd = deals.filter(d => (d.status || 'Lead') === stage);
+    const [bg, fg] = (STAGE_COLORS[stage] || '#f0f0f0|#666').split('|');
+    return `
+      <div class="stage-col">
+        <div class="stage-head" style="border-top: 3px solid ${fg};">
+          <span>${stage}</span>
+          <span class="stage-count">${sd.length}</span>
+        </div>
+        <div class="stage-body">
+          ${sd.length === 0 ? '<div class="empty-kanban">No deals</div>' : sd.map(d => kCard(d)).join('')}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function kCard(d) {
+  const arv = parseFloat(d.arv || d.ARV) || 0;
+  const purchase = parseFloat(d.purchasePrice || d.MAO) || 0;
+  const rehab = parseFloat(d.rehabTotal || (d.anchorpro && d.anchorpro.scopeTotal) || d.rehabCost) || 0;
+  const salePrice = parseFloat(d.salePrice || (d.ironwood && d.ironwood.salePrice)) || 0;
+  const proj = salePrice > 0 ? salePrice - purchase - rehab : (arv > 0 ? arv * 0.70 - purchase - rehab : null);
+
+  const needsScope = d.status === 'Under Contract' && !d.anchorpro;
+  const needsAction = d.status === 'Decision' && !d.exitStrategy;
+
+  return `<div class="k-card" onclick="openDeal('${d.id}')">
+    <div class="k-address">${esc(d.address || 'No address')}</div>
+    <div class="k-tags">
+      ${d.p2p ? `<span class="k-tag k-tag-p2p">P2P</span>` : ''}
+      ${d.anchorpro ? `<span class="k-tag k-tag-ap">Anchor Pro</span>` : ''}
+      ${d.ironwood ? `<span class="k-tag k-tag-iw">Ironwood</span>` : ''}
+      ${d.exitStrategy ? exitTag(d.exitStrategy) : ''}
+    </div>
+    ${arv ? `<div class="k-stat">ARV <strong>${fmt(arv)}</strong>${rehab ? ` · Rehab <strong>${fmt(rehab)}</strong>` : ''}</div>` : ''}
+    ${proj !== null ? `<div class="k-stat" style="margin-top:2px;">Est. profit <strong style="color:${proj>0?'#1a4d32':'#b5341a'}">${fmt(proj)}</strong></div>` : ''}
+    ${needsScope ? `<div class="k-alert">⚠ Needs scope — send to Anchor Pro</div>` : ''}
+    ${needsAction ? `<div class="k-alert">⚠ Exit strategy not set</div>` : ''}
+  </div>`;
+}
+
+function exitTag(s) {
+  const cls = { Wholesale:'k-tag-wholesale', Flip:'k-tag-flip', BRRRR:'k-tag-brrrr' }[s] || 'k-tag-default';
+  return `<span class="k-tag ${cls}">${esc(s)}</span>`;
+}
+
+// ── LIST VIEW ──
+function renderList() {
+  const tbody = document.getElementById('list-body');
+  const deals = filteredDeals();
+  if (!deals.length) {
+    tbody.innerHTML = `<tr><td colspan="11" style="text-align:center;color:var(--muted);padding:32px;">No deals found</td></tr>`;
+    return;
+  }
+  const yr = new Date().getFullYear();
+  tbody.innerHTML = deals.map(d => {
+    const arv      = parseFloat(d.arv || d.ARV) || 0;
+    const purchase = parseFloat(d.purchasePrice || d.MAO) || 0;
+    const rehab    = parseFloat(d.rehabTotal || (d.anchorpro && d.anchorpro.scopeTotal) || d.rehabCost) || 0;
+    const sale     = parseFloat(d.salePrice || (d.ironwood && d.ironwood.salePrice)) || 0;
+    const net      = sale > 0 ? sale - purchase - rehab : null;
+    const ty       = net !== null ? net * SPLIT.ty : null;
+    const jeff     = net !== null ? net * SPLIT.jeff : null;
+    const created  = d.createdAt ? new Date(d.createdAt.seconds * 1000) : null;
+    const days     = created ? Math.floor((Date.now() - created.getTime()) / 86400000) : '—';
+    const [bg, fg] = (STAGE_COLORS[d.status||'Lead'] || '#f0f0f0|#666').split('|');
+    const closedYr = d.status === 'Closed' && d.closedAt && new Date(d.closedAt.seconds*1000).getFullYear() === yr;
+    return `<tr onclick="openDeal('${d.id}')">
+      <td><div class="tbl-address">${esc(d.address||'—')}</div><div class="tbl-sub">${esc(d.sellerName||'')}</div></td>
+      <td><span style="background:${bg};color:${fg};font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;">${esc(d.status||'Lead')}</span></td>
+      <td>${esc(d.exitStrategy||'—')}</td>
+      <td>${arv ? fmt(arv) : '—'}</td>
+      <td>${purchase ? fmt(purchase) : '—'}</td>
+      <td>${rehab ? fmt(rehab) : '—'}</td>
+      <td>${sale ? fmt(sale) : '—'}</td>
+      <td>${net !== null ? `<span class="${net>=0?'profit-pos':'profit-neg'}">${fmt(net)}</span>` : '—'}</td>
+      <td>${ty !== null ? fmt(ty) : '—'}</td>
+      <td>${jeff !== null ? fmt(jeff) : '—'}</td>
+      <td>${days}</td>
+    </tr>`;
+  }).join('');
+}
+
+// ── STATS ──
+function renderStats() {
+  const deals = filteredDeals();
+  const yr = new Date().getFullYear();
+  const active = deals.filter(d => ['Under Contract','Scoped','Decision','Active'].includes(d.status)).length;
+  const closed = deals.filter(d => d.status === 'Closed' && d.closedAt && new Date(d.closedAt.seconds*1000).getFullYear() === yr).length;
+  const totalARV = deals.reduce((s,d) => s + (parseFloat(d.arv||d.ARV)||0), 0);
+  const projProfit = deals.filter(d => d.status !== 'Dead' && d.status !== 'Closed').reduce((s,d) => {
+    const arv = parseFloat(d.arv||d.ARV)||0;
+    const purchase = parseFloat(d.purchasePrice||d.MAO)||0;
+    const rehab = parseFloat(d.rehabTotal||(d.anchorpro&&d.anchorpro.scopeTotal)||d.rehabCost)||0;
+    if (!arv) return s;
+    return s + (arv * 0.70 - purchase - rehab);
+  }, 0);
+  document.getElementById('s-total').textContent = deals.length;
+  document.getElementById('s-active').textContent = active;
+  document.getElementById('s-arv').textContent = fmtK(totalARV);
+  document.getElementById('s-profit').textContent = fmtK(projProfit);
+  document.getElementById('s-closed').textContent = closed;
+}
+
+// ── OPEN DEAL ──
+function openDeal(id) {
+  activeDeal = allDeals.find(d => d.id === id) || null;
+  scopeItems = (activeDeal?.anchorpro?.scopeItems) ? JSON.parse(JSON.stringify(activeDeal.anchorpro.scopeItems)) : [];
+  drawItems  = (activeDeal?.ironwood?.drawSchedule) ? JSON.parse(JSON.stringify(activeDeal.ironwood.drawSchedule)) : [];
+  setModalTab('overview');
+  document.getElementById('dm-address').textContent = activeDeal?.address || 'Deal';
+  document.getElementById('dm-meta').textContent = activeDeal?.createdAt
+    ? 'Added ' + new Date(activeDeal.createdAt.seconds*1000).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})
+    : '';
+  document.getElementById('dm-delete-btn').style.display = activeDeal ? '' : 'none';
+  document.getElementById('deal-modal').classList.add('open');
+}
+
+function openNewDeal() {
+  activeDeal = null;
+  scopeItems = [];
+  drawItems  = [];
+  setModalTab('overview');
+  document.getElementById('dm-address').textContent = 'New Deal';
+  document.getElementById('dm-meta').textContent = '';
+  document.getElementById('dm-delete-btn').style.display = 'none';
+  document.getElementById('deal-modal').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('deal-modal').classList.remove('open');
+  activeDeal = null;
+}
+
+// ── MODAL TAB ──
+function setModalTab(tab) {
+  activeModalTab = tab;
+  ['overview','p2p','anchor','ironwood','waterfall'].forEach(t => {
+    document.getElementById('mtab-' + t).classList.toggle('active', t === tab);
+  });
+  renderModalBody();
+}
+
+// ── MODAL BODY ──
+function renderModalBody() {
+  const body = document.getElementById('dm-body');
+  const d = activeDeal || {};
+  const p2p = d.p2p || {};
+  const ap  = d.anchorpro || {};
+  const iw  = d.ironwood || {};
+
+  if (activeModalTab === 'overview') {
+    body.innerHTML = `
+      ${stageHandoff(d)}
+      <div class="dm-section" style="margin-top:20px;">
+        <div class="dm-section-title">Property</div>
+        <div class="dm-grid">
+          <div class="dm-field full">
+            <div class="dm-label">Address</div>
+            <input class="dm-input" id="ov-address" value="${esc(d.address||'')}" placeholder="123 Main St, Marietta GA 30060"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Exit Strategy</div>
+            <select class="dm-input" id="ov-exit">
+              ${['','Wholesale','Flip','BRRRR','Creative Finance','New Build'].map(o=>`<option${d.exitStrategy===o?' selected':''}>${o}</option>`).join('')}
+            </select>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Lead Source</div>
+            <select class="dm-input" id="ov-source">
+              ${['','REI Reply','Cold Call','Direct Mail','Referral','Driving for Dollars','Website','Inbound','Other'].map(o=>`<option${d.leadSource===o?' selected':''}>${o}</option>`).join('')}
+            </select>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">ARV ($)</div>
+            <input class="dm-input" id="ov-arv" type="number" value="${d.arv||d.ARV||''}" placeholder="0" oninput="updateMaoHint()"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Purchase Price ($)</div>
+            <input class="dm-input" id="ov-purchase" type="number" value="${d.purchasePrice||d.MAO||''}" placeholder="0"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Sale Price ($)</div>
+            <input class="dm-input" id="ov-sale" type="number" value="${d.salePrice||iw.salePrice||''}" placeholder="0 — fill at close"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">MAO Hint</div>
+            <div class="dm-input" id="mao-hint-ov" readonly style="background:var(--bronze-wash);color:var(--bronze-deep);font-weight:600;"></div>
+          </div>
+        </div>
+      </div>
+      <div class="dm-section">
+        <div class="dm-section-title">Notes</div>
+        <textarea class="dm-input" id="ov-notes" rows="3" style="width:100%;">${esc(d.notes||'')}</textarea>
+      </div>`;
+    updateMaoHint();
+
+  } else if (activeModalTab === 'p2p') {
+    body.innerHTML = `
+      <div class="hint-box">Peach to Palms — acquisition layer. Fill in seller details, motivation, and deal financials.</div>
+      <div class="dm-section">
+        <div class="dm-section-title">Seller</div>
+        <div class="dm-grid">
+          <div class="dm-field">
+            <div class="dm-label">Seller Name</div>
+            <input class="dm-input" id="p2p-seller" value="${esc(p2p.sellerName||'')}" placeholder="John Smith"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Seller Phone</div>
+            <input class="dm-input" id="p2p-phone" value="${esc(p2p.sellerPhone||'')}" placeholder="(404) 555-0100"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Motivation Level</div>
+            <select class="dm-input" id="p2p-motivation">
+              ${['','High','Medium','Low'].map(o=>`<option${p2p.motivation===o?' selected':''}>${o}</option>`).join('')}
+            </select>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Timeline</div>
+            <select class="dm-input" id="p2p-timeline">
+              ${['','ASAP (< 30 days)','1–3 months','3–6 months','Flexible'].map(o=>`<option${p2p.timeline===o?' selected':''}>${o}</option>`).join('')}
+            </select>
+          </div>
+          <div class="dm-field full">
+            <div class="dm-label">Seller Situation</div>
+            <textarea class="dm-input" id="p2p-situation" rows="2">${esc(p2p.situation||'')}</textarea>
+          </div>
+        </div>
+      </div>
+      <div class="dm-section">
+        <div class="dm-section-title">Deal Financials</div>
+        <div class="dm-grid">
+          <div class="dm-field">
+            <div class="dm-label">Asking Price ($)</div>
+            <input class="dm-input" id="p2p-asking" type="number" value="${p2p.askingPrice||''}"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Offered / Contract ($)</div>
+            <input class="dm-input" id="p2p-offered" type="number" value="${p2p.offeredPrice||''}"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Assignment Fee ($)</div>
+            <input class="dm-input" id="p2p-assignfee" type="number" value="${p2p.assignmentFee||''}"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">EMD ($)</div>
+            <input class="dm-input" id="p2p-emd" type="number" value="${p2p.emd||''}"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Close Date</div>
+            <input class="dm-input" id="p2p-closedate" type="date" value="${p2p.closeDate||''}"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Buyer (if wholesale)</div>
+            <input class="dm-input" id="p2p-buyer" value="${esc(p2p.buyer||'')}"/>
+          </div>
+        </div>
+      </div>`;
+
+  } else if (activeModalTab === 'anchor') {
+    body.innerHTML = `
+      <div class="hint-box">Anchor Pro — scope &amp; design layer. Add line-item rehab scope below. Total auto-feeds into the Waterfall.</div>
+      <div class="dm-section">
+        <div class="dm-section-title">Scope of Work</div>
+        <div class="scope-item-row" style="margin-bottom:4px;">
+          <span style="flex:3;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);">Description</span>
+          <span style="flex:1;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);">Qty</span>
+          <span style="flex:1;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);">Unit</span>
+          <span style="flex:1;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);">Cost ($)</span>
+          <span style="width:24px;"></span>
+        </div>
+        <div id="scope-rows"></div>
+        <button class="scope-add-btn" onclick="addScopeRow()">+ Add Line Item</button>
+        <div class="scope-total" id="scope-total">Total: $0</div>
+      </div>
+      <div class="dm-section">
+        <div class="dm-section-title">Scope Details</div>
+        <div class="dm-grid">
+          <div class="dm-field">
+            <div class="dm-label">Walkthrough Date</div>
+            <input class="dm-input" id="ap-walkdate" type="date" value="${ap.walkthroughDate||''}"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Estimated Timeline</div>
+            <input class="dm-input" id="ap-timeline" value="${esc(ap.timeline||'')}" placeholder="e.g. 6–8 weeks"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Lead Contractor</div>
+            <input class="dm-input" id="ap-contractor" value="${esc(ap.contractor||'')}"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Permit Required</div>
+            <select class="dm-input" id="ap-permit">
+              ${['','Yes','No','TBD'].map(o=>`<option${ap.permit===o?' selected':''}>${o}</option>`).join('')}
+            </select>
+          </div>
+          <div class="dm-field full">
+            <div class="dm-label">Scope Notes</div>
+            <textarea class="dm-input" id="ap-notes" rows="2">${esc(ap.notes||'')}</textarea>
+          </div>
+        </div>
+      </div>`;
+    renderScopeRows();
+
+  } else if (activeModalTab === 'ironwood') {
+    body.innerHTML = `
+      <div class="hint-box">Ironwood — build &amp; execution layer. Track active job, draw schedule, and final sale price.</div>
+      <div class="dm-section">
+        <div class="dm-section-title">Job Details</div>
+        <div class="dm-grid">
+          <div class="dm-field">
+            <div class="dm-label">Job Start Date</div>
+            <input class="dm-input" id="iw-startdate" type="date" value="${iw.startDate||''}"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Est. Completion</div>
+            <input class="dm-input" id="iw-enddate" type="date" value="${iw.endDate||''}"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Permit Status</div>
+            <select class="dm-input" id="iw-permit">
+              ${['Not Required','Applied','Issued','Passed Final','Closed'].map(o=>`<option${iw.permitStatus===o?' selected':''}>${o}</option>`).join('')}
+            </select>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Foreman</div>
+            <input class="dm-input" id="iw-foreman" value="${esc(iw.foreman||'')}"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">Final Sale Price ($)</div>
+            <input class="dm-input" id="iw-saleprice" type="number" value="${iw.salePrice||''}" placeholder="Fill at close"/>
+          </div>
+          <div class="dm-field">
+            <div class="dm-label">List Date</div>
+            <input class="dm-input" id="iw-listdate" type="date" value="${iw.listDate||''}"/>
+          </div>
+          <div class="dm-field full">
+            <div class="dm-label">Job Notes</div>
+            <textarea class="dm-input" id="iw-notes" rows="2">${esc(iw.notes||'')}</textarea>
+          </div>
+        </div>
+      </div>
+      <div class="dm-section">
+        <div class="dm-section-title">Draw Schedule</div>
+        <div id="draw-rows"></div>
+        <button class="scope-add-btn" onclick="addDrawRow()">+ Add Draw</button>
+      </div>`;
+    renderDrawRows();
+
+  } else if (activeModalTab === 'waterfall') {
+    renderWaterfall(body, d);
+  }
+}
+
+// ── MAO HINT ──
+function updateMaoHint() {
+  const arv = parseFloat(document.getElementById('ov-arv')?.value) || 0;
+  const el = document.getElementById('mao-hint-ov');
+  if (!el) return;
+  el.textContent = arv > 0 ? `MAO (70% × ARV) = ${fmt(arv * 0.70)}` : 'Enter ARV to calculate MAO';
+}
+
+// ── STAGE HANDOFF ──
+function stageHandoff(d) {
+  const current = d.status || 'Lead';
+  const idx = STAGES.indexOf(current);
+  const stagesToShow = STAGES.filter(s => s !== 'Dead');
+  const canAdvance = idx >= 0 && idx < stagesToShow.length - 1;
+  const canBack    = idx > 0;
+
+  const steps = stagesToShow.map((s, i) => {
+    const sIdx = STAGES.indexOf(s);
+    const cls  = sIdx < idx ? 'handoff-step done' : sIdx === idx ? 'handoff-step current' : 'handoff-step';
+    return `<div class="${cls}">${s}</div>${i < stagesToShow.length - 1 ? '<div class="handoff-arrow">›</div>' : ''}`;
+  }).join('');
+
+  return `<div class="stage-handoff">
+    <div class="handoff-label">Deal Stage</div>
+    <div class="handoff-stages">${steps}</div>
+    <div class="handoff-actions">
+      ${canBack    ? `<button class="handoff-btn back"    onclick="advanceStage(-1)">← Back</button>` : ''}
+      ${canAdvance ? `<button class="handoff-btn advance" onclick="advanceStage(1)">${stagesToShow[STAGES.indexOf(current)+1] ? 'Advance to ' + stagesToShow[STAGES.indexOf(current)+1] : 'Next Stage'} →</button>` : ''}
+      ${current === 'Dead' ? '' : `<button class="handoff-btn" style="background:var(--red-tint);color:var(--red);border:1px solid var(--red);" onclick="markDead()">Mark Dead</button>`}
+    </div>
+  </div>`;
+}
+
+async function advanceStage(dir) {
+  if (!activeDeal) return;
+  const idx = STAGES.indexOf(activeDeal.status || 'Lead');
+  const next = STAGES[idx + dir];
+  if (!next) return;
+  const update = { status: next, updatedAt: firebase.firestore.FieldValue.serverTimestamp() };
+  if (next === 'Closed') update.closedAt = firebase.firestore.FieldValue.serverTimestamp();
+  await db.collection('deals').doc(activeDeal.id).update(update);
+  activeDeal.status = next;
+  renderModalBody();
+  showToast('Stage updated: ' + next);
+}
+
+async function markDead() {
+  if (!activeDeal || !confirm('Mark this deal as Dead?')) return;
+  await db.collection('deals').doc(activeDeal.id).update({ status: 'Dead', updatedAt: firebase.firestore.FieldValue.serverTimestamp() });
+  activeDeal.status = 'Dead';
+  renderModalBody();
+  showToast('Deal marked dead');
+}
+
+// ── SCOPE ITEMS ──
+function renderScopeRows() {
+  const el = document.getElementById('scope-rows');
+  if (!el) return;
+  el.innerHTML = scopeItems.map((item, i) => `
+    <div class="scope-item-row">
+      <input class="desc" value="${esc(item.desc||'')}" placeholder="Description" oninput="scopeItems[${i}].desc=this.value"/>
+      <input class="qty"  value="${item.qty||1}"   type="number" min="1" oninput="scopeItems[${i}].qty=parseFloat(this.value)||1; updateScopeTotal()"/>
+      <input class="unit" value="${esc(item.unit||'')}" placeholder="ea/lf/sf" oninput="scopeItems[${i}].unit=this.value"/>
+      <input class="cost" value="${item.cost||0}"  type="number" min="0" oninput="scopeItems[${i}].cost=parseFloat(this.value)||0; updateScopeTotal()"/>
+      <button class="scope-del" onclick="removeScopeRow(${i})">×</button>
+    </div>`).join('');
+  updateScopeTotal();
+}
+
+function addScopeRow() {
+  scopeItems.push({ desc:'', qty:1, unit:'ea', cost:0 });
+  renderScopeRows();
+}
+
+function removeScopeRow(i) {
+  scopeItems.splice(i, 1);
+  renderScopeRows();
+}
+
+function updateScopeTotal() {
+  const total = scopeItems.reduce((s, item) => s + ((item.qty||1) * (item.cost||0)), 0);
+  const el = document.getElementById('scope-total');
+  if (el) el.textContent = 'Total: ' + fmt(total);
+}
+
+function getScopeTotal() {
+  return scopeItems.reduce((s, item) => s + ((item.qty||1) * (item.cost||0)), 0);
+}
+
+// ── DRAW ITEMS ──
+function renderDrawRows() {
+  const el = document.getElementById('draw-rows');
+  if (!el) return;
+  el.innerHTML = drawItems.map((item, i) => `
+    <div class="draw-row">
+      <input class="draw-desc" value="${esc(item.desc||'')}" placeholder="Draw description (e.g. Foundation complete)" oninput="drawItems[${i}].desc=this.value"/>
+      <input class="draw-pct"  value="${item.pct||''}" type="number" min="0" max="100" placeholder="%" oninput="drawItems[${i}].pct=parseFloat(this.value)||0"/>
+      <select class="draw-status" oninput="drawItems[${i}].status=this.value">
+        ${['Pending','Requested','Released'].map(o=>`<option${item.status===o?' selected':''}>${o}</option>`).join('')}
+      </select>
+      <button class="scope-del" onclick="removeDrawRow(${i})">×</button>
+    </div>`).join('');
+}
+
+function addDrawRow() {
+  drawItems.push({ desc:'', pct:0, status:'Pending' });
+  renderDrawRows();
+}
+
+function removeDrawRow(i) {
+  drawItems.splice(i, 1);
+  renderDrawRows();
+}
+
+// ── WATERFALL ──
+function renderWaterfall(body, d) {
+  const arv       = parseFloat(d.arv || d.ARV) || 0;
+  const purchase  = parseFloat(d.purchasePrice || d.MAO) || 0;
+  const rehab     = parseFloat(d.rehabTotal || (d.anchorpro && d.anchorpro.scopeTotal) || d.rehabCost) || 0;
+  const salePrice = parseFloat(d.salePrice || (d.ironwood && d.ironwood.salePrice)) || 0;
+  const carry     = parseFloat(d.carryingCosts) || 0;
+  const closing   = parseFloat(d.closingCosts) || 0;
+
+  const grossProfit = salePrice > 0 ? salePrice - purchase - rehab - carry - closing : null;
+  const ty    = grossProfit !== null ? grossProfit * SPLIT.ty   : null;
+  const jeff  = grossProfit !== null ? grossProfit * SPLIT.jeff : null;
+  const iw    = grossProfit !== null ? grossProfit * SPLIT.ironwood : null;
+
+  body.innerHTML = `
+    <div class="dm-section">
+      <div class="dm-section-title">Deal Numbers</div>
+      <div class="dm-grid">
+        <div class="dm-field">
+          <div class="dm-label">ARV ($)</div>
+          <input class="dm-input" id="wf-arv" type="number" value="${arv||''}" placeholder="0" oninput="wfUpdate()"/>
+        </div>
+        <div class="dm-field">
+          <div class="dm-label">Sale Price ($)</div>
+          <input class="dm-input" id="wf-sale" type="number" value="${salePrice||''}" placeholder="0" oninput="wfUpdate()"/>
+        </div>
+        <div class="dm-field">
+          <div class="dm-label">Purchase Price ($)</div>
+          <input class="dm-input" id="wf-purchase" type="number" value="${purchase||''}" placeholder="0" oninput="wfUpdate()"/>
+        </div>
+        <div class="dm-field">
+          <div class="dm-label">Rehab Cost ($)</div>
+          <input class="dm-input" id="wf-rehab" type="number" value="${rehab||''}" placeholder="0 — auto from Anchor Pro scope" oninput="wfUpdate()"/>
+        </div>
+        <div class="dm-field">
+          <div class="dm-label">Carrying Costs ($)</div>
+          <input class="dm-input" id="wf-carry" type="number" value="${carry||''}" placeholder="0" oninput="wfUpdate()"/>
+        </div>
+        <div class="dm-field">
+          <div class="dm-label">Closing Costs ($)</div>
+          <input class="dm-input" id="wf-closing" type="number" value="${closing||''}" placeholder="0" oninput="wfUpdate()"/>
+        </div>
+      </div>
+    </div>
+    <div class="dm-section">
+      <div class="dm-section-title">Profit Waterfall</div>
+      <div class="wf-panel" id="wf-panel"></div>
+      <div class="wf-company-share">
+        <div class="wf-share-card">
+          <div class="wf-share-label">Peach to Palms</div>
+          <div class="wf-share-pct">P2P Fee</div>
+          <div class="wf-share-amt" id="wf-p2p-share">—</div>
+        </div>
+        <div class="wf-share-card">
+          <div class="wf-share-label">Ty (30%)</div>
+          <div class="wf-share-pct">Anchor Pro Solutions</div>
+          <div class="wf-share-amt" id="wf-ty-share">—</div>
+        </div>
+        <div class="wf-share-card">
+          <div class="wf-share-label">Jeff (35%)</div>
+          <div class="wf-share-pct">Landon Renovations</div>
+          <div class="wf-share-amt" id="wf-jeff-share">—</div>
+        </div>
+      </div>
+    </div>`;
+  wfUpdate();
+}
+
+function wfUpdate() {
+  const arv       = parseFloat(document.getElementById('wf-arv')?.value)     || 0;
+  const sale      = parseFloat(document.getElementById('wf-sale')?.value)    || 0;
+  const purchase  = parseFloat(document.getElementById('wf-purchase')?.value)|| 0;
+  const rehab     = parseFloat(document.getElementById('wf-rehab')?.value)   || 0;
+  const carry     = parseFloat(document.getElementById('wf-carry')?.value)   || 0;
+  const closing   = parseFloat(document.getElementById('wf-closing')?.value) || 0;
+  const revenue   = sale || (arv * 0.70);
+  const gross     = revenue - purchase - rehab - carry - closing;
+  const p2pFee    = parseFloat(activeDeal?.p2p?.assignmentFee) || 0;
+  const netAfterP2P = gross - p2pFee;
+  const ty        = netAfterP2P * SPLIT.ty;
+  const jeff      = netAfterP2P * SPLIT.jeff;
+  const iw        = netAfterP2P * SPLIT.ironwood;
+
+  const panel = document.getElementById('wf-panel');
+  if (!panel) return;
+  panel.innerHTML = `
+    <div class="wf-row head"><span class="wf-lbl">Revenue</span><span class="wf-amt">${sale ? 'Sale Price' : 'ARV × 70% (est.)'}</span></div>
+    <div class="wf-row"><span class="wf-lbl">Revenue</span><span class="wf-amt">${fmt(revenue)}</span></div>
+    <div class="wf-row head"><span class="wf-lbl">Deductions</span><span class="wf-amt"></span></div>
+    <div class="wf-row deduct"><span class="wf-lbl">Purchase Price</span><span class="wf-amt">(${fmt(purchase)})</span></div>
+    <div class="wf-row deduct"><span class="wf-lbl">Rehab Cost</span><span class="wf-amt">(${fmt(rehab)})</span></div>
+    ${carry  ? `<div class="wf-row deduct"><span class="wf-lbl">Carrying Costs</span><span class="wf-amt">(${fmt(carry)})</span></div>` : ''}
+    ${closing? `<div class="wf-row deduct"><span class="wf-lbl">Closing Costs</span><span class="wf-amt">(${fmt(closing)})</span></div>` : ''}
+    <div class="wf-row result"><span class="wf-lbl">Gross Profit</span><span class="wf-amt">${fmt(gross)}</span></div>
+    ${p2pFee ? `<div class="wf-row deduct"><span class="wf-lbl">P2P Assignment Fee</span><span class="wf-amt">(${fmt(p2pFee)})</span></div>` : ''}
+    <div class="wf-row result" style="border-top: 2px solid var(--hairline);"><span class="wf-lbl">Net Distributable</span><span class="wf-amt" style="font-size:16px;color:${netAfterP2P>=0?'#1a4d32':'#b5341a'}">${fmt(netAfterP2P)}</span></div>
+    <div class="wf-row head"><span class="wf-lbl">Splits</span><span class="wf-amt"></span></div>
+    <div class="wf-row split"><span class="wf-lbl">Ty / Anchor Pro (30%)</span><span class="wf-amt">${fmt(ty)}</span></div>
+    <div class="wf-row split"><span class="wf-lbl">Jeff / Landon (35%)</span><span class="wf-amt">${fmt(jeff)}</span></div>
+    <div class="wf-row split"><span class="wf-lbl">Ironwood LLC (35%)</span><span class="wf-amt">${fmt(iw)}</span></div>`;
+
+  const tyEl   = document.getElementById('wf-ty-share');
+  const jeffEl = document.getElementById('wf-jeff-share');
+  const p2pEl  = document.getElementById('wf-p2p-share');
+  if (tyEl)   { tyEl.textContent   = fmt(ty);   tyEl.className   = 'wf-share-amt' + (ty>=0?' positive':''); }
+  if (jeffEl) { jeffEl.textContent = fmt(jeff);  jeffEl.className = 'wf-share-amt' + (jeff>=0?' positive':''); }
+  if (p2pEl)  { p2pEl.textContent  = p2pFee ? fmt(p2pFee) : '—'; }
+}
+
+// ── SAVE ──
+async function saveDeal() {
+  const address = document.getElementById('ov-address')?.value?.trim()
+                || document.getElementById('p2p-seller')?.value?.trim()
+                || (activeDeal?.address);
+  if (!address && activeModalTab === 'overview') {
+    showToast('Enter an address first (Overview tab)');
+    return;
+  }
+
+  const overviewAddress = document.getElementById('ov-address')?.value?.trim() || activeDeal?.address || '';
+  const scopeTotal = getScopeTotal();
+
+  const update = {
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+  };
+
+  if (document.getElementById('ov-address'))  update.address      = overviewAddress;
+  if (document.getElementById('ov-exit'))     update.exitStrategy = document.getElementById('ov-exit').value;
+  if (document.getElementById('ov-source'))   update.leadSource   = document.getElementById('ov-source').value;
+  if (document.getElementById('ov-arv'))      update.arv          = parseFloat(document.getElementById('ov-arv').value)||0;
+  if (document.getElementById('ov-purchase')) update.purchasePrice = parseFloat(document.getElementById('ov-purchase').value)||0;
+  if (document.getElementById('ov-sale'))     update.salePrice    = parseFloat(document.getElementById('ov-sale').value)||0;
+  if (document.getElementById('ov-notes'))    update.notes        = document.getElementById('ov-notes').value;
+
+  if (document.getElementById('p2p-seller')) {
+    update.p2p = {
+      ...(activeDeal?.p2p||{}),
+      sellerName:   document.getElementById('p2p-seller')?.value||'',
+      sellerPhone:  document.getElementById('p2p-phone')?.value||'',
+      motivation:   document.getElementById('p2p-motivation')?.value||'',
+      timeline:     document.getElementById('p2p-timeline')?.value||'',
+      situation:    document.getElementById('p2p-situation')?.value||'',
+      askingPrice:  parseFloat(document.getElementById('p2p-asking')?.value)||0,
+      offeredPrice: parseFloat(document.getElementById('p2p-offered')?.value)||0,
+      assignmentFee:parseFloat(document.getElementById('p2p-assignfee')?.value)||0,
+      emd:          parseFloat(document.getElementById('p2p-emd')?.value)||0,
+      closeDate:    document.getElementById('p2p-closedate')?.value||'',
+      buyer:        document.getElementById('p2p-buyer')?.value||'',
+    };
+  }
+
+  if (document.getElementById('ap-walkdate')) {
+    update.anchorpro = {
+      ...(activeDeal?.anchorpro||{}),
+      scopeItems,
+      scopeTotal,
+      walkthroughDate: document.getElementById('ap-walkdate')?.value||'',
+      timeline:        document.getElementById('ap-timeline')?.value||'',
+      contractor:      document.getElementById('ap-contractor')?.value||'',
+      permit:          document.getElementById('ap-permit')?.value||'',
+      notes:           document.getElementById('ap-notes')?.value||'',
+    };
+    update.rehabTotal = scopeTotal;
+  }
+
+  if (document.getElementById('iw-startdate')) {
+    const iwSalePrice = parseFloat(document.getElementById('iw-saleprice')?.value)||0;
+    update.ironwood = {
+      ...(activeDeal?.ironwood||{}),
+      startDate:    document.getElementById('iw-startdate')?.value||'',
+      endDate:      document.getElementById('iw-enddate')?.value||'',
+      permitStatus: document.getElementById('iw-permit')?.value||'',
+      foreman:      document.getElementById('iw-foreman')?.value||'',
+      salePrice:    iwSalePrice,
+      listDate:     document.getElementById('iw-listdate')?.value||'',
+      notes:        document.getElementById('iw-notes')?.value||'',
+      drawSchedule: drawItems,
+    };
+    if (iwSalePrice) update.salePrice = iwSalePrice;
+  }
+
+  if (document.getElementById('wf-arv')) {
+    update.arv          = parseFloat(document.getElementById('wf-arv')?.value)||update.arv||0;
+    update.purchasePrice= parseFloat(document.getElementById('wf-purchase')?.value)||update.purchasePrice||0;
+    update.salePrice    = parseFloat(document.getElementById('wf-sale')?.value)||update.salePrice||0;
+    update.carryingCosts= parseFloat(document.getElementById('wf-carry')?.value)||0;
+    update.closingCosts = parseFloat(document.getElementById('wf-closing')?.value)||0;
+    update.rehabTotal   = parseFloat(document.getElementById('wf-rehab')?.value)||update.rehabTotal||0;
+  }
+
+  try {
+    if (activeDeal?.id) {
+      await db.collection('deals').doc(activeDeal.id).update(update);
+      showToast('Deal saved');
+    } else {
+      if (!overviewAddress) { showToast('Open Overview tab and enter an address'); return; }
+      update.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      update.status    = update.status || 'Lead';
+      update.address   = overviewAddress;
+      const ref = await db.collection('deals').add(update);
+      activeDeal = { id: ref.id, ...update };
+      document.getElementById('dm-delete-btn').style.display = '';
+      showToast('Deal created');
+    }
+  } catch(e) {
+    showToast('Error saving — check connection');
+    console.error(e);
+  }
+}
+
+// ── DELETE ──
+async function deleteDeal() {
+  if (!activeDeal?.id) return;
+  if (!confirm(`Delete "${activeDeal.address}"? This cannot be undone.`)) return;
+  try {
+    await db.collection('deals').doc(activeDeal.id).delete();
+    closeModal();
+    showToast('Deal deleted');
+  } catch(e) {
+    showToast('Error deleting');
+  }
+}
+
+// ── HELPERS ──
+function fmt(n) {
+  if (n === null || n === undefined) return '—';
+  const num = parseFloat(n);
+  if (isNaN(num)) return '—';
+  return '$' + num.toLocaleString('en-US', { maximumFractionDigits: 0 });
+}
+
+function fmtK(n) {
+  if (!n) return '$0';
+  if (n >= 1000000) return '$' + (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000)    return '$' + (n/1000).toFixed(0) + 'K';
+  return '$' + Math.round(n).toLocaleString();
+}
+
+function esc(s) {
+  return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function showToast(msg) {
+  let t = document.getElementById('cdd-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'cdd-toast';
+    t.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 22px;border-radius:8px;font-size:13px;font-weight:600;z-index:99999;opacity:0;transition:opacity .3s;pointer-events:none;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.style.opacity = '0', 2500);
+}
+
+// ── CLOSE ON BACKDROP ──
+document.getElementById('deal-modal').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+
+<!-- FOOTER -->
+<div class="iw-footer">Peach to Palms · Anchor Pro Solutions · Ironwood Inc. · Deal Machine</div>
+
+</body>
+</html>
