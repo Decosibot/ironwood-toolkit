@@ -257,54 +257,29 @@
     </div>
 
     <div class="input-card">
-      <h3>Contributor Fees (Off the Top)</h3>
+      <h3>Operating Expenses (Pre-Split)</h3>
       <div class="field">
-        <label>Jeff's Compensation Mode</label>
+        <label>Phase</label>
         <div class="field-row">
-          <select id="jeffMode" onchange="calc()" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:8px 10px;font-size:13px;flex:1;">
-            <option value="hourly">Phase 1 — Hourly ($50/hr)</option>
-            <option value="pct">Phase 2 — 30% of Gross Profit</option>
+          <select id="phaseMode" onchange="calc()" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:8px 10px;font-size:13px;flex:1;">
+            <option value="1">Phase 1 — Pre-Salary (before $15K/mo × 2 months)</option>
+            <option value="2">Phase 2 — Salaries Active ($15K/mo threshold hit)</option>
           </select>
         </div>
-        <div class="hint">Converts to 30% once LLC hits $25K/mo for 2 consecutive months</div>
+        <div class="hint">Phase 2: Jeff $5K/mo, Ty $5K/mo, Jordan $3K–$4.5K/mo — paid before profit split</div>
       </div>
-      <div class="field" id="jeffHoursField">
-        <label>Jeff's Hours on This Job</label>
-        <div class="field-row"><input type="number" id="jeffHours" placeholder="0" min="0" oninput="calc()"/><span class="prefix">hrs × $50/hr → Landon Renovations</span></div>
-        <div class="hint" id="jeff-calc-hint">= $0</div>
-      </div>
-      <div class="field" id="jeffPctField" style="display:none;">
-        <label>Jeff's Labor % of Gross Profit</label>
-        <div class="field-row"><input type="number" id="jeffPct" placeholder="30" min="0" max="100" oninput="calc()"/><span class="prefix">% of gross profit → Landon Renovations</span></div>
-        <div class="hint" id="jeff-pct-hint">= $0 labor cut</div>
-      </div>
-      <div class="field">
-        <label>Anchor Pro Management Fee</label>
-        <div class="field-row"><input type="number" id="mgmtPct" placeholder="5" min="0" max="10" oninput="calc()"/><span class="prefix">% of gross revenue</span></div>
-        <div class="hint" id="mgmt-calc-hint">= $0</div>
-      </div>
-      <div class="field">
-        <label>Jordan Zoza — Landon Side</label>
-        <div class="field-row"><input type="number" id="jordanPct" placeholder="3" min="0" max="20" oninput="calc()"/><span class="prefix">% of gross revenue → Landon Renovations</span></div>
-        <div class="hint" id="jordan-calc-hint">= $0</div>
-      </div>
-      <div class="field">
-        <label>Ty Jackson — Marketing (Anchor Pro Side)</label>
-        <div class="field-row"><input type="number" id="tyPct" placeholder="3" min="0" max="20" oninput="calc()"/><span class="prefix">% of gross revenue → Anchor Pro Solutions</span></div>
-        <div class="hint" id="ty-calc-hint">= $0</div>
-      </div>
-      <div class="field">
-        <label>Ty Jackson — Field Labor (Anchor Pro Side)</label>
-        <div class="field-row"><input type="number" id="tyHours" placeholder="0" min="0" oninput="calc()"/><span class="prefix">hrs × $30/hr → Anchor Pro Solutions</span></div>
-        <div class="hint" id="ty-labor-hint">= $0</div>
+      <div class="field" id="salaryField" style="display:none;">
+        <label>Monthly Salaries (this deal's prorated share)</label>
+        <div class="field-row"><span class="prefix">$</span><input type="number" id="salaryAlloc" placeholder="0" min="0" oninput="calc()"/></div>
+        <div class="hint" id="salary-hint">Jeff $5K + Ty $5K + Jordan $3–4.5K = ~$13–14.5K/mo total. Enter prorated amount for this job's timeline.</div>
       </div>
       <div class="field" id="pmFeeField" style="display:none;">
-        <label>Property Management Fee (9% of monthly rent)</label>
+        <label>Monthly Rent (BRRRR — triggers PM income)</label>
         <div class="field-row"><span class="prefix">$</span><input type="number" id="monthlyRent" placeholder="0" min="0" oninput="calc()"/><span class="prefix">monthly rent</span></div>
-        <div class="hint" id="pm-fee-hint">= $0 PM fee + $0 processing fee → Ironwood LLC waterfall</div>
+        <div class="hint" id="pm-fee-hint">= $0 PM fee → Ironwood LLC waterfall</div>
       </div>
       <div class="field">
-        <label>Other Fees / Overhead Allocation</label>
+        <label>Other Overhead / Misc</label>
         <div class="field-row"><span class="prefix">$</span><input type="number" id="otherFees" placeholder="0" oninput="calc()"/></div>
       </div>
     </div>
@@ -313,24 +288,33 @@
   <!-- PARTNER CARDS -->
   <div class="partner-cards">
     <div class="partner-card anchor">
-      <div class="pc-name">Anchor Pro Solutions</div>
+      <div class="pc-name">Ty — Anchor Pro Solutions</div>
       <div class="pc-amount" id="anchorAmount">$0</div>
-      <div class="pc-pct">50% of net distributable profit</div>
+      <div class="pc-pct">30% of net distributable profit</div>
       <div class="pc-breakdown">
-        Mgmt Fee + Ty (3%): <span id="anchorMgmt">$0</span><br/>
-        Profit Split (50%): <span id="anchorSplit">$0</span><br/>
-        Total Take-Home: <span id="anchorTotal">$0</span>
+        Salary (W-2): <span id="tySalary">$0</span><br/>
+        Profit Split (30%): <span id="anchorSplit">$0</span><br/>
+        Total: <span id="anchorTotal">$0</span>
       </div>
     </div>
     <div class="partner-card landon">
-      <div class="pc-name">Landon Renovations</div>
+      <div class="pc-name">Jeff — Landon Renovations</div>
       <div class="pc-amount" id="landonAmount">$0</div>
-      <div class="pc-pct">50% of net distributable profit</div>
+      <div class="pc-pct">35% of net distributable profit</div>
       <div class="pc-breakdown">
-        Jeff's Labor: <span id="landonLabor">$0</span> <span id="landonLaborMode" style="font-size:10px;color:#888;">(hourly)</span><br/>
-        Jordan (3%): <span id="landonRetainer">$0</span><br/>
-        Profit Split (50%): <span id="landonSplit">$0</span><br/>
-        Total Take-Home: <span id="landonTotal">$0</span>
+        Salary (W-2): <span id="jeffSalary">$0</span><br/>
+        Profit Split (35%): <span id="landonSplit">$0</span><br/>
+        Total: <span id="landonTotal">$0</span>
+      </div>
+    </div>
+    <div class="partner-card" style="background:linear-gradient(135deg,#1a2a1a,#0d200d);border-color:#2d5a3d;">
+      <div class="pc-name" style="color:#5cb85c;">Ironwood LLC</div>
+      <div class="pc-amount" id="ironwoodAmount" style="color:#5cb85c;">$0</div>
+      <div class="pc-pct" style="color:rgba(255,255,255,.5);">35% of net distributable profit</div>
+      <div class="pc-breakdown">
+        Jordan Salary: <span id="jordanSalary">$0</span><br/>
+        Profit Split (35%): <span id="ironwoodSplit">$0</span><br/>
+        Reinvested in Company: <span id="ironwoodTotal">$0</span>
       </div>
     </div>
   </div>
@@ -362,6 +346,10 @@
 </div>
 
 <script>
+// ── UPDATED: Simplified 35/30/35 split structure (June 2026)
+// Waterfall: Hard costs → Ad spend → Salaries (when Phase 2) → Net distributable
+// Split: Ty/Anchor Pro 30% · Jeff/Landon 35% · Ironwood LLC 35%
+
 let dealType = 'remodel';
 let history = JSON.parse(localStorage.getItem('anchorpro_waterfall_history') || '[]');
 
@@ -458,20 +446,14 @@ function setDealType(type, el) {
 }
 
 function calc() {
-  const jeffMode   = document.getElementById('jeffMode').value;
-  const jeffHours  = parseFloat(document.getElementById('jeffHours').value) || 0;
-  const jeffPct    = parseFloat(document.getElementById('jeffPct').value) || 30;
-  const mgmtPct    = parseFloat(document.getElementById('mgmtPct').value) || 5;
-  const jordanPct  = parseFloat(document.getElementById('jordanPct').value) || 3;
-  const tyPct      = parseFloat(document.getElementById('tyPct').value) || 3;
-  const tyHours    = parseFloat(document.getElementById('tyHours').value) || 0;
-  const otherFees  = parseFloat(document.getElementById('otherFees').value) || 0;
-  const adSpend    = parseFloat(document.getElementById('adSpend').value) || 0;
+  const phase       = document.getElementById('phaseMode').value;
+  const salaryAlloc = parseFloat(document.getElementById('salaryAlloc').value) || 0;
+  const otherFees   = parseFloat(document.getElementById('otherFees').value) || 0;
+  const adSpend     = parseFloat(document.getElementById('adSpend').value) || 0;
   const monthlyRent = parseFloat(document.getElementById('monthlyRent').value) || 0;
 
-  // Toggle Jeff input visibility
-  document.getElementById('jeffHoursField').style.display = jeffMode === 'hourly' ? '' : 'none';
-  document.getElementById('jeffPctField').style.display   = jeffMode === 'pct'    ? '' : 'none';
+  // Show/hide salary field
+  document.getElementById('salaryField').style.display = phase === '2' ? '' : 'none';
 
   let gross, hardCosts, grossProfit;
   let platformFee = 0, vrPmFee = 0, cleaning = 0, utilities = 0;
@@ -483,194 +465,139 @@ function calc() {
     const vtrFixedCosts = parseFloat(document.getElementById('vtrFixedCosts').value) || 0;
     cleaning            = parseFloat(document.getElementById('vtrCleaning').value) || 0;
     utilities           = parseFloat(document.getElementById('vtrUtilities').value) || 0;
-
     vtrGross     = nightlyRate * (occupancyPct / 100) * 30;
     gross        = vtrGross;
-    platformFee  = gross * 0.03;   // 3% platform host fee
-    vrPmFee      = gross * 0.25;   // 25% VR property management (Ty RE license)
+    platformFee  = gross * 0.03;
+    vrPmFee      = gross * 0.20;  // 20% PM fee (Ironwood property management)
     hardCosts    = vtrFixedCosts;
-
-    // Update the read-only gross display
     document.getElementById('vtrGrossDisplay').value = vtrGross.toFixed(2);
-
     grossProfit = Math.max(0, gross - hardCosts - platformFee - vrPmFee - cleaning - utilities - adSpend);
   } else {
-    gross        = parseFloat(document.getElementById('grossRevenue').value) || 0;
-    hardCosts    = parseFloat(document.getElementById('hardCosts').value) || 0;
-    grossProfit  = Math.max(0, gross - hardCosts - adSpend);
+    gross       = parseFloat(document.getElementById('grossRevenue').value) || 0;
+    hardCosts   = parseFloat(document.getElementById('hardCosts').value) || 0;
+    grossProfit = Math.max(0, gross - hardCosts - adSpend);
   }
 
-  const jeffLabor    = jeffMode === 'hourly' ? jeffHours * 50 : grossProfit * (jeffPct / 100);
-  const mgmtFee      = gross * (mgmtPct / 100);
-  const jordanFee    = gross * (jordanPct / 100);
-  const tyFee        = gross * (tyPct / 100);
-  const tyLabor      = tyHours * 30;
-  const netDist      = Math.max(0, grossProfit - jeffLabor - mgmtFee - jordanFee - tyFee - tyLabor - otherFees);
-  const splitEach    = netDist * 0.50;
+  // Salaries are operating expenses, deducted before split
+  const salaryTotal  = phase === '2' ? salaryAlloc : 0;
+  const pmFee        = dealType === 'brrrr' ? monthlyRent * 0.09 : 0;
 
-  // PM fees (BRRRR only)
-  const pmFee         = dealType === 'brrrr' ? monthlyRent * 0.09 : 0;
-  const pmProcessing  = dealType === 'brrrr' ? monthlyRent * 0.035 : 0;
-  const pmTotal       = pmFee + pmProcessing;
+  // Net distributable = gross profit minus salaries and other overhead
+  const netDist      = Math.max(0, grossProfit - salaryTotal - otherFees);
 
-  // Anchor Pro total = mgmt fee + Ty marketing % + Ty field labor + 50% split
-  const anchorTotal  = mgmtFee + tyFee + tyLabor + splitEach;
-  // Landon total = jeff labor + jordan fee + 50% split
-  const landonTotal  = jeffLabor + jordanFee + splitEach;
+  // 30 / 35 / 35 split
+  const tySplit      = netDist * 0.30;   // Ty / Anchor Pro Solutions
+  const jeffSplit    = netDist * 0.35;   // Jeff / Landon Renovations
+  const iwSplit      = netDist * 0.35;   // Ironwood LLC (reinvested)
 
-  // PM hint update
-  if (dealType === 'brrrr') {
+  // PM hint
+  if (dealType === 'brrrr' && pmFee > 0) {
     document.getElementById('pm-fee-hint').textContent =
-      `= ${fmt(pmFee)} PM fee + ${fmt(pmProcessing)} processing (12.5% total on ${fmt(monthlyRent)}/mo rent) → Ironwood LLC`;
+      `= ${fmt(pmFee)} PM fee (9% of ${fmt(monthlyRent)}/mo rent) → Ironwood LLC`;
   }
-
-  // Update hints
-  document.getElementById('jeff-calc-hint').textContent  = jeffMode === 'hourly'
-    ? `= ${fmt(jeffLabor)} (${jeffHours} hrs × $50/hr) → Landon Renovations`
-    : `= ${fmt(jeffLabor)} (${jeffPct}% × ${fmt(grossProfit)} gross profit) → Landon Renovations`;
-  if (document.getElementById('jeff-pct-hint'))
-    document.getElementById('jeff-pct-hint').textContent = `= ${fmt(jeffLabor)} (${jeffPct}% × ${fmt(grossProfit)} gross profit) → Landon Renovations`;
-  document.getElementById('mgmt-calc-hint').textContent  = `= ${fmt(mgmtFee)} → Anchor Pro Solutions`;
-  document.getElementById('jordan-calc-hint').textContent = `= ${fmt(jordanFee)} → Jordan Zoza / Landon Renovations`;
-  document.getElementById('ty-calc-hint').textContent     = `= ${fmt(tyFee)} (${tyPct}% × ${fmt(gross)}) → Ty Jackson / Anchor Pro Solutions`;
-  document.getElementById('ty-labor-hint').textContent    = `= ${fmt(tyLabor)} (${tyHours} hrs × $30/hr) → Ty Jackson / Anchor Pro Solutions`;
 
   // Partner cards
-  document.getElementById('anchorAmount').textContent = fmt(anchorTotal);
-  document.getElementById('anchorMgmt').textContent   = fmt(mgmtFee + tyFee + tyLabor);
-  document.getElementById('anchorSplit').textContent  = fmt(splitEach);
-  document.getElementById('anchorTotal').textContent  = fmt(anchorTotal);
+  document.getElementById('anchorAmount').textContent = fmt(tySplit);
+  document.getElementById('tySalary').textContent     = phase === '2' ? fmt(salaryAlloc * 0.385) : '$0';  // Ty ~$5K of ~$13K salary pool
+  document.getElementById('anchorSplit').textContent  = fmt(tySplit);
+  document.getElementById('anchorTotal').textContent  = fmt(tySplit + (phase === '2' ? salaryAlloc * 0.385 : 0));
 
-  document.getElementById('landonAmount').textContent   = fmt(landonTotal);
-  document.getElementById('landonLabor').textContent    = fmt(jeffLabor);
-  document.getElementById('landonLaborMode').textContent = jeffMode === 'hourly' ? `(${jeffHours} hrs × $50)` : `(${jeffPct}% gross profit)`;
-  document.getElementById('landonRetainer').textContent = fmt(jordanFee);
-  document.getElementById('landonSplit').textContent    = fmt(splitEach);
-  document.getElementById('landonTotal').textContent    = fmt(landonTotal);
+  document.getElementById('landonAmount').textContent = fmt(jeffSplit);
+  document.getElementById('jeffSalary').textContent   = phase === '2' ? fmt(salaryAlloc * 0.385) : '$0';  // Jeff ~$5K of salary pool
+  document.getElementById('landonSplit').textContent  = fmt(jeffSplit);
+  document.getElementById('landonTotal').textContent  = fmt(jeffSplit + (phase === '2' ? salaryAlloc * 0.385 : 0));
 
-  // Build waterfall rows
+  document.getElementById('ironwoodAmount').textContent = fmt(iwSplit);
+  document.getElementById('jordanSalary').textContent   = phase === '2' ? fmt(salaryAlloc * 0.23) : '$0';  // Jordan ~$3K of salary pool
+  document.getElementById('ironwoodSplit').textContent  = fmt(iwSplit);
+  document.getElementById('ironwoodTotal').textContent  = fmt(iwSplit);
+
+  // Waterfall rows
   let rows;
-
   if (dealType === 'vtr') {
     const nightlyRate  = parseFloat(document.getElementById('nightlyRate').value) || 0;
     const occupancyPct = parseFloat(document.getElementById('occupancyPct').value) || 65;
     rows = [
-      { cls: 'gross',        label: 'Gross Monthly VR Revenue',                          sub: `${fmt(nightlyRate)}/night × ${occupancyPct}% occ × 30 days`, amt: gross },
-      { cls: 'section-head', label: 'STEP 1 — VR OPERATING DEDUCTIONS',                 amt: null },
-      { cls: 'deduct',       label: 'Platform Fee (3%)',                                  sub: 'Airbnb / VRBO host fee — pre-waterfall', amt: -platformFee },
-      { cls: 'deduct',       label: 'PM Fee (25% — Ty Jackson, RE License)',              sub: 'VR property management — Anchor Pro', amt: -vrPmFee },
-      { cls: 'deduct',       label: 'Fixed Monthly Costs (Mortgage, Tax, Insurance)',     sub: 'Property fixed obligations', amt: -hardCosts },
-      ...(cleaning > 0 ? [{ cls: 'deduct', label: 'Cleaning / Turnover',                 sub: 'Monthly cleaning costs', amt: -cleaning }] : []),
-      ...(utilities > 0 ? [{ cls: 'deduct', label: 'Utilities',                           sub: 'Electric, water, gas, internet, etc.', amt: -utilities }] : []),
-      ...(adSpend > 0   ? [{ cls: 'deduct', label: 'Ad Spend (Meta, Google, Direct Mail)',sub: 'Pre-waterfall business expense', amt: -adSpend }] : []),
-      { cls: 'result',       label: 'Gross Profit',                                       amt: grossProfit },
-      { cls: 'section-head', label: 'STEP 2 — CONTRIBUTOR FEES',                         amt: null },
-      { cls: 'deduct',       label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50/hr)` : `Jeff's Labor (${jeffPct}% of gross profit)`, sub: '→ Landon Renovations', amt: -jeffLabor },
-      { cls: 'deduct',       label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`,                  sub: '→ Anchor Pro Solutions', amt: -mgmtFee },
-      { cls: 'deduct',       label: `Jordan Zoza (${jordanPct}% of revenue)`,           sub: '→ Landon Renovations', amt: -jordanFee },
-      { cls: 'deduct',       label: `Ty Jackson — Marketing (${tyPct}% of revenue)`,       sub: '→ Anchor Pro Solutions', amt: -tyFee },
-      ...(tyLabor > 0   ? [{ cls: 'deduct', label: `Ty Jackson — Field Labor (${tyHours} hrs × $30/hr)`, sub: '→ Anchor Pro Solutions', amt: -tyLabor }] : []),
-      ...(otherFees > 0 ? [{ cls: 'deduct', label: 'Other Fees / Overhead', sub: '', amt: -otherFees }] : []),
-      { cls: 'result',       label: 'Net Distributable Profit',                            amt: netDist },
-      { cls: 'section-head', label: 'STEP 3 — 50/50 SPLIT',                               amt: null },
-      { cls: 'split-anchor', label: 'Anchor Pro Solutions (50%)', sub: 'Profit split',     amt: splitEach },
-      { cls: 'split-landon', label: 'Landon Renovations (50%)',   sub: 'Profit split',     amt: splitEach },
+      { cls: 'gross',        label: 'Gross Monthly VR Revenue', sub: `${fmt(nightlyRate)}/night × ${occupancyPct}% occ × 30 days`, amt: gross },
+      { cls: 'section-head', label: 'STEP 1 — OPERATING DEDUCTIONS', amt: null },
+      { cls: 'deduct',       label: 'Platform Fee (3%)', sub: 'Airbnb / VRBO host fee', amt: -platformFee },
+      { cls: 'deduct',       label: 'PM Fee (20% — Ironwood Property Management)', sub: 'Property management — Ironwood LLC', amt: -vrPmFee },
+      { cls: 'deduct',       label: 'Fixed Monthly Costs (Mortgage, Tax, Insurance)', sub: 'Property obligations', amt: -hardCosts },
+      ...(cleaning > 0  ? [{ cls: 'deduct', label: 'Cleaning / Turnover', amt: -cleaning }] : []),
+      ...(utilities > 0 ? [{ cls: 'deduct', label: 'Utilities', amt: -utilities }] : []),
+      ...(adSpend > 0   ? [{ cls: 'deduct', label: 'Ad Spend', sub: 'Pre-waterfall', amt: -adSpend }] : []),
+      { cls: 'result', label: 'Gross Profit', amt: grossProfit },
+      ...(salaryTotal > 0 ? [
+        { cls: 'section-head', label: 'STEP 2 — SALARIES (Phase 2 — Operating Expenses)', amt: null },
+        { cls: 'deduct', label: 'Jeff $5K + Ty $5K + Jordan $3–4.5K (prorated)', sub: 'W-2 payroll — paid before profit split', amt: -salaryTotal },
+      ] : []),
+      ...(otherFees > 0 ? [{ cls: 'deduct', label: 'Other Overhead', amt: -otherFees }] : []),
+      { cls: 'result', label: 'Net Distributable Profit', amt: netDist },
+      { cls: 'section-head', label: 'STEP 3 — 30 / 35 / 35 SPLIT', amt: null },
+      { cls: 'split-anchor', label: 'Ty Jackson — Anchor Pro Solutions (30%)', sub: 'Profit split', amt: tySplit },
+      { cls: 'split-landon', label: 'Jeff Sarabia — Landon Renovations (35%)', sub: 'Profit split', amt: jeffSplit },
+      { cls: 'split-anchor', label: 'Ironwood LLC (35%)', sub: 'Reinvested in company', amt: iwSplit },
     ];
   } else {
     rows = [
-      { cls: 'gross',        label: 'Gross Revenue / Proceeds',                  amt: gross },
-      { cls: 'section-head', label: 'STEP 1 — HARD COSTS',                       amt: null },
+      { cls: 'gross',        label: 'Gross Revenue / Proceeds', amt: gross },
+      { cls: 'section-head', label: 'STEP 1 — HARD COSTS', amt: null },
       { cls: 'deduct',       label: 'Materials, Subs, Closing Costs', sub: 'Off the top', amt: -hardCosts },
-      ...(adSpend > 0 ? [{ cls: 'deduct', label: 'Ad Spend (Meta, Google, Direct Mail)', sub: 'Pre-waterfall business expense', amt: -adSpend }] : []),
-      { cls: 'result',       label: 'Gross Profit',                               amt: grossProfit },
-      { cls: 'section-head', label: 'STEP 2 — CONTRIBUTOR FEES',                 amt: null },
-      { cls: 'deduct',       label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50/hr)` : `Jeff's Labor (${jeffPct}% of gross profit)`, sub: '→ Landon Renovations', amt: -jeffLabor },
-      { cls: 'deduct',       label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`,          sub: '→ Anchor Pro Solutions', amt: -mgmtFee },
-      { cls: 'deduct',       label: `Jordan Zoza (${jordanPct}% of revenue)`,  sub: '→ Landon Renovations', amt: -jordanFee },
-      { cls: 'deduct',       label: `Ty Jackson — Marketing (${tyPct}% of revenue)`, sub: '→ Anchor Pro Solutions', amt: -tyFee },
-      ...(tyLabor > 0 ? [{ cls: 'deduct', label: `Ty Jackson — Field Labor (${tyHours} hrs × $30/hr)`, sub: '→ Anchor Pro Solutions', amt: -tyLabor }] : []),
-      ...(otherFees > 0 ? [{ cls: 'deduct', label: 'Other Fees / Overhead', sub: '', amt: -otherFees }] : []),
-      { cls: 'result',       label: 'Net Distributable Profit',                   amt: netDist },
-      ...(pmTotal > 0 ? [
-        { cls: 'section-head', label: 'STEP 2B — PROPERTY MANAGEMENT INCOME', amt: null },
-        { cls: 'gross',        label: `PM Fee (9% of ${fmt(monthlyRent)}/mo rent)`, sub: '→ Ironwood LLC waterfall', amt: pmFee },
-        { cls: 'gross',        label: `Payment Processing Fee (3.5% of rent)`,      sub: '→ Ironwood LLC waterfall', amt: pmProcessing },
-        { cls: 'result',       label: `Total PM Revenue (12.5% of rent)`,            amt: pmTotal },
+      ...(adSpend > 0 ? [{ cls: 'deduct', label: 'Ad Spend', sub: 'Pre-waterfall business expense', amt: -adSpend }] : []),
+      { cls: 'result', label: 'Gross Profit', amt: grossProfit },
+      ...(salaryTotal > 0 ? [
+        { cls: 'section-head', label: 'STEP 2 — SALARIES (Phase 2 — Operating Expenses)', amt: null },
+        { cls: 'deduct', label: 'Jeff $5K + Ty $5K + Jordan $3–4.5K (prorated)', sub: 'W-2 payroll — paid before profit split', amt: -salaryTotal },
       ] : []),
-      { cls: 'section-head', label: 'STEP 3 — 50/50 SPLIT',                      amt: null },
-      { cls: 'split-anchor', label: 'Anchor Pro Solutions (50%)', sub: 'Profit split', amt: splitEach },
-      { cls: 'split-landon', label: 'Landon Renovations (50%)',   sub: 'Profit split', amt: splitEach },
+      ...(otherFees > 0 ? [{ cls: 'deduct', label: 'Other Overhead', amt: -otherFees }] : []),
+      { cls: 'result', label: 'Net Distributable Profit', amt: netDist },
+      ...(pmFee > 0 ? [
+        { cls: 'section-head', label: 'STEP 2B — BRRRR PROPERTY MANAGEMENT INCOME', amt: null },
+        { cls: 'gross', label: `PM Fee (9% of ${fmt(monthlyRent)}/mo rent)`, sub: '→ Ironwood LLC', amt: pmFee },
+      ] : []),
+      { cls: 'section-head', label: 'STEP 3 — 30 / 35 / 35 SPLIT', amt: null },
+      { cls: 'split-anchor', label: 'Ty Jackson — Anchor Pro Solutions (30%)', sub: 'Profit split', amt: tySplit },
+      { cls: 'split-landon', label: 'Jeff Sarabia — Landon Renovations (35%)', sub: 'Profit split', amt: jeffSplit },
+      { cls: 'split-anchor', label: 'Ironwood LLC (35%)', sub: 'Reinvested in company', amt: iwSplit },
     ];
   }
 
   document.getElementById('waterfallRows').innerHTML = rows.map(r => {
     if (r.cls === 'section-head') return `<div class="wf-row section-head"><span>${r.label}</span></div>`;
     const amtStr = r.amt === null ? '' : (r.amt < 0 ? '− ' + fmt(Math.abs(r.amt)) : fmt(r.amt));
-    return `
-      <div class="wf-row ${r.cls}">
-        <div>
-          <div class="label">${r.label}</div>
-          ${r.sub ? `<div class="sub-label">${r.sub}</div>` : ''}
-        </div>
-        <div class="amt">${amtStr}</div>
-      </div>`;
+    return `<div class="wf-row ${r.cls}">
+      <div><div class="label">${r.label}</div>${r.sub ? `<div class="sub-label">${r.sub}</div>` : ''}</div>
+      <div class="amt">${amtStr}</div>
+    </div>`;
   }).join('');
 
   // Bar chart
   const total = gross || 1;
-  let bars;
-
-  if (dealType === 'vtr') {
-    bars = [
-      { label: 'Platform Fee (3% — Airbnb/VRBO)', val: platformFee, color: '#c0392b' },
-      { label: 'PM Fee (25% — Ty Jackson, RE License)', val: vrPmFee, color: 'var(--bronze)' },
-      { label: 'Fixed Monthly Costs', val: hardCosts, color: '#8e44ad' },
-      ...(cleaning > 0   ? [{ label: 'Cleaning / Turnover', val: cleaning, color: '#e67e22' }] : []),
-      ...(utilities > 0  ? [{ label: 'Utilities', val: utilities, color: '#7f8c8d' }] : []),
-      ...(adSpend > 0    ? [{ label: 'Ad Spend', val: adSpend, color: '#e74c3c' }] : []),
-      { label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50)` : `Jeff's Labor (${jeffPct}% gross profit)`, val: jeffLabor, color: '#3498db' },
-      { label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`, val: mgmtFee, color: '#2ecc71' },
-      { label: `Jordan Zoza (${jordanPct}%)`, val: jordanFee, color: '#ce93d8' },
-      { label: `Ty Jackson — Marketing (${tyPct}%)`, val: tyFee, color: '#80cbc4' },
-      ...(tyLabor > 0    ? [{ label: `Ty Jackson — Field Labor (${tyHours} hrs × $30)`, val: tyLabor, color: '#4db6ac' }] : []),
-      { label: 'Anchor Pro Split (50%)', val: splitEach, color: '#27ae60' },
-      { label: 'Landon Split (50%)', val: splitEach, color: '#2980b9' },
-    ].filter(b => b.val > 0);
-  } else {
-    bars = [
-      { label: 'Hard Costs', val: hardCosts, color: '#c0392b' },
-      ...(adSpend > 0 ? [{ label: 'Ad Spend', val: adSpend, color: '#e74c3c' }] : []),
-      { label: jeffMode === 'hourly' ? `Jeff's Labor (${jeffHours} hrs × $50)` : `Jeff's Labor (${jeffPct}% gross profit)`, val: jeffLabor, color: '#3498db' },
-      { label: `Anchor Pro Mgmt Fee (${mgmtPct}%)`, val: mgmtFee, color: 'var(--bronze)' },
-      { label: `Jordan Zoza (${jordanPct}%)`, val: jordanFee, color: '#ce93d8' },
-      { label: `Ty Jackson — Marketing (${tyPct}%)`, val: tyFee, color: '#80cbc4' },
-      ...(tyLabor > 0 ? [{ label: `Ty Jackson — Field Labor (${tyHours} hrs × $30)`, val: tyLabor, color: '#4db6ac' }] : []),
-      { label: 'Other Fees', val: otherFees, color: '#7f8c8d' },
-      ...(pmTotal > 0 ? [{ label: `PM Fee + Processing (12.5% of rent)`, val: pmTotal, color: 'var(--bronze)' }] : []),
-      { label: 'Anchor Pro Split (50%)', val: splitEach, color: '#27ae60' },
-      { label: 'Landon Split (50%)', val: splitEach, color: '#2980b9' },
-    ].filter(b => b.val > 0);
-  }
+  const bars = [
+    { label: 'Hard Costs / Fixed Costs', val: hardCosts, color: '#c0392b' },
+    ...(platformFee > 0 ? [{ label: 'Platform Fee (3%)', val: platformFee, color: '#e74c3c' }] : []),
+    ...(vrPmFee > 0     ? [{ label: 'PM Fee (20%)', val: vrPmFee, color: '#8e44ad' }] : []),
+    ...(cleaning > 0    ? [{ label: 'Cleaning / Turnover', val: cleaning, color: '#e67e22' }] : []),
+    ...(utilities > 0   ? [{ label: 'Utilities', val: utilities, color: '#7f8c8d' }] : []),
+    ...(adSpend > 0     ? [{ label: 'Ad Spend', val: adSpend, color: '#e74c3c' }] : []),
+    ...(salaryTotal > 0 ? [{ label: 'Salaries (Jeff + Ty + Jordan)', val: salaryTotal, color: '#f39c12' }] : []),
+    ...(otherFees > 0   ? [{ label: 'Other Overhead', val: otherFees, color: '#7f8c8d' }] : []),
+    { label: 'Ty / Anchor Pro (30%)', val: tySplit, color: '#6B8DB5' },
+    { label: 'Jeff / Landon (35%)',   val: jeffSplit, color: '#2980b9' },
+    { label: 'Ironwood LLC (35%)',    val: iwSplit, color: '#27ae60' },
+  ].filter(b => b.val > 0);
 
   document.getElementById('barChart').innerHTML = bars.map(b => {
     const pct = Math.min(100, (b.val / total) * 100);
-    return `
-      <div class="bar-item">
-        <div class="bar-label-row"><span class="bl">${b.label}</span><span class="bv">${fmt(b.val)} (${pct.toFixed(1)}%)</span></div>
-        <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${b.color};"></div></div>
-      </div>`;
+    return `<div class="bar-item">
+      <div class="bar-label-row"><span class="bl">${b.label}</span><span class="bv">${fmt(b.val)} (${pct.toFixed(1)}%)</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${b.color};"></div></div>
+    </div>`;
   }).join('') || '<div class="empty-state">Enter values above to see the breakdown.</div>';
 }
 
 function saveToDeal() {
   const adSpend   = parseFloat(document.getElementById('adSpend').value) || 0;
-  const jeffMode  = document.getElementById('jeffMode').value;
-  const jeffHoursS = parseFloat(document.getElementById('jeffHours').value) || 0;
-  const jeffPctS   = parseFloat(document.getElementById('jeffPct').value) || 30;
-  const mgmtPct   = parseFloat(document.getElementById('mgmtPct').value) || 5;
-  const jordanPct = parseFloat(document.getElementById('jordanPct').value) || 3;
-  const tyPct     = parseFloat(document.getElementById('tyPct').value) || 3;
-  const tyHoursS  = parseFloat(document.getElementById('tyHours').value) || 0;
   const otherFees = parseFloat(document.getElementById('otherFees').value) || 0;
   const name      = document.getElementById('dealName').value.trim() || 'Unnamed Deal';
 
@@ -685,7 +612,7 @@ function saveToDeal() {
     utilities           = parseFloat(document.getElementById('vtrUtilities').value) || 0;
     gross        = nightlyRate * (occupancyPct / 100) * 30;
     platformFee  = gross * 0.03;
-    vrPmFee      = gross * 0.25;
+    vrPmFee      = gross * 0.20;
     hardCosts    = vtrFixedCosts;
     grossProfit  = Math.max(0, gross - hardCosts - platformFee - vrPmFee - cleaning - utilities - adSpend);
   } else {
@@ -696,18 +623,19 @@ function saveToDeal() {
 
   if (!gross) { alert('Enter a gross revenue amount first.'); return; }
 
-  const jeffLabor   = jeffMode === 'hourly' ? jeffHoursS * 50 : grossProfit * (jeffPctS / 100);
-  const mgmtFee     = gross * (mgmtPct / 100);
-  const jordanFee   = gross * (jordanPct / 100);
-  const tyFee       = gross * (tyPct / 100);
-  const tyLabor     = tyHoursS * 30;
-  const netDist     = Math.max(0, grossProfit - jeffLabor - mgmtFee - jordanFee - tyFee - tyLabor - otherFees);
-  const splitEach   = netDist * 0.50;
+  const phaseEl     = document.getElementById('phaseMode');
+  const phase       = phaseEl ? phaseEl.value : '1';
+  const salaryAlloc = parseFloat(document.getElementById('salaryAlloc') ? document.getElementById('salaryAlloc').value : 0) || 0;
+  const salaryTotal = phase === '2' ? salaryAlloc : 0;
+  const netDist     = Math.max(0, grossProfit - salaryTotal - otherFees);
+  const tySplit     = netDist * 0.30;
+  const jeffSplit   = netDist * 0.35;
+  const iwSplit     = netDist * 0.35;
 
   history.unshift({
     id: uid(), date: new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
-    name, type: dealType, gross, netDist, splitEach,
-    anchorTotal: mgmtFee + tyFee + tyLabor + splitEach, landonTotal: jeffLabor + jordanFee + splitEach
+    name, type: dealType, gross, netDist,
+    tySplit, jeffSplit, iwSplit
   });
   localStorage.setItem('anchorpro_waterfall_history', JSON.stringify(history));
   renderHistory();
@@ -720,12 +648,13 @@ function renderHistory() {
     el.innerHTML = '<div class="empty-state">No deals saved yet. Fill in a deal and click "+ Save to History".</div>';
     return;
   }
-  const totAnchor = history.reduce((s,d) => s + (d.anchorTotal||0), 0);
-  const totLandon = history.reduce((s,d) => s + (d.landonTotal||0), 0);
+  const totTy   = history.reduce((s,d) => s + (d.tySplit||0), 0);
+  const totJeff = history.reduce((s,d) => s + (d.jeffSplit||0), 0);
+  const totIw   = history.reduce((s,d) => s + (d.iwSplit||0), 0);
   const typeLabels = { remodel: 'Remodel', brrrr: 'BRRRR', flip: 'Flip', vtr: 'Vacation Rental' };
   el.innerHTML = `
     <table class="hist-table">
-      <thead><tr><th>Date</th><th>Deal / Job</th><th>Type</th><th>Gross Revenue</th><th>Net Distributable</th><th>Anchor Pro</th><th>Landon Renovations</th></tr></thead>
+      <thead><tr><th>Date</th><th>Deal / Job</th><th>Type</th><th>Gross Revenue</th><th>Net Distributable</th><th>Ty / Anchor Pro (30%)</th><th>Jeff / Landon (35%)</th><th>Ironwood LLC (35%)</th></tr></thead>
       <tbody>
         ${history.map(d => `
           <tr>
@@ -734,13 +663,15 @@ function renderHistory() {
             <td style="color:var(--muted)">${typeLabels[d.type] || d.type}</td>
             <td>${fmt(d.gross)}</td>
             <td style="color:var(--bronze)">${fmt(d.netDist)}</td>
-            <td style="color:#5cb85c; font-weight:700;">${fmt(d.anchorTotal)}</td>
-            <td style="color:#64b5f6; font-weight:700;">${fmt(d.landonTotal)}</td>
+            <td style="color:#5cb85c; font-weight:700;">${fmt(d.tySplit)}</td>
+            <td style="color:#64b5f6; font-weight:700;">${fmt(d.jeffSplit)}</td>
+            <td style="color:#f39c12; font-weight:700;">${fmt(d.iwSplit)}</td>
           </tr>`).join('')}
         <tr style="background:var(--ink); font-weight:700; border-top:2px solid var(--bronze);">
           <td colspan="5" style="color:var(--bronze); font-size:11px; text-transform:uppercase; letter-spacing:.5px;">TOTALS (${history.length} deal${history.length===1?'':'s'})</td>
-          <td style="color:#5cb85c;">${fmt(totAnchor)}</td>
-          <td style="color:#64b5f6;">${fmt(totLandon)}</td>
+          <td style="color:#5cb85c;">${fmt(totTy)}</td>
+          <td style="color:#64b5f6;">${fmt(totJeff)}</td>
+          <td style="color:#f39c12;">${fmt(totIw)}</td>
         </tr>
       </tbody>
     </table>`;
