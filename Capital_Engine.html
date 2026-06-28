@@ -222,6 +222,7 @@
     <button class="ce-tab" id="tab-buyers"   onclick="setTab('buyers')">Cash Buyers</button>
     <button class="ce-tab" id="tab-lenders"  onclick="setTab('lenders')">Lenders</button>
     <button class="ce-tab" id="tab-chain"    onclick="setTab('chain')">Deal Chain</button>
+    <button class="ce-tab" id="tab-arb"      onclick="setTab('arb')">⚡ Arbitrage</button>
   </div>
 
   <!-- SUMMARY STRIP -->
@@ -400,6 +401,164 @@
     </div>
   </div>
 
+  <!-- ══ ARBITRAGE TAB ══ -->
+  <div id="view-arb" style="display:none;">
+
+    <!-- SUMMARY STRIP -->
+    <div class="sum-strip" style="margin-bottom:24px;" id="arb-summary-strip">
+      <div class="sum-cell">
+        <div class="sum-cell-label">Wholesale Spread</div>
+        <div class="sum-cell-value green" id="arb-s-wholesale">$0</div>
+        <div class="sum-cell-sub">per deal</div>
+      </div>
+      <div class="sum-cell">
+        <div class="sum-cell-label">Labor Margin</div>
+        <div class="sum-cell-value green" id="arb-s-labor">$0</div>
+        <div class="sum-cell-sub">per job</div>
+      </div>
+      <div class="sum-cell">
+        <div class="sum-cell-label">Rate Arbitrage</div>
+        <div class="sum-cell-value green" id="arb-s-rate">0%</div>
+        <div class="sum-cell-sub">HML → refi spread</div>
+      </div>
+      <div class="sum-cell">
+        <div class="sum-cell-label">Private $ Spread</div>
+        <div class="sum-cell-value green" id="arb-s-pm">0%</div>
+        <div class="sum-cell-sub">raise vs. deploy</div>
+      </div>
+      <div class="sum-cell">
+        <div class="sum-cell-label">Creative Finance</div>
+        <div class="sum-cell-value green" id="arb-s-creative">$0/mo</div>
+        <div class="sum-cell-sub">rate spread</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+      <!-- 1. WHOLESALE SPREAD -->
+      <div class="ce-card">
+        <h3 style="font-family:'Instrument Serif',serif;font-size:17px;color:var(--ink);margin-bottom:4px;">1. Wholesale Spread</h3>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Lock a contract, assign it — pocket the gap. Zero rehab, zero capital risk.</div>
+        <div class="ce-form-grid">
+          <div class="ce-field"><div class="ce-label">Seller Accepted Price ($)</div><input class="ce-input" id="arb-ws-seller" type="number" placeholder="140000" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">Buyer Pays ($)</div><input class="ce-input" id="arb-ws-buyer" type="number" placeholder="155000" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">EMD / Deal Costs ($)</div><input class="ce-input" id="arb-ws-costs" type="number" placeholder="1000" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">Closing Costs / Title ($)</div><input class="ce-input" id="arb-ws-closing" type="number" placeholder="1500" oninput="calcArb()"/></div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:14px;margin-top:4px;">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--hairline);font-size:13px;"><span style="color:var(--muted)">Gross Spread</span><span style="font-weight:700;color:var(--ink)" id="arb-ws-gross">$0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--hairline);font-size:13px;"><span style="color:var(--muted)">Less Costs</span><span style="font-weight:700;color:#b5341a" id="arb-ws-less">$0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0 2px;font-size:15px;"><span style="color:var(--ink);font-weight:700;">Net Assignment Fee</span><span style="font-weight:800;color:#1a4d32;font-size:18px;" id="arb-ws-net">$0</span></div>
+        </div>
+      </div>
+
+      <!-- 2. LABOR RATE ARBITRAGE -->
+      <div class="ce-card">
+        <h3 style="font-family:'Instrument Serif',serif;font-size:17px;color:var(--ink);margin-bottom:4px;">2. Labor Rate Arbitrage</h3>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">You quote market rate. You pay crew cost. The spread is your margin.</div>
+        <div class="ce-form-grid">
+          <div class="ce-field"><div class="ce-label">Bill Rate to Client ($/hr)</div><input class="ce-input" id="arb-lr-bill" type="number" placeholder="95" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">Crew Cost ($/hr)</div><input class="ce-input" id="arb-lr-cost" type="number" placeholder="38" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">Hours on Job</div><input class="ce-input" id="arb-lr-hours" type="number" placeholder="200" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">Material Markup (%)</div><input class="ce-input" id="arb-lr-markup" type="number" placeholder="20" oninput="calcArb()"/></div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:14px;margin-top:4px;">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--hairline);font-size:13px;"><span style="color:var(--muted)">Revenue (billed)</span><span style="font-weight:700;color:var(--ink)" id="arb-lr-rev">$0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--hairline);font-size:13px;"><span style="color:var(--muted)">Crew Cost</span><span style="font-weight:700;color:#b5341a" id="arb-lr-crewcost">$0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--hairline);font-size:13px;"><span style="color:var(--muted)">Margin $</span><span style="font-weight:700;color:#1a4d32" id="arb-lr-margin">$0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0 2px;font-size:15px;"><span style="color:var(--ink);font-weight:700;">Margin %</span><span style="font-weight:800;color:#1a4d32;font-size:18px;" id="arb-lr-pct">0%</span></div>
+        </div>
+      </div>
+
+      <!-- 3. HML → REFI RATE ARBITRAGE -->
+      <div class="ce-card">
+        <h3 style="font-family:'Instrument Serif',serif;font-size:17px;color:var(--ink);margin-bottom:4px;">3. HML → Refi Rate Arbitrage</h3>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Borrow HML short-term, force equity, refi long-term at lower rate. Lock in the spread permanently.</div>
+        <div class="ce-form-grid">
+          <div class="ce-field"><div class="ce-label">Loan Amount ($)</div><input class="ce-input" id="arb-hml-loan" type="number" placeholder="160000" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">HML Rate (%)</div><input class="ce-input" id="arb-hml-rate" type="number" placeholder="13" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">Refi Rate (% 30yr)</div><input class="ce-input" id="arb-hml-refi" type="number" placeholder="7" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">ARV ($)</div><input class="ce-input" id="arb-hml-arv" type="number" placeholder="280000" oninput="calcArb()"/></div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:14px;margin-top:4px;">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--hairline);font-size:13px;"><span style="color:var(--muted)">HML Monthly Interest</span><span style="font-weight:700;color:#b5341a" id="arb-hml-mo-hml">$0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--hairline);font-size:13px;"><span style="color:var(--muted)">Refi Monthly Payment (75% LTV)</span><span style="font-weight:700;color:var(--ink)" id="arb-hml-mo-refi">$0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--hairline);font-size:13px;"><span style="color:var(--muted)">Rate Spread</span><span style="font-weight:700;color:#1a4d32" id="arb-hml-spread">0%</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0 2px;font-size:15px;"><span style="color:var(--ink);font-weight:700;">Equity Captured at ARV</span><span style="font-weight:800;color:#1a4d32;font-size:18px;" id="arb-hml-equity">$0</span></div>
+        </div>
+      </div>
+
+      <!-- 4. CREATIVE FINANCE RATE ARBITRAGE -->
+      <div class="ce-card">
+        <h3 style="font-family:'Instrument Serif',serif;font-size:17px;color:var(--ink);margin-bottom:4px;">4. Creative Finance Rate Arbitrage</h3>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Buy sub-to at seller's low rate, rent or seller-finance out at market. Pocket the monthly spread forever.</div>
+        <div class="ce-form-grid">
+          <div class="ce-field"><div class="ce-label">Loan Balance ($)</div><input class="ce-input" id="arb-cf-balance" type="number" placeholder="120000" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">Seller's Existing Rate (%)</div><input class="ce-input" id="arb-cf-seller-rate" type="number" placeholder="3.5" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">Remaining Term (yrs)</div><input class="ce-input" id="arb-cf-term" type="number" placeholder="22" oninput="calcArb()"/></div>
+          <div class="ce-field"><div class="ce-label">Market Rent / Buyer Pmt ($)</div><input class="ce-input" id="arb-cf-market" type="number" placeholder="1800" oninput="calcArb()"/></div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:14px;margin-top:4px;">
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--hairline);font-size:13px;"><span style="color:var(--muted)">Your PITI (seller's rate)</span><span style="font-weight:700;color:#b5341a" id="arb-cf-piti">$0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid var(--hairline);font-size:13px;"><span style="color:var(--muted)">Income (rent / buyer pmt)</span><span style="font-weight:700;color:var(--ink)" id="arb-cf-income">$0</span></div>
+          <div style="display:flex;justify-content:space-between;padding:8px 0 2px;font-size:15px;"><span style="color:var(--ink);font-weight:700;">Monthly Spread</span><span style="font-weight:800;color:#1a4d32;font-size:18px;" id="arb-cf-spread">$0/mo</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. PRIVATE MONEY RAISE ARBITRAGE — full width -->
+    <div class="ce-card" style="margin-bottom:24px;">
+      <h3 style="font-family:'Instrument Serif',serif;font-size:17px;color:var(--ink);margin-bottom:4px;">5. Private Money Raise Arbitrage</h3>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:16px;">Raise capital from private lenders at a fixed rate. Deploy it on deals at a higher return. The spread is pure profit.</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:16px;">
+        <div class="ce-field"><div class="ce-label">Capital Raised ($)</div><input class="ce-input" id="arb-pm-raised" type="number" placeholder="200000" oninput="calcArb()"/></div>
+        <div class="ce-field"><div class="ce-label">Rate Paid to Lender (%)</div><input class="ce-input" id="arb-pm-lender-rate" type="number" placeholder="8" oninput="calcArb()"/></div>
+        <div class="ce-field"><div class="ce-label">Your Deal Return (%)</div><input class="ce-input" id="arb-pm-return" type="number" placeholder="22" oninput="calcArb()"/></div>
+        <div class="ce-field"><div class="ce-label">Hold Period (months)</div><input class="ce-input" id="arb-pm-hold" type="number" placeholder="6" oninput="calcArb()"/></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
+        <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Interest Owed</div>
+          <div style="font-size:20px;font-weight:800;color:#b5341a;" id="arb-pm-owed">$0</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Deal Profit</div>
+          <div style="font-size:20px;font-weight:800;color:var(--ink);" id="arb-pm-profit">$0</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Spread</div>
+          <div style="font-size:20px;font-weight:800;color:#1a4d32;" id="arb-pm-spread">0%</div>
+        </div>
+        <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:14px;text-align:center;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:6px;">Net Arbitrage $</div>
+          <div style="font-size:20px;font-weight:800;color:#1a4d32;" id="arb-pm-net">$0</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPLAINER -->
+    <div class="ce-card">
+      <div class="ce-section-label">How to Use Each Play — Phase Guide</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:4px;">
+        <div style="background:var(--surface2);border-radius:8px;padding:14px;border-left:3px solid #b85c00;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#b85c00;margin-bottom:6px;">Phase 1 — Now</div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px;">Wholesale + Labor</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">Lock deals below market, assign the contract. Anchor Pro quotes full market rate — Ironwood executes at crew cost. Both spreads require zero capital.</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:14px;border-left:3px solid #1a4d32;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1a4d32;margin-bottom:6px;">Phase 2 — Month 3–6</div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px;">HML + Private Money</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">Use HML for flips. Raise private money from investors at 8–10%, deploy on deals returning 20%+. Each deal you close builds the track record for the next raise.</div>
+        </div>
+        <div style="background:var(--surface2);border-radius:8px;padding:14px;border-left:3px solid #1a3a5c;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#1a3a5c;margin-bottom:6px;">Phase 3 — Year 1+</div>
+          <div style="font-size:13px;font-weight:700;color:var(--ink);margin-bottom:6px;">Creative Finance + BRRRR</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.6;">Sub-to and seller finance plays let you acquire below-market debt. BRRRR recycles the same capital forever. Rate and equity spreads compound over time.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /view-arb -->
+
 </div><!-- /ce-wrap -->
 
 <!-- MODAL -->
@@ -467,10 +626,90 @@ window.addEventListener('load', () => {
 // ── TAB ──
 function setTab(t) {
   activeTab = t;
-  ['overview','buyers','lenders','chain'].forEach(v => {
+  ['overview','buyers','lenders','chain','arb'].forEach(v => {
     document.getElementById('view-' + v).style.display = v === t ? '' : 'none';
     document.getElementById('tab-' + v).classList.toggle('active', v === t);
   });
+}
+
+// ── ARBITRAGE CALCULATORS ──
+function calcArb() {
+  const nv = id => parseFloat(document.getElementById(id)?.value) || 0;
+  const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+  const fmtA = x => '$' + Math.round(x).toLocaleString('en-US');
+
+  // 1. Wholesale Spread
+  const wsSeller  = nv('arb-ws-seller');
+  const wsBuyer   = nv('arb-ws-buyer');
+  const wsCosts   = nv('arb-ws-costs');
+  const wsClosing = nv('arb-ws-closing');
+  const wsGross   = wsBuyer - wsSeller;
+  const wsTotal   = wsCosts + wsClosing;
+  const wsNet     = wsGross - wsTotal;
+  set('arb-ws-gross', fmtA(wsGross));
+  set('arb-ws-less',  fmtA(wsTotal));
+  set('arb-ws-net',   fmtA(wsNet));
+
+  // 2. Labor Rate Arbitrage
+  const lrBill   = nv('arb-lr-bill');
+  const lrCost   = nv('arb-lr-cost');
+  const lrHours  = nv('arb-lr-hours');
+  const lrMarkup = nv('arb-lr-markup') / 100;
+  const lrRev    = lrBill * lrHours;
+  const lrCrew   = lrCost * lrHours;
+  const lrMargin = lrRev - lrCrew;
+  const lrPct    = lrRev > 0 ? ((lrMargin / lrRev) * 100).toFixed(1) : 0;
+  set('arb-lr-rev',      fmtA(lrRev));
+  set('arb-lr-crewcost', fmtA(lrCrew));
+  set('arb-lr-margin',   fmtA(lrMargin));
+  set('arb-lr-pct',      lrPct + '%');
+
+  // 3. HML → Refi Rate Arbitrage
+  const hmlLoan  = nv('arb-hml-loan');
+  const hmlRate  = nv('arb-hml-rate') / 100;
+  const refiRate = nv('arb-hml-refi') / 100;
+  const hmlArv   = nv('arb-hml-arv');
+  const hmlMo    = hmlLoan * (hmlRate / 12);
+  const refiLoan = hmlArv * 0.75;
+  const refiMo   = refiLoan > 0 ? refiLoan * (refiRate / 12) / (1 - Math.pow(1 + refiRate/12, -360)) : 0;
+  const hmlSpread = nv('arb-hml-rate') - nv('arb-hml-refi');
+  const hmlEquity = hmlArv > 0 ? hmlArv - hmlLoan : 0;
+  set('arb-hml-mo-hml',  fmtA(hmlMo));
+  set('arb-hml-mo-refi', fmtA(refiMo));
+  set('arb-hml-spread',  hmlSpread.toFixed(1) + '%');
+  set('arb-hml-equity',  fmtA(hmlEquity));
+
+  // 4. Creative Finance Rate Arbitrage
+  const cfBalance = nv('arb-cf-balance');
+  const cfRate    = nv('arb-cf-seller-rate') / 100;
+  const cfTerm    = nv('arb-cf-term') * 12;
+  const cfMarket  = nv('arb-cf-market');
+  const cfMo      = cfBalance > 0 && cfRate > 0 ? cfBalance * (cfRate/12) / (1 - Math.pow(1 + cfRate/12, -cfTerm)) : 0;
+  const cfSpread  = cfMarket - cfMo;
+  set('arb-cf-piti',   fmtA(cfMo));
+  set('arb-cf-income', fmtA(cfMarket));
+  set('arb-cf-spread', fmtA(cfSpread) + '/mo');
+
+  // 5. Private Money Raise
+  const pmRaised = nv('arb-pm-raised');
+  const pmLRate  = nv('arb-pm-lender-rate') / 100;
+  const pmReturn = nv('arb-pm-return') / 100;
+  const pmHold   = nv('arb-pm-hold') / 12;
+  const pmOwed   = pmRaised * pmLRate * pmHold;
+  const pmProfit = pmRaised * pmReturn * pmHold;
+  const pmSpread = nv('arb-pm-return') - nv('arb-pm-lender-rate');
+  const pmNet    = pmProfit - pmOwed;
+  set('arb-pm-owed',   fmtA(pmOwed));
+  set('arb-pm-profit', fmtA(pmProfit));
+  set('arb-pm-spread', pmSpread.toFixed(1) + '%');
+  set('arb-pm-net',    fmtA(pmNet));
+
+  // Update summary strip
+  document.getElementById('arb-s-wholesale').textContent = fmtA(wsNet);
+  document.getElementById('arb-s-labor').textContent     = fmtA(lrMargin);
+  document.getElementById('arb-s-rate').textContent      = hmlSpread.toFixed(1) + '%';
+  document.getElementById('arb-s-pm').textContent        = pmSpread.toFixed(1) + '%';
+  document.getElementById('arb-s-creative').textContent  = fmtA(cfSpread) + '/mo';
 }
 
 // ── CHECKLIST ──
