@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Market Expansion Playbook — Deal Machine</title>
+<link rel="stylesheet" href="iw-design.css">
+<style>
+  /* ── PAGE SHELL ── */
+  .page-header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--hairline);
+    padding: 28px 32px 24px;
+  }
+  .page-header-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .page-eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--bronze);
+    margin-bottom: 6px;
+  }
+  .page-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: clamp(22px, 3vw, 30px);
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .page-sub {
+    font-size: 14px;
+    color: var(--muted);
+  }
+
+  /* ── SUMMARY STRIP ── */
+  .summary-strip {
+    background: var(--surface);
+    border-bottom: 1px solid var(--hairline);
+    padding: 0 32px;
+  }
+  .summary-strip-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+  }
+  .stat-cell {
+    padding: 14px 28px 14px 0;
+    margin-right: 28px;
+    border-right: 1px solid var(--hairline);
+    min-width: 130px;
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+  .stat-value {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 26px;
+    color: var(--ink);
+    line-height: 1;
+  }
+
+  /* ── TABS ── */
+  .tab-bar {
+    background: var(--surface);
+    border-bottom: 1px solid var(--hairline);
+    padding: 0 32px;
+  }
+  .tab-bar-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .tab-bar-inner::-webkit-scrollbar { display: none; }
+  .tab-btn {
+    padding: 14px 22px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: 'Geist', system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--muted);
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: color .15s, border-color .15s;
+  }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active {
+    color: var(--bronze);
+    border-bottom-color: var(--bronze);
+    font-weight: 600;
+  }
+
+  /* ── MAIN CONTENT ── */
+  .main {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 32px;
+  }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* ── LAYOUT: TWO COLUMNS ── */
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 24px;
+    align-items: start;
+  }
+  @media (max-width: 860px) {
+    .two-col { grid-template-columns: 1fr; }
+    .main { padding: 20px 16px; }
+    .summary-strip { padding: 0 16px; }
+    .tab-bar { padding: 0 16px; }
+    .page-header { padding: 20px 16px 18px; }
+    .stat-cell { min-width: 100px; padding: 12px 18px 12px 0; margin-right: 18px; }
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 24px;
+    box-shadow: 0 1px 4px rgba(28,24,20,.06);
+  }
+  .card-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 19px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .card-sub {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+
+  /* ── FORM CONTROLS ── */
+  label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 5px;
+  }
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 9px 13px;
+    font-family: 'Geist', system-ui, sans-serif;
+    font-size: 14px;
+    color: var(--ink);
+    outline: none;
+    transition: border-color .15s;
+    appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--bronze);
+  }
+  .form-row {
+    margin-bottom: 16px;
+  }
+
+  /* ── SLIDER ROWS ── */
+  .slider-row {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+    margin-bottom: 14px;
+    padding: 14px 16px;
+    background: var(--bg);
+    border-radius: var(--radius);
+    border: 1px solid var(--hairline);
+  }
+  .slider-label { font-size: 13px; font-weight: 500; color: var(--ink); }
+  .slider-desc { font-size: 11px; color: var(--muted); margin-top: 2px; }
+  .slider-input {
+    width: 90px;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    accent-color: var(--bronze);
+  }
+  .slider-val {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--bronze);
+    min-width: 20px;
+    text-align: center;
+  }
+
+  /* ── SCORE RESULT ── */
+  .score-result {
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: var(--radius);
+    border: 1px solid var(--hairline);
+    background: var(--bg);
+    text-align: center;
+  }
+  .score-big {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 52px;
+    line-height: 1;
+    color: var(--ink);
+  }
+  .score-denom { font-size: 20px; color: var(--muted); }
+  .score-label {
+    font-size: 14px;
+    font-weight: 600;
+    margin-top: 8px;
+    padding: 4px 14px;
+    border-radius: 999px;
+    display: inline-block;
+  }
+  .score-label.ideal { background: #D8F3DC; color: #1B4332; }
+  .score-label.strong { background: #FEF9C3; color: #713F12; }
+  .score-label.possible { background: #FFEDD5; color: #9A3412; }
+  .score-label.skip { background: #FDECEA; color: #7F1D1D; }
+
+  /* ── SCORE BAR ── */
+  .score-bar-wrap {
+    margin-top: 14px;
+    background: var(--hairline);
+    border-radius: 999px;
+    height: 10px;
+    overflow: hidden;
+  }
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width .4s ease;
+    background: var(--bronze);
+  }
+
+  /* ── BTN ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 20px;
+    border-radius: var(--radius);
+    border: none;
+    font-family: 'Geist', system-ui, sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity .15s, transform .1s;
+  }
+  .btn:hover { opacity: .85; }
+  .btn:active { transform: scale(.98); }
+  .btn-primary { background: var(--bronze); color: #fff; }
+  .btn-ghost {
+    background: transparent;
+    color: var(--bronze);
+    border: 1px solid var(--bronze);
+  }
+  .btn-danger { background: var(--red-tint, #FDECEA); color: var(--red, #B5341A); border: 1px solid var(--red, #B5341A); }
+  .btn-sm { padding: 6px 13px; font-size: 13px; }
+
+  /* ── SAVED MARKETS SIDEBAR ── */
+  .saved-list { display: flex; flex-direction: column; gap: 10px; }
+  .saved-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: border-color .15s;
+  }
+  .saved-item:hover { border-color: var(--bronze); }
+  .saved-item-name { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .saved-item-date { font-size: 11px; color: var(--muted); margin-top: 1px; }
+  .score-badge {
+    font-size: 13px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+  }
+  .badge-ideal { background: #D8F3DC; color: #1B4332; }
+  .badge-strong { background: #FEF9C3; color: #713F12; }
+  .badge-possible { background: #FFEDD5; color: #9A3412; }
+  .badge-skip { background: #FDECEA; color: #7F1D1D; }
+
+  /* ── CHECKLIST ── */
+  .phase-block { margin-bottom: 28px; }
+  .phase-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 4px;
+  }
+  .phase-sub { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: background .12s;
+  }
+  .check-item.done {
+    background: #F0FAF3;
+    border-color: #A7D9B4;
+  }
+  .check-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    margin-top: 1px;
+    cursor: pointer;
+    accent-color: var(--bronze);
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 4px;
+  }
+  .check-item-text {
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.5;
+  }
+  .check-item.done .check-item-text {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  .checklist-progress {
+    font-size: 13px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .checklist-bar-wrap {
+    background: var(--hairline);
+    border-radius: 999px;
+    height: 6px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .checklist-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    background: var(--bronze);
+    transition: width .3s ease;
+  }
+
+  /* ── MARKET SELECTOR (checklist) ── */
+  .market-select-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+  .market-select-row .form-row { margin-bottom: 0; flex: 1; min-width: 180px; }
+
+  /* ── AVATAR CARDS ── */
+  .avatar-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+  .avatar-card {
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+  }
+  .avatar-card-icon {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
+  .avatar-card-name {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 17px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+  .avatar-card-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .avatar-section-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 21px;
+    color: var(--ink);
+    margin-bottom: 4px;
+    margin-top: 32px;
+  }
+  .avatar-section-title:first-of-type { margin-top: 0; }
+  .avatar-section-sub { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+  .prop-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 14px;
+    margin-bottom: 32px;
+  }
+  .prop-item {
+    background: var(--bg);
+    border: 1px solid var(--hairline);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--ink);
+  }
+  .prop-item strong { display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 3px; }
+  .thread-box {
+    background: var(--bronze-wash, rgba(107,141,181,.08));
+    border: 1px solid var(--bronze-tint, #D6E3F0);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+    margin-top: 20px;
+    font-size: 14px;
+    color: var(--ink);
+    line-height: 1.7;
+  }
+  .thread-box strong { color: var(--bronze); }
+
+  /* ── MARKET MAP ── */
+  .map-controls {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .state-group { margin-bottom: 28px; }
+  .state-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 8px 0 10px;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 12px;
+  }
+  .market-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  .market-table th {
+    text-align: left;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 6px 12px;
+    border-bottom: 1px solid var(--hairline);
+  }
+  .market-table td {
+    padding: 11px 12px;
+    font-size: 14px;
+    border-bottom: 1px solid var(--hairline);
+    vertical-align: top;
+  }
+  .market-table tr:last-child td { border-bottom: none; }
+  .market-table tr:hover td { background: var(--bg); }
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+  .status-active { background: #D8F3DC; color: #1B4332; }
+  .status-evaluating { background: #FEF9C3; color: #713F12; }
+  .status-ondeck { background: var(--hairline); color: var(--muted); }
+  .notes-cell { font-size: 13px; color: var(--muted); max-width: 280px; }
+  .del-btn {
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    padding: 4px;
+    font-size: 16px;
+    transition: color .15s;
+  }
+  .del-btn:hover { color: var(--red, #B5341A); }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(28,24,20,.45);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+  .modal {
+    background: var(--surface);
+    border-radius: var(--radius);
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 40px rgba(28,24,20,.18);
+    transform: translateY(10px);
+    transition: transform .2s;
+  }
+  .modal-overlay.open .modal { transform: translateY(0); }
+  .modal-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 21px;
+    color: var(--ink);
+    margin-bottom: 20px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+    font-size: 14px;
+  }
+  .empty-state-icon { font-size: 36px; margin-bottom: 10px; }
+  .empty-state-title {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-size: 18px;
+    color: var(--ink);
+    margin-bottom: 6px;
+  }
+
+  /* ── MISC ── */
+  .section-gap { margin-top: 32px; }
+  .flex-between { display: flex; justify-content: space-between; align-items: center; }
+  .mt-8 { margin-top: 8px; }
+  .mt-16 { margin-top: 16px; }
+  hr.divider { border: none; border-top: 1px solid var(--hairline); margin: 24px 0; }
+</style>
+</head>
+<body>
+
+<!-- ═══ PAGE HEADER ═══ -->
+<div class="page-header">
+  <div class="page-header-inner">
+    <div class="page-eyebrow">Deal Machine — Ironwood Toolkit</div>
+    <h1 class="page-title">Market Expansion Playbook</h1>
+    <p class="page-sub">Score, plan, and track new markets for P2P · Anchor Pro · Ironwood across the SE US and beyond.</p>
+  </div>
+</div>
+
+<!-- ═══ SUMMARY STRIP ═══ -->
+<div class="summary-strip">
+  <div class="summary-strip-inner">
+    <div class="stat-cell">
+      <div class="stat-label">Markets Active</div>
+      <div class="stat-value" id="stat-active">—</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Evaluating</div>
+      <div class="stat-value" id="stat-evaluating">—</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Total Tracked</div>
+      <div class="stat-value" id="stat-total">—</div>
+    </div>
+    <div class="stat-cell">
+      <div class="stat-label">Avg Score</div>
+      <div class="stat-value" id="stat-avg-score">—</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ TAB BAR ═══ -->
+<div class="tab-bar">
+  <div class="tab-bar-inner">
+    <button class="tab-btn active" onclick="switchTab('scorecard', this)">Market Scorecard</button>
+    <button class="tab-btn" onclick="switchTab('checklist', this)">Entry Checklist</button>
+    <button class="tab-btn" onclick="switchTab('avatar', this)">Avatar Reference</button>
+    <button class="tab-btn" onclick="switchTab('map', this)">Market Map</button>
+  </div>
+</div>
+
+<!-- ═══ MAIN ═══ -->
+<div class="main">
+
+  <!-- ─── TAB 1: MARKET SCORECARD ─── -->
+  <div class="tab-panel active" id="tab-scorecard">
+    <div class="two-col">
+
+      <!-- Left: Scorecard form -->
+      <div>
+        <div class="card">
+          <div class="card-title">Score a New Market</div>
+          <div class="card-sub">Rate each factor 1–5 to calculate market fit for the Deal Machine model.</div>
+
+          <div class="form-row">
+            <label for="sc-market-name">Market / Metro Name</label>
+            <input type="text" id="sc-market-name" placeholder="e.g. Gainesville, GA">
+          </div>
+
+          <div id="slider-rows"></div>
+
+          <div class="score-result" id="score-result">
+            <div class="score-big"><span id="score-num">25</span><span class="score-denom">/50</span></div>
+            <div id="score-label-el" class="score-label possible" style="margin-top:10px;">🟠 Possible — Do more research first</div>
+            <div class="score-bar-wrap" style="margin-top:14px;">
+              <div class="score-bar-fill" id="score-bar" style="width:50%"></div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap;">
+            <button class="btn btn-primary" onclick="saveScorecard()">Save Scorecard</button>
+            <button class="btn btn-ghost" onclick="resetScorecard()">Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Saved scorecards -->
+      <div>
+        <div class="card">
+          <div class="flex-between" style="margin-bottom:16px;">
+            <div class="card-title" style="margin-bottom:0;">Saved Markets</div>
+            <span id="saved-count" style="font-size:13px;color:var(--muted);">0 markets</span>
+          </div>
+          <div id="saved-list" class="saved-list">
+            <div class="empty-state">
+              <div class="empty-state-icon">📍</div>
+              <div class="empty-state-title">No markets scored yet</div>
+              Score a market on the left and save it.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── TAB 2: ENTRY CHECKLIST ─── -->
+  <div class="tab-panel" id="tab-checklist">
+    <div class="card" style="margin-bottom:24px;">
+      <div class="market-select-row">
+        <div class="form-row">
+          <label for="cl-market-select">Select or Create Market</label>
+          <input type="text" id="cl-market-name-input" placeholder="Enter market name…" style="margin-bottom:8px;">
+          <select id="cl-market-select" onchange="loadChecklist()">
+            <option value="">— choose saved market —</option>
+          </select>
+        </div>
+        <button class="btn btn-primary" onclick="startChecklist()" style="flex-shrink:0;">Start Checklist</button>
+      </div>
+
+      <div id="cl-progress-area" style="display:none;">
+        <div class="checklist-progress" id="cl-progress-text">0 of 25 complete</div>
+        <div class="checklist-bar-wrap">
+          <div class="checklist-bar-fill" id="cl-progress-bar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="cl-phases">
+      <div class="empty-state">
+        <div class="empty-state-icon">📋</div>
+        <div class="empty-state-title">Select or create a market above</div>
+        Checklists are saved per-market so you can track multiple launches at once.
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TAB 3: AVATAR REFERENCE ─── -->
+  <div class="tab-panel" id="tab-avatar">
+
+    <!-- Property Profile -->
+    <div class="avatar-section-title">The Property Profile</div>
+    <div class="avatar-section-sub">The physical asset we target — appears across SE US markets regardless of specific city.</div>
+    <div class="prop-grid">
+      <div class="prop-item"><strong>Era</strong>1960s–1990s housing stock</div>
+      <div class="prop-item"><strong>Size</strong>3/2 or 4/2 — 1,200–2,200 sqft</div>
+      <div class="prop-item"><strong>Condition</strong>Deferred maintenance, dated finishes, or distress</div>
+      <div class="prop-item"><strong>ARV Range</strong>$200K–$450K</div>
+      <div class="prop-item"><strong>Seller Equity</strong>40%+ (room for a deal)</div>
+      <div class="prop-item"><strong>Location</strong>Suburban / exurban — not inner city, not rural</div>
+    </div>
+
+    <!-- Seller Avatars -->
+    <div class="avatar-section-title">The Seller Avatar</div>
+    <div class="avatar-section-sub">Five types, one common thread: speed and certainty over top dollar.</div>
+    <div class="avatar-grid">
+      <div class="avatar-card">
+        <div class="avatar-card-icon">🏠</div>
+        <div class="avatar-card-name">The Inheritor</div>
+        <div class="avatar-card-desc">Got the house, not the desire. Doesn't want to deal with repairs, tenants, or the market. Wants fast, fair, hassle-free.</div>
+      </div>
+      <div class="avatar-card">
+        <div class="avatar-card-icon">🔑</div>
+        <div class="avatar-card-name">The Tired Landlord</div>
+        <div class="avatar-card-desc">Problem tenants, deferred repairs, done being a landlord. Values certainty and speed over max price.</div>
+      </div>
+      <div class="avatar-card">
+        <div class="avatar-card-icon">⚡</div>
+        <div class="avatar-card-name">The Life Event Seller</div>
+        <div class="avatar-card-desc">Divorce, job loss, medical bills, relocation. Needs to move before circumstances force their hand.</div>
+      </div>
+      <div class="avatar-card">
+        <div class="avatar-card-icon">👴</div>
+        <div class="avatar-card-name">The Aging Homeowner</div>
+        <div class="avatar-card-desc">Downsizing or kids helping them sell. Trust is the primary currency. Needs hand-holding and clarity.</div>
+      </div>
+      <div class="avatar-card">
+        <div class="avatar-card-icon">⏰</div>
+        <div class="avatar-card-name">The Pre-Foreclosure Seller</div>
+        <div class="avatar-card-desc">Racing the bank. Every day matters. Needs a hero who can close in 7–10 days.</div>
+      </div>
+    </div>
+
+    <div class="thread-box">
+      <strong>The common thread across all 5:</strong> Speed and certainty over top dollar. That's the wedge. Every outreach message, script, and offer structure should center on that promise.
+    </div>
+
+    <!-- Buyer/Investor Avatar -->
+    <div class="avatar-section-title section-gap">The Buyer / Investor Avatar</div>
+    <div class="avatar-section-sub">Who buys the deals P2P finds — and who Anchor Pro and Ironwood serve on the back end.</div>
+    <div class="avatar-grid">
+      <div class="avatar-card">
+        <div class="avatar-card-icon">💼</div>
+        <div class="avatar-card-name">The SE Cash Buyer</div>
+        <div class="avatar-card-desc">Active cash buyer or HML-backed flipper in the SE market. Owns 2–10 rentals, looking to add or reposition. Wants a trusted contractor who already knows the deal.</div>
+      </div>
+      <div class="avatar-card">
+        <div class="avatar-card-icon">🔗</div>
+        <div class="avatar-card-name">The Vertical Buyer</div>
+        <div class="avatar-card-desc">Values fixed-bid scope, no surprises, and a single point of contact across P2P → Anchor Pro → Ironwood. Loyalty goes to whoever eliminates friction.</div>
+      </div>
+    </div>
+
+    <!-- Homeowner Avatar (Ironwood) -->
+    <div class="avatar-section-title section-gap">The Homeowner Avatar (Ironwood)</div>
+    <div class="avatar-section-sub">Direct-to-homeowner clients for Ironwood home services.</div>
+    <div class="avatar-grid">
+      <div class="avatar-card">
+        <div class="avatar-card-icon">🏡</div>
+        <div class="avatar-card-name">The Cobb-Equiv Homeowner</div>
+        <div class="avatar-card-desc">$300K–$600K home in a suburban equivalent market. Values craftsmanship and trust over lowest bid.</div>
+      </div>
+      <div class="avatar-card">
+        <div class="avatar-card-icon">⭐</div>
+        <div class="avatar-card-name">The Referral Engine</div>
+        <div class="avatar-card-desc">Refers neighbors and family when the experience is great. Responsive to before/after content and neighborhood social proof.</div>
+      </div>
+    </div>
+
+    <div class="thread-box" style="margin-top:20px;margin-bottom:0;">
+      <strong>The vertical power move:</strong> One seller → P2P acquires → Anchor Pro scopes → Ironwood rehabs → buyer holds. Every step adds margin. Every handoff is a relationship. The avatar isn't one person — it's a chain.
+    </div>
+
+  </div>
+
+  <!-- ─── TAB 4: MARKET MAP ─── -->
+  <div class="tab-panel" id="tab-map">
+    <div class="flex-between" style="margin-bottom:20px;flex-wrap:wrap;gap:12px;">
+      <div>
+        <h2 style="font-family:'Instrument Serif',Georgia,serif;font-size:21px;margin-bottom:3px;">Market Tracker</h2>
+        <p style="font-size:13px;color:var(--muted);">All known and target markets organized by state and status.</p>
+      </div>
+      <button class="btn btn-primary" onclick="openAddMarketModal()">+ Add Market</button>
+    </div>
+
+    <div class="card">
+      <div id="map-table-area"></div>
+    </div>
+  </div>
+
+</div><!-- /.main -->
+
+<!-- ═══ MODAL: Add Market (Map) ═══ -->
+<div class="modal-overlay" id="modal-add-market">
+  <div class="modal">
+    <div class="modal-title">Add Market</div>
+    <div class="form-row">
+      <label for="am-name">Market Name</label>
+      <input type="text" id="am-name" placeholder="e.g. Lakeland, FL">
+    </div>
+    <div class="form-row">
+      <label for="am-state">State</label>
+      <select id="am-state">
+        <option value="GA">Georgia (GA)</option>
+        <option value="FL">Florida (FL)</option>
+        <option value="NC">North Carolina (NC)</option>
+        <option value="AL">Alabama (AL)</option>
+        <option value="TN">Tennessee (TN)</option>
+        <option value="SC">South Carolina (SC)</option>
+        <option value="TX">Texas (TX)</option>
+        <option value="Other">Other</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="am-status">Status</label>
+      <select id="am-status">
+        <option value="active">🟢 Active</option>
+        <option value="evaluating">🟡 Evaluating</option>
+        <option value="ondeck">⚪ On Deck</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label for="am-notes">Notes (optional)</label>
+      <textarea id="am-notes" rows="3" placeholder="Any notes about this market…" style="resize:vertical;"></textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeModal('modal-add-market')">Cancel</button>
+      <button class="btn btn-primary" onclick="saveMarketEntry()">Save Market</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ MODAL: View Saved Scorecard ═══ -->
+<div class="modal-overlay" id="modal-view-scorecard">
+  <div class="modal">
+    <div class="modal-title" id="view-sc-title">Market Scorecard</div>
+    <div id="view-sc-body"></div>
+    <div class="modal-actions">
+      <button class="btn btn-danger btn-sm" id="view-sc-delete-btn">Delete</button>
+      <button class="btn btn-ghost" onclick="closeModal('modal-view-scorecard')">Close</button>
+      <button class="btn btn-primary" onclick="loadScorecardIntoForm()">Load into Form</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ═══════════════════════════════════════════════
+   DATA & CONSTANTS
+═══════════════════════════════════════════════ */
+const SCORECARD_KEY = 'dm_market_scorecards';
+const MAP_KEY = 'dm_market_map';
+const CHECKLIST_KEY = 'dm_market_checklists';
+
+const CRITERIA = [
+  { key: 'stock_age',      label: 'Housing Stock Age',        desc: 'Mostly 1960s–1990s builds? (5=yes, 1=mostly new)' },
+  { key: 'arv_range',      label: 'Median ARV Range',         desc: '$200K–$450K sweet spot? (5=yes, 1=too high/low)' },
+  { key: 'owner_equity',   label: 'Owner Equity',             desc: 'Long-term owners, 10+ yr equity common? (5=yes)' },
+  { key: 'competition',    label: 'Investor Competition',      desc: 'Lightly competitive? (5=light, 1=saturated)' },
+  { key: 'pop_growth',     label: 'Population/Job Growth',    desc: 'In-migration or growth nearby? (5=strong, 1=declining)' },
+  { key: 'seller_supply',  label: 'Motivated Seller Supply',  desc: 'Probate/tax delinquent/tired landlords common? (5=abundant)' },
+  { key: 'cash_buyers',    label: 'Cash Buyer Activity',      desc: 'Active investor/flipper market? (5=very active)' },
+  { key: 'labor_pool',     label: 'Contractor Labor Pool',    desc: 'Can we source quality crews? (5=abundant, 1=very tight)' },
+  { key: 'drive_time',     label: 'Drive Time from Base',     desc: 'Distance from current base? (5=<1hr, 1=>3hr)' },
+  { key: 'data_avail',     label: 'Data/List Availability',   desc: 'Skip trace/probate/tax delinquent lists? (5=easy, 1=very hard)' },
+];
+
+const PHASES = [
+  {
+    title: 'Phase 1 — Research',
+    sub: 'Week 1–2: Validate the market before spending a dollar.',
+    items: [
+      'Pull comps: verify ARV range matches $200K–$450K profile',
+      'Research probate, tax delinquent, and pre-NOD list sources for the county',
+      'Identify 3–5 active cash buyers/investors already working that market',
+      'Check investor Facebook groups and local REIA chapters',
+      'Verify skip trace data availability (PropStream, BatchLeads, etc.)',
+      'Research local title companies that handle double closes / assignments',
+      'Check contractor / labor market (HomeAdvisor, local Craigslist, Facebook trades groups)',
+      'Map the county courthouse for probate filings',
+    ]
+  },
+  {
+    title: 'Phase 2 — Infrastructure',
+    sub: 'Week 2–4: Build the machine before you pull the trigger.',
+    items: [
+      'Set up GHL pipeline for new market (tag all leads with market name)',
+      'Create geo-targeted REI Reply campaign for new market',
+      'Build 500-piece direct mail list (probate + tax delinquent)',
+      'Set up Google Business Profile in new market (if doing Ironwood work there)',
+      'Create geo-targeted SEO landing page: "Sell my house fast [city]"',
+      'Order first direct mail campaign',
+      'Attend first local REIA or investor meetup',
+    ]
+  },
+  {
+    title: 'Phase 3 — Activation',
+    sub: 'Week 3–6: Launch, learn, and iterate fast.',
+    items: [
+      'First REI Reply campaign live',
+      'First direct mail drops',
+      '3+ buyer conversations in new market',
+      'First deal under contract (even if small)',
+      'Post local content to social (Facebook groups, community groups)',
+      'Request first reviews from any early interactions',
+      'Debrief: what\'s working, what\'s different vs home market',
+    ]
+  },
+  {
+    title: 'Phase 4 — Scale Decision',
+    sub: 'Day 60–90: Commit, partner, or pause.',
+    items: [
+      'Have we closed at least 1 deal?',
+      'Do we have 5+ buyers on our list for this market?',
+      'Is lead cost acceptable (<$500/deal)?',
+      'Is drive time sustainable or do we need a local partner/boots on the ground?',
+      'Decision: Full commit / Partner model / Pause',
+    ]
+  }
+];
+
+const DEFAULT_MARKETS = [
+  { id: uid(), name: 'Marietta', state: 'GA', status: 'active', notes: 'Home market' },
+  { id: uid(), name: 'Kennesaw', state: 'GA', status: 'active', notes: 'Home market' },
+  { id: uid(), name: 'Douglasville', state: 'GA', status: 'evaluating', notes: '' },
+  { id: uid(), name: 'Gainesville', state: 'GA', status: 'ondeck', notes: '' },
+  { id: uid(), name: 'Rome', state: 'GA', status: 'ondeck', notes: '' },
+  { id: uid(), name: 'Cartersville', state: 'GA', status: 'ondeck', notes: '' },
+  { id: uid(), name: 'Ocala', state: 'FL', status: 'ondeck', notes: '' },
+  { id: uid(), name: 'Lakeland', state: 'FL', status: 'ondeck', notes: '' },
+  { id: uid(), name: 'Palm Bay', state: 'FL', status: 'ondeck', notes: '' },
+  { id: uid(), name: 'Charlotte', state: 'NC', status: 'ondeck', notes: 'Future expansion' },
+  { id: uid(), name: 'Birmingham', state: 'AL', status: 'ondeck', notes: 'Future expansion' },
+  { id: uid(), name: 'Nashville', state: 'TN', status: 'ondeck', notes: 'Future expansion' },
+  { id: uid(), name: 'Jacksonville', state: 'FL', status: 'ondeck', notes: 'Future expansion' },
+];
+
+let currentViewScorecard = null;
+
+/* ═══════════════════════════════════════════════
+   UTILITY
+═══════════════════════════════════════════════ */
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+function getScorecards() {
+  try { return JSON.parse(localStorage.getItem(SCORECARD_KEY)) || []; } catch { return []; }
+}
+function saveScorecards(arr) { localStorage.setItem(SCORECARD_KEY, JSON.stringify(arr)); }
+function getMapMarkets() {
+  try {
+    const d = JSON.parse(localStorage.getItem(MAP_KEY));
+    if (d && d.length) return d;
+    // seed defaults
+    localStorage.setItem(MAP_KEY, JSON.stringify(DEFAULT_MARKETS));
+    return DEFAULT_MARKETS;
+  } catch {
+    localStorage.setItem(MAP_KEY, JSON.stringify(DEFAULT_MARKETS));
+    return DEFAULT_MARKETS;
+  }
+}
+function saveMapMarkets(arr) { localStorage.setItem(MAP_KEY, JSON.stringify(arr)); }
+function getChecklists() {
+  try { return JSON.parse(localStorage.getItem(CHECKLIST_KEY)) || {}; } catch { return {}; }
+}
+function saveChecklists(obj) { localStorage.setItem(CHECKLIST_KEY, JSON.stringify(obj)); }
+
+/* ═══════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════ */
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+/* ═══════════════════════════════════════════════
+   SUMMARY STRIP
+═══════════════════════════════════════════════ */
+function refreshSummary() {
+  const markets = getMapMarkets();
+  const scorecards = getScorecards();
+  document.getElementById('stat-active').textContent = markets.filter(m => m.status === 'active').length;
+  document.getElementById('stat-evaluating').textContent = markets.filter(m => m.status === 'evaluating').length;
+  document.getElementById('stat-total').textContent = markets.length;
+  if (scorecards.length) {
+    const avg = scorecards.reduce((s, c) => s + c.total, 0) / scorecards.length;
+    document.getElementById('stat-avg-score').textContent = avg.toFixed(1);
+  } else {
+    document.getElementById('stat-avg-score').textContent = '—';
+  }
+}
+
+/* ═══════════════════════════════════════════════
+   TAB 1: SCORECARD
+═══════════════════════════════════════════════ */
+function buildSliderRows() {
+  const container = document.getElementById('slider-rows');
+  container.innerHTML = '';
+  CRITERIA.forEach(c => {
+    const row = document.createElement('div');
+    row.className = 'slider-row';
+    row.innerHTML = `
+      <div>
+        <div class="slider-label">${c.label}</div>
+        <div class="slider-desc">${c.desc}</div>
+      </div>
+      <input type="range" class="slider-input" min="1" max="5" value="3"
+             id="sl-${c.key}" oninput="onSliderChange()">
+      <div class="slider-val" id="sv-${c.key}">3</div>
+    `;
+    container.appendChild(row);
+  });
+  onSliderChange();
+}
+
+function getSliderValues() {
+  const vals = {};
+  CRITERIA.forEach(c => {
+    vals[c.key] = parseInt(document.getElementById('sl-' + c.key).value);
+  });
+  return vals;
+}
+
+function onSliderChange() {
+  const vals = getSliderValues();
+  CRITERIA.forEach(c => {
+    document.getElementById('sv-' + c.key).textContent = vals[c.key];
+  });
+  const total = Object.values(vals).reduce((a, b) => a + b, 0);
+  document.getElementById('score-num').textContent = total;
+  const pct = (total / 50) * 100;
+  document.getElementById('score-bar').style.width = pct + '%';
+
+  const labelEl = document.getElementById('score-label-el');
+  labelEl.className = 'score-label';
+  if (total >= 45) {
+    labelEl.classList.add('ideal');
+    labelEl.textContent = '🟢 Ideal Market — Move immediately';
+  } else if (total >= 38) {
+    labelEl.classList.add('strong');
+    labelEl.textContent = '🟡 Strong Market — Plan entry within 90 days';
+  } else if (total >= 28) {
+    labelEl.classList.add('possible');
+    labelEl.textContent = '🟠 Possible — Do more research first';
+  } else {
+    labelEl.classList.add('skip');
+    labelEl.textContent = '🔴 Skip — Doesn\'t fit the model';
+  }
+}
+
+function saveScorecard() {
+  const name = document.getElementById('sc-market-name').value.trim();
+  if (!name) { alert('Please enter a market name.'); return; }
+  const vals = getSliderValues();
+  const total = Object.values(vals).reduce((a, b) => a + b, 0);
+  const scorecards = getScorecards();
+  // check duplicate
+  const existing = scorecards.findIndex(s => s.name.toLowerCase() === name.toLowerCase());
+  const entry = { id: existing >= 0 ? scorecards[existing].id : uid(), name, scores: vals, total, date: new Date().toLocaleDateString() };
+  if (existing >= 0) scorecards[existing] = entry;
+  else scorecards.push(entry);
+  saveScorecards(scorecards);
+  renderSavedList();
+  refreshSummary();
+  refreshChecklistSelect();
+  alert(`Scorecard saved for ${name} (${total}/50).`);
+}
+
+function resetScorecard() {
+  document.getElementById('sc-market-name').value = '';
+  CRITERIA.forEach(c => { document.getElementById('sl-' + c.key).value = 3; });
+  onSliderChange();
+}
+
+function renderSavedList() {
+  const scorecards = getScorecards();
+  const container = document.getElementById('saved-list');
+  document.getElementById('saved-count').textContent = scorecards.length + ' market' + (scorecards.length !== 1 ? 's' : '');
+
+  if (!scorecards.length) {
+    container.innerHTML = `<div class="empty-state">
+      <div class="empty-state-icon">📍</div>
+      <div class="empty-state-title">No markets scored yet</div>
+      Score a market on the left and save it.
+    </div>`;
+    return;
+  }
+
+  container.innerHTML = '';
+  [...scorecards].reverse().forEach(sc => {
+    const rating = getRating(sc.total);
+    const item = document.createElement('div');
+    item.className = 'saved-item';
+    item.onclick = () => openViewScorecard(sc.id);
+    item.innerHTML = `
+      <div>
+        <div class="saved-item-name">${sc.name}</div>
+        <div class="saved-item-date">${sc.date}</div>
+      </div>
+      <span class="score-badge badge-${rating.cls}">${sc.total}/50</span>
+    `;
+    container.appendChild(item);
+  });
+}
+
+function getRating(total) {
+  if (total >= 45) return { cls: 'ideal', label: 'Ideal' };
+  if (total >= 38) return { cls: 'strong', label: 'Strong' };
+  if (total >= 28) return { cls: 'possible', label: 'Possible' };
+  return { cls: 'skip', label: 'Skip' };
+}
+
+function openViewScorecard(id) {
+  const scorecards = getScorecards();
+  const sc = scorecards.find(s => s.id === id);
+  if (!sc) return;
+  currentViewScorecard = sc;
+  document.getElementById('view-sc-title').textContent = sc.name + ' — ' + sc.total + '/50';
+  const rating = getRating(sc.total);
+  let html = `<div class="score-result" style="margin-bottom:16px;">
+    <div class="score-big">${sc.total}<span class="score-denom">/50</span></div>
+    <div class="score-bar-wrap" style="margin-top:12px;"><div class="score-bar-fill" style="width:${(sc.total/50)*100}%"></div></div>
+  </div>`;
+  html += '<table style="width:100%;border-collapse:collapse;">';
+  CRITERIA.forEach(c => {
+    const v = sc.scores[c.key] || 0;
+    html += `<tr><td style="padding:7px 0;font-size:13px;color:var(--ink);border-bottom:1px solid var(--hairline);">${c.label}</td>
+      <td style="padding:7px 0;text-align:right;font-weight:700;color:var(--bronze);font-size:14px;border-bottom:1px solid var(--hairline);">${v}/5</td></tr>`;
+  });
+  html += '</table>';
+  document.getElementById('view-sc-body').innerHTML = html;
+  document.getElementById('view-sc-delete-btn').onclick = () => deleteScorecard(id);
+  openModal('modal-view-scorecard');
+}
+
+function deleteScorecard(id) {
+  if (!confirm('Delete this scorecard?')) return;
+  let scorecards = getScorecards().filter(s => s.id !== id);
+  saveScorecards(scorecards);
+  renderSavedList();
+  refreshSummary();
+  closeModal('modal-view-scorecard');
+}
+
+function loadScorecardIntoForm() {
+  if (!currentViewScorecard) return;
+  document.getElementById('sc-market-name').value = currentViewScorecard.name;
+  CRITERIA.forEach(c => {
+    document.getElementById('sl-' + c.key).value = currentViewScorecard.scores[c.key] || 3;
+  });
+  onSliderChange();
+  closeModal('modal-view-scorecard');
+  switchTab('scorecard', document.querySelector('.tab-btn'));
+}
+
+/* ═══════════════════════════════════════════════
+   TAB 2: ENTRY CHECKLIST
+═══════════════════════════════════════════════ */
+let activeChecklistMarket = null;
+
+function refreshChecklistSelect() {
+  const sel = document.getElementById('cl-market-select');
+  const saved = sel.value;
+  sel.innerHTML = '<option value="">— choose saved market —</option>';
+  // Add from scorecards
+  const scorecards = getScorecards();
+  scorecards.forEach(sc => {
+    const opt = document.createElement('option');
+    opt.value = sc.name;
+    opt.textContent = sc.name + ' (' + sc.total + '/50)';
+    sel.appendChild(opt);
+  });
+  // Add from checklists not in scorecards
+  const checklists = getChecklists();
+  Object.keys(checklists).forEach(mktName => {
+    if (!scorecards.find(s => s.name === mktName)) {
+      const opt = document.createElement('option');
+      opt.value = mktName;
+      opt.textContent = mktName + ' (custom)';
+      sel.appendChild(opt);
+    }
+  });
+  if (saved) sel.value = saved;
+}
+
+function loadChecklist() {
+  const sel = document.getElementById('cl-market-select');
+  if (sel.value) document.getElementById('cl-market-name-input').value = sel.value;
+}
+
+function startChecklist() {
+  const name = document.getElementById('cl-market-name-input').value.trim()
+             || document.getElementById('cl-market-select').value.trim();
+  if (!name) { alert('Enter or select a market name.'); return; }
+  activeChecklistMarket = name;
+  renderChecklist();
+}
+
+function renderChecklist() {
+  const mkt = activeChecklistMarket;
+  if (!mkt) return;
+  const checklists = getChecklists();
+  if (!checklists[mkt]) checklists[mkt] = {};
+  const state = checklists[mkt];
+
+  // Count
+  let total = 0, done = 0;
+  PHASES.forEach(p => p.items.forEach((_, i) => {
+    total++;
+    if (state[p.title + '_' + i]) done++;
+  }));
+
+  document.getElementById('cl-progress-area').style.display = 'block';
+  document.getElementById('cl-progress-text').textContent = `${done} of ${total} complete — ${mkt}`;
+  document.getElementById('cl-progress-bar').style.width = (total ? (done / total * 100) : 0) + '%';
+
+  const container = document.getElementById('cl-phases');
+  container.innerHTML = '';
+  PHASES.forEach(phase => {
+    const block = document.createElement('div');
+    block.className = 'phase-block';
+    block.innerHTML = `<div class="phase-title">${phase.title}</div><div class="phase-sub">${phase.sub}</div>`;
+    phase.items.forEach((item, i) => {
+      const key = phase.title + '_' + i;
+      const checked = !!state[key];
+      const row = document.createElement('label');
+      row.className = 'check-item' + (checked ? ' done' : '');
+      row.innerHTML = `<input type="checkbox" ${checked ? 'checked' : ''}>
+        <span class="check-item-text">${item}</span>`;
+      row.querySelector('input').addEventListener('change', (e) => {
+        const cls = getChecklists();
+        if (!cls[mkt]) cls[mkt] = {};
+        cls[mkt][key] = e.target.checked;
+        saveChecklists(cls);
+        row.classList.toggle('done', e.target.checked);
+        renderChecklistProgress();
+      });
+      block.appendChild(row);
+    });
+    container.appendChild(block);
+  });
+}
+
+function renderChecklistProgress() {
+  const mkt = activeChecklistMarket;
+  if (!mkt) return;
+  const state = getChecklists()[mkt] || {};
+  let total = 0, done = 0;
+  PHASES.forEach(p => p.items.forEach((_, i) => {
+    total++;
+    if (state[p.title + '_' + i]) done++;
+  }));
+  document.getElementById('cl-progress-text').textContent = `${done} of ${total} complete — ${mkt}`;
+  document.getElementById('cl-progress-bar').style.width = (total ? (done / total * 100) : 0) + '%';
+}
+
+/* ═══════════════════════════════════════════════
+   TAB 4: MARKET MAP
+═══════════════════════════════════════════════ */
+function renderMapTable() {
+  const markets = getMapMarkets();
+  const byState = {};
+  markets.forEach(m => {
+    if (!byState[m.state]) byState[m.state] = [];
+    byState[m.state].push(m);
+  });
+  const stateOrder = ['GA', 'FL', 'NC', 'SC', 'AL', 'TN', 'TX', 'Other'];
+  const container = document.getElementById('map-table-area');
+  if (!markets.length) {
+    container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">🗺️</div><div class="empty-state-title">No markets tracked yet</div>Add your first market above.</div>`;
+    return;
+  }
+  let html = '';
+  const orderedStates = [...new Set([...stateOrder.filter(s => byState[s]), ...Object.keys(byState).filter(s => !stateOrder.includes(s))])];
+  orderedStates.forEach(state => {
+    if (!byState[state]) return;
+    html += `<div class="state-group">
+      <div class="state-label">${state}</div>
+      <table class="market-table">
+        <thead>
+          <tr>
+            <th>Market</th>
+            <th>Status</th>
+            <th>Notes</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>`;
+    byState[state].forEach(m => {
+      const statusMap = {
+        active: { cls: 'status-active', label: '🟢 Active' },
+        evaluating: { cls: 'status-evaluating', label: '🟡 Evaluating' },
+        ondeck: { cls: 'status-ondeck', label: '⚪ On Deck' },
+      };
+      const s = statusMap[m.status] || statusMap.ondeck;
+      html += `<tr>
+        <td style="font-weight:600;">${m.name}</td>
+        <td><span class="status-pill ${s.cls}">${s.label}</span></td>
+        <td class="notes-cell">${m.notes || '—'}</td>
+        <td><button class="del-btn" onclick="deleteMarketEntry('${m.id}')" title="Delete">✕</button></td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+  });
+  container.innerHTML = html;
+}
+
+function openAddMarketModal() {
+  document.getElementById('am-name').value = '';
+  document.getElementById('am-state').value = 'GA';
+  document.getElementById('am-status').value = 'ondeck';
+  document.getElementById('am-notes').value = '';
+  openModal('modal-add-market');
+}
+
+function saveMarketEntry() {
+  const name = document.getElementById('am-name').value.trim();
+  if (!name) { alert('Please enter a market name.'); return; }
+  const markets = getMapMarkets();
+  markets.push({
+    id: uid(),
+    name,
+    state: document.getElementById('am-state').value,
+    status: document.getElementById('am-status').value,
+    notes: document.getElementById('am-notes').value.trim(),
+  });
+  saveMapMarkets(markets);
+  closeModal('modal-add-market');
+  renderMapTable();
+  refreshSummary();
+}
+
+function deleteMarketEntry(id) {
+  if (!confirm('Remove this market from the tracker?')) return;
+  const markets = getMapMarkets().filter(m => m.id !== id);
+  saveMapMarkets(markets);
+  renderMapTable();
+  refreshSummary();
+}
+
+/* ═══════════════════════════════════════════════
+   MODALS
+═══════════════════════════════════════════════ */
+function openModal(id) {
+  document.getElementById(id).classList.add('open');
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('open');
+}
+// Close on backdrop click
+document.querySelectorAll('.modal-overlay').forEach(overlay => {
+  overlay.addEventListener('click', (e) => {
+    if (e.target === overlay) overlay.classList.remove('open');
+  });
+});
+
+/* ═══════════════════════════════════════════════
+   INIT
+═══════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  buildSliderRows();
+  renderSavedList();
+  refreshChecklistSelect();
+  renderMapTable();
+  refreshSummary();
+});
+</script>
+</body>
+</html>

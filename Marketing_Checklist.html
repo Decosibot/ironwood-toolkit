@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<link rel="stylesheet" href="iw-design.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Marketing & Social Checklist — Deal Machine</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui, sans-serif; font-size: 14px; min-height: 100vh; }
+.container { max-width: 1000px; margin: 0 auto; padding: 28px 20px 80px; }
+
+.page-header { margin-bottom: 28px; }
+.page-title { font-family: 'Instrument Serif', serif; font-size: 28px; color: var(--ink); }
+.page-sub { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+/* SUMMARY STRIP */
+.sum-strip { display: grid; grid-template-columns: repeat(5, 1fr); gap: 0; border: 1px solid var(--hairline); border-radius: var(--radius); overflow: hidden; margin-bottom: 28px; }
+.sum-cell { padding: 14px 16px; background: var(--surface); border-right: 1px solid var(--hairline); text-align: center; }
+.sum-cell:last-child { border-right: none; }
+.sum-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 4px; }
+.sum-value { font-family: 'Instrument Serif', serif; font-size: 22px; color: var(--ink); }
+.sum-value.green { color: #1a4d32; }
+@media(max-width:640px){ .sum-strip { grid-template-columns: repeat(2,1fr); } }
+
+/* TOOLBAR */
+.toolbar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; gap: 12px; flex-wrap: wrap; }
+.filter-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill { padding: 6px 14px; border-radius: 20px; border: 1px solid var(--hairline); background: var(--surface); font-size: 12px; font-weight: 700; cursor: pointer; color: var(--muted); transition: all .15s; }
+.pill.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.btn { padding: 8px 16px; border-radius: 7px; border: none; font-size: 12px; font-weight: 700; cursor: pointer; }
+.btn-ghost { background: var(--surface); border: 1px solid var(--hairline); color: var(--ink); }
+.btn-ghost:hover { border-color: var(--bronze); }
+.btn-danger { background: #7f1d1d22; color: #b91c1c; border: 1px solid #b91c1c44; }
+.btn-danger:hover { background: #7f1d1d44; }
+
+/* SECTION */
+.section { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); margin-bottom: 20px; overflow: hidden; }
+.section-header { display: flex; align-items: center; gap: 12px; padding: 16px 20px; cursor: pointer; border-bottom: 1px solid var(--hairline); }
+.section-icon { font-size: 18px; }
+.section-title { font-family: 'Instrument Serif', serif; font-size: 17px; color: var(--ink); flex: 1; }
+.section-meta { display: flex; align-items: center; gap: 10px; }
+.progress-pill { font-size: 11px; font-weight: 700; color: var(--muted); background: var(--surface2); border-radius: 12px; padding: 3px 10px; white-space: nowrap; }
+.progress-pill.done { color: #1a4d32; background: #e8f5ee; }
+.section-chevron { font-size: 12px; color: var(--muted); transition: transform .2s; }
+.section-chevron.open { transform: rotate(180deg); }
+.section-body { display: none; padding: 4px 0 8px; }
+.section-body.open { display: block; }
+
+/* PROGRESS BAR */
+.prog-bar-wrap { height: 4px; background: var(--hairline); }
+.prog-bar { height: 4px; background: var(--bronze); transition: width .3s; }
+.prog-bar.green { background: #1a4d32; }
+
+/* ITEMS */
+.item { display: flex; align-items: flex-start; gap: 12px; padding: 10px 20px; border-bottom: 1px solid var(--hairline); transition: background .1s; }
+.item:last-child { border-bottom: none; }
+.item:hover { background: var(--surface2); }
+.item.done-item { opacity: .55; }
+.item input[type="checkbox"] { margin-top: 2px; width: 16px; height: 16px; accent-color: var(--ink); cursor: pointer; flex-shrink: 0; }
+.item-body { flex: 1; }
+.item-text { font-size: 13px; color: var(--ink); line-height: 1.5; }
+.item-text.done-text { text-decoration: line-through; color: var(--muted); }
+.item-sub { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.4; }
+.item-tags { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
+.tag { font-size: 9px; font-weight: 700; letter-spacing: .5px; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; }
+.tag-p2p      { background: #b85c0018; color: #b85c00; border: 1px solid #b85c0030; }
+.tag-anchor   { background: #1a3a5c18; color: #1a3a5c; border: 1px solid #1a3a5c30; }
+.tag-ironwood { background: #1a4d3218; color: #1a4d32; border: 1px solid #1a4d3230; }
+.tag-all      { background: var(--surface2); color: var(--muted); border: 1px solid var(--hairline); }
+.tag-free     { background: #16a34a18; color: #16a34a; border: 1px solid #16a34a30; }
+.tag-paid     { background: #7c3aed18; color: #7c3aed; border: 1px solid #7c3aed30; }
+.tag-urgent   { background: #b91c1c18; color: #b91c1c; border: 1px solid #b91c1c30; }
+.tag-ai       { background: #0369a118; color: #0369a1; border: 1px solid #0369a130; }
+.tag-tool     { background: #92400e18; color: #92400e; border: 1px solid #92400e30; }
+
+/* MONTH BADGES */
+.month-badge { display: inline-block; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; padding: 2px 8px; border-radius: 4px; background: var(--bronze); color: #fff; margin-left: 6px; opacity: .85; }
+
+/* TOAST */
+#toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--ink); color: var(--bg); padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 700; z-index: 9999; transition: transform .3s; pointer-events: none; }
+#toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="page-header">
+    <div class="page-title">Marketing & Social Media Checklist</div>
+    <div class="page-sub">Complete marketing launch checklist across Peach to Palms, Anchor Pro, and Ironwood — from GBP setup to 6-month milestones</div>
+  </div>
+
+  <!-- SUMMARY STRIP -->
+  <div class="sum-strip">
+    <div class="sum-cell"><div class="sum-label">Total Items</div><div class="sum-value" id="s-total">0</div></div>
+    <div class="sum-cell"><div class="sum-label">Completed</div><div class="sum-value green" id="s-done">0</div></div>
+    <div class="sum-cell"><div class="sum-label">Remaining</div><div class="sum-value" id="s-remain">0</div></div>
+    <div class="sum-cell"><div class="sum-label">% Complete</div><div class="sum-value" id="s-pct">0%</div></div>
+    <div class="sum-cell"><div class="sum-label">Urgent Left</div><div class="sum-value" id="s-urgent">0</div></div>
+  </div>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="filter-pills">
+      <div class="pill active" onclick="setFilter('all', this)">All</div>
+      <div class="pill" onclick="setFilter('p2p', this)">P2P</div>
+      <div class="pill" onclick="setFilter('anchor', this)">Anchor Pro</div>
+      <div class="pill" onclick="setFilter('ironwood', this)">Ironwood</div>
+      <div class="pill" onclick="setFilter('shared', this)">Shared</div>
+      <div class="pill" onclick="setFilter('urgent', this)">🔴 Urgent</div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost" onclick="expandAll()">Expand All</button>
+      <button class="btn btn-danger" onclick="clearAll()">Reset</button>
+    </div>
+  </div>
+
+  <div id="checklist-container"></div>
+</div>
+
+<div id="toast">Saved</div>
+
+<script>
+const STORAGE_KEY = 'dm_marketing_checklist';
+let activeFilter = 'all';
+let state = {};
+
+const SECTIONS = [
+  {
+    id: 'foundation',
+    icon: '🏗️',
+    title: 'Foundation — Do These First',
+    items: [
+      { id: 'gbp-p2p', text: 'Claim & fully optimize Google Business Profile — Peach to Palms', sub: 'Add photos, hours, services, description, website URL', tags: ['p2p','urgent','free'], month: 1 },
+      { id: 'gbp-anchor', text: 'Claim & fully optimize Google Business Profile — Anchor Pro Solutions', sub: 'Investor/contractor category, services list, portfolio photos', tags: ['anchor','urgent','free'], month: 1 },
+      { id: 'gbp-ironwood', text: 'Claim & fully optimize Google Business Profile — Ironwood Inc.', sub: 'Home services category, service areas, before/after photos', tags: ['ironwood','urgent','free'], month: 1 },
+      { id: 'brand-assets', text: 'Create brand asset folder for each company', sub: 'Logos (SVG + PNG), brand colors hex codes, font files, email signature templates', tags: ['all','urgent','free'], month: 1 },
+      { id: 'email-sig', text: 'Set up professional email signatures for all 3 companies', sub: 'Name, title, phone, website, logo — use for every outbound email', tags: ['all','free'], month: 1 },
+      { id: 'email-domain', text: 'Verify branded email domains are active and working', sub: 'ty@peach2palms.com / ty@anchorprosolutions.com / ty@ironwoodhomeservices.com', tags: ['all','urgent','paid'], month: 1 },
+      { id: 'website-p2p', text: 'Launch P2P website with seller lead capture', sub: 'Minimum: "We buy houses" landing page, contact form, phone number, GBP link', tags: ['p2p','urgent','paid'], month: 1 },
+      { id: 'website-anchor', text: 'Launch Anchor Pro website with estimator lead magnet', sub: 'Investor-facing: scope/estimate CTA, project gallery, contact form', tags: ['anchor','paid'], month: 1 },
+      { id: 'website-ironwood', text: 'Launch Ironwood website with homeowner CTA', sub: 'Before/after gallery, service list, Nextdoor/Google review links, contact form', tags: ['ironwood','paid'], month: 1 },
+    ]
+  },
+  {
+    id: 'social-setup',
+    icon: '📱',
+    title: 'Social Media Account Setup',
+    items: [
+      { id: 'fb-p2p', text: 'Create Facebook Business Page — Peach to Palms Property Group', sub: 'Full profile: logo, cover photo, about section, website, phone, services', tags: ['p2p','urgent','free'], month: 1 },
+      { id: 'ig-p2p', text: 'Create Instagram Business Account — Peach to Palms', sub: 'Link to Facebook Page, bio with call to action, highlight categories', tags: ['p2p','free'], month: 1 },
+      { id: 'tiktok-p2p', text: 'Create TikTok Business Account — Peach to Palms', sub: 'Short-form video for motivated seller education and deal content', tags: ['p2p','free'], month: 1 },
+      { id: 'ig-anchor', text: 'Create Instagram Business Account — Anchor Pro Solutions', sub: 'Authority/expertise content: scope walkthroughs, estimate breakdowns, project photos', tags: ['anchor','free'], month: 1 },
+      { id: 'li-anchor', text: 'Create LinkedIn Company Page — Anchor Pro Solutions', sub: 'Investor/property manager audience — authority content, REIA connections', tags: ['anchor','free'], month: 1 },
+      { id: 'ig-ironwood', text: 'Create Instagram Business Account — Ironwood Inc.', sub: 'Before/after projects, crew content, home value tips', tags: ['ironwood','urgent','free'], month: 1 },
+      { id: 'fb-ironwood', text: 'Create Facebook Business Page — Ironwood Inc.', sub: 'Homeowner audience — local community groups, before/after content', tags: ['ironwood','free'], month: 1 },
+      { id: 'nextdoor-ironwood', text: 'Claim Nextdoor Business Page — Ironwood Inc.', sub: 'Hyper-local homeowner audience — set service areas by neighborhood', tags: ['ironwood','free'], month: 1 },
+      { id: 'yt-p2p', text: 'Create YouTube Channel — Peach to Palms', sub: 'Longer-form seller education, deal walkthroughs, how wholesaling works', tags: ['p2p','free'], month: 2 },
+      { id: 'link-all', text: 'Cross-link all social profiles to websites and GBP listings', sub: 'Every profile should point to the website; every website should show social links', tags: ['all','free'], month: 1 },
+    ]
+  },
+  {
+    id: 'social-content',
+    icon: '📸',
+    title: 'Social Media Content — Month 1 Launch',
+    items: [
+      { id: 'content-p2p-intro', text: 'Post P2P introduction/brand story content on Facebook + TikTok', sub: 'Who you are, what you do, who you help — set the tone from day 1', tags: ['p2p','urgent','free'], month: 1 },
+      { id: 'content-anchor-intro', text: 'Post Anchor Pro introduction content on Instagram + LinkedIn', sub: 'Positioning: precision, expertise, fixed-bid promise', tags: ['anchor','free'], month: 1 },
+      { id: 'content-ironwood-intro', text: 'Post Ironwood introduction content on Instagram + Nextdoor', sub: 'Local craftsman positioning: who you are, your work, your neighborhood', tags: ['ironwood','free'], month: 1 },
+      { id: 'flywheel-post-1', text: 'Film and post first Flywheel Content Series', sub: 'One deal, three posts: P2P (we locked it) → Anchor Pro (here\'s the scope) → Ironwood (here\'s the finish)', tags: ['all','free'], month: 2 },
+      { id: 'cadence-p2p', text: 'Establish P2P posting cadence: 3–5x/week Facebook + TikTok', sub: 'Types: seller education, deal walkthrough, testimonial, before/after, "how wholesaling works"', tags: ['p2p','free'], month: 2 },
+      { id: 'cadence-anchor', text: 'Establish Anchor Pro posting cadence: 3x/week Instagram, 2x/week LinkedIn', sub: 'Types: scope breakdown, rehab cost post, investor tip, project photo, fixed-bid explainer', tags: ['anchor','free'], month: 2 },
+      { id: 'cadence-ironwood', text: 'Establish Ironwood posting cadence: 4x/week Instagram, weekly Nextdoor', sub: 'Types: before/after, crew at work, home tip, neighborhood spotlight, project timeline', tags: ['ironwood','free'], month: 2 },
+      { id: 'testimonial-first', text: 'Collect and post first 3 testimonials across all companies', sub: 'Video preferred, written acceptable — use on website, social, and GBP', tags: ['all','free'], month: 2 },
+      { id: 'hashtag-strategy', text: 'Build hashtag sets for each company and platform', sub: '15–25 hashtags per post — mix of broad (#realestate), mid (#wholesalingrealestate), local (#mariettaga)', tags: ['all','free'], month: 1 },
+    ]
+  },
+  {
+    id: 'rei-reply',
+    icon: '📞',
+    title: 'REI Reply — AI Voicemail & SMS (P2P)',
+    items: [
+      { id: 'rei-account', text: 'Set up REI Reply account and configure P2P branding', sub: 'Business name, callback number, voicemail script — Hero + Sage tone', tags: ['p2p','urgent','paid','ai'], month: 1 },
+      { id: 'rei-script', text: 'Write and load AI voicemail scripts for each seller avatar', sub: '5 scripts: Inheritor, Tired Landlord, Life Event, Aging Homeowner, Pre-Foreclosure', tags: ['p2p','urgent','ai'], month: 1 },
+      { id: 'rei-sms', text: 'Build SMS follow-up sequences in REI Reply', sub: '3-touch sequence: initial reply → value add → soft close — all in Sage voice', tags: ['p2p','paid','ai'], month: 1 },
+      { id: 'rei-list', text: 'Upload first skip-traced list to REI Reply campaign', sub: 'Start with 200–500 records: probate + tax delinquent in target market', tags: ['p2p','urgent','paid'], month: 1 },
+      { id: 'rei-first-campaign', text: 'Launch first REI Reply campaign and monitor responses', sub: 'Check daily for first 2 weeks — refine scripts based on response patterns', tags: ['p2p','urgent','ai'], month: 1 },
+      { id: 'rei-ghl-connect', text: 'Connect REI Reply → GHL Wholesale pipeline via webhook/Zapier', sub: 'Every qualified lead auto-creates a GHL contact in Wholesale pipeline', tags: ['p2p','paid','ai','tool'], month: 2 },
+    ]
+  },
+  {
+    id: 'ghl',
+    icon: '🔁',
+    title: 'GoHighLevel (GHL) — CRM Pipelines',
+    items: [
+      { id: 'ghl-account', text: 'Confirm GHL account is active and all 3 companies configured as sub-accounts', sub: 'Each company should have its own pipeline, contacts, and automations', tags: ['all','urgent','paid','tool'], month: 1 },
+      { id: 'ghl-wholesale', text: 'Build Wholesale Pipeline in GHL (P2P)', sub: 'Stages: New Lead → Contacted → Appointment Set → Offer Made → Under Contract → Closed / Dead', tags: ['p2p','urgent','tool'], month: 1 },
+      { id: 'ghl-design', text: 'Build Design/Scope Pipeline in GHL (Anchor Pro)', sub: 'Stages: Inquiry → Walkthrough Scheduled → Scope Built → Proposal Sent → Won / Lost', tags: ['anchor','urgent','tool'], month: 1 },
+      { id: 'ghl-build', text: 'Build Build/Service Pipeline in GHL (Ironwood)', sub: 'Stages: New Request → Estimate Sent → Deposit Received → In Progress → Complete → Review Requested', tags: ['ironwood','urgent','tool'], month: 1 },
+      { id: 'ghl-tags', text: 'Set up contact tags for market, source, avatar type in GHL', sub: 'Tag: market (Marietta, Gainesville…), source (REI Reply, direct mail, referral), avatar (Inheritor, Tired LL…)', tags: ['all','tool'], month: 1 },
+      { id: 'ghl-review-seq', text: 'Build automated review request sequence in GHL (Ironwood + Anchor Pro)', sub: 'Trigger: stage moves to "Complete" → 2-day delay → SMS + email asking for Google review', tags: ['ironwood','anchor','paid','ai','tool'], month: 4 },
+      { id: 'ghl-referral', text: 'Build referral handoff automation: P2P → Anchor Pro → Ironwood', sub: 'When deal advances to "Under Contract" in P2P pipeline, auto-create Anchor Pro inquiry record', tags: ['all','paid','ai','tool'], month: 2 },
+      { id: 'ghl-nurture', text: 'Build lead nurture sequences for cold/dead leads in each pipeline', sub: '90-day re-engagement: 3 touches, value-add content, soft re-open', tags: ['all','paid','ai'], month: 3 },
+    ]
+  },
+  {
+    id: 'direct-mail',
+    icon: '✉️',
+    title: 'Direct Mail (P2P)',
+    items: [
+      { id: 'list-probate', text: 'Pull probate list for primary target market', sub: 'County courthouse or BatchLeads/PropStream — 200–500 records to start', tags: ['p2p','paid'], month: 3 },
+      { id: 'list-taxdel', text: 'Pull tax delinquent list for primary target market', sub: 'County tax assessor or data provider — filter for 2+ years delinquent', tags: ['p2p','paid'], month: 3 },
+      { id: 'list-pre-nod', text: 'Pull pre-NOD / pre-foreclosure list', sub: 'Lis pendens filings in target county — time-sensitive, contact fast', tags: ['p2p','paid','urgent'], month: 3 },
+      { id: 'mail-design', text: 'Design and print first direct mail piece', sub: 'Yellow letter or postcard — Hero + Sage tone, simple CTA: call or text this number', tags: ['p2p','paid'], month: 3 },
+      { id: 'mail-drop-1', text: 'Drop first 500-piece direct mail campaign', sub: 'Track response rate — target 1–3% response, 0.1–0.5% deal conversion', tags: ['p2p','paid'], month: 3 },
+      { id: 'mail-track', text: 'Set up dedicated tracking number for direct mail', sub: 'Separate number routes to GHL, tracks source for every inbound call', tags: ['p2p','paid','tool'], month: 3 },
+    ]
+  },
+  {
+    id: 'ads',
+    icon: '💰',
+    title: 'Paid Advertising',
+    items: [
+      { id: 'lsa-ironwood', text: 'Set up Google Local Services Ads (LSA) — Ironwood', sub: 'Highest ROI channel for homeowner services — $500/mo test budget to start', tags: ['ironwood','paid','urgent'], month: 3 },
+      { id: 'google-anchor', text: 'Set up Google Ads campaign — Anchor Pro', sub: 'Keywords: "investment property rehab [city]", "contractor for investors" — $300/mo test', tags: ['anchor','paid'], month: 4 },
+      { id: 'fb-ads-p2p', text: 'Launch Facebook/Instagram ads — P2P motivated seller campaign', sub: 'Target: homeowners 55+, 10yr+ in home, within 30mi of target markets — $200/mo test', tags: ['p2p','paid'], month: 4 },
+      { id: 'seo-p2p', text: 'Build geo-targeted SEO landing pages for P2P', sub: '"Sell my house fast [city]" pages for each target market — 500+ words, GBP schema markup', tags: ['p2p','paid'], month: 2 },
+    ]
+  },
+  {
+    id: 'referral',
+    icon: '🤝',
+    title: 'Referral Programs',
+    items: [
+      { id: 'agent-program', text: 'Launch formal real estate agent referral program (all 3 companies)', sub: 'P2P: agents refer pre-listing wholesale leads. Anchor Pro: agents refer investor clients. Ironwood: agents refer homeowners needing reno before listing.', tags: ['all','free'], month: 4 },
+      { id: 'attorney-cpa', text: 'Build attorney/CPA referral network for P2P', sub: 'Target: probate attorneys, divorce attorneys, estate CPAs — structured referral fee agreement', tags: ['p2p','free'], month: 3 },
+      { id: 'reia-anchor', text: 'Get Anchor Pro to 3+ REIA meetups with consistent presence', sub: 'Not one-time — build relationships over months. Bring estimator printouts as lead magnet.', tags: ['anchor','free'], month: 2 },
+      { id: 'pm-ironwood', text: 'Direct outreach to property management companies — Ironwood', sub: 'Property managers need trusted contractors for turn work — pitch fixed-bid + reliability', tags: ['ironwood','free'], month: 3 },
+      { id: 'hoa-ironwood', text: 'Reach out to HOA boards for Ironwood preferred vendor status', sub: 'HOAs refer homeowners — get on the approved vendor list in 2+ neighborhoods', tags: ['ironwood','free'], month: 4 },
+    ]
+  },
+  {
+    id: 'reviews',
+    icon: '⭐',
+    title: 'Reviews & Reputation',
+    items: [
+      { id: 'reviews-target', text: 'Set review targets: 10 reviews/company by Month 3, 50+ Ironwood by Year 1', sub: 'Google reviews are the #1 trust signal for homeowner and investor audiences', tags: ['all','urgent','free'], month: 1 },
+      { id: 'review-process', text: 'Build review request process — ask every satisfied client within 24hrs', sub: 'Script: "We\'d really appreciate it if you could leave us a quick Google review" + direct link', tags: ['all','free'], month: 1 },
+      { id: 'review-link', text: 'Create short review link for each GBP (share in texts/emails)', sub: 'Use Google\'s Place ID to build g.page/[business] or similar short link', tags: ['all','free'], month: 1 },
+      { id: 'review-respond', text: 'Respond to every Google review — positive and negative', sub: 'Response shows up in search — it\'s marketing. Personalize, don\'t template.', tags: ['all','free'], month: 1 },
+      { id: 'review-10-anchor', text: 'Hit 10 Google reviews — Anchor Pro Solutions', tags: ['anchor','free'], month: 3 },
+      { id: 'review-10-p2p', text: 'Hit 10 Google reviews — Peach to Palms', tags: ['p2p','free'], month: 3 },
+      { id: 'review-10-ironwood', text: 'Hit 10 Google reviews — Ironwood Inc.', tags: ['ironwood','free','urgent'], month: 3 },
+      { id: 'review-50-ironwood', text: 'Hit 50 Google reviews — Ironwood Inc. (Year 1 target)', tags: ['ironwood','free'], month: 12 },
+    ]
+  },
+  {
+    id: 'email',
+    icon: '📧',
+    title: 'Email List & Nurture',
+    items: [
+      { id: 'email-capture', text: 'Set up email capture at every digital touchpoint', sub: 'Website forms, GHL landing pages, estimator tool, social bio links — all capture email', tags: ['all','free'], month: 1 },
+      { id: 'email-100', text: 'Reach 100+ email contacts across all 3 companies', sub: 'Segment by company audience: motivated sellers, cash buyers, investors, homeowners', tags: ['all','free'], month: 5 },
+      { id: 'buyer-list', text: 'Build P2P cash buyer email list to 15+ verified buyers', sub: 'Active buyers who respond to deal blasts — quality over quantity', tags: ['p2p','urgent','free'], month: 5 },
+      { id: 'email-deal-blast', text: 'Send first deal blast email to cash buyer list', sub: 'Use Deal Memo tool to generate the content — email + text simultaneously', tags: ['p2p','free'], month: 2 },
+      { id: 'email-newsletter', text: 'Launch monthly market update email for investor audience (Anchor Pro)', sub: 'Rehab cost trends, deal flow notes, project spotlight — positions Anchor Pro as expert', tags: ['anchor','free'], month: 4 },
+    ]
+  },
+  {
+    id: 'milestones',
+    icon: '🎯',
+    title: '6-Month Milestones',
+    items: [
+      { id: 'm1', text: 'Month 1: All 3 GBPs claimed/optimized, all social accounts live, email capture at every touchpoint', tags: ['all','urgent'], month: 1 },
+      { id: 'm2', text: 'Month 2: Weekly content cadence active on all platforms, first flywheel deal series posted, REI Reply campaign running', tags: ['all'], month: 2 },
+      { id: 'm3', text: 'Month 3: Ironwood LSA live ($500/mo), P2P first 500-piece direct mail dropped, 10 reviews per company target hit, Anchor Pro estimator as public lead magnet', tags: ['all','paid'], month: 3 },
+      { id: 'm4', text: 'Month 4: Formal agent referral program active, automated review request sequence running in GHL, Google Ads (Anchor Pro) and FB Ads (P2P) test budgets live', tags: ['all','paid'], month: 4 },
+      { id: 'm5', text: 'Month 5: 100+ email contacts total, 15+ P2P cash buyers on list, Ironwood Nextdoor presence in 2+ neighborhoods, P2P in at least 1 new expansion market', tags: ['all'], month: 5 },
+      { id: 'm6', text: 'Month 6: Audit all channels — double down on top 2 per company, cut underperformers. Set Year 2 budget and goals.', tags: ['all'], month: 6 },
+    ]
+  },
+];
+
+// ── INIT ──
+function loadState() {
+  state = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+}
+
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  updateStats();
+}
+
+function setFilter(f, el) {
+  activeFilter = f;
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  renderAll();
+}
+
+function expandAll() {
+  document.querySelectorAll('.section-body').forEach(b => b.classList.add('open'));
+  document.querySelectorAll('.section-chevron').forEach(c => c.classList.add('open'));
+}
+
+function toggleSection(id) {
+  const body = document.getElementById('body-' + id);
+  const chev = document.getElementById('chev-' + id);
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+
+function clearAll() {
+  if (!confirm('Reset all checkboxes? This cannot be undone.')) return;
+  state = {};
+  saveState();
+  renderAll();
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+function itemVisible(item) {
+  if (activeFilter === 'all') return true;
+  if (activeFilter === 'urgent') return item.tags.includes('urgent');
+  if (activeFilter === 'shared') return item.tags.includes('all');
+  return item.tags.includes(activeFilter);
+}
+
+function renderAll() {
+  const container = document.getElementById('checklist-container');
+  container.innerHTML = '';
+  SECTIONS.forEach(sec => {
+    const visibleItems = sec.items.filter(itemVisible);
+    if (!visibleItems.length) return;
+    const total = visibleItems.length;
+    const done  = visibleItems.filter(i => state[i.id]).length;
+    const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+    const allDone = done === total;
+
+    const el = document.createElement('div');
+    el.className = 'section';
+    el.innerHTML = `
+      <div class="section-header" onclick="toggleSection('${sec.id}')">
+        <span class="section-icon">${sec.icon}</span>
+        <span class="section-title">${sec.title}</span>
+        <div class="section-meta">
+          <span class="progress-pill${allDone ? ' done' : ''}">${done}/${total} ${allDone ? '✓' : ''}</span>
+          <span class="section-chevron open" id="chev-${sec.id}">▾</span>
+        </div>
+      </div>
+      <div class="prog-bar-wrap"><div class="prog-bar${allDone ? ' green' : ''}" style="width:${pct}%"></div></div>
+      <div class="section-body open" id="body-${sec.id}">
+        ${visibleItems.map(item => renderItem(item)).join('')}
+      </div>`;
+    container.appendChild(el);
+  });
+  updateStats();
+}
+
+function renderItem(item) {
+  const done = !!state[item.id];
+  const tagHtml = item.tags.map(t => {
+    const labels = { p2p:'P2P', anchor:'Anchor Pro', ironwood:'Ironwood', all:'All 3', free:'Free', paid:'Paid', urgent:'Urgent', ai:'AI', tool:'Tool' };
+    return `<span class="tag tag-${t}">${labels[t]||t}</span>`;
+  }).join('');
+  const monthBadge = item.month ? `<span class="month-badge">Mo ${item.month}</span>` : '';
+  return `
+    <div class="item${done ? ' done-item' : ''}" id="item-${item.id}">
+      <input type="checkbox" ${done ? 'checked' : ''} onchange="toggle('${item.id}', this.checked)"/>
+      <div class="item-body">
+        <div class="item-text${done ? ' done-text' : ''}">${item.text}${monthBadge}</div>
+        ${item.sub ? `<div class="item-sub">${item.sub}</div>` : ''}
+        <div class="item-tags">${tagHtml}</div>
+      </div>
+    </div>`;
+}
+
+function toggle(id, checked) {
+  state[id] = checked;
+  saveState();
+  // Update just this item's row style without full re-render
+  const row = document.getElementById('item-' + id);
+  if (row) {
+    row.classList.toggle('done-item', checked);
+    const txt = row.querySelector('.item-text');
+    if (txt) txt.classList.toggle('done-text', checked);
+  }
+  // Update section progress bar + pill
+  SECTIONS.forEach(sec => {
+    const visibleItems = sec.items.filter(itemVisible);
+    if (!visibleItems.some(i => i.id === id)) return;
+    const total = visibleItems.length;
+    const done  = visibleItems.filter(i => state[i.id]).length;
+    const pct   = total > 0 ? Math.round((done / total) * 100) : 0;
+    const allDone = done === total;
+    const pill = document.querySelector(`#body-${sec.id}`)?.previousElementSibling?.previousElementSibling?.querySelector('.progress-pill');
+    if (pill) { pill.textContent = `${done}/${total}${allDone ? ' ✓' : ''}`; pill.classList.toggle('done', allDone); }
+    const bar = document.querySelector(`#body-${sec.id}`)?.previousElementSibling;
+    if (bar?.classList.contains('prog-bar-wrap')) {
+      const inner = bar.querySelector('.prog-bar');
+      if (inner) { inner.style.width = pct + '%'; inner.classList.toggle('green', allDone); }
+    }
+  });
+}
+
+function updateStats() {
+  let total = 0, done = 0, urgent = 0;
+  SECTIONS.forEach(sec => sec.items.forEach(item => {
+    if (!itemVisible(item)) return;
+    total++;
+    if (state[item.id]) done++;
+    if (item.tags.includes('urgent') && !state[item.id]) urgent++;
+  }));
+  document.getElementById('s-total').textContent  = total;
+  document.getElementById('s-done').textContent   = done;
+  document.getElementById('s-remain').textContent = total - done;
+  document.getElementById('s-pct').textContent    = total > 0 ? Math.round((done/total)*100) + '%' : '0%';
+  document.getElementById('s-urgent').textContent = urgent;
+}
+
+loadState();
+renderAll();
+</script>
+</body>
+</html>
