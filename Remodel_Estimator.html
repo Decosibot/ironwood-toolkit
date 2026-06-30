@@ -251,21 +251,16 @@
         <span class="pct-label">%</span>
       </div>
       <div class="markup-card">
-        <label>Jeff's Mode</label>
-        <select id="jeffMode" onchange="recalc()" style="background:var(--surface);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;">
-          <option value="hourly">Hourly ($50/hr)</option>
-          <option value="pct">30% Gross Profit</option>
+        <label>Phase</label>
+        <select id="phaseMode" onchange="recalc()" style="background:var(--surface);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;">
+          <option value="1">Phase 1 — No Salaries</option>
+          <option value="2">Phase 2 — Salaries Active</option>
         </select>
       </div>
-      <div class="markup-card" id="jeffHoursCard">
-        <label>Jeff's Hours</label>
-        <input type="number" id="jeffHours" value="0" min="0" oninput="recalc()"/>
-        <span class="pct-label">hrs</span>
-      </div>
-      <div class="markup-card" id="jeffPctCard" style="display:none;">
-        <label>Jeff's Cut (% Gross Profit)</label>
-        <input type="number" id="jeffPct" value="30" min="0" max="100" oninput="recalc()"/>
-        <span class="pct-label">%</span>
+      <div class="markup-card">
+        <label>Salary Allocation (this job)</label>
+        <input type="number" id="salaryAlloc" value="0" min="0" oninput="recalc()"/>
+        <span class="pct-label">$</span>
       </div>
       <div class="markup-card">
         <label>Contingency</label>
@@ -273,19 +268,9 @@
         <span class="pct-label">%</span>
       </div>
       <div class="markup-card">
-        <label>Jordan (% Gross Revenue)</label>
-        <input type="number" id="jordanPct" value="3" min="0" max="20" oninput="recalc()"/>
-        <span class="pct-label">%</span>
-      </div>
-      <div class="markup-card">
-        <label>Ty — Marketing (% Revenue)</label>
-        <input type="number" id="tyPct" value="3" min="0" max="20" oninput="recalc()"/>
-        <span class="pct-label">%</span>
-      </div>
-      <div class="markup-card">
-        <label>Ty — Field Labor (hrs)</label>
-        <input type="number" id="tyHours" value="0" min="0" oninput="recalc()"/>
-        <span class="pct-label">× $30</span>
+        <label>Other Overhead (this job)</label>
+        <input type="number" id="otherFees" value="0" min="0" oninput="recalc()"/>
+        <span class="pct-label">$</span>
       </div>
     </div>
 
@@ -424,14 +409,12 @@
           <div style="font-size:10px; color:var(--bronze); text-transform:uppercase; letter-spacing:1px; font-weight:700; margin-bottom:8px;">Internal — Profit Waterfall Preview</div>
           <div class="totals-row subtotal"><span>Ad Spend (pre-waterfall)</span><span id="t-ad-spend">$0</span></div>
           <div class="totals-row subtotal"><span>Gross Profit (Revenue − Materials − Subs − Ad Spend)</span><span id="t-gross-profit">$0</span></div>
-          <div class="totals-row subtotal"><span id="t-jeff-label">Jeff's Cut (hourly · 0 hrs × $50)</span><span id="t-jeff-cut">$0</span></div>
-          <div class="totals-row subtotal"><span>Mgmt Fee (5% of revenue)</span><span id="t-mgmt-fee">$0</span></div>
-          <div class="totals-row subtotal"><span>Jordan (<span id="t-jordan-pct">3</span>% of revenue)</span><span id="t-jordan-fee">$0</span></div>
-          <div class="totals-row subtotal"><span>Ty — Marketing (<span id="t-ty-pct">3</span>% of revenue)</span><span id="t-ty-fee">$0</span></div>
-          <div class="totals-row subtotal"><span id="t-ty-labor-label">Ty — Field Labor (0 hrs × $30)</span><span id="t-ty-labor">$0</span></div>
-          <div class="totals-row subtotal"><span>Net Distributable (50/50 split)</span><span id="t-net-dist">$0</span></div>
-          <div class="totals-row" style="color:var(--success);"><span>Est. Ty Total (Mgmt + Marketing + 50%)</span><span id="t-anchor-est">$0</span></div>
-          <div class="totals-row" style="color:#64b5f6;"><span>Est. Jeff Total (Labor + Jordan + 50%)</span><span id="t-landon-est">$0</span></div>
+          <div class="totals-row subtotal"><span id="t-salary-label">Salary Allocation (Phase 1 — $0)</span><span id="t-salary-alloc">$0</span></div>
+          <div class="totals-row subtotal"><span>Other Overhead</span><span id="t-other-fees">$0</span></div>
+          <div class="totals-row subtotal"><span>Net Distributable</span><span id="t-net-dist">$0</span></div>
+          <div class="totals-row" style="color:var(--success);"><span>Ty / Anchor Pro (30%)</span><span id="t-anchor-est">$0</span></div>
+          <div class="totals-row" style="color:#64b5f6;"><span>Jeff / Landon (35%)</span><span id="t-landon-est">$0</span></div>
+          <div class="totals-row" style="color:#f39c12;"><span>Ironwood LLC (35%)</span><span id="t-ironwood-est">$0</span></div>
         </div>
       </div>
 
@@ -483,7 +466,7 @@ function newJobObj() {
     jobAddress: '', startDate: '', duration: '', jobType: 'Kitchen Remodel',
     scopeSummary: '', internalNotes: '', payTerms: '40% deposit · 60% on completion',
     validDays: 30, depositPct: 40,
-    matMarkup: 25, labMarkup: 35, jeffMode: 'hourly', jeffHours: 0, jeffPct: 30, jordanPct: 3, tyPct: 3, tyHours: 0, adSpend: 0, contingency: 10,
+    matMarkup: 25, labMarkup: 35, phaseMode: '1', salaryAlloc: 0, otherFees: 0, adSpend: 0, contingency: 10,
     categories: [{ id: uid(), name: 'Labor' }, { id: uid(), name: 'Materials' }, { id: uid(), name: 'Subcontractors' }],
     items: []
   };
@@ -520,13 +503,10 @@ function populateSidebar() {
   setVal('depositPct', job.depositPct);
   setVal('matMarkup', job.matMarkup);
   setVal('labMarkup', job.labMarkup);
-  setVal('jeffMode',   job.jeffMode   ?? 'hourly');
-  setVal('jeffHours',  job.jeffHours  ?? 0);
-  setVal('jeffPct',    job.jeffPct    ?? 30);
-  setVal('jordanPct',  job.jordanPct  ?? 3);
-  setVal('tyPct',      job.tyPct      ?? 3);
-  setVal('tyHours',    job.tyHours    ?? 0);
-  setVal('adSpend',    job.adSpend    ?? 0);
+  setVal('phaseMode',   job.phaseMode   ?? '1');
+  setVal('salaryAlloc', job.salaryAlloc ?? 0);
+  setVal('otherFees',   job.otherFees   ?? 0);
+  setVal('adSpend',     job.adSpend     ?? 0);
   setVal('contingency', job.contingency);
 }
 
@@ -624,21 +604,14 @@ function deleteItem(id) {
 
 // ─── RECALC ───────────────────────────────────────────────────────────────────
 function recalc() {
-  const matMu   = (parseFloat(getVal('matMarkup')) || 0) / 100;
-  const labMu   = (parseFloat(getVal('labMarkup')) || 0) / 100;
-  const jeffMode  = getVal('jeffMode') || 'hourly';
-  const jeffHours = parseFloat(getVal('jeffHours')) || 0;
-  const jeffPct   = parseFloat(getVal('jeffPct')) || 30;
-  const jordanPct = parseFloat(getVal('jordanPct')) || 3;
-  const tyPct     = parseFloat(getVal('tyPct')) || 3;
-  const tyHours   = parseFloat(getVal('tyHours')) || 0;
-  const adSpend   = parseFloat(getVal('adSpend')) || 0;
-  const contPct   = (parseFloat(getVal('contingency')) || 0) / 100;
-  const depPct    = (parseFloat(getVal('depositPct')) || 0) / 100;
-
-  // Toggle visibility of Jeff's input cards
-  document.getElementById('jeffHoursCard').style.display = jeffMode === 'hourly' ? '' : 'none';
-  document.getElementById('jeffPctCard').style.display   = jeffMode === 'pct'    ? '' : 'none';
+  const matMu      = (parseFloat(getVal('matMarkup')) || 0) / 100;
+  const labMu      = (parseFloat(getVal('labMarkup')) || 0) / 100;
+  const adSpend    = parseFloat(getVal('adSpend')) || 0;
+  const phase      = getVal('phaseMode') || '1';
+  const salaryAlloc= parseFloat(getVal('salaryAlloc')) || 0;
+  const otherFees  = parseFloat(getVal('otherFees')) || 0;
+  const contPct    = (parseFloat(getVal('contingency')) || 0) / 100;
+  const depPct     = (parseFloat(getVal('depositPct')) || 0) / 100;
 
   let matRaw = 0, labRaw = 0, subTotal = 0;
   job.items.forEach(i => {
@@ -656,17 +629,13 @@ function recalc() {
   const deposit    = total * depPct;
   const balance    = total - deposit;
 
-  // Profit waterfall preview
+  // Profit waterfall — 30 / 35 / 35
   const grossProfit  = Math.max(0, total - matRaw - subTotal - adSpend);
-  const jeffCut      = jeffMode === 'hourly' ? jeffHours * 50 : grossProfit * (jeffPct / 100);
-  const mgmtFee      = total * 0.05;
-  const jordanFee    = total * (jordanPct / 100);
-  const tyFee        = total * (tyPct / 100);
-  const tyLabor      = tyHours * 30;
-  const netDist      = Math.max(0, grossProfit - jeffCut - mgmtFee - jordanFee - tyFee - tyLabor);
-  const splitEach    = netDist * 0.50;
-  const anchorEst    = mgmtFee + tyFee + tyLabor + splitEach;
-  const landonEst    = jeffCut + jordanFee + splitEach;
+  const salaryTotal  = phase === '2' ? salaryAlloc : 0;
+  const netDist      = Math.max(0, grossProfit - salaryTotal - otherFees);
+  const tySplit      = netDist * 0.30;
+  const jeffSplit    = netDist * 0.35;
+  const iwSplit      = netDist * 0.35;
 
   setText('t-mat-raw',     fmt(matRaw));
   setText('t-mat-pct',     getVal('matMarkup'));
@@ -683,20 +652,13 @@ function recalc() {
   setText('t-balance',     fmt(balance));
   setText('t-ad-spend',    fmt(adSpend));
   setText('t-gross-profit',fmt(grossProfit));
-  setText('t-jeff-label',  jeffMode === 'hourly'
-    ? `Jeff's Cut (hourly · ${jeffHours} hrs × $50)`
-    : `Jeff's Cut (${jeffPct}% of gross profit)`);
-  setText('t-jeff-cut',    fmt(jeffCut));
-  setText('t-mgmt-fee',    fmt(mgmtFee));
-  setText('t-jordan-pct',  jordanPct);
-  setText('t-jordan-fee',  fmt(jordanFee));
-  setText('t-ty-pct',        tyPct);
-  setText('t-ty-fee',        fmt(tyFee));
-  setText('t-ty-labor-label',`Ty — Field Labor (${tyHours} hrs × $30)`);
-  setText('t-ty-labor',      fmt(tyLabor));
-  setText('t-net-dist',      fmt(netDist));
-  setText('t-anchor-est',  fmt(anchorEst));
-  setText('t-landon-est',  fmt(landonEst));
+  setText('t-salary-label', phase === '2' ? `Salary Allocation (Phase 2 — active)` : `Salary Allocation (Phase 1 — $0)`);
+  setText('t-salary-alloc', fmt(salaryTotal));
+  setText('t-other-fees',   fmt(otherFees));
+  setText('t-net-dist',     fmt(netDist));
+  setText('t-anchor-est',   fmt(tySplit));
+  setText('t-landon-est',   fmt(jeffSplit));
+  setText('t-ironwood-est', fmt(iwSplit));
 }
 
 // ─── VIEW TOGGLE ─────────────────────────────────────────────────────────────
@@ -886,13 +848,10 @@ function collectSidebar() {
   job.depositPct   = parseFloat(getVal('depositPct')) || 40;
   job.matMarkup    = parseFloat(getVal('matMarkup')) || 25;
   job.labMarkup    = parseFloat(getVal('labMarkup')) || 35;
-  job.jeffMode     = getVal('jeffMode') || 'hourly';
-  job.jeffHours    = parseFloat(getVal('jeffHours'))  || 0;
-  job.jeffPct      = parseFloat(getVal('jeffPct'))    || 30;
-  job.jordanPct    = parseFloat(getVal('jordanPct'))  || 3;
-  job.tyPct        = parseFloat(getVal('tyPct'))      || 3;
-  job.tyHours      = parseFloat(getVal('tyHours'))    || 0;
-  job.adSpend      = parseFloat(getVal('adSpend'))    || 0;
+  job.phaseMode    = getVal('phaseMode')               || '1';
+  job.salaryAlloc  = parseFloat(getVal('salaryAlloc')) || 0;
+  job.otherFees    = parseFloat(getVal('otherFees'))   || 0;
+  job.adSpend      = parseFloat(getVal('adSpend'))     || 0;
   job.contingency  = parseFloat(getVal('contingency')) || 10;
 }
 
@@ -917,17 +876,14 @@ function newJob() {
 function exportToWaterfall() {
   collectSidebar();
 
-  const matMu    = (parseFloat(job.matMarkup) || 25) / 100;
-  const labMu    = (parseFloat(job.labMarkup) || 35) / 100;
-  const contPct  = (parseFloat(job.contingency) || 10) / 100;
-  const depPct   = (parseFloat(job.depositPct) || 35) / 100;
-  const jeffMode = job.jeffMode || 'hourly';
-  const jeffPct  = parseFloat(job.jeffPct) || 30;
-  const jeffHours= parseFloat(job.jeffHours) || 0;
-  const jordanPct= parseFloat(job.jordanPct) || 3;
-  const tyPct    = parseFloat(job.tyPct) || 3;
-  const tyHours  = parseFloat(job.tyHours) || 0;
-  const adSpend  = parseFloat(job.adSpend) || 0;
+  const matMu      = (parseFloat(job.matMarkup) || 25) / 100;
+  const labMu      = (parseFloat(job.labMarkup) || 35) / 100;
+  const contPct    = (parseFloat(job.contingency) || 10) / 100;
+  const depPct     = (parseFloat(job.depositPct) || 35) / 100;
+  const adSpend    = parseFloat(job.adSpend) || 0;
+  const phase      = job.phaseMode || '1';
+  const salaryAlloc= parseFloat(job.salaryAlloc) || 0;
+  const otherFees  = parseFloat(job.otherFees) || 0;
 
   let matRaw = 0, labRaw = 0, subTotal = 0;
   job.items.forEach(i => {
@@ -937,41 +893,28 @@ function exportToWaterfall() {
     else subTotal += raw;
   });
 
-  const matMarked = matRaw * (1 + matMu);
-  const labMarked = labRaw * (1 + labMu);
-  const subtotal  = matMarked + labMarked + subTotal;
-  const cont      = subtotal * contPct;
-  const total     = subtotal + cont;
-  const deposit   = total * depPct;
+  const matMarked  = matRaw * (1 + matMu);
+  const labMarked  = labRaw * (1 + labMu);
+  const subtotal   = matMarked + labMarked + subTotal;
+  const cont       = subtotal * contPct;
+  const total      = subtotal + cont;
+  const deposit    = total * depPct;
 
   const grossProfit = Math.max(0, total - matRaw - subTotal - adSpend);
-  const jeffCut     = jeffMode === 'hourly' ? jeffHours * 50 : grossProfit * (jeffPct / 100);
-  const mgmtFee     = total * 0.05;
-  const jordanFee   = total * (jordanPct / 100);
-  const tyFee       = total * (tyPct / 100);
-  const tyLabor     = tyHours * 30;
-  const netDist     = Math.max(0, grossProfit - jeffCut - mgmtFee - jordanFee - tyFee - tyLabor);
+  const salaryTotal = phase === '2' ? salaryAlloc : 0;
+  const netDist     = Math.max(0, grossProfit - salaryTotal - otherFees);
+  const tySplit     = netDist * 0.30;
+  const jeffSplit   = netDist * 0.35;
+  const iwSplit     = netDist * 0.35;
 
   const payload = {
-    jobName:      job.jobName || '',
-    clientName:   job.clientName || '',
-    address:      job.jobName || '',
-    roomType:     job.roomType || '',
-    total,
-    matRaw,
-    labRaw,
-    subTotal,
-    cont,
-    deposit,
-    grossProfit,
-    jeffCut,
-    mgmtFee,
-    jordanFee,
-    tyFee,
-    tyLabor,
-    netDist,
-    splitEach: netDist * 0.50,
-    adSpend,
+    jobName:    job.jobName || '',
+    clientName: job.clientName || '',
+    address:    job.jobName || '',
+    roomType:   job.roomType || '',
+    total, matRaw, labRaw, subTotal, cont, deposit,
+    grossProfit, netDist, tySplit, jeffSplit, iwSplit,
+    adSpend, salaryTotal, otherFees,
     exportedAt: new Date().toISOString(),
     source: 'Remodel_Estimator',
   };
