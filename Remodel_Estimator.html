@@ -384,6 +384,12 @@
         </div>
       </div>
 
+      <!-- EXTERIOR PAINT & STAIN QUICK BUILD -->
+      <div style="margin-bottom:20px;">
+        <div class="section-head" style="margin-top:0;">Anchor Pro — Exterior Quick Build</div>
+        <button class="btn btn-gold btn-sm btn-block" onclick="document.getElementById('extModal').style.display='flex'">🎨 Exterior Paint / Stain Form</button>
+      </div>
+
       <!-- QUICK ADD TEMPLATES -->
       <div style="margin-bottom: 20px;">
         <div class="section-head" style="margin-top:0;">Quick Add — Common Items</div>
@@ -1060,6 +1066,138 @@ function showEstimatorToast(msg){
   clearTimeout(t._timer);
   t._timer = setTimeout(()=>t.style.opacity='0', 2500);
 }
+
+// ── EXTERIOR PAINT / STAIN QUICK BUILD ──
+function buildExteriorEstimate() {
+  const nv = id => parseFloat(document.getElementById(id).value) || 0;
+  const cb = id => document.getElementById(id).checked;
+
+  // Deck
+  const deckSqft   = nv('ext-deck-sqft');
+  const deckRepair  = cb('ext-deck-repair');
+
+  // Porch
+  const porchSqft  = nv('ext-porch-sqft');
+  const porchStrip = cb('ext-porch-strip');
+  const porchRails = cb('ext-porch-rails');
+
+  // Steps
+  const steps = nv('ext-steps');
+
+  // Shutters
+  const shutters = nv('ext-shutters');
+
+  // Labor rate
+  const labor = 50;
+
+  const items = [];
+
+  // ── DECK ──
+  if (deckSqft > 0) {
+    items.push({ desc: 'Deck — pressure wash & prep', type: 'labor', qty: Math.ceil(deckSqft / 100), rate: 35, note: `${deckSqft} sqft` });
+    items.push({ desc: 'Deck stain — materials', type: 'material', qty: Math.ceil(deckSqft / 200), rate: 45, note: '1 gal per 200sqft' });
+    items.push({ desc: 'Deck stain — labor', type: 'labor', qty: Math.ceil(deckSqft / 60), rate: labor, note: `${deckSqft} sqft` });
+    if (deckRepair) {
+      items.push({ desc: 'Deck minor wood repair — materials', type: 'material', qty: 1, rate: 80, note: 'boards, screws, wood filler' });
+      items.push({ desc: 'Deck minor wood repair — labor', type: 'labor', qty: 2, rate: labor, note: '2hrs' });
+    }
+  }
+
+  // ── PORCH ──
+  if (porchSqft > 0) {
+    if (porchStrip) {
+      items.push({ desc: 'Porch — paint strip / chemical removal', type: 'labor', qty: Math.ceil(porchSqft / 10), rate: labor, note: `${porchSqft} sqft floor` });
+      items.push({ desc: 'Porch — strip materials (chemical stripper)', type: 'material', qty: Math.ceil(porchSqft / 50), rate: 28, note: '1 gal per 50sqft' });
+      items.push({ desc: 'Porch — pressure wash after strip', type: 'labor', qty: 1, rate: 35, note: 'post-strip rinse' });
+    } else {
+      items.push({ desc: 'Porch — pressure wash & prep', type: 'labor', qty: 1, rate: 35, note: `${porchSqft} sqft` });
+    }
+    items.push({ desc: 'Porch floor stain — materials', type: 'material', qty: 1, rate: 32, note: `${porchSqft} sqft` });
+    items.push({ desc: 'Porch floor stain — labor', type: 'labor', qty: Math.ceil(porchSqft / 30), rate: labor, note: `${porchSqft} sqft` });
+    if (porchRails) {
+      items.push({ desc: 'Porch rails stain — materials', type: 'material', qty: 1, rate: 20, note: 'primer + stain' });
+      items.push({ desc: 'Porch rails stain — labor', type: 'labor', qty: 2, rate: labor, note: '~16 lf rails' });
+    }
+  }
+
+  // ── STEPS ──
+  if (steps > 0) {
+    items.push({ desc: `Steps (${steps}) — pressure wash & prep`, type: 'labor', qty: Math.ceil(steps / 15), rate: 35, note: `${steps} steps` });
+    items.push({ desc: `Steps (${steps}) — stain materials`, type: 'material', qty: Math.ceil(steps / 25), rate: 30, note: 'per can' });
+    items.push({ desc: `Steps (${steps}) — stain labor`, type: 'labor', qty: Math.ceil(steps / 10), rate: labor, note: `${steps} steps` });
+  }
+
+  // ── SHUTTERS ──
+  if (shutters > 0) {
+    items.push({ desc: `Shutters (${shutters}) — remove & rehang`, type: 'labor', qty: Math.ceil(shutters / 4), rate: labor, note: `${shutters} shutters` });
+    items.push({ desc: `Shutters (${shutters}) — paint materials`, type: 'material', qty: 1, rate: Math.ceil(shutters * 5), note: 'paint + primer' });
+    items.push({ desc: `Shutters (${shutters}) — paint labor`, type: 'labor', qty: Math.ceil(shutters / 3), rate: labor, note: `${shutters} shutters` });
+  }
+
+  // Add all items
+  items.forEach(it => {
+    if (typeof quickAdd === 'function') {
+      quickAdd(it.desc, it.type, it.qty, it.rate);
+    }
+  });
+
+  document.getElementById('extModal').style.display = 'none';
+  showToast('Exterior estimate lines added ✓');
+}
 </script>
+
+<!-- ── EXTERIOR MODAL ── -->
+<div id="extModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9000;align-items:center;justify-content:center;">
+  <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:12px;padding:28px;width:100%;max-width:520px;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+      <div style="font-family:'Instrument Serif',serif;font-size:20px;color:var(--cream);">🎨 Exterior Paint / Stain</div>
+      <button onclick="document.getElementById('extModal').style.display='none'" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;">×</button>
+    </div>
+
+    <!-- DECK -->
+    <div style="font-size:11px;color:var(--bronze);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--hairline);">Deck</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+      <div class="field-group"><label>Deck Size (sq ft)</label><input type="number" id="ext-deck-sqft" placeholder="e.g. 120" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:8px 10px;font-size:13px;width:100%;"/></div>
+      <div class="field-group" style="display:flex;align-items:flex-end;padding-bottom:2px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--cream);font-weight:600;">
+          <input type="checkbox" id="ext-deck-repair" style="width:15px;height:15px;accent-color:var(--bronze);"/> Minor wood repair needed
+        </label>
+      </div>
+    </div>
+
+    <!-- PORCH -->
+    <div style="font-size:11px;color:var(--bronze);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--hairline);">Porch</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:6px;">
+      <div class="field-group"><label>Porch Floor Size (sq ft)</label><input type="number" id="ext-porch-sqft" placeholder="e.g. 32" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:8px 10px;font-size:13px;width:100%;"/></div>
+      <div class="field-group" style="display:flex;flex-direction:column;gap:8px;justify-content:flex-end;padding-bottom:2px;">
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--cream);font-weight:600;">
+          <input type="checkbox" id="ext-porch-strip" style="width:15px;height:15px;accent-color:var(--bronze);"/> Remove old paint first
+        </label>
+        <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--cream);font-weight:600;">
+          <input type="checkbox" id="ext-porch-rails" style="width:15px;height:15px;accent-color:var(--bronze);"/> Include rails
+        </label>
+      </div>
+    </div>
+
+    <!-- STEPS -->
+    <div style="font-size:11px;color:var(--bronze);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--hairline);">Steps</div>
+    <div style="margin-bottom:10px;">
+      <div class="field-group"><label>Number of Steps</label><input type="number" id="ext-steps" placeholder="e.g. 25" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:8px 10px;font-size:13px;width:100%;"/></div>
+    </div>
+
+    <!-- SHUTTERS -->
+    <div style="font-size:11px;color:var(--bronze);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--hairline);">Shutters</div>
+    <div style="margin-bottom:20px;">
+      <div class="field-group"><label>Number of Shutters</label><input type="number" id="ext-shutters" placeholder="e.g. 8" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:8px 10px;font-size:13px;width:100%;"/></div>
+    </div>
+
+    <div style="font-size:11px;color:var(--muted);margin-bottom:16px;">All lines will be added to the estimator at Anchor Pro labor rate ($50/hr). Adjust quantities after if needed.</div>
+
+    <div style="display:flex;gap:10px;">
+      <button onclick="buildExteriorEstimate()" style="flex:1;padding:11px;background:var(--bronze);color:#0a0a0a;border:none;border-radius:8px;font-size:14px;font-weight:800;cursor:pointer;">Build Estimate Lines</button>
+      <button onclick="document.getElementById('extModal').style.display='none'" style="padding:11px 18px;background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;">Cancel</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
