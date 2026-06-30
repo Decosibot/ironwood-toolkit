@@ -253,14 +253,24 @@
       <div class="markup-card">
         <label>Phase</label>
         <select id="phaseMode" onchange="recalc()" style="background:var(--surface);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;">
-          <option value="1">Phase 1 — No Salaries</option>
+          <option value="1">Phase 1 — Hourly Billing</option>
           <option value="2">Phase 2 — Salaries Active</option>
         </select>
       </div>
-      <div class="markup-card">
+      <div class="markup-card" id="jeffHoursCard">
+        <label>Jeff Hours (× $50)</label>
+        <input type="number" id="jeffHours" value="0" min="0" oninput="recalc()"/>
+        <span class="pct-label">hrs</span>
+      </div>
+      <div class="markup-card" id="tyHoursCard">
+        <label>Ty Hours (× $30)</label>
+        <input type="number" id="tyHours" value="0" min="0" oninput="recalc()"/>
+        <span class="pct-label">hrs</span>
+      </div>
+      <div class="markup-card" id="salaryAllocCard">
         <label>Salary Allocation (this job)</label>
-        <input type="number" id="salaryAlloc" value="0" min="0" oninput="recalc()"/>
-        <span class="pct-label">$</span>
+        <input type="number" id="salaryAlloc" value="13000" min="0" oninput="recalc()"/>
+        <span class="pct-label" style="font-size:10px;">Jeff $5K + Ty $5K + Jordan $3K</span>
       </div>
       <div class="markup-card">
         <label>Contingency</label>
@@ -409,7 +419,9 @@
           <div style="font-size:10px; color:var(--bronze); text-transform:uppercase; letter-spacing:1px; font-weight:700; margin-bottom:8px;">Internal — Profit Waterfall Preview</div>
           <div class="totals-row subtotal"><span>Ad Spend (pre-waterfall)</span><span id="t-ad-spend">$0</span></div>
           <div class="totals-row subtotal"><span>Gross Profit (Revenue − Materials − Subs − Ad Spend)</span><span id="t-gross-profit">$0</span></div>
-          <div class="totals-row subtotal"><span id="t-salary-label">Salary Allocation (Phase 1 — $0)</span><span id="t-salary-alloc">$0</span></div>
+          <div class="totals-row subtotal" id="t-jeff-hourly-row"><span id="t-jeff-label">Jeff Hourly (0 hrs × $50)</span><span id="t-jeff-cut">$0</span></div>
+          <div class="totals-row subtotal" id="t-ty-hourly-row"><span id="t-ty-label">Ty Hourly (0 hrs × $30)</span><span id="t-ty-cut">$0</span></div>
+          <div class="totals-row subtotal" id="t-salary-row"><span id="t-salary-label">Salary Allocation (Phase 2 — active)</span><span id="t-salary-alloc">$0</span></div>
           <div class="totals-row subtotal"><span>Other Overhead</span><span id="t-other-fees">$0</span></div>
           <div class="totals-row subtotal"><span>Net Distributable</span><span id="t-net-dist">$0</span></div>
           <div class="totals-row" style="color:var(--success);"><span>Ty / Anchor Pro (30%)</span><span id="t-anchor-est">$0</span></div>
@@ -466,7 +478,7 @@ function newJobObj() {
     jobAddress: '', startDate: '', duration: '', jobType: 'Kitchen Remodel',
     scopeSummary: '', internalNotes: '', payTerms: '40% deposit · 60% on completion',
     validDays: 30, depositPct: 40,
-    matMarkup: 25, labMarkup: 35, phaseMode: '1', salaryAlloc: 0, otherFees: 0, adSpend: 0, contingency: 10,
+    matMarkup: 25, labMarkup: 35, phaseMode: '1', jeffHours: 0, tyHours: 0, salaryAlloc: 13000, otherFees: 0, adSpend: 0, contingency: 10,
     categories: [{ id: uid(), name: 'Labor' }, { id: uid(), name: 'Materials' }, { id: uid(), name: 'Subcontractors' }],
     items: []
   };
@@ -504,7 +516,9 @@ function populateSidebar() {
   setVal('matMarkup', job.matMarkup);
   setVal('labMarkup', job.labMarkup);
   setVal('phaseMode',   job.phaseMode   ?? '1');
-  setVal('salaryAlloc', job.salaryAlloc ?? 0);
+  setVal('jeffHours',   job.jeffHours   ?? 0);
+  setVal('tyHours',     job.tyHours     ?? 0);
+  setVal('salaryAlloc', job.salaryAlloc ?? 13000);
   setVal('otherFees',   job.otherFees   ?? 0);
   setVal('adSpend',     job.adSpend     ?? 0);
   setVal('contingency', job.contingency);
@@ -630,12 +644,25 @@ function recalc() {
   const balance    = total - deposit;
 
   // Profit waterfall — 30 / 35 / 35
+  const jeffHours    = parseFloat(getVal('jeffHours')) || 0;
+  const tyHoursVal   = parseFloat(getVal('tyHours'))   || 0;
   const grossProfit  = Math.max(0, total - matRaw - subTotal - adSpend);
+  const jeffHourly   = phase === '1' ? jeffHours * 50 : 0;
+  const tyHourly     = phase === '1' ? tyHoursVal * 30 : 0;
   const salaryTotal  = phase === '2' ? salaryAlloc : 0;
-  const netDist      = Math.max(0, grossProfit - salaryTotal - otherFees);
+  const netDist      = Math.max(0, grossProfit - jeffHourly - tyHourly - salaryTotal - otherFees);
   const tySplit      = netDist * 0.30;
   const jeffSplit    = netDist * 0.35;
   const iwSplit      = netDist * 0.35;
+
+  // Show/hide phase-specific inputs and rows
+  const p1 = phase === '1';
+  document.getElementById('jeffHoursCard').style.display   = p1 ? '' : 'none';
+  document.getElementById('tyHoursCard').style.display     = p1 ? '' : 'none';
+  document.getElementById('salaryAllocCard').style.display = p1 ? 'none' : '';
+  document.getElementById('t-jeff-hourly-row').style.display = p1 ? '' : 'none';
+  document.getElementById('t-ty-hourly-row').style.display   = p1 ? '' : 'none';
+  document.getElementById('t-salary-row').style.display      = p1 ? 'none' : '';
 
   setText('t-mat-raw',     fmt(matRaw));
   setText('t-mat-pct',     getVal('matMarkup'));
@@ -652,7 +679,10 @@ function recalc() {
   setText('t-balance',     fmt(balance));
   setText('t-ad-spend',    fmt(adSpend));
   setText('t-gross-profit',fmt(grossProfit));
-  setText('t-salary-label', phase === '2' ? `Salary Allocation (Phase 2 — active)` : `Salary Allocation (Phase 1 — $0)`);
+  setText('t-jeff-label',  `Jeff Hourly (${jeffHours} hrs × $50)`);
+  setText('t-jeff-cut',    fmt(jeffHourly));
+  setText('t-ty-label',    `Ty Hourly (${tyHoursVal} hrs × $30)`);
+  setText('t-ty-cut',      fmt(tyHourly));
   setText('t-salary-alloc', fmt(salaryTotal));
   setText('t-other-fees',   fmt(otherFees));
   setText('t-net-dist',     fmt(netDist));
@@ -676,7 +706,6 @@ function buildProposal() {
   collectSidebar();
   const matMu   = (parseFloat(job.matMarkup) || 0) / 100;
   const labMu   = (parseFloat(job.labMarkup) || 0) / 100;
-  const jeffPct = parseFloat(job.jeffPct) || 30;
   const contPct = (parseFloat(job.contingency) || 0) / 100;
   const depPct  = (parseFloat(job.depositPct) || 0) / 100;
 
@@ -849,7 +878,9 @@ function collectSidebar() {
   job.matMarkup    = parseFloat(getVal('matMarkup')) || 25;
   job.labMarkup    = parseFloat(getVal('labMarkup')) || 35;
   job.phaseMode    = getVal('phaseMode')               || '1';
-  job.salaryAlloc  = parseFloat(getVal('salaryAlloc')) || 0;
+  job.jeffHours    = parseFloat(getVal('jeffHours'))   || 0;
+  job.tyHours      = parseFloat(getVal('tyHours'))     || 0;
+  job.salaryAlloc  = parseFloat(getVal('salaryAlloc')) || 13000;
   job.otherFees    = parseFloat(getVal('otherFees'))   || 0;
   job.adSpend      = parseFloat(getVal('adSpend'))     || 0;
   job.contingency  = parseFloat(getVal('contingency')) || 10;
@@ -900,9 +931,13 @@ function exportToWaterfall() {
   const total      = subtotal + cont;
   const deposit    = total * depPct;
 
+  const jeffHours   = parseFloat(job.jeffHours) || 0;
+  const tyHoursVal  = parseFloat(job.tyHours)   || 0;
   const grossProfit = Math.max(0, total - matRaw - subTotal - adSpend);
+  const jeffHourly  = phase === '1' ? jeffHours * 50 : 0;
+  const tyHourly    = phase === '1' ? tyHoursVal * 30 : 0;
   const salaryTotal = phase === '2' ? salaryAlloc : 0;
-  const netDist     = Math.max(0, grossProfit - salaryTotal - otherFees);
+  const netDist     = Math.max(0, grossProfit - jeffHourly - tyHourly - salaryTotal - otherFees);
   const tySplit     = netDist * 0.30;
   const jeffSplit   = netDist * 0.35;
   const iwSplit     = netDist * 0.35;
@@ -912,9 +947,9 @@ function exportToWaterfall() {
     clientName: job.clientName || '',
     address:    job.jobName || '',
     roomType:   job.roomType || '',
-    total, matRaw, labRaw, subTotal, cont, deposit,
-    grossProfit, netDist, tySplit, jeffSplit, iwSplit,
-    adSpend, salaryTotal, otherFees,
+    phase, total, matRaw, labRaw, subTotal, cont, deposit,
+    grossProfit, jeffHourly, tyHourly, salaryTotal, otherFees,
+    netDist, tySplit, jeffSplit, iwSplit, adSpend,
     exportedAt: new Date().toISOString(),
     source: 'Remodel_Estimator',
   };
