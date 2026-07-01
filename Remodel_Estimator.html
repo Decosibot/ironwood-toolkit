@@ -393,6 +393,150 @@
         <button class="btn btn-gold btn-sm btn-block" onclick="document.getElementById('extModal').style.display='flex'">🎨 Exterior Paint / Stain Form</button>
       </div>
 
+      <!-- PAINT GUIDE & PRICE COMPARISON PANELS -->
+      <div style="margin-bottom:20px;">
+        <div class="section-head" style="margin-top:0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;" onclick="togglePanel('paintGuidePanel',this)">
+          <span>🎨 Paint Guide</span><span style="font-size:14px;color:var(--muted);" id="paintGuideChevron">▼</span>
+        </div>
+        <div id="paintGuidePanel" style="display:none;">
+          <!-- SHEEN GUIDE -->
+          <div style="font-size:11px;color:var(--bronze);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin:10px 0 6px;">Sheen Selector</div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:14px;">
+            <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:10px;">
+              <div style="font-weight:700;color:var(--cream);font-size:12px;">Flat / Matte</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px;">Ceilings, low-traffic walls. Hides imperfections. Not washable.</div>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:10px;">
+              <div style="font-weight:700;color:var(--cream);font-size:12px;">Eggshell</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px;">Primary interior walls. Slight sheen, light washability. Best for living rooms, bedrooms.</div>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:10px;">
+              <div style="font-weight:700;color:var(--cream);font-size:12px;">Satin</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px;">Kitchens, bathrooms, trim. Washable. Slight pearl look.</div>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:10px;">
+              <div style="font-weight:700;color:var(--cream);font-size:12px;">Semi-Gloss</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px;">Doors, trim, cabinetry. Durable, easy to clean. Shows imperfections.</div>
+            </div>
+            <div style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:10px;">
+              <div style="font-weight:700;color:var(--cream);font-size:12px;">Gloss / High-Gloss</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:3px;">Front doors, shutters, accent trim. Maximum durability. Prep work critical.</div>
+            </div>
+          </div>
+
+          <!-- SURFACE PRODUCT GUIDE -->
+          <div style="font-size:11px;color:var(--bronze);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin:10px 0 6px;">Product by Surface</div>
+          <div style="overflow-x:auto;margin-bottom:14px;">
+            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+              <thead><tr style="background:var(--ink);">
+                <th style="padding:7px 10px;text-align:left;color:var(--bronze);font-size:10px;text-transform:uppercase;letter-spacing:.5px;">Surface</th>
+                <th style="padding:7px 10px;text-align:left;color:var(--bronze);font-size:10px;text-transform:uppercase;letter-spacing:.5px;">Product Rec</th>
+                <th style="padding:7px 10px;text-align:left;color:var(--bronze);font-size:10px;text-transform:uppercase;letter-spacing:.5px;">Sheen</th>
+                <th style="padding:7px 10px;text-align:left;color:var(--bronze);font-size:10px;text-transform:uppercase;letter-spacing:.5px;">Primer?</th>
+                <th style="padding:7px 10px;text-align:right;color:var(--bronze);font-size:10px;text-transform:uppercase;letter-spacing:.5px;">Coverage</th>
+              </tr></thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">Interior Walls</td><td style="padding:6px 10px;color:var(--muted);">SW Duration or Emerald</td><td style="padding:6px 10px;color:var(--muted);">Eggshell</td><td style="padding:6px 10px;color:#e5a020;">Spot prime bare patches</td><td style="padding:6px 10px;text-align:right;color:var(--muted);">~350 sqft/gal</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Ceilings</td><td style="padding:6px 10px;color:var(--muted);">SW Ceiling Paint</td><td style="padding:6px 10px;color:var(--muted);">Flat</td><td style="padding:6px 10px;color:#4caf50;">Only if major stain</td><td style="padding:6px 10px;text-align:right;color:var(--muted);">~400 sqft/gal</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">Interior Trim</td><td style="padding:6px 10px;color:var(--muted);">SW Emerald Urethane</td><td style="padding:6px 10px;color:var(--muted);">Semi-Gloss</td><td style="padding:6px 10px;color:#4caf50;">Yes — BIN or Oil Primo</td><td style="padding:6px 10px;text-align:right;color:var(--muted);">~300 sqft/gal</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Exterior Siding</td><td style="padding:6px 10px;color:var(--muted);">SW Emerald Exterior or SW A-100</td><td style="padding:6px 10px;color:var(--muted);">Satin</td><td style="padding:6px 10px;color:#e5a020;">Required on bare wood</td><td style="padding:6px 10px;text-align:right;color:var(--muted);">~300 sqft/gal</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">Deck / Porch Floor</td><td style="padding:6px 10px;color:var(--muted);">SW SuperDeck or DEFY Stain</td><td style="padding:6px 10px;color:var(--muted);">Solid / Semi-Transparent</td><td style="padding:6px 10px;color:#4caf50;">Deck cleaner + brightener</td><td style="padding:6px 10px;text-align:right;color:var(--muted);">~150–200 sqft/gal</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Front Door</td><td style="padding:6px 10px;color:var(--muted);">SW Emerald Urethane</td><td style="padding:6px 10px;color:var(--muted);">Gloss</td><td style="padding:6px 10px;color:#4caf50;">Yes — sand + prime</td><td style="padding:6px 10px;text-align:right;color:var(--muted);">~300 sqft/gal</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">Shutters</td><td style="padding:6px 10px;color:var(--muted);">SW Exterior Latex or spray enamel</td><td style="padding:6px 10px;color:var(--muted);">Semi-Gloss</td><td style="padding:6px 10px;color:#4caf50;">Yes if bare/peeling</td><td style="padding:6px 10px;text-align:right;color:var(--muted);">~300 sqft/gal</td></tr>
+                <tr style="background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Cabinets</td><td style="padding:6px 10px;color:var(--muted);">SW Emerald Urethane</td><td style="padding:6px 10px;color:var(--muted);">Semi-Gloss</td><td style="padding:6px 10px;color:#4caf50;">Yes — BIN shellac primer</td><td style="padding:6px 10px;text-align:right;color:var(--muted);">~250 sqft/gal</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- COVERAGE CALC -->
+          <div style="font-size:11px;color:var(--bronze);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin:10px 0 6px;">Coverage Calculator</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+            <div class="field-group" style="margin:0;"><label>Sq Ft</label><input type="number" id="pg-sqft" placeholder="e.g. 400" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;" oninput="calcPaintCoverage()"/></div>
+            <div class="field-group" style="margin:0;"><label>Coats</label><input type="number" id="pg-coats" value="2" min="1" max="4" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;" oninput="calcPaintCoverage()"/></div>
+            <div class="field-group" style="margin:0;"><label>Coverage (sqft/gal)</label><input type="number" id="pg-coverage" value="350" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;" oninput="calcPaintCoverage()"/></div>
+          </div>
+          <div id="pg-result" style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:10px;font-size:13px;color:var(--cream);"></div>
+        </div>
+      </div>
+
+      <!-- PRICE COMPARISON -->
+      <div style="margin-bottom:20px;">
+        <div class="section-head" style="margin-top:0;cursor:pointer;display:flex;justify-content:space-between;align-items:center;" onclick="togglePanel('priceCompPanel',this)">
+          <span>💲 Price Comparison</span><span style="font-size:14px;color:var(--muted);" id="priceCompChevron">▼</span>
+        </div>
+        <div id="priceCompPanel" style="display:none;">
+          <!-- MATERIAL PRICE BENCHMARKS -->
+          <div style="font-size:11px;color:var(--bronze);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin:10px 0 6px;">Material Price Benchmarks</div>
+          <div style="overflow-x:auto;margin-bottom:14px;">
+            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+              <thead><tr style="background:var(--ink);">
+                <th style="padding:7px 10px;text-align:left;color:var(--bronze);font-size:10px;text-transform:uppercase;">Material</th>
+                <th style="padding:7px 10px;text-align:right;color:#4caf50;font-size:10px;">Budget</th>
+                <th style="padding:7px 10px;text-align:right;color:#e5a020;font-size:10px;">Mid</th>
+                <th style="padding:7px 10px;text-align:right;color:#64b5f6;font-size:10px;">Premium</th>
+                <th style="padding:7px 10px;text-align:left;color:var(--muted);font-size:10px;">Unit</th>
+              </tr></thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">Interior Paint (SW / BM)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$30</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$55</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$80+</td><td style="padding:6px 10px;color:var(--muted);">per gal</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Exterior Paint (SW)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$35</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$60</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$85+</td><td style="padding:6px 10px;color:var(--muted);">per gal</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">Deck Stain (SW SuperDeck)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$28</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$45</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$65+</td><td style="padding:6px 10px;color:var(--muted);">per gal</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Primer (PVA / BIN)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$18</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$30</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$55</td><td style="padding:6px 10px;color:var(--muted);">per gal</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">LVP Flooring</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$1.20</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$2.50</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$4.50+</td><td style="padding:6px 10px;color:var(--muted);">per sqft</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Hardwood Flooring</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$3.50</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$6.00</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$12+</td><td style="padding:6px 10px;color:var(--muted);">per sqft</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">Drywall (4×8 sheet)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$14</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$18</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$24</td><td style="padding:6px 10px;color:var(--muted);">per sheet</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Tile (ceramic, floor)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$1.00</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$3.50</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$8+</td><td style="padding:6px 10px;color:var(--muted);">per sqft</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">Quartz Countertop</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$40</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$65</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$100+</td><td style="padding:6px 10px;color:var(--muted);">per sqft</td></tr>
+                <tr style="background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Lumber (2×4×8, pine)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$3.50</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$5.00</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$7+</td><td style="padding:6px 10px;color:var(--muted);">per board</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- LABOR BENCHMARKS -->
+          <div style="font-size:11px;color:var(--bronze);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin:10px 0 6px;">Labor Rate Benchmarks (Atlanta / SE Suburbs)</div>
+          <div style="overflow-x:auto;margin-bottom:14px;">
+            <table style="width:100%;border-collapse:collapse;font-size:12px;">
+              <thead><tr style="background:var(--ink);">
+                <th style="padding:7px 10px;text-align:left;color:var(--bronze);font-size:10px;text-transform:uppercase;">Trade</th>
+                <th style="padding:7px 10px;text-align:right;color:#4caf50;font-size:10px;">Low</th>
+                <th style="padding:7px 10px;text-align:right;color:#e5a020;font-size:10px;">Market</th>
+                <th style="padding:7px 10px;text-align:right;color:#64b5f6;font-size:10px;">Premium</th>
+                <th style="padding:7px 10px;text-align:left;color:var(--muted);font-size:10px;">Unit</th>
+              </tr></thead>
+              <tbody>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">General Labor (AP rate)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$35</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$50</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$75</td><td style="padding:6px 10px;color:var(--muted);">per hr</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Painter (exterior)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$1.50</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$2.50</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$4.00</td><td style="padding:6px 10px;color:var(--muted);">per sqft</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">Painter (interior, per room)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$150</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$250</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$400</td><td style="padding:6px 10px;color:var(--muted);">per room</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Flooring Install (LVP)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$1.50</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$2.50</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$4.00</td><td style="padding:6px 10px;color:var(--muted);">per sqft</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">Tile Install</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$5.00</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$8.00</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$12+</td><td style="padding:6px 10px;color:var(--muted);">per sqft</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Electrician (sub)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$75</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$100</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$150</td><td style="padding:6px 10px;color:var(--muted);">per hr</td></tr>
+                <tr style="border-bottom:1px solid var(--hairline);"><td style="padding:6px 10px;color:var(--cream);">Plumber (sub)</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$80</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$110</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$175</td><td style="padding:6px 10px;color:var(--muted);">per hr</td></tr>
+                <tr style="background:var(--surface2);"><td style="padding:6px 10px;color:var(--cream);">Pressure Wash</td><td style="padding:6px 10px;text-align:right;color:#4caf50;">$0.10</td><td style="padding:6px 10px;text-align:right;color:#e5a020;">$0.20</td><td style="padding:6px 10px;text-align:right;color:#64b5f6;">$0.35</td><td style="padding:6px 10px;color:var(--muted);">per sqft</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- AM I IN RANGE? -->
+          <div style="font-size:11px;color:var(--bronze);text-transform:uppercase;letter-spacing:.8px;font-weight:700;margin:10px 0 6px;">Am I In Range?</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:8px;">
+            <div class="field-group" style="margin:0;"><label>Job Type</label>
+              <select id="pc-jobtype" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;" onchange="checkPriceRange()">
+                <option value="kitchen">Kitchen Remodel</option>
+                <option value="bath">Bathroom Remodel</option>
+                <option value="paint-int">Painting (Interior, per room)</option>
+                <option value="paint-ext">Painting (Exterior, whole house)</option>
+                <option value="floor">Flooring (per 1,000 sqft)</option>
+                <option value="deck">Deck Build (new, 200sqft)</option>
+                <option value="roof">Roofing (avg house)</option>
+                <option value="addition">Addition (per sqft)</option>
+              </select>
+            </div>
+            <div class="field-group" style="margin:0;"><label>Your Bid ($)</label><input type="number" id="pc-bid" placeholder="e.g. 8500" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;" oninput="checkPriceRange()"/></div>
+            <div class="field-group" style="margin:0;align-self:flex-end;"><label>&nbsp;</label><button onclick="checkPriceRange()" style="width:100%;padding:7px;background:var(--bronze);color:#0a0a0a;border:none;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;">Check</button></div>
+          </div>
+          <div id="pc-result" style="background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:10px;font-size:13px;color:var(--cream);"></div>
+        </div>
+      </div>
+
       <!-- QUICK ADD TEMPLATES -->
       <div style="margin-bottom: 20px;">
         <div class="section-head" style="margin-top:0;">Quick Add — Common Items</div>
@@ -585,7 +729,7 @@ function renderItems() {
         <span style="font-size:11px; color:var(--muted)">${typeLabel}</span>
         <input class="li-input num" type="number" value="${item.qty}" onchange="updateItem('${item.id}','qty',this.value);recalc()" style="width:70px;"/>
         <input class="li-input num" type="number" value="${item.cost}" onchange="updateItem('${item.id}','cost',this.value);recalc()" style="width:80px;"/>
-        <span class="li-total">${fmt(total)}</span>
+        <span class="li-total">${fmtR(total)}</span>
         <input class="li-input" value="${esc(item.supplier||'')}" onchange="updateItem('${item.id}','supplier',this.value)" placeholder="e.g. Home Depot, Ferguson…" style="font-size:11px; color:var(--muted);"/>
         <button class="li-del" onclick="deleteItem('${item.id}')">×</button>
       </div>
@@ -673,31 +817,31 @@ function recalc() {
   document.getElementById('t-ty-hourly-row').style.display   = p1 ? '' : 'none';
   document.getElementById('t-salary-row').style.display      = p1 ? 'none' : '';
 
-  setText('t-mat-raw',     fmt(matRaw));
+  setText('t-mat-raw',     fmtR(matRaw));
   setText('t-mat-pct',     getVal('matMarkup'));
-  setText('t-mat-marked',  fmt(matMarked));
-  setText('t-lab-raw',     fmt(labRaw));
+  setText('t-mat-marked',  fmtR(matMarked));
+  setText('t-lab-raw',     fmtR(labRaw));
   setText('t-lab-pct',     getVal('labMarkup'));
-  setText('t-lab-marked',  fmt(labMarked));
-  setText('t-sub',         fmt(subTotal));
+  setText('t-lab-marked',  fmtR(labMarked));
+  setText('t-sub',         fmtR(subTotal));
   setText('t-cont-pct',    getVal('contingency'));
-  setText('t-cont',        fmt(cont));
-  setText('t-total',       fmt(total));
+  setText('t-cont',        fmtR(cont));
+  setText('t-total',       fmtR(total));
   setText('t-dep-pct',     getVal('depositPct'));
-  setText('t-deposit',     fmt(deposit));
-  setText('t-balance',     fmt(balance));
-  setText('t-ad-spend',    fmt(adSpend));
-  setText('t-gross-profit',fmt(grossProfit));
+  setText('t-deposit',     fmtR(deposit));
+  setText('t-balance',     fmtR(balance));
+  setText('t-ad-spend',    fmtR(adSpend));
+  setText('t-gross-profit',fmtR(grossProfit));
   setText('t-jeff-label',  `Jeff Hourly (${jeffHours} hrs × $50)`);
-  setText('t-jeff-cut',    fmt(jeffHourly));
+  setText('t-jeff-cut',    fmtR(jeffHourly));
   setText('t-ty-label',    `Ty Hourly (${tyHoursVal} hrs × $30)`);
-  setText('t-ty-cut',      fmt(tyHourly));
-  setText('t-salary-alloc', fmt(salaryTotal));
-  setText('t-other-fees',   fmt(otherFees));
-  setText('t-net-dist',     fmt(netDist));
-  setText('t-anchor-est',   fmt(tySplit));
-  setText('t-landon-est',   fmt(jeffSplit));
-  setText('t-ironwood-est', fmt(iwSplit));
+  setText('t-ty-cut',      fmtR(tyHourly));
+  setText('t-salary-alloc', fmtR(salaryTotal));
+  setText('t-other-fees',   fmtR(otherFees));
+  setText('t-net-dist',     fmtR(netDist));
+  setText('t-anchor-est',   fmtR(tySplit));
+  setText('t-landon-est',   fmtR(jeffSplit));
+  setText('t-ironwood-est', fmtR(iwSplit));
 }
 
 // ─── VIEW TOGGLE ─────────────────────────────────────────────────────────────
@@ -761,8 +905,8 @@ function buildProposal() {
         <tr>
           <td>${esc(item.desc)}</td>
           <td class="num">${item.qty} ${unitLabel}</td>
-          <td class="num">${fmt(item.cost * (1 + markup))}</td>
-          <td class="num">${fmt(total)}</td>
+          <td class="num">${fmtR(item.cost * (1 + markup))}</td>
+          <td class="num">${fmtR(total)}</td>
         </tr>`;
     });
   });
@@ -791,7 +935,7 @@ function buildProposal() {
       </div>
       <div class="prop-meta-item">
         <div class="m-label">Total Estimate</div>
-        <div class="m-val" style="color:var(--bronze);">${fmt(total)}</div>
+        <div class="m-val" style="color:var(--bronze);">${fmtR(total)}</div>
       </div>
     </div>
 
@@ -827,19 +971,19 @@ function buildProposal() {
           <tfoot>
             <tr class="total-row">
               <td colspan="3"><strong>TOTAL ESTIMATE</strong></td>
-              <td class="num"><strong>${fmt(total)}</strong></td>
+              <td class="num"><strong>${fmtR(total)}</strong></td>
             </tr>
           </tfoot>
         </table>
 
         <div class="prop-totals">
-          ${matRaw > 0 ? `<div class="pt-row"><span>Materials</span><span>${fmt(matMarked)}</span></div>` : ''}
-          ${labRaw > 0 ? `<div class="pt-row"><span>Labor</span><span>${fmt(labMarked)}</span></div>` : ''}
-          ${subTotal > 0 ? `<div class="pt-row"><span>Subcontractors &amp; Permits</span><span>${fmt(subTotal)}</span></div>` : ''}
-          <div class="pt-row"><span>Contingency Reserve</span><span>${fmt(cont)}</span></div>
-          <div class="pt-row grand"><span>TOTAL</span><span>${fmt(total)}</span></div>
-          <div class="pt-row" style="color:#c0392b;"><span><strong>Deposit Required (${job.depositPct}%)</strong></span><span><strong>${fmt(deposit)}</strong></span></div>
-          <div class="pt-row" style="color:#555;"><span>Balance Due on Completion</span><span>${fmt(balance)}</span></div>
+          ${matRaw > 0 ? `<div class="pt-row"><span>Materials</span><span>${fmtR(matMarked)}</span></div>` : ''}
+          ${labRaw > 0 ? `<div class="pt-row"><span>Labor</span><span>${fmtR(labMarked)}</span></div>` : ''}
+          ${subTotal > 0 ? `<div class="pt-row"><span>Subcontractors &amp; Permits</span><span>${fmtR(subTotal)}</span></div>` : ''}
+          <div class="pt-row"><span>Contingency Reserve</span><span>${fmtR(cont)}</span></div>
+          <div class="pt-row grand"><span>TOTAL</span><span>${fmtR(total)}</span></div>
+          <div class="pt-row" style="color:#c0392b;"><span><strong>Deposit Required (${job.depositPct}%)</strong></span><span><strong>${fmtR(deposit)}</strong></span></div>
+          <div class="pt-row" style="color:#555;"><span>Balance Due on Completion</span><span>${fmtR(balance)}</span></div>
         </div>
       </div>
 
@@ -1014,7 +1158,13 @@ function handleFileLoad(e) {
 
 // ─── UTILS ───────────────────────────────────────────────────────────────────
 function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2,6); }
+function roundSmart(n) {
+  const v = parseFloat(n) || 0;
+  const step = v < 100 ? 5 : 10;
+  return Math.round(v / step) * step;
+}
 function fmt(n) { return '$' + (parseFloat(n)||0).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function fmtR(n) { const r = roundSmart(n); return '$' + r.toLocaleString('en-US',{minimumFractionDigits:0,maximumFractionDigits:0}); }
 function esc(s) { return (s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function getVal(id) { const el = document.getElementById(id); return el ? el.value : ''; }
 function setVal(id, v) { const el = document.getElementById(id); if (el) el.value = v || ''; }
@@ -1063,6 +1213,57 @@ function showEstimatorToast(msg){
   t.style.opacity = '1';
   clearTimeout(t._timer);
   t._timer = setTimeout(()=>t.style.opacity='0', 2500);
+}
+
+// ── PANEL TOGGLE ──
+function togglePanel(panelId, headerEl) {
+  const panel = document.getElementById(panelId);
+  const chevronId = panelId === 'paintGuidePanel' ? 'paintGuideChevron' : 'priceCompChevron';
+  const chevron = document.getElementById(chevronId);
+  const open = panel.style.display === 'none' || panel.style.display === '';
+  panel.style.display = open ? 'block' : 'none';
+  if (chevron) chevron.textContent = open ? '▲' : '▼';
+}
+
+// ── PAINT COVERAGE CALC ──
+function calcPaintCoverage() {
+  const sqft = parseFloat(document.getElementById('pg-sqft').value) || 0;
+  const coats = parseFloat(document.getElementById('pg-coats').value) || 2;
+  const coverage = parseFloat(document.getElementById('pg-coverage').value) || 350;
+  const result = document.getElementById('pg-result');
+  if (!sqft) { result.textContent = 'Enter square footage above.'; return; }
+  const gallons = (sqft * coats) / coverage;
+  const gallonsRound = Math.ceil(gallons);
+  const low = (gallonsRound * 30).toFixed(0);
+  const high = (gallonsRound * 70).toFixed(0);
+  result.innerHTML = `<strong style="color:var(--bronze);">${gallonsRound} gallons</strong> needed (${gallons.toFixed(1)} exact) &nbsp;·&nbsp; Est. paint cost: <strong>$${low} – $${high}</strong> depending on brand tier`;
+}
+
+// ── PRICE RANGE CHECKER ──
+const PC_RANGES = {
+  kitchen:   { low: 5000,  market: 12000, high: 25000, label: 'Kitchen Remodel' },
+  bath:      { low: 2500,  market: 7000,  high: 15000, label: 'Bathroom Remodel' },
+  'paint-int': { low: 150, market: 280,   high: 500,   label: 'Interior Paint (per room)' },
+  'paint-ext': { low: 2500,market: 4500,  high: 8000,  label: 'Exterior Paint (whole house)' },
+  floor:     { low: 2500,  market: 5000,  high: 9000,  label: 'Flooring (per 1,000 sqft, LVP)' },
+  deck:      { low: 5000,  market: 9000,  high: 18000, label: 'Deck Build (200 sqft, new)' },
+  roof:      { low: 8000,  market: 14000, high: 22000, label: 'Roofing (avg house)' },
+  addition:  { low: 80,    market: 150,   high: 250,   label: 'Addition (per sqft)' },
+};
+function checkPriceRange() {
+  const type = document.getElementById('pc-jobtype').value;
+  const bid = parseFloat(document.getElementById('pc-bid').value) || 0;
+  const result = document.getElementById('pc-result');
+  const r = PC_RANGES[type];
+  if (!r) { result.textContent = ''; return; }
+  if (!bid) { result.innerHTML = `<span style="color:var(--muted);">Market range for ${r.label}: <strong>$${r.low.toLocaleString()} – $${r.high.toLocaleString()}</strong> &nbsp;·&nbsp; Midpoint: <strong>$${r.market.toLocaleString()}</strong></span>`; return; }
+  let tag, color;
+  if (bid < r.low * 0.8)       { tag = '⚠️ Under-priced — leaving money on the table'; color = '#e74c3c'; }
+  else if (bid < r.low)        { tag = '🟡 Slightly low — tighten scope or check materials'; color = '#e5a020'; }
+  else if (bid <= r.market)    { tag = '✅ In range — competitive mid-market bid'; color = '#4caf50'; }
+  else if (bid <= r.high)      { tag = '✅ Premium range — justify with quality or speed'; color = '#64b5f6'; }
+  else                         { tag = '🔴 Above market — make sure scope warrants it'; color = '#e74c3c'; }
+  result.innerHTML = `<span style="color:${color};font-weight:700;">${tag}</span><br/><span style="color:var(--muted);font-size:11px;">Market range for ${r.label}: $${r.low.toLocaleString()} – $${r.high.toLocaleString()} &nbsp;·&nbsp; Midpoint: $${r.market.toLocaleString()}</span>`;
 }
 
 // ── EXTERIOR PAINT / STAIN QUICK BUILD ──
