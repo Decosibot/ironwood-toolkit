@@ -288,15 +288,33 @@
         <input type="number" id="salaryAlloc" value="13000" min="0" oninput="recalc()"/>
         <span class="pct-label" style="font-size:10px;">Jeff $5K + Ty $5K + Jordan $3K</span>
       </div>
-      <div class="markup-card">
+      <div class="markup-card" style="display:none;">
         <label>Contingency</label>
-        <input type="number" id="contingency" value="10" min="0" max="30" oninput="recalc()"/>
+        <input type="number" id="contingency" value="0" min="0" max="30" oninput="recalc()"/>
         <span class="pct-label">%</span>
       </div>
       <div class="markup-card">
         <label>Other Overhead (this job)</label>
         <input type="number" id="otherFees" value="0" min="0" oninput="recalc()"/>
         <span class="pct-label">$</span>
+      </div>
+      <div class="markup-card">
+        <label>Fuel / Travel ($)</label>
+        <input type="number" id="fuelTravel" value="0" min="0" oninput="recalc()"/>
+        <span class="pct-label">$</span>
+      </div>
+      <div class="markup-card">
+        <label>Permit / Inspection Fees</label>
+        <input type="number" id="permitFees" value="0" min="0" oninput="recalc()"/>
+        <span class="pct-label">$</span>
+      </div>
+      <div class="markup-card">
+        <label>GA Sales Tax (8.9%)</label>
+        <select id="taxMode" onchange="recalc()" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:5px;padding:4px 6px;font-size:11px;">
+          <option value="none">No Tax</option>
+          <option value="materials">Materials Only</option>
+          <option value="all">Full Job</option>
+        </select>
       </div>
     </div>
 
@@ -331,6 +349,10 @@
       <label>Additional Notes (internal)</label>
       <textarea id="internalNotes" rows="2" placeholder="Permit needed, HOA approval required, etc."></textarea>
     </div>
+
+    <div class="section-head">Connect</div>
+    <button class="btn btn-outline btn-block" onclick="importFromPublicEstimator()" style="font-size:12px;">⬇ Import Lead from Public Estimator</button>
+    <div id="importStatus" style="font-size:11px;color:var(--muted);margin-top:4px;text-align:center;"></div>
 
     <button class="btn btn-gold btn-block" onclick="saveJob()">&#10003; Save Job</button>
     <button class="btn btn-outline btn-block" onclick="newJob()">+ New Job</button>
@@ -571,7 +593,10 @@
         <div class="totals-row subtotal"><span>Raw Labor Cost</span><span id="t-lab-raw">$0</span></div>
         <div class="totals-row subtotal"><span>Labor + Markup (<span id="t-lab-pct">35</span>%)</span><span id="t-lab-marked">$0</span></div>
         <div class="totals-row subtotal"><span>Subcontractors / Permits</span><span id="t-sub">$0</span></div>
-        <div class="totals-row subtotal"><span>Contingency (<span id="t-cont-pct">10</span>%)</span><span id="t-cont">$0</span></div>
+        <div class="totals-row subtotal"><span>Contingency (<span id="t-cont-pct">0</span>%)</span><span id="t-cont">$0</span></div>
+        <div class="totals-row subtotal" id="t-tax-row" style="display:none;"><span>GA Sales Tax (8.9%)</span><span id="t-tax-amt">$0</span></div>
+        <div class="totals-row subtotal" id="t-fuel-row" style="display:none;"><span>Fuel / Travel</span><span id="t-fuel-amt">$0</span></div>
+        <div class="totals-row subtotal" id="t-permit-row" style="display:none;"><span>Permit / Inspection Fees</span><span id="t-permit-amt">$0</span></div>
         <div class="totals-row total"><span>TOTAL ESTIMATE</span><span id="t-total">$0</span></div>
         <div class="totals-row split"><span>Deposit Due (<span id="t-dep-pct">40</span>%)</span><span id="t-deposit">$0</span></div>
         <div class="totals-row split" style="color:var(--muted)"><span>Balance on Completion</span><span id="t-balance">$0</span></div>
@@ -639,7 +664,7 @@ function newJobObj() {
     jobAddress: '', startDate: '', duration: '', jobType: 'Kitchen Remodel',
     scopeSummary: '', internalNotes: '', payTerms: '40% deposit · 60% on completion',
     validDays: 30, depositPct: 40,
-    matMarkup: 25, labMarkup: 35, phaseMode: '1', jeffHours: 0, tyHours: 0, salaryAlloc: 13000, otherFees: 0, adSpend: 0, contingency: 10, companySelect: 'anchor',
+    matMarkup: 25, labMarkup: 35, phaseMode: '1', jeffHours: 0, tyHours: 0, salaryAlloc: 13000, otherFees: 0, adSpend: 0, contingency: 0, companySelect: 'anchor', fuelTravel: 0, permitFees: 0, taxMode: 'none',
     categories: [{ id: uid(), name: 'Labor' }, { id: uid(), name: 'Materials' }, { id: uid(), name: 'Subcontractors' }],
     items: [], paintSelections: []
   };
@@ -682,8 +707,11 @@ function populateSidebar() {
   setVal('salaryAlloc', job.salaryAlloc ?? 13000);
   setVal('otherFees',   job.otherFees   ?? 0);
   setVal('adSpend',      job.adSpend      ?? 0);
-  setVal('contingency',  job.contingency);
+  setVal('contingency',  job.contingency  ?? 0);
   setVal('companySelect',job.companySelect ?? 'anchor');
+  setVal('fuelTravel',   job.fuelTravel   ?? 0);
+  setVal('permitFees',   job.permitFees   ?? 0);
+  setVal('taxMode',      job.taxMode      ?? 'none');
   if (!job.paintSelections) job.paintSelections = [];
   renderPaintSels();
 }
@@ -788,6 +816,9 @@ function recalc() {
   const phase      = getVal('phaseMode') || '1';
   const salaryAlloc= parseFloat(getVal('salaryAlloc')) || 0;
   const otherFees  = parseFloat(getVal('otherFees')) || 0;
+  const fuelTravel = parseFloat(getVal('fuelTravel')) || 0;
+  const permitFees = parseFloat(getVal('permitFees')) || 0;
+  const taxMode    = getVal('taxMode') || 'none';
   const contPct    = (parseFloat(getVal('contingency')) || 0) / 100;
   const depPct     = (parseFloat(getVal('depositPct')) || 0) / 100;
 
@@ -803,7 +834,10 @@ function recalc() {
   const labMarked  = labRaw * (1 + labMu);
   const subtotal   = matMarked + labMarked + subTotal;
   const cont       = subtotal * contPct;
-  const total      = subtotal + cont;
+  const GA_TAX     = 0.089;
+  const taxBase    = taxMode === 'all' ? subtotal + cont : taxMode === 'materials' ? matMarked : 0;
+  const taxAmt     = taxBase * GA_TAX;
+  const total      = subtotal + cont + taxAmt + fuelTravel + permitFees;
   const deposit    = total * depPct;
   const balance    = total - deposit;
 
@@ -837,6 +871,16 @@ function recalc() {
   setText('t-sub',         fmtR(subTotal));
   setText('t-cont-pct',    getVal('contingency'));
   setText('t-cont',        fmtR(cont));
+  // tax / fuel / permit rows
+  const taxRow = document.getElementById('t-tax-row');
+  if (taxRow) taxRow.style.display = taxAmt > 0 ? '' : 'none';
+  setText('t-tax-amt',     fmtR(taxAmt));
+  const fuelRow = document.getElementById('t-fuel-row');
+  if (fuelRow) fuelRow.style.display = fuelTravel > 0 ? '' : 'none';
+  setText('t-fuel-amt',    fmtR(fuelTravel));
+  const permitRow = document.getElementById('t-permit-row');
+  if (permitRow) permitRow.style.display = permitFees > 0 ? '' : 'none';
+  setText('t-permit-amt',  fmtR(permitFees));
   setText('t-total',       fmtR(total));
   setText('t-dep-pct',     getVal('depositPct'));
   setText('t-deposit',     fmtR(deposit));
@@ -879,10 +923,14 @@ function buildProposal() {
                                           : 'Anchor Pro Solutions Inc. warrants all labor for 1 year from project completion date. Manufacturer warranties apply to all installed materials.';
   const coMaterials= coKey === 'ironwood' ? 'All materials are supplied and managed by Ironwood Inc. Pricing is all-inclusive — no separate material invoices. Client-supplied materials must be approved in advance and on-site before the scheduled work date.'
                                           : 'All materials are supplied and managed by Anchor Pro Solutions Inc. Pricing is all-inclusive — no separate material invoices. Client-supplied materials must be approved in advance and on-site before the scheduled work date.';
-  const matMu   = (parseFloat(job.matMarkup) || 0) / 100;
-  const labMu   = (parseFloat(job.labMarkup) || 0) / 100;
-  const contPct = (parseFloat(job.contingency) || 0) / 100;
-  const depPct  = (parseFloat(job.depositPct) || 0) / 100;
+  const matMu      = (parseFloat(job.matMarkup) || 0) / 100;
+  const labMu      = (parseFloat(job.labMarkup) || 0) / 100;
+  const contPct    = (parseFloat(job.contingency) || 0) / 100;
+  const depPct     = (parseFloat(job.depositPct) || 0) / 100;
+  const fuelTravel = parseFloat(job.fuelTravel) || 0;
+  const permitFees = parseFloat(job.permitFees) || 0;
+  const taxMode    = job.taxMode || 'none';
+  const GA_TAX     = 0.089;
 
   let matRaw = 0, labRaw = 0, subTotal = 0;
   job.items.forEach(i => {
@@ -895,10 +943,11 @@ function buildProposal() {
   const labMarked = labRaw * (1 + labMu);
   const subtotal  = matMarked + labMarked + subTotal;
   const cont      = subtotal * contPct;
-  const total     = subtotal + cont;
+  const taxBase   = taxMode === 'all' ? subtotal + cont : taxMode === 'materials' ? matMarked : 0;
+  const taxAmt    = taxBase * GA_TAX;
+  const total     = subtotal + cont + taxAmt + fuelTravel + permitFees;
   const deposit   = total * depPct;
   const balance   = total - deposit;
-
   const cardTotal = total * 1.04;
   const today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
   const validUntil = new Date(Date.now() + (job.validDays || 30) * 86400000).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
@@ -907,13 +956,18 @@ function buildProposal() {
   const paintSels = job.paintSelections || [];
   let paintHTML = '';
   if (paintSels.length > 0) {
-    paintHTML = paintSels.map(p => `
-      <tr>
+    paintHTML = paintSels.map(p => {
+      const statusLabel = p.colorStatus === 'options' ? '🎨 Options (TBD)' : p.colorStatus === 'tbd' ? '⏳ Client selecting' : '✅ Confirmed';
+      const colorDisplay = p.colorStatus === 'options'
+        ? (p.color || '').split('\n').filter(Boolean).map((c,ci) => `<div style="color:#666;font-size:11px;">Option ${ci+1}: ${c}</div>`).join('')
+        : esc(p.color) || '—';
+      return `<tr>
         <td>${esc(p.surface)}</td>
-        <td>${esc(p.product)}</td>
+        <td>${esc(p.product) || '—'}</td>
         <td>${esc(p.sheen)}</td>
-        <td>${esc(p.color)}</td>
-      </tr>`).join('');
+        <td><div style="font-size:10px;color:#888;margin-bottom:2px;">${statusLabel}</div>${colorDisplay}</td>
+      </tr>`;
+    }).join('');
   }
 
   // Build line items by category
@@ -1015,7 +1069,10 @@ function buildProposal() {
           ${matRaw > 0 ? `<div class="pt-row"><span>Materials</span><span>${fmtR(matMarked)}</span></div>` : ''}
           ${labRaw > 0 ? `<div class="pt-row"><span>Labor</span><span>${fmtR(labMarked)}</span></div>` : ''}
           ${subTotal > 0 ? `<div class="pt-row"><span>Subcontractors &amp; Permits</span><span>${fmtR(subTotal)}</span></div>` : ''}
-          <div class="pt-row"><span>Contingency Reserve</span><span>${fmtR(cont)}</span></div>
+          ${cont > 0 ? `<div class="pt-row"><span>Contingency Reserve</span><span>${fmtR(cont)}</span></div>` : ''}
+          ${taxAmt > 0 ? `<div class="pt-row"><span>GA Sales Tax (8.9%)</span><span>${fmtR(taxAmt)}</span></div>` : ''}
+          ${fuelTravel > 0 ? `<div class="pt-row"><span>Fuel / Travel</span><span>${fmtR(fuelTravel)}</span></div>` : ''}
+          ${permitFees > 0 ? `<div class="pt-row"><span>Permit / Inspection Fees</span><span>${fmtR(permitFees)}</span></div>` : ''}
           <div class="pt-row grand"><span>TOTAL</span><span>${fmtR(total)}</span></div>
           <div class="pt-row" style="color:#c0392b;"><span><strong>Deposit Required (${job.depositPct}%)</strong></span><span><strong>${fmtR(deposit)}</strong></span></div>
           <div class="pt-row" style="color:#555;"><span>Balance Due on Completion</span><span>${fmtR(balance)}</span></div>
@@ -1084,6 +1141,9 @@ function collectSidebar() {
   job.adSpend        = parseFloat(getVal('adSpend'))     || 0;
   job.contingency    = parseFloat(getVal('contingency')) || 10;
   job.companySelect  = getVal('companySelect')           || 'anchor';
+  job.fuelTravel     = parseFloat(getVal('fuelTravel'))  || 0;
+  job.permitFees     = parseFloat(getVal('permitFees'))  || 0;
+  job.taxMode        = getVal('taxMode')                 || 'none';
 }
 
 function saveJob() {
@@ -1287,9 +1347,17 @@ function renderPaintSels() {
         <div><label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px;">Product</label>
           <input value="${esc(p.product)}" onchange="updatePaintSel(${i},'product',this.value)" placeholder="e.g. SW Emerald" style="${inputStyle}"/>
         </div>
-        <div><label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px;">Color</label>
-          <input value="${esc(p.color)}" onchange="updatePaintSel(${i},'color',this.value)" placeholder="e.g. Accessible Beige SW 7036" style="${inputStyle}"/>
+        <div><label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px;">Color Status</label>
+          <select onchange="updatePaintSel(${i},'colorStatus',this.value);renderPaintSels()" style="${inputStyle}">
+            <option value="confirmed" ${(p.colorStatus||'confirmed')==='confirmed'?'selected':''}>✅ Confirmed</option>
+            <option value="options" ${p.colorStatus==='options'?'selected':''}>🎨 3 Options (TBD)</option>
+            <option value="tbd" ${p.colorStatus==='tbd'?'selected':''}>⏳ TBD</option>
+          </select>
         </div>
+      </div>
+      <div style="margin-top:6px;">
+        <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px;">${p.colorStatus==='options' ? 'Color Options (1 per line)' : 'Color Name / Code'}</label>
+        <textarea onchange="updatePaintSel(${i},'color',this.value)" placeholder="${p.colorStatus==='options' ? 'Option 1: SW Accessible Beige\nOption 2: SW Agreeable Gray\nOption 3: SW Repose Gray' : 'e.g. Accessible Beige SW 7036'}" rows="3" style="${inputStyle}resize:vertical;">${esc(p.color)}</textarea>
       </div>
     </div>
   `).join('');
@@ -1309,6 +1377,58 @@ function removePaintSel(i) {
 function updatePaintSel(i, field, val) {
   if (!job.paintSelections) job.paintSelections = [];
   if (job.paintSelections[i]) job.paintSelections[i][field] = val;
+}
+
+// ── IMPORT FROM PUBLIC ESTIMATOR ──
+function importFromPublicEstimator() {
+  const status = document.getElementById('importStatus');
+  let ctx;
+  try { ctx = JSON.parse(localStorage.getItem('ironwood_estimate_context') || 'null'); } catch(e) {}
+  if (!ctx) {
+    status.textContent = '⚠ No lead found — customer must submit the public estimator first.';
+    status.style.color = 'var(--danger)';
+    return;
+  }
+  // Pull the submitted lead payload too (from the public estimator submitForm)
+  let lead;
+  try { lead = JSON.parse(localStorage.getItem('ironwood_latest_lead') || 'null'); } catch(e) {}
+
+  // Pre-fill sidebar fields
+  if (lead) {
+    if (lead.firstName || lead.lastName) setVal('clientName', `${lead.firstName||''} ${lead.lastName||''}`.trim());
+    if (lead.phone)   setVal('clientPhone', lead.phone);
+    if (lead.email)   setVal('clientEmail', lead.email);
+    if (lead.address) { setVal('jobAddress', lead.address); setVal('jobName', lead.address); }
+    if (lead.notes)   setVal('scopeSummary', lead.notes);
+  }
+
+  // Set job type from project type
+  const typeMap = {
+    kitchen: 'Kitchen Remodel', bath: 'Bathroom Remodel', full: 'Full Home Renovation',
+    flooring: 'Flooring', painting: 'Painting (Interior)', exterior: 'Painting (Exterior)',
+    deck: 'Deck / Porch Build', roofing: 'Roofing', basement: 'Basement Finish', addition: 'Addition / Room Build'
+  };
+  if (ctx.projectType && typeMap[ctx.projectType]) setVal('jobType', typeMap[ctx.projectType]);
+
+  // Pre-fill scope summary with estimate context
+  const existingScope = getVal('scopeSummary');
+  const ctxLines = [
+    ctx.projectLabel ? `Project: ${ctx.projectLabel}` : '',
+    ctx.sqft ? `Approx. ${ctx.sqft.toLocaleString()} sqft` : '',
+    ctx.rooms ? `Rooms: ${ctx.rooms}` : '',
+    ctx.workTypes ? `Work types: ${ctx.workTypes}` : '',
+    ctx.lowEst && ctx.highEst ? `Customer est. range: $${ctx.lowEst.toLocaleString()} – $${ctx.highEst.toLocaleString()}` : '',
+  ].filter(Boolean).join(' · ');
+  if (!existingScope && ctxLines) setVal('scopeSummary', ctxLines);
+
+  // Update job object and re-render
+  collectSidebar();
+  renderItems();
+  recalc();
+
+  const age = ctx.date ? Math.round((Date.now() - new Date(ctx.date)) / 60000) : null;
+  status.textContent = `✓ Imported${age !== null ? ` (submitted ${age < 60 ? age + ' min ago' : Math.round(age/60) + ' hr ago'})` : ''}`;
+  status.style.color = 'var(--success)';
 }
 
 // ── PANEL TOGGLE ──

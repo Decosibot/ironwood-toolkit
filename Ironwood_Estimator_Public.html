@@ -1419,6 +1419,9 @@ async function submitForm() {
     } catch(e) { console.warn('GHL webhook error:', e); }
   }
 
+  // Save lead to localStorage for internal estimator import
+  try { localStorage.setItem('ironwood_latest_lead', JSON.stringify(payload)); } catch(e) {}
+
   // Confirmation summary rows
   const summaryRows = [
     ['Name',         payload.firstName + ' ' + payload.lastName],
