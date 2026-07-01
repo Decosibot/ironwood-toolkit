@@ -238,6 +238,14 @@
       <textarea id="scopeSummary" rows="3" placeholder="Full kitchen gut and remodel including new cabinets, countertops, backsplash, flooring, and appliance hookups..."></textarea>
     </div>
 
+    <div class="field-group" style="margin-top:8px;">
+      <label>Issuing Company</label>
+      <select id="companySelect" onchange="recalc()" style="background:var(--surface);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:6px 8px;font-size:12px;width:100%;">
+        <option value="anchor">Anchor Pro Solutions Inc.</option>
+        <option value="ironwood">Ironwood Inc.</option>
+      </select>
+    </div>
+
     <div class="section-head">Markup Settings</div>
     <div class="markup-grid">
       <div class="markup-card">
@@ -478,7 +486,7 @@ function newJobObj() {
     jobAddress: '', startDate: '', duration: '', jobType: 'Kitchen Remodel',
     scopeSummary: '', internalNotes: '', payTerms: '40% deposit · 60% on completion',
     validDays: 30, depositPct: 40,
-    matMarkup: 25, labMarkup: 35, phaseMode: '1', jeffHours: 0, tyHours: 0, salaryAlloc: 13000, otherFees: 0, adSpend: 0, contingency: 10,
+    matMarkup: 25, labMarkup: 35, phaseMode: '1', jeffHours: 0, tyHours: 0, salaryAlloc: 13000, otherFees: 0, adSpend: 0, contingency: 10, companySelect: 'anchor',
     categories: [{ id: uid(), name: 'Labor' }, { id: uid(), name: 'Materials' }, { id: uid(), name: 'Subcontractors' }],
     items: []
   };
@@ -520,8 +528,9 @@ function populateSidebar() {
   setVal('tyHours',     job.tyHours     ?? 0);
   setVal('salaryAlloc', job.salaryAlloc ?? 13000);
   setVal('otherFees',   job.otherFees   ?? 0);
-  setVal('adSpend',     job.adSpend     ?? 0);
-  setVal('contingency', job.contingency);
+  setVal('adSpend',      job.adSpend      ?? 0);
+  setVal('contingency',  job.contingency);
+  setVal('companySelect',job.companySelect ?? 'anchor');
 }
 
 // ─── CATEGORIES ──────────────────────────────────────────────────────────────
@@ -704,6 +713,16 @@ function toggleView() {
 // ─── BUILD PROPOSAL ───────────────────────────────────────────────────────────
 function buildProposal() {
   collectSidebar();
+  const coKey = job.companySelect || 'anchor';
+  const coName     = coKey === 'ironwood' ? 'Ironwood Inc.'                : 'Anchor Pro Solutions Inc.';
+  const coShort    = coKey === 'ironwood' ? 'Ironwood Inc.'                : 'Anchor Pro Solutions Inc.';
+  const coRep      = coKey === 'ironwood' ? 'Jeff Sarabia'                 : 'Ty Jackson';
+  const coPhone    = coKey === 'ironwood' ? '(770) 000-0000'               : '(678) 633-8186';
+  const coEmail    = coKey === 'ironwood' ? 'jeff@ironwoodhomereno.com'    : 'ty@anchorprosolutions.com';
+  const coWarranty = coKey === 'ironwood' ? 'Ironwood Inc. warrants all labor for 1 year from project completion date. Manufacturer warranties apply to all installed materials.'
+                                          : 'Anchor Pro Solutions Inc. warrants all labor for 1 year from project completion date. Manufacturer warranties apply to all installed materials.';
+  const coMaterials= coKey === 'ironwood' ? 'All materials are supplied and managed by Ironwood Inc. Pricing is all-inclusive — no separate material invoices. Client-supplied materials must be approved in advance and on-site before the scheduled work date.'
+                                          : 'All materials are supplied and managed by Anchor Pro Solutions Inc. Pricing is all-inclusive — no separate material invoices. Client-supplied materials must be approved in advance and on-site before the scheduled work date.';
   const matMu   = (parseFloat(job.matMarkup) || 0) / 100;
   const labMu   = (parseFloat(job.labMarkup) || 0) / 100;
   const contPct = (parseFloat(job.contingency) || 0) / 100;
@@ -752,7 +771,7 @@ function buildProposal() {
 
   document.getElementById('proposalDoc').innerHTML = `
     <div class="prop-header">
-      <div class="co-name">Ironwood Renovations</div>
+      <div class="co-name">${coName}</div>
       <h1>Project Estimate</h1>
       <div class="prop-sub">${esc(job.jobType)} · Prepared ${today}</div>
     </div>
@@ -788,8 +807,8 @@ function buildProposal() {
         </div>
         <div class="prop-section">
           <h3>Contractor Information</h3>
-          <div class="prop-info-block" style="margin-bottom:6px;"><div class="pi-label">Company</div><div class="pi-val">Ironwood LLC</div></div>
-          <div class="prop-info-block" style="margin-bottom:6px;"><div class="pi-label">Lead</div><div class="pi-val">Jeff Sarabia</div></div>
+          <div class="prop-info-block" style="margin-bottom:6px;"><div class="pi-label">Company</div><div class="pi-val">${coShort}</div></div>
+          <div class="prop-info-block" style="margin-bottom:6px;"><div class="pi-label">Lead</div><div class="pi-val">${coRep}</div></div>
           <div class="prop-info-block" style="margin-bottom:6px;"><div class="pi-label">Est. Duration</div><div class="pi-val">${esc(job.duration) || '—'}</div></div>
           <div class="prop-info-block"><div class="pi-label">Quote Valid Until</div><div class="pi-val">${validUntil}</div></div>
         </div>
@@ -831,14 +850,14 @@ function buildProposal() {
           <strong>Accepted Methods:</strong> Check, Zelle, bank transfer. No cash accepted on jobs over $1,000.<br/>
           <strong>Quote Validity:</strong> This estimate is valid for ${job.validDays} days from the date issued (${today}).<br/>
           <strong>Change Orders:</strong> Any changes to the scope of work after signing require a written change order and may affect the total price and timeline.<br/>
-          <strong>Materials:</strong> All materials are supplied and managed by Ironwood LLC. Pricing is all-inclusive — no separate material invoices. Client-supplied materials must be approved in advance and on-site before the scheduled work date.<br/>
-          <strong>Warranty:</strong> Ironwood LLC warrants all labor for 1 year from project completion date. Manufacturer warranties apply to all installed materials.
+          <strong>Materials:</strong> ${coMaterials}<br/>
+          <strong>Warranty:</strong> ${coWarranty}
         </div>
       </div>
 
       <div class="prop-section">
         <h3>Authorization &amp; Acceptance</h3>
-        <p style="font-size:13px; color:#555; margin-bottom:20px;">By signing below, the client authorizes Ironwood LLC to proceed with the work described in this estimate under the terms stated above.</p>
+        <p style="font-size:13px; color:#555; margin-bottom:20px;">By signing below, the client authorizes ${coShort} to proceed with the work described in this estimate under the terms stated above.</p>
         <div class="prop-sig">
           <div class="sig-line-wrap">
             <div class="sl-line"></div>
@@ -846,7 +865,7 @@ function buildProposal() {
           </div>
           <div class="sig-line-wrap">
             <div class="sl-line"></div>
-            <div class="sl-label">Jeff Sarabia — Ironwood LLC</div>
+            <div class="sl-label">${coRep} — ${coShort}</div>
           </div>
         </div>
       </div>
@@ -854,7 +873,7 @@ function buildProposal() {
     </div>
 
     <div class="prop-footer">
-      <span>Ironwood Renovations</span>
+      <span>${coName}</span>
       <span>Confidential Estimate · ${today}</span>
     </div>
   `;
@@ -877,13 +896,14 @@ function collectSidebar() {
   job.depositPct   = parseFloat(getVal('depositPct')) || 40;
   job.matMarkup    = parseFloat(getVal('matMarkup')) || 25;
   job.labMarkup    = parseFloat(getVal('labMarkup')) || 35;
-  job.phaseMode    = getVal('phaseMode')               || '1';
-  job.jeffHours    = parseFloat(getVal('jeffHours'))   || 0;
-  job.tyHours      = parseFloat(getVal('tyHours'))     || 0;
-  job.salaryAlloc  = parseFloat(getVal('salaryAlloc')) || 13000;
-  job.otherFees    = parseFloat(getVal('otherFees'))   || 0;
-  job.adSpend      = parseFloat(getVal('adSpend'))     || 0;
-  job.contingency  = parseFloat(getVal('contingency')) || 10;
+  job.phaseMode      = getVal('phaseMode')               || '1';
+  job.jeffHours      = parseFloat(getVal('jeffHours'))   || 0;
+  job.tyHours        = parseFloat(getVal('tyHours'))     || 0;
+  job.salaryAlloc    = parseFloat(getVal('salaryAlloc')) || 13000;
+  job.otherFees      = parseFloat(getVal('otherFees'))   || 0;
+  job.adSpend        = parseFloat(getVal('adSpend'))     || 0;
+  job.contingency    = parseFloat(getVal('contingency')) || 10;
+  job.companySelect  = getVal('companySelect')           || 'anchor';
 }
 
 function saveJob() {
