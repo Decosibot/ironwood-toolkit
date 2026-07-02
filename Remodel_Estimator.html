@@ -958,9 +958,16 @@ function buildProposal() {
   if (paintSels.length > 0) {
     paintHTML = paintSels.map(p => {
       const statusLabel = p.colorStatus === 'options' ? '🎨 Options (TBD)' : p.colorStatus === 'tbd' ? '⏳ Client selecting' : '✅ Confirmed';
-      const colorDisplay = p.colorStatus === 'options'
-        ? (p.color || '').split('\n').filter(Boolean).map((c,ci) => `<div style="color:#666;font-size:11px;">Option ${ci+1}: ${c}</div>`).join('')
-        : esc(p.color) || '—';
+      let colorDisplay;
+      if (p.colorStatus === 'options') {
+        colorDisplay = (p.color || '').split('\n').filter(Boolean).map((c,ci) => `<div style="color:#666;font-size:11px;">Option ${ci+1}: ${c}</div>`).join('');
+      } else if (p.colorStatus === 'tbd') {
+        colorDisplay = '<span style="color:#aaa;font-size:11px;font-style:italic;">To be determined</span>';
+      } else {
+        const swatch = p.colorHex ? `<span style="display:inline-block;width:16px;height:16px;background:${p.colorHex};border-radius:3px;border:1px solid #ccc;vertical-align:middle;margin-right:6px;"></span>` : '';
+        const label = [p.color, p.colorCode ? `(${p.colorCode})` : '', p.colorBrand || ''].filter(Boolean).join(' ');
+        colorDisplay = `${swatch}<span style="vertical-align:middle;">${label || '—'}</span>`;
+      }
       return `<tr>
         <td>${esc(p.surface)}</td>
         <td>${esc(p.product) || '—'}</td>
@@ -1311,6 +1318,225 @@ function showEstimatorToast(msg){
   t._timer = setTimeout(()=>t.style.opacity='0', 2500);
 }
 
+// ── PAINT COLOR DATABASE ──
+const PAINT_COLORS = [
+  // Sherwin-Williams
+  {brand:'SW',name:'Accessible Beige',code:'SW 7036',hex:'#C2B49A'},
+  {brand:'SW',name:'Agreeable Gray',code:'SW 7029',hex:'#C2BAA8'},
+  {brand:'SW',name:'Repose Gray',code:'SW 7015',hex:'#C2BFB8'},
+  {brand:'SW',name:'Alabaster',code:'SW 7008',hex:'#F2EDE3'},
+  {brand:'SW',name:'Creamy',code:'SW 7012',hex:'#F3EDD7'},
+  {brand:'SW',name:'Shoji White',code:'SW 7042',hex:'#E4DCCA'},
+  {brand:'SW',name:'Worldly Gray',code:'SW 7043',hex:'#B8B1A3'},
+  {brand:'SW',name:'Intellectual Gray',code:'SW 7045',hex:'#A39E96'},
+  {brand:'SW',name:'Mindful Gray',code:'SW 7016',hex:'#B9B3A9'},
+  {brand:'SW',name:'Colonnade Gray',code:'SW 7641',hex:'#B0A99E'},
+  {brand:'SW',name:'Antique White',code:'SW 6119',hex:'#F0E6D3'},
+  {brand:'SW',name:'Dover White',code:'SW 6385',hex:'#EFE8D8'},
+  {brand:'SW',name:'Moderate White',code:'SW 6140',hex:'#EAE2D5'},
+  {brand:'SW',name:'Pure White',code:'SW 7005',hex:'#F5F2EA'},
+  {brand:'SW',name:'Extra White',code:'SW 7006',hex:'#F7F5F0'},
+  {brand:'SW',name:'High Reflective White',code:'SW 7757',hex:'#FAFAF8'},
+  {brand:'SW',name:'Naval',code:'SW 6244',hex:'#3D5166'},
+  {brand:'SW',name:'Charcoal Blue',code:'SW 2739',hex:'#4A5B6A'},
+  {brand:'SW',name:'Tricorn Black',code:'SW 6258',hex:'#2B2B2B'},
+  {brand:'SW',name:'Iron Ore',code:'SW 7069',hex:'#434343'},
+  {brand:'SW',name:'Peppercorn',code:'SW 7674',hex:'#5E5C58'},
+  {brand:'SW',name:'Dovetail',code:'SW 7018',hex:'#888179'},
+  {brand:'SW',name:'Urbane Bronze',code:'SW 7048',hex:'#645D52'},
+  {brand:'SW',name:'Cavern Clay',code:'SW 7701',hex:'#BF7455'},
+  {brand:'SW',name:'Antler Velvet',code:'SW 6133',hex:'#B08B6E'},
+  {brand:'SW',name:'Ivoire',code:'SW 6127',hex:'#EDE5C8'},
+  {brand:'SW',name:'Macadamia',code:'SW 6142',hex:'#D4C3AA'},
+  {brand:'SW',name:'Balanced Beige',code:'SW 7037',hex:'#C8BAA4'},
+  {brand:'SW',name:'Kilim Beige',code:'SW 6106',hex:'#C8A882'},
+  {brand:'SW',name:'Heron Plume',code:'SW 6070',hex:'#D6CDC0'},
+  {brand:'SW',name:'Sea Salt',code:'SW 6204',hex:'#BAD0C8'},
+  {brand:'SW',name:'Rainwashed',code:'SW 6211',hex:'#AABFB8'},
+  {brand:'SW',name:'Comfort Gray',code:'SW 6205',hex:'#A8BDB8'},
+  {brand:'SW',name:'Keystone Gray',code:'SW 7504',hex:'#9E9A93'},
+  {brand:'SW',name:'Emerging Taupe',code:'SW 6080',hex:'#AFA196'},
+  {brand:'SW',name:'Dustblu',code:'SW 0061',hex:'#95A8B0'},
+  {brand:'SW',name:'Refuge',code:'SW 6228',hex:'#7E8F86'},
+  {brand:'SW',name:'Sage',code:'SW 0025',hex:'#99A68F'},
+  {brand:'SW',name:'Artichoke',code:'SW 9132',hex:'#7D8A72'},
+  {brand:'SW',name:'Pewter Green',code:'SW 6208',hex:'#7C8C7A'},
+  {brand:'SW',name:'Needlepoint Navy',code:'SW 9179',hex:'#37506A'},
+  {brand:'SW',name:'In the Navy',code:'SW 9178',hex:'#2C4460'},
+  {brand:'SW',name:'Smoky Blue',code:'SW 7604',hex:'#7B95A7'},
+  {brand:'SW',name:'Windy Blue',code:'SW 6240',hex:'#8BA8B5'},
+  {brand:'SW',name:'Watery',code:'SW 6478',hex:'#82B0B9'},
+  {brand:'SW',name:'Intimate White',code:'SW 6322',hex:'#EDE8DC'},
+  {brand:'SW',name:'Taupe of the Morning',code:'SW 9083',hex:'#C0AFA2'},
+  {brand:'SW',name:'Pearly White',code:'SW 7009',hex:'#EDE8D9'},
+  {brand:'SW',name:'Snowbound',code:'SW 7004',hex:'#EEE9DE'},
+  {brand:'SW',name:'Marshmallow',code:'SW 7001',hex:'#F5F2EB'},
+  // Behr (Home Depot)
+  {brand:'Behr',name:'Antique Linen',code:'N200-1',hex:'#EEE5D4'},
+  {brand:'Behr',name:'Polar Bear',code:'75',hex:'#F5F3ED'},
+  {brand:'Behr',name:'Swiss Coffee',code:'12',hex:'#F0EBE0'},
+  {brand:'Behr',name:'Navajo White',code:'290E-2',hex:'#F2E6CA'},
+  {brand:'Behr',name:'Ultra Pure White',code:'1850',hex:'#F8F8F6'},
+  {brand:'Behr',name:'Bleached Linen',code:'710C-2',hex:'#EDE3D2'},
+  {brand:'Behr',name:'Light French Gray',code:'760E-2',hex:'#C8C4BC'},
+  {brand:'Behr',name:'Silver Drop',code:'790C-2',hex:'#D0CECC'},
+  {brand:'Behr',name:'Gray Owl',code:'750E-3',hex:'#C0BCBA'},
+  {brand:'Behr',name:'Cracked Pepper',code:'790F-7',hex:'#3A3A3A'},
+  {brand:'Behr',name:'Blueprint',code:'S510-6',hex:'#3A5F8A'},
+  {brand:'Behr',name:'Dusty Miller',code:'S560-4',hex:'#87A8B5'},
+  {brand:'Behr',name:'Wheat Bread',code:'310D-4',hex:'#C4A882'},
+  {brand:'Behr',name:'Toasty',code:'270F-4',hex:'#B8906A'},
+  {brand:'Behr',name:'Cappuccino Froth',code:'N230-2',hex:'#DDD0BC'},
+  {brand:'Behr',name:'Smoky White',code:'BWC-13',hex:'#E8E4DA'},
+  {brand:'Behr',name:'Mushroom Bisque',code:'N230-3',hex:'#CCC0A8'},
+  {brand:'Behr',name:'Natural Gray',code:'N520-3',hex:'#B5B0A8'},
+  {brand:'Behr',name:'Pewter',code:'N520-4',hex:'#9E9990'},
+  {brand:'Behr',name:'Dark Pewter',code:'N520-5',hex:'#898278'},
+  {brand:'Behr',name:'Sage Advice',code:'M390-4',hex:'#96A38C'},
+  {brand:'Behr',name:'Jade Garden',code:'M390-5',hex:'#7B9070'},
+  {brand:'Behr',name:'Cliffside Park',code:'S430-6',hex:'#4A7566'},
+  {brand:'Behr',name:'Midnight Blue',code:'S530-7',hex:'#243855'},
+  {brand:'Behr',name:'Marquee White',code:'MQ3-32',hex:'#F0ECDF'},
+  {brand:'Behr',name:'Blank Canvas',code:'75',hex:'#F2EEE4'},
+  {brand:'Behr',name:'Burnished Clay',code:'S210-5',hex:'#C47855'},
+  {brand:'Behr',name:'Rustic Taupe',code:'N190-4',hex:'#B5A38A'},
+  {brand:'Behr',name:'Charcoal Slate',code:'N540-6',hex:'#545254'},
+  {brand:'Behr',name:'Dark Burgundy',code:'S-H-100',hex:'#6B2737'},
+  // Valspar (Lowes)
+  {brand:'Valspar',name:'Filtered Shade',code:'5006-1B',hex:'#D4CFC8'},
+  {brand:'Valspar',name:'White Truffle',code:'7001-3',hex:'#EDE5D5'},
+  {brand:'Valspar',name:'Pale Oak',code:'7006-17',hex:'#D8CCBA'},
+  {brand:'Valspar',name:'Coconut Shells',code:'3007-10B',hex:'#C8B898'},
+  {brand:'Valspar',name:'Tempe Star',code:'5003-1B',hex:'#B8B4AC'},
+  {brand:'Valspar',name:'Woodlawn Colonial Gray',code:'5002-10A',hex:'#A8A49C'},
+  {brand:'Valspar',name:'Gravity',code:'4007-10A',hex:'#868280'},
+  {brand:'Valspar',name:'Noir',code:'4001-1C',hex:'#2A2A2A'},
+  {brand:'Valspar',name:'Aqua Smoke',code:'5006-2C',hex:'#96B0B4'},
+  {brand:'Valspar',name:'Iced Cube Silver',code:'5001-1B',hex:'#D8D8D5'},
+  {brand:'Valspar',name:'Flint Smoke',code:'4002-4A',hex:'#9C9890'},
+  {brand:'Valspar',name:'Gentle Violet',code:'V110-3',hex:'#B4ACBC'},
+  {brand:'Valspar',name:'Green Tea Leaf',code:'5007-8A',hex:'#8FA880'},
+  {brand:'Valspar',name:'Restful',code:'5007-3A',hex:'#AABCAC'},
+  {brand:'Valspar',name:'Cosmic',code:'4008-5A',hex:'#3A6080'},
+  {brand:'Valspar',name:'White Origami',code:'7002-9',hex:'#F0EBE0'},
+  {brand:'Valspar',name:'Antique Silk',code:'3007-1A',hex:'#EFE4CC'},
+  {brand:'Valspar',name:'Toasted Marshmallow',code:'3001-3B',hex:'#E8D8B8'},
+  {brand:'Valspar',name:'Sand Dune',code:'3003-5B',hex:'#C8B490'},
+  {brand:'Valspar',name:'Dried Thyme',code:'5007-6A',hex:'#7A8E72'},
+  {brand:'Valspar',name:'Sagebrush',code:'5008-3A',hex:'#A8AC98'},
+  {brand:'Valspar',name:'Evening Haze',code:'V110-1',hex:'#C8C4D0'},
+  {brand:'Valspar',name:'Stormy Night',code:'4004-6C',hex:'#48505E'},
+  {brand:'Valspar',name:'Smoked Oyster',code:'3007-3A',hex:'#C0B4A0'},
+  {brand:'Valspar',name:'Afternoon Tea',code:'3005-9B',hex:'#D4C4A8'},
+];
+
+const BRAND_COLORS = { 'SW':'#0072CE', 'Behr':'#E31837', 'Valspar':'#00539C' };
+
+function searchPaintColors(q, brand) {
+  const lq = q.toLowerCase();
+  return PAINT_COLORS.filter(c =>
+    (!brand || c.brand === brand) &&
+    (c.name.toLowerCase().includes(lq) || c.code.toLowerCase().includes(lq) || c.hex.toLowerCase().includes(lq))
+  ).slice(0, 20);
+}
+
+function openColorPicker(idx) {
+  let modal = document.getElementById('colorPickerModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'colorPickerModal';
+    modal.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:9999;display:flex;align-items:center;justify-content:center;';
+    modal.innerHTML = `
+      <div style="background:var(--surface);border:1px solid var(--hairline);border-radius:14px;padding:24px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+          <div style="font-family:'Instrument Serif',serif;font-size:18px;color:var(--cream);">🎨 Pick a Paint Color</div>
+          <button onclick="document.getElementById('colorPickerModal').remove()" style="background:none;border:none;font-size:22px;color:var(--muted);cursor:pointer;">×</button>
+        </div>
+        <div style="display:flex;gap:6px;margin-bottom:10px;">
+          <select id="cpBrand" onchange="runColorSearch()" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:7px 8px;font-size:12px;flex:0 0 auto;">
+            <option value="">All Brands</option>
+            <option value="SW">Sherwin-Williams</option>
+            <option value="Behr">Behr (Home Depot)</option>
+            <option value="Valspar">Valspar (Lowe's)</option>
+          </select>
+          <input id="cpSearch" type="text" placeholder="Search color name or code…" oninput="runColorSearch()"
+            style="flex:1;background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;"/>
+        </div>
+        <div id="cpResults" style="display:grid;grid-template-columns:1fr 1fr;gap:8px;"></div>
+        <div style="margin-top:14px;border-top:1px solid var(--hairline);padding-top:12px;">
+          <div style="font-size:10px;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;">Or enter manually</div>
+          <div style="display:grid;grid-template-columns:1fr 1fr 80px;gap:6px;">
+            <input id="cpManualName" placeholder="Color name" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:7px 8px;font-size:12px;font-family:inherit;"/>
+            <input id="cpManualCode" placeholder="Code (optional)" style="background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:7px 8px;font-size:12px;font-family:inherit;"/>
+            <input id="cpManualHex" type="color" value="#C2B49A" style="border:1px solid var(--hairline);border-radius:6px;height:34px;width:100%;cursor:pointer;"/>
+          </div>
+          <button onclick="applyManualColor(${idx})" style="width:100%;margin-top:8px;padding:8px;background:var(--bronze);color:#0a0a0a;border:none;border-radius:6px;font-size:13px;font-weight:700;cursor:pointer;">Use This Color</button>
+        </div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+  modal.dataset.idx = idx;
+  modal.style.display = 'flex';
+  document.getElementById('cpSearch').value = '';
+  document.getElementById('cpBrand').value = '';
+  document.getElementById('cpResults').innerHTML = '<div style="color:var(--muted);font-size:12px;grid-column:span 2;padding:8px 0;">Type to search colors above…</div>';
+  setTimeout(() => document.getElementById('cpSearch').focus(), 100);
+}
+
+function runColorSearch() {
+  const q = document.getElementById('cpSearch').value.trim();
+  const brand = document.getElementById('cpBrand').value;
+  const results = document.getElementById('cpResults');
+  if (!q && !brand) {
+    results.innerHTML = '<div style="color:var(--muted);font-size:12px;grid-column:span 2;padding:8px 0;">Type to search colors above…</div>';
+    return;
+  }
+  const matches = searchPaintColors(q, brand);
+  if (!matches.length) {
+    results.innerHTML = '<div style="color:var(--muted);font-size:12px;grid-column:span 2;padding:8px 0;">No matches — try a different name or use manual entry below.</div>';
+    return;
+  }
+  const modal = document.getElementById('colorPickerModal');
+  const idx = parseInt(modal.dataset.idx);
+  results.innerHTML = matches.map(c => `
+    <button onclick="applyColor(${idx},'${c.name.replace(/'/g,"\\'")}','${c.code}','${c.hex}','${c.brand}')"
+      style="display:flex;align-items:center;gap:8px;background:var(--surface2);border:1px solid var(--hairline);border-radius:8px;padding:8px;cursor:pointer;text-align:left;transition:border-color .15s;"
+      onmouseover="this.style.borderColor='var(--bronze)'" onmouseout="this.style.borderColor='var(--hairline)'">
+      <div style="width:32px;height:32px;border-radius:4px;background:${c.hex};flex-shrink:0;border:1px solid rgba(0,0,0,.1);"></div>
+      <div>
+        <div style="font-size:11px;font-weight:700;color:var(--cream);line-height:1.2;">${c.name}</div>
+        <div style="font-size:10px;color:var(--muted);">${c.code}</div>
+        <div style="font-size:10px;color:${BRAND_COLORS[c.brand]||'#888'};font-weight:600;">${c.brand === 'SW' ? 'Sherwin-Williams' : c.brand === 'Behr' ? 'Behr · Home Depot' : 'Valspar · Lowe\'s'}</div>
+      </div>
+    </button>`).join('');
+}
+
+function applyColor(idx, name, code, hex, brand) {
+  if (!job.paintSelections[idx]) return;
+  job.paintSelections[idx].color = name;
+  job.paintSelections[idx].colorCode = code;
+  job.paintSelections[idx].colorHex = hex;
+  job.paintSelections[idx].colorBrand = brand;
+  job.paintSelections[idx].colorStatus = 'confirmed';
+  document.getElementById('colorPickerModal').remove();
+  renderPaintSels();
+}
+
+function applyManualColor(idx) {
+  const name = document.getElementById('cpManualName').value.trim();
+  const code = document.getElementById('cpManualCode').value.trim();
+  const hex  = document.getElementById('cpManualHex').value;
+  if (!name) { alert('Enter a color name.'); return; }
+  if (!job.paintSelections[idx]) return;
+  job.paintSelections[idx].color = name;
+  job.paintSelections[idx].colorCode = code;
+  job.paintSelections[idx].colorHex = hex;
+  job.paintSelections[idx].colorBrand = 'Custom';
+  job.paintSelections[idx].colorStatus = 'confirmed';
+  document.getElementById('colorPickerModal').remove();
+  renderPaintSels();
+}
+
 // ── PAINT SELECTIONS ──
 function togglePaintSelPanel() {
   const panel = document.getElementById('paintSelPanel');
@@ -1355,17 +1581,26 @@ function renderPaintSels() {
           </select>
         </div>
       </div>
+      ${p.colorStatus !== 'options' ? `
+      <div style="margin-top:8px;display:flex;gap:8px;align-items:center;">
+        ${p.colorHex ? `<div style="width:32px;height:32px;border-radius:5px;background:${p.colorHex};border:1px solid rgba(255,255,255,0.15);flex-shrink:0;"></div>` : ''}
+        <div style="flex:1;min-width:0;">
+          ${p.color ? `<div style="font-size:12px;font-weight:600;color:var(--cream);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${esc(p.color)}</div>
+          <div style="font-size:10px;color:var(--muted);">${p.colorBrand ? `${p.colorBrand} · ` : ''}${p.colorCode || ''}</div>` : `<div style="font-size:11px;color:var(--muted);">No color selected</div>`}
+        </div>
+        <button onclick="openColorPicker(${i})" style="flex-shrink:0;padding:5px 10px;background:var(--surface);border:1px solid var(--bronze);color:var(--bronze);border-radius:5px;font-size:11px;font-weight:700;cursor:pointer;">🎨 Pick</button>
+      </div>` : `
       <div style="margin-top:6px;">
-        <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px;">${p.colorStatus==='options' ? 'Color Options (1 per line)' : 'Color Name / Code'}</label>
-        <textarea onchange="updatePaintSel(${i},'color',this.value)" placeholder="${p.colorStatus==='options' ? 'Option 1: SW Accessible Beige\nOption 2: SW Agreeable Gray\nOption 3: SW Repose Gray' : 'e.g. Accessible Beige SW 7036'}" rows="3" style="${inputStyle}resize:vertical;">${esc(p.color)}</textarea>
-      </div>
+        <label style="font-size:10px;color:var(--muted);display:block;margin-bottom:3px;">Color Options (1 per line)</label>
+        <textarea onchange="updatePaintSel(${i},'color',this.value)" placeholder="Option 1: SW Accessible Beige\nOption 2: SW Agreeable Gray\nOption 3: SW Repose Gray" rows="3" style="${inputStyle}resize:vertical;">${esc(p.color)}</textarea>
+      </div>`}
     </div>
   `).join('');
 }
 
 function addPaintSel() {
   if (!job.paintSelections) job.paintSelections = [];
-  job.paintSelections.push({ surface: 'Interior Walls', product: '', sheen: 'Eggshell', color: '' });
+  job.paintSelections.push({ surface: 'Interior Walls', product: '', sheen: 'Eggshell', color: '', colorCode: '', colorHex: '', colorBrand: '', colorStatus: 'confirmed' });
   renderPaintSels();
 }
 
