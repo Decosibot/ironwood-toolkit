@@ -1428,9 +1428,40 @@ const PAINT_COLORS = [
   {brand:'Valspar',name:'Stormy Night',code:'4004-6C',hex:'#48505E'},
   {brand:'Valspar',name:'Smoked Oyster',code:'3007-3A',hex:'#C0B4A0'},
   {brand:'Valspar',name:'Afternoon Tea',code:'3005-9B',hex:'#D4C4A8'},
+  // Glidden / PPG
+  {brand:'Glidden',name:'Antique White',code:'GLN65',hex:'#F0E8D8'},
+  {brand:'Glidden',name:'White on White',code:'GLN06',hex:'#F5F3ED'},
+  {brand:'Glidden',name:'Navajo White',code:'10YY 72/111',hex:'#F2E6CA'},
+  {brand:'Glidden',name:'Cottage White',code:'GLN03',hex:'#F0EBE0'},
+  {brand:'Glidden',name:'Bright White',code:'GLN01',hex:'#F8F7F2'},
+  {brand:'Glidden',name:'Swiss Coffee',code:'70YY 80/029',hex:'#EDE4D0'},
+  {brand:'Glidden',name:'Silver Lining',code:'60YY 68/013',hex:'#D0CCC4'},
+  {brand:'Glidden',name:'Elephant Skin',code:'50YY 52/012',hex:'#ADA8A0'},
+  {brand:'Glidden',name:'Pewter Gray',code:'10YY 44/014',hex:'#7A7870'},
+  {brand:'Glidden',name:'Turtledove',code:'10YY 72/029',hex:'#D4CCBC'},
+  {brand:'Glidden',name:'Pebble Stone',code:'10YY 60/041',hex:'#BEB4A4'},
+  {brand:'Glidden',name:'Toasted Almond',code:'30YY 51/089',hex:'#BCA080'},
+  {brand:'Glidden',name:'Sandcastle',code:'20YY 63/103',hex:'#D4B88C'},
+  {brand:'Glidden',name:'Mesa Tan',code:'30YY 44/139',hex:'#C09060'},
+  {brand:'Glidden',name:'Caramel Latte',code:'20YY 34/189',hex:'#B07840'},
+  {brand:'Glidden',name:'Crushed Basil',code:'10GY 35/099',hex:'#6A8460'},
+  {brand:'Glidden',name:'Soft Fern',code:'10GY 48/085',hex:'#7E9870'},
+  {brand:'Glidden',name:'Pale Jade',code:'50GY 72/053',hex:'#B0C8B0'},
+  {brand:'Glidden',name:'Dusty Miller',code:'10BG 55/075',hex:'#7EA4A8'},
+  {brand:'Glidden',name:'Smoky Blue',code:'10BB 37/092',hex:'#507898'},
+  {brand:'Glidden',name:'Navy Blue',code:'10BB 15/050',hex:'#253C58'},
+  {brand:'Glidden',name:'Deep Charcoal',code:'10YY 13/007',hex:'#383430'},
+  {brand:'Glidden',name:'Black Magic',code:'00NN 05/000',hex:'#1C1C1A'},
+  {brand:'Glidden',name:'Barn Red',code:'10YR 13/185',hex:'#7A2820'},
+  {brand:'Glidden',name:'Terracotta Clay',code:'20YR 36/175',hex:'#BC6040'},
+  {brand:'Glidden',name:'Wheat Fields',code:'20YY 72/089',hex:'#DCC898'},
+  {brand:'Glidden',name:'Mushroom Broth',code:'10YY 45/029',hex:'#9E9484'},
+  {brand:'Glidden',name:'Warm Gray',code:'70YY 55/007',hex:'#B0ACAC'},
+  {brand:'Glidden',name:'Misty Morning',code:'10BB 67/015',hex:'#C0C8D0'},
+  {brand:'Glidden',name:'Evening Mist',code:'10BB 55/023',hex:'#A8B4BC'},
 ];
 
-const BRAND_COLORS = { 'SW':'#0072CE', 'Behr':'#E31837', 'Valspar':'#00539C' };
+const BRAND_COLORS = { 'SW':'#0072CE', 'Behr':'#E31837', 'Valspar':'#00539C', 'Glidden':'#007B3E' };
 
 function searchPaintColors(q, brand) {
   const lq = q.toLowerCase();
@@ -1458,6 +1489,7 @@ function openColorPicker(idx) {
             <option value="SW">Sherwin-Williams</option>
             <option value="Behr">Behr (Home Depot)</option>
             <option value="Valspar">Valspar (Lowe's)</option>
+            <option value="Glidden">Glidden / PPG</option>
           </select>
           <input id="cpSearch" type="text" placeholder="Search color name or code…" oninput="runColorSearch()"
             style="flex:1;background:var(--surface2);border:1px solid var(--hairline);color:var(--cream);border-radius:6px;padding:7px 10px;font-size:13px;font-family:inherit;"/>
