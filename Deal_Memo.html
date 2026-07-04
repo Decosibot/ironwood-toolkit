@@ -276,6 +276,34 @@ body { background: var(--bg); color: var(--cream); font-family: 'Geist', system-
         <hr class="divider"/>
         <div class="field-row">
           <div class="field">
+            <label>Buyer Closing Costs (est.)</label>
+            <div class="prefix-wrap"><span class="pfx">$</span>
+              <input type="number" id="f-closing-costs" placeholder="5000" oninput="calcNumbers()"/>
+            </div>
+          </div>
+          <div class="field">
+            <label>Holding Costs (est.)</label>
+            <div class="prefix-wrap"><span class="pfx">$</span>
+              <input type="number" id="f-holding" placeholder="4000" oninput="calcNumbers()"/>
+            </div>
+          </div>
+        </div>
+        <div class="calc-row" style="background:rgba(184,151,90,.08);border-color:var(--bronze)">
+          <span class="cl" style="font-weight:700;color:var(--cream);">Buyer's Net Profit</span>
+          <span class="cv" id="c-profit" style="font-size:16px;">$0</span>
+        </div>
+        <div class="calc-row">
+          <span class="cl">Return on Investment (ROI)</span>
+          <span class="cv" id="c-roi">0%</span>
+        </div>
+        <div class="calc-row">
+          <span class="cl">Sell Price at 85% ARV (Flip)</span>
+          <span class="cv" id="c-sellprice">$0</span>
+        </div>
+
+        <hr class="divider"/>
+        <div class="field-row">
+          <div class="field">
             <label>Exit Strategy</label>
             <select id="f-exit" onchange="render()">
               <option value="Wholesale">Wholesale</option>
@@ -399,16 +427,25 @@ function showToast(msg = 'Saved!') {
 
 // ── CALC NUMBERS ──
 function calcNumbers() {
-  const arv    = n('f-arv');
-  const rehab  = n('f-rehab');
-  const asking = n('f-asking');
-  const allin  = asking + rehab;
-  const equity = arv - allin;
-  const equityPct = arv > 0 ? ((equity / arv) * 100).toFixed(1) : 0;
+  const arv         = n('f-arv');
+  const rehab       = n('f-rehab');
+  const asking      = n('f-asking');
+  const closingCosts = n('f-closing-costs');
+  const holding     = n('f-holding');
+  const allin       = asking + rehab;
+  const equity      = arv > 0 ? arv - allin : 0;
+  const equityPct   = arv > 0 ? ((equity / arv) * 100).toFixed(1) : 0;
+  const sellPrice   = arv > 0 ? arv * 0.85 : 0;
+  const totalCosts  = allin + closingCosts + holding;
+  const profit      = arv > 0 ? sellPrice - totalCosts : 0;
+  const roi         = totalCosts > 0 ? ((profit / totalCosts) * 100).toFixed(1) : 0;
 
-  document.getElementById('c-allin').textContent  = fmt(allin);
-  document.getElementById('c-equity').textContent = fmt(equity);
+  document.getElementById('c-allin').textContent    = fmt(allin);
+  document.getElementById('c-equity').textContent   = fmt(equity);
   document.getElementById('c-equitypct').textContent = equityPct + '%';
+  document.getElementById('c-sellprice').textContent = fmt(sellPrice);
+  document.getElementById('c-profit').textContent   = fmt(profit);
+  document.getElementById('c-roi').textContent      = roi + '%';
   render();
 }
 
@@ -473,10 +510,15 @@ function render() {
   const ctaEmail = v('f-email') || '';
   const ctaComp  = v('f-company') || 'Peach to Palms Property Group';
 
+  const closingCosts = n('f-closing-costs');
+  const holding  = n('f-holding');
   const allin    = asking + rehab;
   const equity   = arv > 0 ? arv - allin : 0;
   const equityPct = arv > 0 ? ((equity / arv) * 100).toFixed(1) : '—';
-  const profit   = exit === 'Flip' ? (arv * 0.85 - allin) : (arv > 0 ? equity : 0);
+  const sellPrice = arv > 0 ? arv * 0.85 : 0;
+  const totalCosts = allin + closingCosts + holding;
+  const profit   = arv > 0 ? sellPrice - totalCosts : 0;
+  const roi      = totalCosts > 0 ? ((profit / totalCosts) * 100).toFixed(1) : '—';
   const propSub  = [propType, beds ? `${beds}bd` : '', baths ? `${baths}ba` : '', sqft ? `${Number(sqft).toLocaleString()} sf` : '', year ? `Built ${year}` : '', area].filter(Boolean).join(' · ');
 
   const numLeft = `
@@ -491,7 +533,10 @@ function render() {
     <div>
       ${equity  ? `<div class="num-row"><span class="nl">Equity at ARV</span><span class="nv">${fmt(equity)}</span></div>` : ''}
       ${equityPct !== '—' ? `<div class="num-row"><span class="nl">Equity %</span><span class="nv">${equityPct}%</span></div>` : ''}
-      ${exit === 'Flip' && profit ? `<div class="num-row"><span class="nl">Est. Flip Profit (at 85% ARV)</span><span class="nv">${fmt(profit)}</span></div>` : ''}
+      ${sellPrice ? `<div class="num-row"><span class="nl">Sell Price (85% ARV)</span><span class="nv">${fmt(sellPrice)}</span></div>` : ''}
+      ${closingCosts ? `<div class="num-row"><span class="nl">Est. Closing Costs</span><span class="nv">${fmt(closingCosts)}</span></div>` : ''}
+      ${holding ? `<div class="num-row"><span class="nl">Est. Holding Costs</span><span class="nv">${fmt(holding)}</span></div>` : ''}
+      ${profit ? `<div class="num-row highlight"><span class="nl">Buyer's Net Profit</span><span class="nv">${fmt(profit)} ${roi !== '—' ? `<span style="font-size:11px;color:var(--muted);font-weight:400;">(${roi}% ROI)</span>` : ''}</span></div>` : ''}
       ${assignFee ? `<div class="num-row highlight"><span class="nl">Assignment Fee</span><span class="nv">${fmt(assignFee)}</span></div>` : ''}
     </div>`;
 
@@ -514,7 +559,7 @@ function render() {
       ${arv    ? `<div class="hl-card"><div class="hl-label">ARV</div><div class="hl-value">${fmt(arv)}</div><div class="hl-sub">After Repair Value</div></div>` : ''}
       ${asking ? `<div class="hl-card"><div class="hl-label">Purchase Price</div><div class="hl-value">${fmt(asking)}</div><div class="hl-sub">Contract price</div></div>` : ''}
       ${rehab  ? `<div class="hl-card"><div class="hl-label">Est. Rehab</div><div class="hl-value">${fmt(rehab)}</div><div class="hl-sub">${condition || 'Scope TBD'}</div></div>` : ''}
-      ${allin  ? `<div class="hl-card"><div class="hl-label">All-In Cost</div><div class="hl-value">${fmt(allin)}</div><div class="hl-sub">${equityPct !== '—' ? equityPct + '% equity at ARV' : ''}</div></div>` : ''}
+      ${profit ? `<div class="hl-card" style="border-color:var(--bronze);background:rgba(184,151,90,.1)"><div class="hl-label">Buyer's Net Profit</div><div class="hl-value">${fmt(profit)}</div><div class="hl-sub">${roi !== '—' ? roi + '% ROI' : equityPct !== '—' ? equityPct + '% equity' : ''}</div></div>` : (allin ? `<div class="hl-card"><div class="hl-label">All-In Cost</div><div class="hl-value">${fmt(allin)}</div><div class="hl-sub">${equityPct !== '—' ? equityPct + '% equity at ARV' : ''}</div></div>` : '')}
     </div>
 
     ${photoSection}
@@ -568,9 +613,8 @@ function copyText() {
   const asking   = n('f-asking');
   const rehab    = n('f-rehab');
   const assignFee = n('f-assignfee');
-  const allin    = asking + rehab;
-  const equity   = arv > 0 ? arv - allin : 0;
-  const equityPct = arv > 0 ? ((equity / arv) * 100).toFixed(1) : '—';
+  const closingCosts = n('f-closing-costs');
+  const holding  = n('f-holding');
   const beds     = v('f-beds');
   const baths    = v('f-baths');
   const sqft     = v('f-sqft');
@@ -583,6 +627,13 @@ function copyText() {
   const ctaName  = v('f-name');
   const ctaPhone = v('f-phone');
   const ctaEmail = v('f-email');
+  const allin    = asking + rehab;
+  const equity   = arv > 0 ? arv - allin : 0;
+  const equityPct = arv > 0 ? ((equity / arv) * 100).toFixed(1) : '—';
+  const sellPrice = arv > 0 ? arv * 0.85 : 0;
+  const totalCosts = allin + closingCosts + holding;
+  const profit   = arv > 0 ? sellPrice - totalCosts : 0;
+  const roi      = totalCosts > 0 ? ((profit / totalCosts) * 100).toFixed(1) : '—';
 
   const lines = [
     `🌿 DEAL MEMO — PEACH TO PALMS PROPERTY GROUP`,
@@ -597,6 +648,9 @@ function copyText() {
     rehab  ? `   Est. Rehab:       ${fmt(rehab)}` : '',
     allin  ? `   All-In Cost:      ${fmt(allin)}` : '',
     equity ? `   Equity at ARV:    ${fmt(equity)} (${equityPct}%)` : '',
+    closingCosts ? `   Closing Costs:    ${fmt(closingCosts)}` : '',
+    holding ? `   Holding Costs:    ${fmt(holding)}` : '',
+    profit  ? `   Buyer Net Profit: ${fmt(profit)} (${roi}% ROI)` : '',
     assignFee ? `   Assignment Fee:   ${fmt(assignFee)}` : '',
     ``,
     exit   ? `📋 Exit Strategy: ${exit}` : '',
