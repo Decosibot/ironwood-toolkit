@@ -148,6 +148,7 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
     <button class="btn btn-outline" onclick="exportJSON()">Export</button>
     <button class="btn btn-outline" onclick="importFromFirestore()">Import Deals</button>
     <button class="btn btn-orange" onclick="newMonth()">New Month</button>
+    <a class="btn btn-outline" href="Connected_Deal_Dashboard.html">⇄ Dashboard</a>
     <a class="btn btn-outline" href="index.html">← Toolkit</a>
   </div>
 </div>
@@ -578,25 +579,31 @@ async function importFromFirestore() {
   const month=document.getElementById('monthPicker').value;
   if (!month) { alert('Select a month first.'); return; }
   try {
-    const snap=await db.collection('deals')
-      .where('status','==','Closed')
-      .where('company','in',['Peach to Palms','peach-to-palms'])
-      .get();
-    if (snap.empty) { alert('No closed Peach to Palms deals found in Deal Pipeline.'); return; }
+    // Pull all Closed deals — filter to P2P by p2p sub-object presence or wholesale exit strategy
+    const snap=await db.collection('deals').where('status','==','Closed').get();
+    if (snap.empty) { alert('No closed deals found in Deal Pipeline.'); return; }
     let added=0;
     snap.docs.forEach(doc=>{
       const d=doc.data();
-      const ts=d.updatedAt?.toDate?.();
+      // P2P deals have p2p sub-object OR wholesale/creative finance exit strategy
+      const isP2P = d.p2p || ['Wholesale','Creative Finance'].includes(d.exitStrategy);
+      if (!isP2P) return;
+      const ts=d.updatedAt?.toDate?.() || d.closedAt?.toDate?.();
       if (ts) {
         const dm=ts.getFullYear()+'-'+String(ts.getMonth()+1).padStart(2,'0');
         if (dm!==month) return;
       }
-      if (d.assignmentFee>0) { addRow('revenue',d.address+' — Assignment Fee',d.assignmentFee,'Assignment Fee'); added++; }
-      else if (d.salePrice>0) { addRow('revenue',d.address+' — Closed',d.salePrice,'Wholesale'); added++; }
+      const label = d.address || 'Pipeline Deal';
+      const fee = parseFloat(d.p2p?.assignmentFee || d.assignmentFee) || 0;
+      const sale = parseFloat(d.salePrice) || 0;
+      if (fee>0) { addRow('revenue', label+' — Assignment Fee', fee, 'Assignment Fee'); added++; }
+      else if (sale>0) { addRow('revenue', label+' — Wholesale', sale, 'Wholesale'); added++; }
+      const dealCost = parseFloat(d.p2p?.dealCost) || 0;
+      if (dealCost>0) addRow('dealCosts', 'Deal Costs — '+label, dealCost, 'Deal Cost', label);
     });
     recalcAll();
-    alert(added ? `Imported ${added} deal(s).` : 'No P2P deals closed in '+month+'.');
-  } catch(e) { alert('Could not connect. Check your connection.'); }
+    alert(added ? `Imported ${added} P2P deal(s) for ${month}.` : 'No P2P deals closed in '+month+'.');
+  } catch(e) { alert('Could not connect. Check your connection.'); console.error(e); }
 }
 
 document.getElementById('monthPicker').addEventListener('change', updateHeader);

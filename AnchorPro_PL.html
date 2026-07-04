@@ -149,6 +149,7 @@ body { background: var(--bg); color: var(--ink); font-family: 'Geist', system-ui
     <button class="btn btn-outline" onclick="exportJSON()">Export</button>
     <button class="btn btn-outline" onclick="importFromFirestore()">Import Deals</button>
     <button class="btn btn-green" onclick="newMonth()">New Month</button>
+    <a class="btn btn-outline" href="Connected_Deal_Dashboard.html">⇄ Dashboard</a>
     <a class="btn btn-outline" href="index.html">← Toolkit</a>
   </div>
 </div>
@@ -625,25 +626,28 @@ async function importFromFirestore() {
   const month = document.getElementById('monthPicker').value;
   if (!month) { alert('Select a month first.'); return; }
   try {
-    const snap = await db.collection('deals')
-      .where('status','==','Closed')
-      .where('company','in',['Anchor Pro','anchor-pro'])
-      .get();
-    if (snap.empty) { alert('No closed Anchor Pro deals found in Deal Pipeline.'); return; }
+    // Pull all Closed deals — filter to Anchor Pro by anchorpro sub-object presence
+    const snap = await db.collection('deals').where('status','==','Closed').get();
+    if (snap.empty) { alert('No closed deals found in Deal Pipeline.'); return; }
     let added = 0;
     snap.docs.forEach(doc => {
       const d = doc.data();
-      const ts = d.updatedAt?.toDate?.();
+      // Only Anchor Pro deals (have anchorpro sub-object OR were scoped/decided)
+      if (!d.anchorpro && d.status !== 'Scoped' && d.status !== 'Decision') return;
+      const ts = d.updatedAt?.toDate?.() || d.closedAt?.toDate?.();
       if (ts) {
         const dm = ts.getFullYear()+'-'+String(ts.getMonth()+1).padStart(2,'0');
         if (dm !== month) return;
       }
-      if (d.salePrice > 0) { addRow('revenue', d.address+' — Closed', d.salePrice, 'Ironwood Job'); added++; }
-      if (d.rehabCost > 0) { addRow('jobCosts', 'Rehab — '+(d.address||''), d.rehabCost, 'Subcontractor', d.address||''); }
+      const scopeTotal = parseFloat(d.anchorpro?.scopeTotal || d.rehabTotal || d.rehabCost) || 0;
+      const label = d.address || 'Pipeline Deal';
+      if (scopeTotal > 0) { addRow('revenue', label+' — Job', scopeTotal, 'Remodel Job'); added++; }
+      const jobCost = parseFloat(d.rehabCost || d.rehabTotal) || 0;
+      if (jobCost > 0) { addRow('jobCosts', 'Job Costs — '+label, jobCost*0.6, 'Labor/Materials', label); }
     });
     recalcAll();
-    alert(added ? `Imported ${added} deal(s).` : 'No Anchor Pro deals closed in '+month+'.');
-  } catch(e) { alert('Could not connect. Check your connection.'); }
+    alert(added ? `Imported ${added} Anchor Pro job(s) for ${month}.` : 'No Anchor Pro jobs closed in '+month+'.');
+  } catch(e) { alert('Could not connect. Check your connection.'); console.error(e); }
 }
 
 document.getElementById('monthPicker').addEventListener('change', updateHeader);
