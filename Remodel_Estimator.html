@@ -353,6 +353,8 @@
     <div class="section-head">Connect</div>
     <button class="btn btn-outline btn-block" onclick="importFromPublicEstimator()" style="font-size:12px;">⬇ Import Lead from Public Estimator</button>
     <div id="importStatus" style="font-size:11px;color:var(--muted);margin-top:4px;text-align:center;"></div>
+    <button class="btn btn-outline btn-block" onclick="pushToDashboard()" style="font-size:12px;margin-top:8px;">⬆ Push Rehab Cost to Dashboard</button>
+    <div id="dashboardPushStatus" style="font-size:11px;color:var(--muted);margin-top:4px;text-align:center;"></div>
 
     <button class="btn btn-gold btn-block" onclick="saveJob()">&#10003; Save Job</button>
     <button class="btn btn-outline btn-block" onclick="newJob()">+ New Job</button>
@@ -1696,6 +1698,46 @@ function importFromPublicEstimator() {
   const age = ctx.date ? Math.round((Date.now() - new Date(ctx.date)) / 60000) : null;
   status.textContent = `✓ Imported${age !== null ? ` (submitted ${age < 60 ? age + ' min ago' : Math.round(age/60) + ' hr ago'})` : ''}`;
   status.style.color = 'var(--success)';
+}
+
+// ── PUSH REHAB COST TO DASHBOARD ──
+function pushToDashboard() {
+  collectSidebar();
+  const status = document.getElementById('dashboardPushStatus');
+  const totalEl = document.getElementById('t-total');
+  const rehabTotal = parseFloat((totalEl?.textContent || '').replace(/[^0-9.]/g,'')) || 0;
+  if (!rehabTotal) { status.textContent = '⚠ No total yet — add line items first'; status.style.color = 'var(--danger)'; return; }
+
+  const matMu = (parseFloat(job.matMarkup) || 25) / 100;
+  const labMu = (parseFloat(job.labMarkup) || 35) / 100;
+  const cats = (job.categories || []).map(c => ({
+    name: c.name,
+    total: (job.items || []).filter(i => i.catId === c.id).reduce((s,i) => {
+      const mu = i.type === 'material' ? matMu : i.type === 'labor' ? labMu : 0;
+      return s + ((i.qty||0)*(i.cost||0)*(1+mu));
+    }, 0)
+  })).filter(c => c.total > 0);
+
+  const payload = {
+    _source: 'Remodel Estimator',
+    address: job.jobAddress || job.clientName || '',
+    rehabTotal,
+    scopeSummary: job.scopeSummary || '',
+    scopeCategories: cats,
+    clientName: job.clientName || '',
+    jobType: job.jobType || '',
+    timestamp: new Date().toISOString(),
+  };
+
+  try {
+    localStorage.setItem('iw_remodeler_output', JSON.stringify(payload));
+    localStorage.setItem('iw_dashboard_push', JSON.stringify(payload));
+    status.textContent = `✓ Pushed $${rehabTotal.toLocaleString()} to Dashboard`;
+    status.style.color = 'var(--success)';
+  } catch(e) {
+    status.textContent = '⚠ Error — could not write to localStorage';
+    status.style.color = 'var(--danger)';
+  }
 }
 
 // ── PANEL TOGGLE ──

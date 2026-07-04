@@ -166,6 +166,28 @@ textarea.dm-input { resize: vertical; min-height: 72px; }
 .alert-banner { background: #fff3e8; border: 1px solid #f0c080; border-radius: var(--radius); padding: 12px 16px; font-size: 13px; color: #7a4010; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
 .alert-banner strong { font-weight: 700; }
 
+/* ── IMPORT BANNER ── */
+.import-banner { background: #eefaf3; border: 1px solid #a8d8b8; border-radius: var(--radius); padding: 14px 18px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.import-banner .ib-text { font-size: 13px; color: #1a4d32; font-weight: 600; }
+.import-banner .ib-sub { font-size: 11px; color: #2d7a50; margin-top: 2px; }
+.import-banner .ib-actions { display: flex; gap: 8px; }
+
+/* ── TOOL PUSH BUTTONS ── */
+.tool-push-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 14px; }
+.tool-push-btn { padding: 10px 14px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; border: 1px solid var(--hairline); background: var(--surface); color: var(--ink-soft); font-family: inherit; transition: all .15s; text-align: left; }
+.tool-push-btn:hover { border-color: var(--bronze); color: var(--bronze); }
+.tool-push-btn .tpb-label { font-size: 10px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: .5px; display: block; margin-bottom: 2px; }
+.tool-push-btn.active-push { border-color: #1a4d32; background: #eefaf3; color: #1a4d32; }
+
+/* ── ANALYSIS RESULTS ── */
+.analysis-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 12px; }
+.analysis-card { background: var(--bg); border: 1px solid var(--hairline); border-radius: 8px; padding: 12px 14px; }
+.analysis-card .ac-label { font-size: 9px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; font-weight: 700; }
+.analysis-card .ac-source { font-size: 9px; color: var(--bronze); margin-bottom: 4px; }
+.analysis-card .ac-val { font-size: 16px; font-weight: 700; color: var(--ink); }
+.analysis-card.highlight { border-color: var(--bronze); background: var(--bronze-wash); }
+.analysis-card.highlight .ac-val { color: var(--bronze-deep); }
+
 /* ── EMPTY ── */
 .empty-kanban { text-align: center; color: var(--muted); font-size: 12px; padding: 24px 8px; }
 
@@ -197,6 +219,18 @@ textarea.dm-input { resize: vertical; min-height: 72px; }
 </div>
 
 <div class="cdd-wrap">
+
+  <!-- IMPORT BANNER (shown when tool data detected) -->
+  <div class="import-banner" id="import-banner" style="display:none;">
+    <div>
+      <div class="ib-text" id="ib-text">📋 Data available from an external tool</div>
+      <div class="ib-sub" id="ib-sub">Click Load to create a new deal with this data pre-filled</div>
+    </div>
+    <div class="ib-actions">
+      <button class="dm-btn primary" onclick="applyToolImport()">Load into Dashboard</button>
+      <button class="dm-btn" onclick="dismissToolImport()">Dismiss</button>
+    </div>
+  </div>
 
   <!-- COMPANY TABS -->
   <div class="co-tabs">
@@ -292,6 +326,7 @@ textarea.dm-input { resize: vertical; min-height: 72px; }
       <button class="dm-tab" id="mtab-anchor"           onclick="setModalTab('anchor')">Anchor Pro</button>
       <button class="dm-tab" id="mtab-ironwood"         onclick="setModalTab('ironwood')">Ironwood</button>
       <button class="dm-tab" id="mtab-waterfall"        onclick="setModalTab('waterfall')">Waterfall</button>
+      <button class="dm-tab" id="mtab-tools"            onclick="setModalTab('tools')">⇄ Tools</button>
     </div>
 
     <div class="dm-body" id="dm-body"></div>
@@ -347,6 +382,7 @@ let activeModalTab = 'overview';
 // ── INIT ──
 window.addEventListener('load', () => {
   setCoTab('all');
+  checkToolImports();
   db.collection('deals').orderBy('createdAt','desc').onSnapshot(snap => {
     allDeals = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     render();
@@ -549,7 +585,7 @@ function closeModal() {
 // ── MODAL TAB ──
 function setModalTab(tab) {
   activeModalTab = tab;
-  ['overview','p2p','anchor','ironwood','waterfall'].forEach(t => {
+  ['overview','p2p','anchor','ironwood','waterfall','tools'].forEach(t => {
     document.getElementById('mtab-' + t).classList.toggle('active', t === tab);
   });
   renderModalBody();
@@ -763,6 +799,88 @@ function renderModalBody() {
 
   } else if (activeModalTab === 'waterfall') {
     renderWaterfall(body, d);
+
+  } else if (activeModalTab === 'tools') {
+    const rehabFromEst = d.rehabFromEstimator || null;
+    const brrrr = d.brrrrResult || {};
+    const mao   = d.maoResult   || {};
+
+    body.innerHTML = `
+      <!-- PULL FROM TOOLS -->
+      <div class="dm-section">
+        <div class="dm-section-title">Pull Data Into This Deal</div>
+
+        <div style="background:var(--bg);border:1px solid var(--hairline);border-radius:8px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--ink);">Remodel Estimator → Rehab Cost</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px;">${rehabFromEst ? `Last import: ${fmt(rehabFromEst)}` : 'No import yet — open Remodel Estimator and push to dashboard'}</div>
+            </div>
+            <button class="dm-btn" onclick="pullFromRemodeler()" style="flex-shrink:0;">⬇ Pull Rehab Cost</button>
+          </div>
+          ${rehabFromEst ? `<div style="margin-top:8px;padding:8px 12px;background:var(--bronze-wash);border-radius:6px;font-size:13px;font-weight:700;color:var(--bronze-deep);">Rehab Total: ${fmt(rehabFromEst)}</div>` : ''}
+        </div>
+
+        <div style="background:var(--bg);border:1px solid var(--hairline);border-radius:8px;padding:14px;margin-bottom:12px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--ink);">BRRRR Analyzer → Hold Analysis</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px;">${brrrr.cashFlow ? `Cash flow: ${fmt(brrrr.cashFlow)}/mo · Refi: ${fmt(brrrr.refiProceeds)}` : 'No BRRRR analysis yet'}</div>
+            </div>
+            <button class="dm-btn" onclick="pullFromBRRRR()">⬇ Pull BRRRR Result</button>
+          </div>
+          ${brrrr.cashFlow ? `<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+            <div class="analysis-card"><div class="ac-label">Monthly Cash Flow</div><div class="ac-val">${fmt(brrrr.cashFlow)}</div></div>
+            <div class="analysis-card"><div class="ac-label">Refi Proceeds</div><div class="ac-val">${fmt(brrrr.refiProceeds)}</div></div>
+            <div class="analysis-card highlight"><div class="ac-label">Deal Grade</div><div class="ac-val">${brrrr.grade || '—'}</div></div>
+          </div>` : ''}
+        </div>
+
+        <div style="background:var(--bg);border:1px solid var(--hairline);border-radius:8px;padding:14px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;">
+            <div>
+              <div style="font-size:12px;font-weight:700;color:var(--ink);">MAO Calculator → Max Offer</div>
+              <div style="font-size:11px;color:var(--muted);margin-top:2px;">${mao.maxOffer ? `MAO: ${fmt(mao.maxOffer)} · Discount: ${mao.discountPct || '—'}%` : 'No MAO result yet'}</div>
+            </div>
+            <button class="dm-btn" onclick="pullFromMAO()">⬇ Pull MAO Result</button>
+          </div>
+          ${mao.maxOffer ? `<div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <div class="analysis-card highlight"><div class="ac-label">Max Allowable Offer</div><div class="ac-val">${fmt(mao.maxOffer)}</div></div>
+            <div class="analysis-card"><div class="ac-label">Discount %</div><div class="ac-val">${mao.discountPct || '—'}%</div></div>
+          </div>` : ''}
+        </div>
+      </div>
+
+      <!-- PUSH TO TOOLS -->
+      <div class="dm-section">
+        <div class="dm-section-title">Push This Deal to Tools</div>
+        <div class="tool-push-grid">
+          <button class="tool-push-btn" onclick="pushToTool('brrrr')">
+            <span class="tpb-label">Peach to Palms</span>
+            📊 Open in BRRRR Analyzer
+          </button>
+          <button class="tool-push-btn" onclick="pushToTool('mao')">
+            <span class="tpb-label">Peach to Palms</span>
+            🧮 Open in MAO Calculator
+          </button>
+          <button class="tool-push-btn" onclick="pushToTool('remodeler')">
+            <span class="tpb-label">Ironwood</span>
+            🔨 Open in Remodel Estimator
+          </button>
+          <button class="tool-push-btn" onclick="pushToTool('dealmemo')">
+            <span class="tpb-label">Peach to Palms</span>
+            📄 Send to Deal Memo (Final)
+          </button>
+          <button class="tool-push-btn" onclick="pushToTool('pitch')">
+            <span class="tpb-label">Peach to Palms</span>
+            💼 Send to Private Money Pitch
+          </button>
+          <button class="tool-push-btn" onclick="pushToTool('trackrecord')">
+            <span class="tpb-label">Peach to Palms</span>
+            ✅ Log to Track Record
+          </button>
+        </div>
+      </div>`;
   }
 }
 
@@ -1100,6 +1218,164 @@ async function deleteDeal() {
     showToast('Deal deleted');
   } catch(e) {
     showToast('Error deleting');
+  }
+}
+
+// ── TOOL IMPORT BANNER ──
+let _pendingToolImport = null;
+
+function checkToolImports() {
+  // Check for data pushed from any tool (Remodel Estimator, customer estimators)
+  let data = null;
+  let source = '';
+
+  try {
+    const raw = localStorage.getItem('iw_dashboard_push');
+    if (raw) { data = JSON.parse(raw); source = 'iw_dashboard_push'; }
+  } catch(e) {}
+
+  if (!data) {
+    try {
+      const raw = localStorage.getItem('ironwood_latest_lead');
+      if (raw) {
+        const lead = JSON.parse(raw);
+        if (lead && lead.address) { data = { address: lead.address, clientName: lead.firstName + ' ' + lead.lastName, phone: lead.phone, email: lead.email, projectType: lead.projectType }; source = 'ironwood_latest_lead'; }
+      }
+    } catch(e) {}
+  }
+
+  if (!data) return;
+  _pendingToolImport = { data, source };
+  const toolName = source === 'iw_dashboard_push' ? (data._source || 'Tool') : 'Customer Estimator';
+  document.getElementById('ib-text').textContent = `📋 ${toolName} data ready — "${data.address || 'New Deal'}"`;
+  document.getElementById('ib-sub').textContent  = source === 'ironwood_latest_lead'
+    ? `Lead from: ${data.clientName || ''} · ${data.projectType || 'Project'}`
+    : `ARV: ${data.arv ? '$' + Number(data.arv).toLocaleString() : '—'} · Rehab: ${data.rehabTotal ? '$' + Number(data.rehabTotal).toLocaleString() : '—'}`;
+  document.getElementById('import-banner').style.display = 'flex';
+}
+
+function applyToolImport() {
+  if (!_pendingToolImport) return;
+  const { data, source } = _pendingToolImport;
+  // Open new deal modal pre-filled
+  activeDeal = null; scopeItems = []; drawItems = [];
+  setModalTab('overview');
+  document.getElementById('dm-address').textContent = data.address || 'New Deal';
+  document.getElementById('dm-meta').textContent = 'Pre-filled from ' + (data._source || 'tool import');
+  document.getElementById('dm-delete-btn').style.display = 'none';
+  document.getElementById('deal-modal').classList.add('open');
+  // Pre-fill after modal renders
+  setTimeout(() => {
+    const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+    set('ov-address', data.address);
+    set('ov-arv', data.arv);
+    set('ov-purchase', data.purchasePrice || data.maoResult?.maxOffer);
+    if (data.rehabTotal) {
+      // Will auto-populate scope total
+      activeDeal = activeDeal || {};
+      activeDeal._rehabFromEstimator = data.rehabTotal;
+    }
+    updateMaoHint();
+  }, 100);
+  dismissToolImport();
+}
+
+function dismissToolImport() {
+  document.getElementById('import-banner').style.display = 'none';
+  localStorage.removeItem('iw_dashboard_push');
+  _pendingToolImport = null;
+}
+
+// ── PULL FROM TOOLS (read localStorage written by each tool) ──
+async function pullFromRemodeler() {
+  let data;
+  try { data = JSON.parse(localStorage.getItem('iw_remodeler_output') || 'null'); } catch(e) {}
+  if (!data || !data.rehabTotal) { showToast('No Remodel Estimator output found — finalize a job there first'); return; }
+  if (!activeDeal?.id) { showToast('Save this deal first, then pull'); return; }
+  await db.collection('deals').doc(activeDeal.id).update({
+    rehabTotal: data.rehabTotal,
+    rehabFromEstimator: data.rehabTotal,
+    'anchorpro.scopeTotal': data.rehabTotal,
+    'anchorpro.scopeSummary': data.scopeSummary || '',
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  activeDeal.rehabFromEstimator = data.rehabTotal;
+  activeDeal.rehabTotal = data.rehabTotal;
+  showToast('Rehab cost imported: ' + fmt(data.rehabTotal));
+  renderModalBody();
+}
+
+async function pullFromBRRRR() {
+  let data;
+  try { data = JSON.parse(localStorage.getItem('iw_brrrr_output') || 'null'); } catch(e) {}
+  if (!data) { showToast('No BRRRR result found — run an analysis there first'); return; }
+  if (!activeDeal?.id) { showToast('Save this deal first'); return; }
+  await db.collection('deals').doc(activeDeal.id).update({
+    brrrrResult: data,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  activeDeal.brrrrResult = data;
+  showToast('BRRRR result imported');
+  renderModalBody();
+}
+
+async function pullFromMAO() {
+  let data;
+  try { data = JSON.parse(localStorage.getItem('iw_mao_output') || 'null'); } catch(e) {}
+  if (!data) { showToast('No MAO result found — run the calculator first'); return; }
+  if (!activeDeal?.id) { showToast('Save this deal first'); return; }
+  await db.collection('deals').doc(activeDeal.id).update({
+    maoResult: data,
+    purchasePrice: data.maxOffer || activeDeal.purchasePrice,
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  activeDeal.maoResult = data;
+  showToast('MAO result imported: ' + fmt(data.maxOffer));
+  renderModalBody();
+}
+
+// ── PUSH TO TOOLS (write localStorage, then open the tool) ──
+function pushToTool(tool) {
+  const d = activeDeal || {};
+  const payload = {
+    _source: 'Connected Deal Dashboard',
+    _dealId: d.id || null,
+    address: d.address || '',
+    arv: d.arv || 0,
+    purchasePrice: d.purchasePrice || d.maoResult?.maxOffer || 0,
+    rehabTotal: d.rehabTotal || d.rehabFromEstimator || 0,
+    exitStrategy: d.exitStrategy || '',
+    assignmentFee: d.p2p?.assignmentFee || 0,
+    sellerName: d.p2p?.sellerName || '',
+    brrrrResult: d.brrrrResult || null,
+    maoResult: d.maoResult || null,
+    closingCosts: d.closingCosts || 0,
+    carryingCosts: d.carryingCosts || 0,
+    salePrice: d.salePrice || 0,
+  };
+
+  const urls = {
+    brrrr:       'IPG_BRRRRAnalyzer.html',
+    mao:         'MAO_Calculator.html',
+    remodeler:   'Remodel_Estimator.html',
+    dealmemo:    'Deal_Memo.html',
+    pitch:       'Lender_Package.html',
+    trackrecord: 'Track_Record.html',
+  };
+
+  const keys = {
+    brrrr:       'iw_brrrr_input',
+    mao:         'iw_mao_input',
+    remodeler:   'iw_remodeler_input',
+    dealmemo:    'iw_dealmemo_input',
+    pitch:       'iw_pitch_input',
+    trackrecord: 'iw_trackrecord_input',
+  };
+
+  try { localStorage.setItem(keys[tool], JSON.stringify(payload)); } catch(e) {}
+  if (urls[tool]) {
+    showToast('Deal pushed — opening ' + tool + '…');
+    setTimeout(() => window.open(urls[tool], '_blank'), 400);
   }
 }
 
