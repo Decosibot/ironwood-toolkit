@@ -1,0 +1,1316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>n8n Workflow Ecosystem — Ironwood Property Group</title>
+  <link rel="stylesheet" href="iw-design.css" />
+  <style>
+    /* ── PAGE-SPECIFIC OVERRIDES ── */
+    body { background: var(--bg); }
+
+    /* ── PRINT ── */
+    @media print {
+      .iw-header, .iw-footer { display: none !important; }
+      .swimlane-scroll { overflow: visible !important; }
+      body { font-size: 11px; }
+      .node-card { break-inside: avoid; }
+    }
+
+    /* ── ALERT BOX ── */
+    .alert-broken {
+      background: var(--red-tint);
+      border: 1.5px solid var(--red);
+      border-radius: var(--radius-lg);
+      padding: 20px 28px;
+      margin: 28px 28px 0;
+    }
+    .alert-broken h3 {
+      font-family: 'Geist', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--red);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .alert-broken ol {
+      padding-left: 20px;
+      margin: 0;
+    }
+    .alert-broken ol li {
+      font-size: 13px;
+      color: #6B1A0A;
+      line-height: 1.7;
+      margin-bottom: 4px;
+    }
+    .alert-broken ol li strong {
+      color: var(--red);
+    }
+    .alert-broken ol li code {
+      background: rgba(181,52,26,.12);
+      border: 1px solid rgba(181,52,26,.25);
+      border-radius: 4px;
+      padding: 1px 6px;
+      font-size: 12px;
+      font-family: 'Geist Mono', 'Courier New', monospace;
+      color: var(--red);
+    }
+
+    /* ── SWIMLANE CONTAINER ── */
+    .swimlane-wrapper {
+      padding: 28px 28px 0;
+    }
+    .swimlane-scroll {
+      overflow-x: auto;
+      padding-bottom: 32px;
+    }
+    .swimlane-grid {
+      display: flex;
+      gap: 0;
+      min-width: max-content;
+      align-items: stretch;
+    }
+
+    /* ── COLUMN ── */
+    .col {
+      width: 260px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+    }
+    .col-header {
+      font-family: 'Instrument Serif', serif;
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--ink);
+      text-align: center;
+      padding: 10px 12px;
+      border-radius: var(--radius) var(--radius) 0 0;
+      border: 1.5px solid var(--hairline);
+      border-bottom: none;
+      margin-bottom: 0;
+      letter-spacing: -.01em;
+    }
+    .col-header span.col-sub {
+      display: block;
+      font-family: 'Geist', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    .col-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 10px 10px 10px;
+      background: rgba(255,255,255,.45);
+      border: 1.5px solid var(--hairline);
+      border-radius: 0 0 var(--radius) var(--radius);
+    }
+
+    /* Column color themes */
+    .col-lead    .col-header { background: #FEF3E2; border-color: #F0C080; }
+    .col-lead    .col-body   { background: rgba(254,243,226,.35); border-color: #F0C080; }
+    .col-route   .col-header { background: var(--bronze-tint); border-color: var(--bronze); }
+    .col-route   .col-body   { background: rgba(214,227,240,.25); border-color: var(--bronze); }
+    .col-nurture .col-header { background: var(--green-tint); border-color: #74C69D; }
+    .col-nurture .col-body   { background: rgba(216,243,220,.25); border-color: #74C69D; }
+    .col-deal    .col-header { background: #FEF3CD; border-color: #E6C85A; }
+    .col-deal    .col-body   { background: rgba(254,243,205,.25); border-color: #E6C85A; }
+    .col-anchor  .col-header { background: #DCEEFF; border-color: #7FB3E8; }
+    .col-anchor  .col-body   { background: rgba(220,238,255,.25); border-color: #7FB3E8; }
+    .col-content .col-header { background: #EDE8F5; border-color: #B8A8D8; }
+    .col-content .col-body   { background: rgba(237,232,245,.25); border-color: #B8A8D8; }
+    .col-webinar .col-header { background: #FDE8D8; border-color: #E8A87C; }
+    .col-webinar .col-body   { background: rgba(253,232,216,.25); border-color: #E8A87C; }
+
+    /* ── NODE CARD ── */
+    .node-card {
+      background: var(--surface);
+      border: 1px solid var(--hairline);
+      border-left: 3.5px solid var(--hairline);
+      border-radius: var(--radius);
+      padding: 10px 12px 10px 11px;
+      box-shadow: 0 1px 3px rgba(28,24,20,.06);
+      position: relative;
+    }
+    .node-card.status-active {
+      border-left-color: var(--green);
+    }
+    .node-card.status-broken {
+      border-left-color: var(--red);
+      background: #FFFAF9;
+    }
+    .node-card.status-inactive {
+      border-left-color: #CCCCCC;
+      opacity: .82;
+    }
+    .node-card.status-new {
+      border-left-color: #4A6FA5;
+      background: #F5F9FF;
+    }
+
+    /* card header row */
+    .node-header {
+      display: flex;
+      align-items: flex-start;
+      gap: 7px;
+      margin-bottom: 5px;
+    }
+    .node-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+      margin-top: 4px;
+    }
+    .status-active  .node-dot { background: var(--green); }
+    .status-broken  .node-dot { background: var(--red); }
+    .status-inactive .node-dot { background: #AAAAAA; }
+    .status-new      .node-dot { background: #4A6FA5; }
+
+    .node-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--ink);
+      line-height: 1.35;
+      flex: 1;
+    }
+
+    .node-badge {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      padding: 2px 7px;
+      border-radius: 20px;
+      flex-shrink: 0;
+      white-space: nowrap;
+    }
+    .badge-broken   { background: var(--red-tint);    color: var(--red);       border: 1px solid rgba(181,52,26,.3); }
+    .badge-inactive { background: #F0EEEB;             color: #888;             border: 1px solid #DDDDDD; }
+    .badge-new      { background: #E8EFF9;             color: #3A5A8A;          border: 1px solid #B8CAEA; }
+
+    .node-trigger {
+      font-size: 10.5px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .node-trigger::before {
+      content: '⚡';
+      font-size: 9px;
+    }
+
+    .node-desc {
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .node-desc strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    /* grouped card */
+    .node-card.grouped {
+      border-left-width: 3.5px;
+      border-left-color: var(--green);
+    }
+    .group-label {
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--green);
+      margin-bottom: 8px;
+      padding-bottom: 6px;
+      border-bottom: 1px solid var(--green-tint);
+    }
+    .sequence-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: 6px;
+    }
+    .seq-pill {
+      font-size: 10px;
+      background: var(--green-tint);
+      color: var(--green);
+      border: 1px solid rgba(45,106,79,.2);
+      border-radius: 12px;
+      padding: 2px 8px;
+      white-space: nowrap;
+    }
+
+    /* ── CONNECTOR COLUMN ── */
+    .connector-col {
+      width: 40px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      padding-top: 46px; /* clear column header height */
+    }
+    .connector-block {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      flex: 1;
+      justify-content: center;
+      gap: 4px;
+    }
+    .arrow-line {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .arrow-shaft {
+      width: 2px;
+      height: 24px;
+      background: var(--hairline);
+      border-radius: 1px;
+    }
+    .arrow-head {
+      width: 0;
+      height: 0;
+      border-left: 5px solid transparent;
+      border-right: 5px solid transparent;
+      border-top: 7px solid var(--hairline);
+    }
+    /* horizontal arrow between columns */
+    .h-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .h-arrow-line {
+      width: 28px;
+      height: 2px;
+      background: var(--bronze);
+      border-radius: 1px;
+    }
+    .h-arrow-tip {
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 8px solid var(--bronze);
+      margin-left: 28px;
+      margin-top: -13px;
+    }
+    .h-arrow-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      color: var(--bronze);
+      white-space: nowrap;
+      margin-top: 6px;
+    }
+
+    /* Combined horiz arrow as a single shape */
+    .col-arrow {
+      width: 40px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding-top: 46px;
+    }
+    .col-arrow-inner {
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .arrow-h {
+      display: flex;
+      align-items: center;
+    }
+    .arrow-h-line {
+      width: 20px;
+      height: 2px;
+      background: var(--bronze);
+      border-radius: 1px;
+    }
+    .arrow-h-tip {
+      width: 0;
+      height: 0;
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 7px solid var(--bronze);
+    }
+    .arrow-h-label {
+      font-size: 9px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .07em;
+      color: var(--muted);
+      text-align: center;
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+
+    /* ── MULTI-ARROW between Routing → multiple destinations ── */
+    .col-arrow-multi {
+      width: 40px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding-top: 46px;
+      gap: 0;
+    }
+    .multi-arrow-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0;
+      width: 100%;
+    }
+    .multi-arrow-label {
+      font-size: 8.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: var(--bronze);
+      text-align: center;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+    .multi-arrow-stem {
+      width: 2px;
+      background: var(--bronze);
+      flex: 1;
+      min-height: 20px;
+      border-radius: 1px;
+    }
+    .multi-arrow-bend {
+      width: 18px;
+      height: 12px;
+      border-top: 2px solid var(--bronze);
+      border-right: 2px solid var(--bronze);
+      border-radius: 0 4px 0 0;
+    }
+    .multi-arrow-line {
+      display: flex;
+      align-items: center;
+      gap: 0;
+    }
+    .multi-line-shaft {
+      width: 10px;
+      height: 2px;
+      background: var(--bronze);
+    }
+    .multi-line-tip {
+      width: 0; height: 0;
+      border-top: 4px solid transparent;
+      border-bottom: 4px solid transparent;
+      border-left: 6px solid var(--bronze);
+    }
+
+    /* ── OUTPUTS ROW ── */
+    .outputs-section {
+      padding: 28px 28px;
+    }
+    .outputs-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .1em;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .outputs-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .output-badge {
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--hairline);
+      background: var(--surface);
+      color: var(--ink);
+      white-space: nowrap;
+    }
+    .output-badge.inactive {
+      color: var(--muted);
+      opacity: .7;
+      font-style: italic;
+    }
+    .output-badge.active-dest {
+      border-color: var(--green);
+      background: var(--green-tint);
+      color: var(--green);
+    }
+    .output-badge.warn-dest {
+      border-color: #E6C85A;
+      background: #FEF9E3;
+      color: #856A00;
+    }
+
+    /* ── LEGEND ── */
+    .legend-section {
+      padding: 0 28px 28px;
+    }
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      align-items: center;
+    }
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .legend-bar {
+      width: 16px;
+      height: 3px;
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* ── STATS BAR ── */
+    .stats-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 18px 28px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--hairline);
+    }
+    .stat-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--muted);
+    }
+    .stat-pill .stat-num {
+      font-family: 'Instrument Serif', serif;
+      font-size: 22px;
+      line-height: 1;
+    }
+    .stat-pill.total .stat-num { color: var(--ink); }
+    .stat-pill.active-stat .stat-num { color: var(--green); }
+    .stat-pill.broken-stat .stat-num { color: var(--red); }
+    .stat-pill.inactive-stat .stat-num { color: #AAAAAA; }
+    .stat-pill.new-stat .stat-num { color: #4A6FA5; }
+    .stat-divider {
+      width: 1px;
+      height: 28px;
+      background: var(--hairline);
+      align-self: center;
+    }
+
+    /* ── SECTION DIVIDER ── */
+    .section-rule {
+      border: none;
+      border-top: 1px solid var(--hairline);
+      margin: 0 28px;
+    }
+
+    /* ── PRINT BTN ── */
+    .print-btn {
+      font-size: 13px;
+      color: var(--muted);
+      background: none;
+      border: 1px solid var(--hairline);
+      border-radius: 20px;
+      padding: 6px 14px;
+      cursor: pointer;
+      font-family: 'Geist', sans-serif;
+      transition: all .2s;
+    }
+    .print-btn:hover { color: var(--bronze); border-color: var(--bronze); }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     HEADER
+══════════════════════════════════════════════ -->
+<header class="iw-header">
+  <a href="index.html" class="iw-logo-area">
+    <div class="iw-logo-box">I</div>
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">TOOLKIT</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <a href="index.html" class="iw-back-btn">← Toolkit</a>
+    <button class="print-btn" onclick="window.print()">⎙ Print</button>
+  </div>
+</header>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<div class="iw-hero">
+  <div class="iw-eyebrow">Automation Infrastructure</div>
+  <h1>n8n Workflow Ecosystem</h1>
+  <p>60 workflows &middot; 37 active &middot; 4 broken &middot; 22 inactive &middot; 1 new</p>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     STATS BAR
+══════════════════════════════════════════════ -->
+<div class="stats-bar">
+  <div class="stat-pill total">
+    <span class="stat-num">60</span>
+    <span>Total Workflows</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat-pill active-stat">
+    <span class="stat-num">37</span>
+    <span>Active &amp; Working</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat-pill broken-stat">
+    <span class="stat-num">4</span>
+    <span>Active &amp; Broken</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat-pill inactive-stat">
+    <span class="stat-num">22</span>
+    <span>Inactive / Stub</span>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat-pill new-stat">
+    <span class="stat-num">1</span>
+    <span>New (just built)</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     BROKEN WORKFLOWS ALERT
+══════════════════════════════════════════════ -->
+<div class="alert-broken">
+  <h3>&#9888; Active Workflows Currently Failing</h3>
+  <ol>
+    <li><strong>Daily Content Briefing</strong> — <code>$env.ANTHROPIC_API_KEY</code> blocked on n8n Cloud &rarr; replace with actual hardcoded key in the Claude HTTP Request node</li>
+    <li><strong>Lead Scoring &amp; Prioritization</strong> — Google Sheets tab name not resolving &rarr; re-select the correct tab inside the Google Sheets node</li>
+    <li><strong>Social Media Graphic Generator</strong> — Claude response mismatch + invalid Canva header syntax &rarr; fix Parse Copy node expression + correct the Canva API header field</li>
+    <li><strong>Content Reply Handler</strong> — same <code>$env</code> Claude key issue as Daily Content Briefing &rarr; replace with actual key in Claude node</li>
+  </ol>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     SWIMLANE
+══════════════════════════════════════════════ -->
+<div class="swimlane-wrapper">
+  <div class="swimlane-scroll">
+    <div class="swimlane-grid">
+
+      <!-- ════════════════════════════════
+           COL 1: LEAD ENTRY
+      ════════════════════════════════ -->
+      <div class="col col-lead">
+        <div class="col-header">
+          Lead Entry
+          <span class="col-sub">Inbound Sources</span>
+        </div>
+        <div class="col-body">
+
+          <!-- REI Reply -->
+          <div class="node-card status-inactive">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">REI Reply Voicemail</div>
+              <span class="node-badge badge-inactive">Inactive</span>
+            </div>
+            <div class="node-trigger">Inbound Call</div>
+            <div class="node-desc">AI scores HOT / WARM / COLD &rarr; Deal Pipeline. Blocked on REI Reply API key.</div>
+          </div>
+
+          <!-- ManyChat -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">ManyChat Instagram DMs</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Instagram DMs &rarr; Lead Intake &rarr; ManyChat Bridge</div>
+          </div>
+
+          <!-- Website Forms -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Website Forms</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Feeds <strong>Lead Magnet Router</strong> for all buyer/seller form submissions</div>
+          </div>
+
+          <!-- Home Valuation -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Home Valuation Form</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">&rarr; Instant Home Valuation workflow + Lead Magnet Router</div>
+          </div>
+
+          <!-- Facebook Lead Ad -->
+          <div class="node-card status-inactive">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Facebook Lead Ad</div>
+              <span class="node-badge badge-inactive">Inactive</span>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">&rarr; Lead routing. Credential not connected.</div>
+          </div>
+
+          <!-- Pressure Washing Form -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Pressure Washing Form</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">&rarr; Pressure Washing workflow cluster (Leads &rarr; Booking &rarr; Callbacks)</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ARROW 1→2 -->
+      <div class="col-arrow">
+        <div class="col-arrow-inner">
+          <div class="arrow-h">
+            <div class="arrow-h-line"></div>
+            <div class="arrow-h-tip"></div>
+          </div>
+          <div class="arrow-h-label">Routes<br>leads</div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════
+           COL 2: ROUTING & SCORING
+      ════════════════════════════════ -->
+      <div class="col col-route">
+        <div class="col-header">
+          Routing &amp; Scoring
+          <span class="col-sub">Hub Layer</span>
+        </div>
+        <div class="col-body">
+
+          <!-- Lead Magnet Router -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Lead Magnet Router</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc"><strong>HUB</strong> — routes all website leads to correct nurture sequence by buyer type + location</div>
+          </div>
+
+          <!-- ManyChat Bridge -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">ManyChat to n8n Bridge</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Routes by keyword: seller / buyer / investor / webinar / home value</div>
+          </div>
+
+          <!-- Lead Scoring -->
+          <div class="node-card status-broken">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">P2P Lead Scoring &amp; Prioritization</div>
+              <span class="node-badge badge-broken">BROKEN</span>
+            </div>
+            <div class="node-trigger">Schedule — daily noon</div>
+            <div class="node-desc">Pulls leads from Sheets, scores HOT/WARM/COLD, emails Ty for HOT leads. <strong>Fix:</strong> re-select Sheets tab.</div>
+          </div>
+
+          <!-- GHL SMS Nurture -->
+          <div class="node-card status-inactive">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">P2P GHL SMS Nurture</div>
+              <span class="node-badge badge-inactive">Inactive</span>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">GHL API key missing — not functional</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ARROW 2→3 (multi) -->
+      <div class="col-arrow">
+        <div class="col-arrow-inner">
+          <div class="arrow-h">
+            <div class="arrow-h-line"></div>
+            <div class="arrow-h-tip"></div>
+          </div>
+          <div class="arrow-h-label">Nurture<br>&amp; deal</div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════
+           COL 3: NURTURE SEQUENCES
+      ════════════════════════════════ -->
+      <div class="col col-nurture">
+        <div class="col-header">
+          Email Nurture (P2P)
+          <span class="col-sub">12 AI Sequences + Campaigns</span>
+        </div>
+        <div class="col-body">
+
+          <!-- 12 Sequences grouped -->
+          <div class="node-card grouped status-active">
+            <div class="group-label">12 Claude AI Email Sequences</div>
+            <div class="node-trigger" style="margin-bottom:6px;">⚡ Sub-workflow (fed by Lead Magnet Router)</div>
+            <div class="node-desc">Claude generates personalized emails &rarr; Gmail sends with 2–4 day waits</div>
+            <div class="sequence-list">
+              <span class="seq-pill">Beginner REI</span>
+              <span class="seq-pill">Emerald Coast</span>
+              <span class="seq-pill">First-Time Buyer</span>
+              <span class="seq-pill">Rental Analysis</span>
+              <span class="seq-pill">STR Playbook</span>
+              <span class="seq-pill">30-Day Home Prep</span>
+              <span class="seq-pill">Affordability</span>
+              <span class="seq-pill">Home Valuation</span>
+              <span class="seq-pill">Move-Up Buyer</span>
+              <span class="seq-pill">Atlanta Suburbs</span>
+              <span class="seq-pill">Sell First or Buy First</span>
+              <span class="seq-pill">Down Payment Decoded</span>
+            </div>
+          </div>
+
+          <!-- Buyer SMS -->
+          <div class="node-card status-inactive">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Buyer Nurture SMS</div>
+              <span class="node-badge badge-inactive">Inactive</span>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">5-step SMS drip for buyers</div>
+          </div>
+
+          <!-- Seller SMS -->
+          <div class="node-card status-inactive">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Seller Nurture SMS</div>
+              <span class="node-badge badge-inactive">Inactive</span>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">5-step SMS drip for sellers</div>
+          </div>
+
+          <!-- 52-Week Email -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">52-Week Email Campaign Generator</div>
+            </div>
+            <div class="node-trigger">On-demand</div>
+            <div class="node-desc">Claude generates full 52-week buyer + seller email campaign &rarr; Google Sheets</div>
+          </div>
+
+          <!-- 52-Week SMS -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">52-Week SMS Copy Generator</div>
+            </div>
+            <div class="node-trigger">On-demand</div>
+            <div class="node-desc">Claude generates 52-week SMS copy &rarr; Google Sheets</div>
+          </div>
+
+          <!-- Webinar Reminder -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Webinar Reminder Sequence (P2P)</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Confirmation &rarr; 24hr reminder &rarr; 1hr reminder &rarr; post-webinar follow-up</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ARROW 3→4 -->
+      <div class="col-arrow">
+        <div class="col-arrow-inner">
+          <div class="arrow-h">
+            <div class="arrow-h-line"></div>
+            <div class="arrow-h-tip"></div>
+          </div>
+          <div class="arrow-h-label">Deal<br>handoff</div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════
+           COL 4: DEAL MACHINE
+      ════════════════════════════════ -->
+      <div class="col col-deal">
+        <div class="col-header">
+          Deal Machine
+          <span class="col-sub">P2P + Ironwood</span>
+        </div>
+        <div class="col-body">
+
+          <!-- Handoff -->
+          <div class="node-card status-new">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">P2P &rarr; AP + Ironwood Handoff</div>
+              <span class="node-badge badge-new">NEW</span>
+            </div>
+            <div class="node-trigger">Schedule — every 15 min</div>
+            <div class="node-desc">Polls Firestore for Under Contract deals &rarr; emails Anchor Pro (scope walk) + Ironwood (deal alert) &rarr; marks handoffSent=true</div>
+          </div>
+
+          <!-- REI Reply Deal Pipeline -->
+          <div class="node-card status-inactive">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">REI Reply &rarr; Deal Pipeline</div>
+              <span class="node-badge badge-inactive">Inactive</span>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Stub — receives REI Reply lead, creates Firestore deal record. Blocked on API key.</div>
+          </div>
+
+          <!-- Credit & Funding -->
+          <div class="node-card status-inactive">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">P2P Credit &amp; Funding Intake</div>
+              <span class="node-badge badge-inactive">Inactive</span>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Ready to activate — scores credit/funding leads, Claude triage, Firestore + SMS</div>
+          </div>
+
+          <!-- Blueprint Analysis -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Ironwood Blueprint AI Analysis</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Receives blueprint data &rarr; Claude analysis &rarr; returns structured result</div>
+          </div>
+
+          <!-- Blueprint Stub -->
+          <div class="node-card status-inactive">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Ironwood Blueprint Tool</div>
+              <span class="node-badge badge-inactive">Inactive</span>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Empty stub — safe to delete</div>
+          </div>
+
+          <!-- Firestore label -->
+          <div style="text-align:center; padding: 6px 0 2px;">
+            <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#856A00; background:#FEF9E3; border:1px solid #E6C85A; border-radius:12px; padding:3px 10px;">&rarr; Firestore</span>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ARROW 4→5 -->
+      <div class="col-arrow">
+        <div class="col-arrow-inner">
+          <div class="arrow-h">
+            <div class="arrow-h-line"></div>
+            <div class="arrow-h-tip"></div>
+          </div>
+          <div class="arrow-h-label">Scope<br>walk</div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════
+           COL 5: ANCHOR PRO OPS
+      ════════════════════════════════ -->
+      <div class="col col-anchor">
+        <div class="col-header">
+          Anchor Pro Operations
+          <span class="col-sub">Jobs, Payments, Field Ops</span>
+        </div>
+        <div class="col-body">
+
+          <!-- Dashboard Hub -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Anchor Pro Dashboard</div>
+            </div>
+            <div class="node-trigger">Webhook (GET + POST)</div>
+            <div class="node-desc"><strong>HUB</strong> — job list, photo requests, status updates, booking, invoicing. Feeds all AP sub-workflows.</div>
+          </div>
+
+          <!-- Booking → Stripe -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Booking &rarr; Stripe Quote</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Creates Stripe customer &rarr; builds quote &rarr; generates invoice &rarr; emails client</div>
+          </div>
+
+          <!-- Send Payment Link -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Send Payment Link</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Fetches Stripe invoice &rarr; sends payment link to client</div>
+          </div>
+
+          <!-- Charge Card -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Charge Card on File</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Creates Stripe payment intent &rarr; charges saved card on file</div>
+          </div>
+
+          <!-- Photo Analyzer -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Photo Analyzer</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Claude Vision — analyzes job photos for quality + completion assessment</div>
+          </div>
+
+          <!-- Promo Code -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Validate Promo Code</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Checks promo code against Google Sheet &rarr; returns valid/invalid + discount %</div>
+          </div>
+
+          <!-- PW Leads -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Pressure Washing — Leads</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Logs lead &rarr; Sheets + Twilio SMS + AI nurture agent</div>
+          </div>
+
+          <!-- PW Booking -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Pressure Washing — Booking</div>
+            </div>
+            <div class="node-trigger">Telegram</div>
+            <div class="node-desc">Watches Telegram &rarr; parses booking &rarr; updates Sheet &rarr; sends confirmation</div>
+          </div>
+
+          <!-- PW Callbacks -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Pressure Washing — Callbacks</div>
+            </div>
+            <div class="node-trigger">Telegram</div>
+            <div class="node-desc">Handles Telegram button presses &rarr; updates Sheet &rarr; booking follow-up</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ARROW 5→6 -->
+      <div class="col-arrow">
+        <div class="col-arrow-inner">
+          <div class="arrow-h">
+            <div class="arrow-h-line"></div>
+            <div class="arrow-h-tip"></div>
+          </div>
+          <div class="arrow-h-label">Content<br>feeds</div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════
+           COL 6: CONTENT & SOCIAL
+      ════════════════════════════════ -->
+      <div class="col col-content">
+        <div class="col-header">
+          Content &amp; Social
+          <span class="col-sub">Publishing &amp; Brand</span>
+        </div>
+        <div class="col-body">
+
+          <!-- Blog Post Creator -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Blog Post Creator</div>
+            </div>
+            <div class="node-trigger">Schedule — 3×/week</div>
+            <div class="node-desc">Picks topic &rarr; OpenAI generates post &rarr; Pexels image &rarr; FTP upload to website &rarr; Telegram notify</div>
+          </div>
+
+          <!-- Social Auto-Poster -->
+          <div class="node-card status-broken">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Social Media Auto-Poster</div>
+              <span class="node-badge badge-broken">BROKEN</span>
+            </div>
+            <div class="node-trigger">Schedule — 3×/week</div>
+            <div class="node-desc">Generates Facebook/Instagram/LinkedIn copy &rarr; posts to all 3. <strong>LinkedIn fails</strong> — placeholder credential.</div>
+          </div>
+
+          <!-- Listing → Instagram -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Listing &rarr; Instagram Auto-Post</div>
+            </div>
+            <div class="node-trigger">Webhook</div>
+            <div class="node-desc">Listing data &rarr; OpenAI image &rarr; branded caption &rarr; Instagram Graph API</div>
+          </div>
+
+          <!-- Social Graphic Generator -->
+          <div class="node-card status-broken">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Social Graphic Generator (P2P)</div>
+              <span class="node-badge badge-broken">BROKEN</span>
+            </div>
+            <div class="node-trigger">Schedule — 3×/week</div>
+            <div class="node-desc">Picks topic &rarr; Claude copy &rarr; <strong>Parse Copy crash</strong> &rarr; Canva templates never reached. Fix header syntax.</div>
+          </div>
+
+          <!-- Daily Content Briefing -->
+          <div class="node-card status-broken">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Daily Content Briefing</div>
+              <span class="node-badge badge-broken">BROKEN</span>
+            </div>
+            <div class="node-trigger">Schedule — daily 8AM</div>
+            <div class="node-desc">RSS feeds &rarr; Claude picks top 3 &rarr; Telegram briefing. <strong>Fails on <code>$env</code> key</strong> — replace with actual key.</div>
+          </div>
+
+          <!-- Content Reply Handler -->
+          <div class="node-card status-broken">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Content Reply Handler</div>
+              <span class="node-badge badge-broken">BROKEN</span>
+            </div>
+            <div class="node-trigger">Telegram</div>
+            <div class="node-desc">Telegram reply &rarr; Claude captions &rarr; approval flow &rarr; post. <strong>Fails on <code>$env</code> key</strong> — replace with actual key.</div>
+          </div>
+
+          <!-- Email Campaign Generator -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Email Campaign Generator</div>
+            </div>
+            <div class="node-trigger">On-demand</div>
+            <div class="node-desc">Claude generates 52-week email campaign &rarr; Sheets</div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ARROW 6→7 -->
+      <div class="col-arrow">
+        <div class="col-arrow-inner">
+          <div class="arrow-h">
+            <div class="arrow-h-line"></div>
+            <div class="arrow-h-tip"></div>
+          </div>
+          <div class="arrow-h-label">Webinar<br>route</div>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════
+           COL 7: WEBINAR SYSTEM
+      ════════════════════════════════ -->
+      <div class="col col-webinar">
+        <div class="col-header">
+          Webinar System
+          <span class="col-sub">Registration &amp; Follow-up</span>
+        </div>
+        <div class="col-body">
+
+          <!-- ManyChat Bridge → Webinar -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">ManyChat Bridge &rarr; Webinar</div>
+            </div>
+            <div class="node-trigger">Sub-workflow</div>
+            <div class="node-desc">Routes webinar keyword from ManyChat bridge into Webinar Registration Handler</div>
+          </div>
+
+          <!-- Registration Handler -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Webinar Registration Handler</div>
+            </div>
+            <div class="node-trigger">Sub-workflow</div>
+            <div class="node-desc">Sets date, checks capacity, Google Meet link, confirmation email, logs to Sheets</div>
+          </div>
+
+          <!-- Reminder Sequence -->
+          <div class="node-card status-inactive">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Webinar Reminder Sequence</div>
+              <span class="node-badge badge-inactive">Inactive ⚠</span>
+            </div>
+            <div class="node-trigger">Schedule — hourly</div>
+            <div class="node-desc">Should be ON when webinars are running — sends 24hr + 1hr reminders. Turn on before next event.</div>
+          </div>
+
+          <!-- Post-Webinar -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Webinar Post-Webinar Handler</div>
+            </div>
+            <div class="node-trigger">Sub-workflow</div>
+            <div class="node-desc">Splits attended vs no-show, sends follow-ups, updates Sheet, triggers Blog Post Creator</div>
+          </div>
+
+          <!-- Monthly Cohort Reset -->
+          <div class="node-card status-active">
+            <div class="node-header">
+              <div class="node-dot"></div>
+              <div class="node-name">Monthly Cohort Reset</div>
+            </div>
+            <div class="node-trigger">Schedule — last day of month</div>
+            <div class="node-desc">Archives registrants, resets Sheet for next cohort</div>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /swimlane-grid -->
+  </div><!-- /swimlane-scroll -->
+</div><!-- /swimlane-wrapper -->
+
+<!-- ══════════════════════════════════════════════
+     EXTERNAL OUTPUTS
+══════════════════════════════════════════════ -->
+<hr class="section-rule" style="margin-top:28px;" />
+<div class="outputs-section">
+  <div class="outputs-label">External Systems &amp; Destinations</div>
+  <div class="outputs-row">
+    <span class="output-badge active-dest">Firestore</span>
+    <span class="output-badge active-dest">Google Sheets</span>
+    <span class="output-badge active-dest">Gmail</span>
+    <span class="output-badge active-dest">Telegram</span>
+    <span class="output-badge active-dest">Stripe</span>
+    <span class="output-badge active-dest">Instagram</span>
+    <span class="output-badge active-dest">Facebook</span>
+    <span class="output-badge warn-dest">LinkedIn</span>
+    <span class="output-badge active-dest">Website (FTP)</span>
+    <span class="output-badge inactive">GHL (inactive)</span>
+    <span class="output-badge active-dest">ManyChat SMS</span>
+    <span class="output-badge active-dest">Twilio SMS</span>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     LEGEND
+══════════════════════════════════════════════ -->
+<hr class="section-rule" />
+<div class="legend-section" style="padding-top:20px;">
+  <div class="outputs-label">Legend</div>
+  <div class="legend-row">
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--green);"></div>
+      Active &amp; Working — green border
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:var(--red);"></div>
+      Active &amp; Broken — red border + BROKEN badge
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#AAAAAA;"></div>
+      Inactive / Stub — gray border + INACTIVE badge
+    </div>
+    <div class="legend-item">
+      <div class="legend-dot" style="background:#4A6FA5;"></div>
+      New (just built) — blue border + NEW badge
+    </div>
+    <div class="legend-item">
+      <div class="legend-bar" style="background:var(--bronze);"></div>
+      Connector arrow = primary data flow
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════════ -->
+<footer class="iw-footer">
+  <div>Ironwood Property Group &mdash; Internal Toolkit</div>
+  <div style="margin-top:6px;">
+    <a href="index.html">← Back to Toolkit</a>
+    &nbsp;&middot;&nbsp;
+    <a href="System_Flowchart.html">System Flowchart</a>
+    &nbsp;&middot;&nbsp;
+    <a href="Connected_Deal_Dashboard.html">Deal Dashboard</a>
+  </div>
+  <div style="margin-top:8px; font-size:12px; color:#B0A89A;">Last updated: July 2026 &middot; 60 workflows documented</div>
+</footer>
+
+</body>
+</html>
