@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Deal Machine — System Flowchart</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #0e0e0e; color: #f4efe6; font-family: 'Geist', system-ui, sans-serif; font-size: 13px; min-height: 100vh; padding: 32px 20px; }
+
+h1 { font-family: Georgia, serif; font-size: 26px; color: #f4efe6; margin-bottom: 6px; }
+.sub { font-size: 12px; color: #888; margin-bottom: 36px; }
+
+/* ── LEGEND ── */
+.legend { display: flex; gap: 20px; flex-wrap: wrap; margin-bottom: 36px; }
+.legend-item { display: flex; align-items: center; gap: 7px; font-size: 11px; color: #aaa; }
+.legend-dot { width: 12px; height: 12px; border-radius: 3px; flex-shrink: 0; }
+
+/* ── FLOW GRID ── */
+.flow { display: flex; flex-direction: column; gap: 0; }
+
+/* ── ROWS ── */
+.row { display: flex; align-items: flex-start; gap: 0; position: relative; }
+.row-label { width: 130px; flex-shrink: 0; padding: 14px 16px 14px 0; font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: .8px; font-weight: 700; text-align: right; border-right: 2px solid #222; margin-right: 24px; padding-top: 22px; }
+.row-content { flex: 1; display: flex; align-items: center; gap: 0; flex-wrap: nowrap; padding: 14px 0; position: relative; }
+
+/* ── NODES ── */
+.node {
+  border-radius: 10px;
+  padding: 12px 16px;
+  min-width: 150px;
+  max-width: 180px;
+  flex-shrink: 0;
+  position: relative;
+  cursor: default;
+  transition: transform .15s, box-shadow .15s;
+}
+.node:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,.4); }
+.node-label { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; font-weight: 800; margin-bottom: 4px; opacity: .7; }
+.node-title { font-size: 13px; font-weight: 700; line-height: 1.3; }
+.node-sub { font-size: 10px; margin-top: 4px; opacity: .65; line-height: 1.4; }
+.node-status { display: inline-block; margin-top: 6px; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 3px; letter-spacing: .4px; text-transform: uppercase; }
+
+/* Node types */
+.node-customer  { background: #1a2a3a; border: 1px solid #2a4a6a; color: #93c5fd; }
+.node-customer .node-label { color: #60a5fa; }
+.node-internal  { background: #1a2410; border: 1px solid #3a5a18; color: #86efac; }
+.node-internal .node-label { color: #4ade80; }
+.node-hub       { background: #2a1a08; border: 2px solid #b8975a; color: #fde68a; }
+.node-hub .node-label { color: #b8975a; }
+.node-output    { background: #1a1030; border: 1px solid #4a3a7a; color: #c4b5fd; }
+.node-output .node-label { color: #a78bfa; }
+.node-external  { background: #1a1a1a; border: 1px solid #333; color: #aaa; }
+.node-external .node-label { color: #666; }
+
+/* Status badges */
+.status-live    { background: #14532d; color: #86efac; }
+.status-wired   { background: #1e3a5f; color: #93c5fd; }
+.status-planned { background: #2d1a00; color: #fb923c; }
+.status-todo    { background: #2a1a2a; color: #c084fc; }
+
+/* ── ARROWS ── */
+.arrow {
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  flex-shrink: 0;
+  color: #444;
+  font-size: 18px;
+  position: relative;
+}
+.arrow.active { color: #b8975a; }
+.arrow.dashed { color: #333; }
+.arrow-label {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 9px;
+  color: #666;
+  white-space: nowrap;
+  background: #0e0e0e;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
+
+/* ── DOWN ARROWS ── */
+.down-row { display: flex; align-items: flex-start; gap: 0; }
+.down-spacer { width: 130px; flex-shrink: 0; border-right: 2px solid #222; margin-right: 24px; }
+.down-content { flex: 1; display: flex; gap: 0; padding: 4px 0; }
+.down-arrow { min-width: 150px; max-width: 180px; text-align: center; color: #444; font-size: 16px; flex-shrink: 0; }
+.down-arrow.active { color: #b8975a; }
+.down-arrow-gap { flex-shrink: 0; padding: 0 6px; min-width: 38px; }
+
+/* ── HUB SECTION ── */
+.hub-section { display: flex; align-items: flex-start; gap: 0; margin: 0; }
+.hub-spacer { width: 130px; flex-shrink: 0; border-right: 2px solid #222; margin-right: 24px; }
+.hub-content { flex: 1; }
+.hub-box {
+  background: #1e1208;
+  border: 2px solid #b8975a;
+  border-radius: 14px;
+  padding: 20px 24px;
+  margin-bottom: 0;
+  position: relative;
+}
+.hub-box::before {
+  content: '⬡ CONNECTED DEAL DASHBOARD';
+  position: absolute;
+  top: -10px;
+  left: 20px;
+  background: #b8975a;
+  color: #0a0a0a;
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  padding: 2px 10px;
+  border-radius: 4px;
+}
+.hub-fields { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 8px; }
+.hub-field { background: #2a1e0a; border: 1px solid #3a2a10; border-radius: 6px; padding: 8px 10px; }
+.hub-field .hf-label { font-size: 9px; color: #b8975a; text-transform: uppercase; letter-spacing: .5px; font-weight: 700; }
+.hub-field .hf-source { font-size: 10px; color: #888; margin-top: 2px; }
+.hub-field .hf-val { font-size: 12px; color: #fde68a; font-weight: 700; margin-top: 1px; }
+
+/* ── SECTION DIVIDER ── */
+.section-divider { display: flex; align-items: flex-start; gap: 0; margin: 8px 0; }
+.sd-spacer { width: 130px; flex-shrink: 0; border-right: 2px solid #222; margin-right: 24px; }
+.sd-line { flex: 1; border-top: 1px dashed #222; margin-top: 10px; }
+
+/* ── CONNECTIONS PANEL ── */
+.connections { margin-top: 40px; }
+.connections h2 { font-size: 12px; color: #b8975a; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid #222; }
+.conn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.conn-card { background: #141414; border: 1px solid #222; border-radius: 8px; padding: 14px; }
+.conn-card .cc-from { font-size: 11px; font-weight: 700; color: #f4efe6; }
+.conn-card .cc-arrow { font-size: 10px; color: #b8975a; margin: 3px 0; }
+.conn-card .cc-to { font-size: 11px; font-weight: 700; color: #f4efe6; }
+.conn-card .cc-data { font-size: 10px; color: #666; margin-top: 6px; line-height: 1.5; }
+.conn-card .cc-status { margin-top: 8px; font-size: 9px; font-weight: 800; padding: 2px 7px; border-radius: 3px; display: inline-block; text-transform: uppercase; letter-spacing: .4px; }
+</style>
+</head>
+<body>
+
+<h1>Deal Machine — System Flowchart</h1>
+<div class="sub">Three-company closed-loop deal system · Peach to Palms → Anchor Pro → Ironwood</div>
+
+<!-- LEGEND -->
+<div class="legend">
+  <div class="legend-item"><div class="legend-dot" style="background:#1a2a3a;border:1px solid #2a4a6a"></div> Customer-Facing Tool</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1a2410;border:1px solid #3a5a18"></div> Internal Tool</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#2a1a08;border:2px solid #b8975a"></div> Hub / Dashboard</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1a1030;border:1px solid #4a3a7a"></div> Output / Report</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#14532d"></div> Live & Connected</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#1e3a5f"></div> Wired (localStorage)</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#2d1a00"></div> Planned</div>
+</div>
+
+<div class="flow">
+
+  <!-- ROW 1: CUSTOMER INTAKE -->
+  <div class="row">
+    <div class="row-label">Customer<br/>Intake</div>
+    <div class="row-content">
+      <div class="node node-customer">
+        <div class="node-label">Anchor Pro</div>
+        <div class="node-title">Pressure Washing Estimator</div>
+        <div class="node-sub">Customer submits quote request</div>
+        <div class="node-status status-wired">Wired →</div>
+      </div>
+      <div class="arrow active">→<div class="arrow-label">localStorage</div></div>
+      <div class="node node-customer">
+        <div class="node-label">Anchor Pro</div>
+        <div class="node-title">Painting Estimator</div>
+        <div class="node-sub">Customer submits quote request</div>
+        <div class="node-status status-wired">Wired →</div>
+      </div>
+      <div class="arrow active">→<div class="arrow-label">localStorage</div></div>
+      <div class="node node-customer">
+        <div class="node-label">Ironwood</div>
+        <div class="node-title">Public Estimator</div>
+        <div class="node-sub">Homeowner submits project request</div>
+        <div class="node-status status-wired">Wired →</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOWN ARROWS ROW 1→2 -->
+  <div class="down-row">
+    <div class="down-spacer"></div>
+    <div class="down-content">
+      <div class="down-arrow active">↓</div>
+      <div class="down-arrow-gap"></div>
+      <div class="down-arrow active">↓</div>
+      <div class="down-arrow-gap"></div>
+      <div class="down-arrow active">↓</div>
+    </div>
+  </div>
+
+  <!-- ROW 2: INTERNAL OPS -->
+  <div class="row">
+    <div class="row-label">Internal<br/>Ops</div>
+    <div class="row-content">
+      <div class="node node-internal">
+        <div class="node-label">Anchor Pro</div>
+        <div class="node-title">AP Job Estimator</div>
+        <div class="node-sub">Price PW + painting jobs</div>
+        <div class="node-status status-live">Live</div>
+      </div>
+      <div class="arrow dashed">→</div>
+      <div class="node node-internal">
+        <div class="node-label">Ironwood</div>
+        <div class="node-title">Remodel Estimator</div>
+        <div class="node-sub">Itemized rehab scope + cost</div>
+        <div class="node-status status-wired">Import Lead ✓</div>
+      </div>
+      <div class="arrow active">→<div class="arrow-label">rehab total</div></div>
+      <div class="node node-internal">
+        <div class="node-label">Peach to Palms</div>
+        <div class="node-title">Deal Memo</div>
+        <div class="node-sub">Buyer blast with full deal numbers</div>
+        <div class="node-status status-planned">Planned ←</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOWN ARROWS ROW 2→HUB -->
+  <div class="down-row">
+    <div class="down-spacer"></div>
+    <div class="down-content">
+      <div class="down-arrow" style="color:#333">↓</div>
+      <div class="down-arrow-gap"></div>
+      <div class="down-arrow active">↓</div>
+      <div class="down-arrow-gap"></div>
+      <div class="down-arrow active">↓</div>
+    </div>
+  </div>
+
+  <!-- HUB -->
+  <div class="hub-section">
+    <div class="hub-spacer"></div>
+    <div class="hub-content">
+      <div class="hub-box">
+        <div class="hub-fields">
+          <div class="hub-field">
+            <div class="hf-label">Address + ARV</div>
+            <div class="hf-source">← Deal Memo</div>
+            <div class="hf-val">Deal identity</div>
+          </div>
+          <div class="hub-field">
+            <div class="hf-label">Exact Rehab Cost</div>
+            <div class="hf-source">← Remodel Estimator</div>
+            <div class="hf-val">Itemized total</div>
+          </div>
+          <div class="hub-field">
+            <div class="hf-label">Cash Flow / Refi</div>
+            <div class="hf-source">← BRRRR Analyzer</div>
+            <div class="hf-val">Hold analysis</div>
+          </div>
+          <div class="hub-field">
+            <div class="hf-label">Max Offer</div>
+            <div class="hf-source">← MAO Calculator</div>
+            <div class="hf-val">Offer ceiling</div>
+          </div>
+          <div class="hub-field">
+            <div class="hf-label">Buyer Profit / ROI</div>
+            <div class="hf-source">← Deal Memo</div>
+            <div class="hf-val">Buyer numbers</div>
+          </div>
+          <div class="hub-field">
+            <div class="hf-label">Lender Attached</div>
+            <div class="hf-source">← Lender Tracker</div>
+            <div class="hf-val">Funding source</div>
+          </div>
+          <div class="hub-field">
+            <div class="hf-label">AP Job Scope</div>
+            <div class="hf-source">← Anchor Pro Est.</div>
+            <div class="hf-val">Services booked</div>
+          </div>
+          <div class="hub-field">
+            <div class="hf-label">Deal Stage</div>
+            <div class="hf-source">← All tools</div>
+            <div class="hf-val">Pipeline status</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOWN ARROWS HUB→ANALYSIS -->
+  <div class="down-row">
+    <div class="down-spacer"></div>
+    <div class="down-content" style="justify-content:center;gap:40px;">
+      <div class="down-arrow active" style="min-width:auto;">↓</div>
+      <div class="down-arrow active" style="min-width:auto;">↓</div>
+      <div class="down-arrow active" style="min-width:auto;">↓</div>
+    </div>
+  </div>
+
+  <!-- ROW 3: ANALYSIS -->
+  <div class="row">
+    <div class="row-label">Analysis<br/>Loop</div>
+    <div class="row-content" style="justify-content:center;gap:16px;">
+      <div class="node node-internal">
+        <div class="node-label">Peach to Palms</div>
+        <div class="node-title">BRRRR Analyzer</div>
+        <div class="node-sub">Cash flow, refi, deal grade A–D</div>
+        <div class="node-status status-planned">Planned ↔ Hub</div>
+      </div>
+      <div class="arrow active">↔</div>
+      <div class="node node-internal">
+        <div class="node-label">Peach to Palms</div>
+        <div class="node-title">MAO Calculator</div>
+        <div class="node-sub">Max allowable offer from BRRRR output</div>
+        <div class="node-status status-planned">Planned ↔ Hub</div>
+      </div>
+      <div class="arrow active">↔</div>
+      <div class="node node-internal">
+        <div class="node-label">Peach to Palms</div>
+        <div class="node-title">Lender Tracker</div>
+        <div class="node-sub">Match deal to lender by LTV + terms</div>
+        <div class="node-status status-planned">Planned ↔ Hub</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOWN ARROWS ANALYSIS→OUTPUT -->
+  <div class="down-row">
+    <div class="down-spacer"></div>
+    <div class="down-content" style="justify-content:center;gap:40px;">
+      <div class="down-arrow active" style="min-width:auto;">↓</div>
+      <div class="down-arrow active" style="min-width:auto;">↓</div>
+      <div class="down-arrow active" style="min-width:auto;">↓</div>
+    </div>
+  </div>
+
+  <!-- ROW 4: OUTPUT -->
+  <div class="row">
+    <div class="row-label">Final<br/>Output</div>
+    <div class="row-content" style="justify-content:center;gap:16px;">
+      <div class="node node-output">
+        <div class="node-label">Output</div>
+        <div class="node-title">Deal Memo (Final)</div>
+        <div class="node-sub">Buyer blast with all real numbers pulled from hub</div>
+        <div class="node-status status-planned">Planned</div>
+      </div>
+      <div class="arrow active">→</div>
+      <div class="node node-output">
+        <div class="node-label">Output</div>
+        <div class="node-title">Private Money Pitch</div>
+        <div class="node-sub">Lender one-pager auto-filled from deal + track record</div>
+        <div class="node-status status-planned">Planned</div>
+      </div>
+      <div class="arrow active">→</div>
+      <div class="node node-output">
+        <div class="node-label">Output</div>
+        <div class="node-title">Track Record</div>
+        <div class="node-sub">One-click deal close logs to history</div>
+        <div class="node-status status-planned">Planned</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DOWN ARROWS OUTPUT→P&L -->
+  <div class="down-row">
+    <div class="down-spacer"></div>
+    <div class="down-content" style="justify-content:center;gap:40px;">
+      <div class="down-arrow active" style="min-width:auto;">↓</div>
+      <div class="down-arrow" style="color:#333;min-width:auto;">↓</div>
+      <div class="down-arrow active" style="min-width:auto;">↓</div>
+    </div>
+  </div>
+
+  <!-- ROW 5: FINANCIALS -->
+  <div class="row">
+    <div class="row-label">Financials<br/>& Reporting</div>
+    <div class="row-content" style="justify-content:center;gap:16px;">
+      <div class="node node-internal">
+        <div class="node-label">Peach to Palms</div>
+        <div class="node-title">P2P P&amp;L</div>
+        <div class="node-sub">Assignment fees flow into monthly waterfall</div>
+        <div class="node-status status-planned">Planned</div>
+      </div>
+      <div class="arrow dashed">→</div>
+      <div class="node node-internal">
+        <div class="node-label">Anchor Pro</div>
+        <div class="node-title">AP P&amp;L</div>
+        <div class="node-sub">Booked jobs flow into monthly waterfall</div>
+        <div class="node-status status-planned">Planned</div>
+      </div>
+      <div class="arrow dashed">→</div>
+      <div class="node node-internal">
+        <div class="node-label">Ironwood</div>
+        <div class="node-title">Ironwood P&amp;L</div>
+        <div class="node-sub">Rehab job revenue flows into waterfall</div>
+        <div class="node-status status-planned">Planned</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CONNECTION DETAILS -->
+<div class="connections">
+  <h2>Connection Details — What Passes Between Tools</h2>
+  <div class="conn-grid">
+
+    <div class="conn-card">
+      <div class="cc-from">AP Pressure Washing Estimator</div>
+      <div class="cc-arrow">→ ironwood_latest_lead</div>
+      <div class="cc-to">Remodel Estimator (Import Lead)</div>
+      <div class="cc-data">name, phone, email, address, project type, estimate range</div>
+      <div class="cc-status status-wired">Live ✓</div>
+    </div>
+
+    <div class="conn-card">
+      <div class="cc-from">AP Painting Estimator</div>
+      <div class="cc-arrow">→ ironwood_latest_lead</div>
+      <div class="cc-to">Remodel Estimator (Import Lead)</div>
+      <div class="cc-data">name, phone, email, address, sqft, service label, total</div>
+      <div class="cc-status status-wired">Live ✓</div>
+    </div>
+
+    <div class="conn-card">
+      <div class="cc-from">Ironwood Public Estimator</div>
+      <div class="cc-arrow">→ ironwood_latest_lead</div>
+      <div class="cc-to">Remodel Estimator (Import Lead)</div>
+      <div class="cc-data">name, phone, email, address, job type, estimate range</div>
+      <div class="cc-status status-wired">Live ✓</div>
+    </div>
+
+    <div class="conn-card">
+      <div class="cc-from">Remodel Estimator</div>
+      <div class="cc-arrow">→ iw_active_deal (planned)</div>
+      <div class="cc-to">Connected Deal Dashboard</div>
+      <div class="cc-data">itemized rehab total, scope summary, labor, materials, markup</div>
+      <div class="cc-status status-planned">Planned</div>
+    </div>
+
+    <div class="conn-card">
+      <div class="cc-from">Deal Memo</div>
+      <div class="cc-arrow">→ iw_active_deal (planned)</div>
+      <div class="cc-to">Connected Deal Dashboard</div>
+      <div class="cc-data">address, ARV, asking price, assignment fee, buyer profit, ROI</div>
+      <div class="cc-status status-planned">Planned</div>
+    </div>
+
+    <div class="conn-card">
+      <div class="cc-from">BRRRR Analyzer</div>
+      <div class="cc-arrow">↔ iw_active_deal (planned)</div>
+      <div class="cc-to">Connected Deal Dashboard</div>
+      <div class="cc-data">cash flow, refi proceeds, equity %, deal grade, hold analysis</div>
+      <div class="cc-status status-planned">Planned</div>
+    </div>
+
+    <div class="conn-card">
+      <div class="cc-from">MAO Calculator</div>
+      <div class="cc-arrow">↔ iw_active_deal (planned)</div>
+      <div class="cc-to">Connected Deal Dashboard</div>
+      <div class="cc-data">max offer, discount %, repair allowance, cash offer vs listing</div>
+      <div class="cc-status status-planned">Planned</div>
+    </div>
+
+    <div class="conn-card">
+      <div class="cc-from">Lender Tracker</div>
+      <div class="cc-arrow">→ iw_active_deal (planned)</div>
+      <div class="cc-to">Connected Deal Dashboard + Pitch</div>
+      <div class="cc-data">lender name, rate, LTV, max loan, terms → Private Money Pitch</div>
+      <div class="cc-status status-planned">Planned</div>
+    </div>
+
+    <div class="conn-card">
+      <div class="cc-from">Connected Deal Dashboard</div>
+      <div class="cc-arrow">→ full deal record (planned)</div>
+      <div class="cc-to">Deal Memo (Final) + Track Record</div>
+      <div class="cc-data">all reconciled numbers → buyer blast + one-click deal close</div>
+      <div class="cc-status status-planned">Planned</div>
+    </div>
+
+    <div class="conn-card">
+      <div class="cc-from">Track Record</div>
+      <div class="cc-arrow">→ completed deals (planned)</div>
+      <div class="cc-to">Private Money Pitch</div>
+      <div class="cc-data">deal history auto-fills credibility section of lender pitch</div>
+      <div class="cc-status status-planned">Planned</div>
+    </div>
+
+    <div class="conn-card">
+      <div class="cc-from">Closed Deals (all companies)</div>
+      <div class="cc-arrow">→ revenue (planned)</div>
+      <div class="cc-to">P2P / AP / Ironwood P&amp;L</div>
+      <div class="cc-data">assignment fees, job revenue auto-post to monthly waterfall</div>
+      <div class="cc-status status-planned">Planned</div>
+    </div>
+
+    <div class="conn-card" style="border-color:#b8975a44;">
+      <div class="cc-from" style="color:#b8975a;">Connected Deal Dashboard</div>
+      <div class="cc-arrow" style="color:#b8975a;">⬡ Central Hub</div>
+      <div class="cc-to" style="color:#b8975a;">All Tools Read & Write Here</div>
+      <div class="cc-data">Single localStorage record per deal. Every tool pushes its output and pulls what it needs. No double entry.</div>
+      <div class="cc-status" style="background:#2a1a08;color:#fde68a;">Hub</div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
