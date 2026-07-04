@@ -113,6 +113,12 @@ body { background: var(--bg); color: var(--cream); font-family: 'Geist', system-
 
 /* ── DEAL IMPORT BAR ── */
 .import-bar { background: #1a2a1a; border: 1px solid #2d5a2d; border-radius: 8px; padding: 12px 16px; margin-bottom: 18px; display: flex; align-items: center; justify-content: space-between; gap: 10px; display: none; }
+
+/* ── DASHBOARD LOAD BANNER ── */
+#dashBanner { display: none; background: #1a2a1a; border: 1px solid #2d5a2d; border-radius: 8px; padding: 11px 16px; margin-bottom: 18px; display: none; align-items: center; justify-content: space-between; gap: 10px; }
+#dashBanner span { font-size: 13px; color: #86efac; font-weight: 600; }
+#dashBanner button { background: transparent; border: 1px solid #2d5a2d; color: #86efac; border-radius: 6px; padding: 4px 12px; font-size: 12px; cursor: pointer; }
+#dashBanner button:hover { background: #2d5a2d; }
 .import-bar span { font-size: 13px; color: #86efac; }
 
 /* ── HISTORY ── */
@@ -161,6 +167,12 @@ body { background: var(--bg); color: var(--cream); font-family: 'Geist', system-
       <button class="btn btn-ghost btn-sm" onclick="copyText()">Copy as Text</button>
       <button class="btn btn-gold" onclick="window.print()">Print / Save PDF</button>
     </div>
+  </div>
+
+  <!-- DASHBOARD LOAD BANNER (iw_dealmemo_input) -->
+  <div id="dashBanner">
+    <span id="dashBannerMsg">Deal data loaded from Dashboard</span>
+    <button onclick="dismissDashBanner()">Dismiss</button>
   </div>
 
   <!-- DEAL IMPORT BANNER -->
@@ -484,6 +496,23 @@ function calcNumbers() {
   document.getElementById('c-sellprice').textContent = fmt(sellPrice);
   document.getElementById('c-profit').textContent   = fmt(profit);
   document.getElementById('c-roi').textContent      = roi + '%';
+
+  // Write output record for other tools to consume
+  try {
+    localStorage.setItem('iw_dealmemo_output', JSON.stringify({
+      address:      v('f-address'),
+      arv:          n('f-arv'),
+      asking:       n('f-asking'),
+      rehab:        n('f-rehab'),
+      assignmentFee: n('f-assignfee'),
+      closingCosts: n('f-closing-costs'),
+      holding:      n('f-holding'),
+      buyerProfit:  profit,
+      roi:          roi,
+      timestamp:    new Date().toISOString()
+    }));
+  } catch(e) {}
+
   render();
 }
 
@@ -868,6 +897,58 @@ function dismissImport() {
   _pendingDeal = null;
 }
 
+// ── DASHBOARD INPUT (iw_dealmemo_input) ──
+function checkDealMemoInput() {
+  const raw = localStorage.getItem('iw_dealmemo_input');
+  if (!raw) return;
+  try {
+    const d = JSON.parse(raw);
+    if (!d) return;
+    const set = (id, val) => { if (val !== undefined && val !== null && val !== '') { const e = document.getElementById(id); if (e) e.value = val; } };
+
+    set('f-address', d.address);
+    set('f-arv',     d.arv);
+    set('f-rehab',   d.rehabTotal);
+
+    // purchasePrice → MAO → maoResult.maxOffer, in priority order
+    const askingVal = d.purchasePrice || d.MAO || (d.maoResult && d.maoResult.maxOffer);
+    set('f-asking', askingVal);
+
+    set('f-assignfee',     d.assignmentFee);
+    set('f-closing-costs', d.closingCosts);
+    set('f-holding',       d.carryingCosts);
+
+    // exitStrategy — only apply if it matches a select option
+    if (d.exitStrategy) {
+      const exitEl = document.getElementById('f-exit');
+      if (exitEl) {
+        for (let i = 0; i < exitEl.options.length; i++) {
+          if (exitEl.options[i].value === d.exitStrategy) {
+            exitEl.selectedIndex = i;
+            break;
+          }
+        }
+      }
+    }
+
+    calcNumbers();
+    render();
+
+    // Show green banner
+    const addr = d.address || 'this deal';
+    const banner = document.getElementById('dashBanner');
+    document.getElementById('dashBannerMsg').textContent = 'Deal data loaded from Dashboard — ' + addr;
+    banner.style.display = 'flex';
+
+    // Clear the input key
+    localStorage.removeItem('iw_dealmemo_input');
+  } catch(e) { console.warn('iw_dealmemo_input parse error', e); }
+}
+
+function dismissDashBanner() {
+  document.getElementById('dashBanner').style.display = 'none';
+}
+
 // ── PRE-FILL CONTACT DEFAULTS ──
 function prefillDefaults() {
   if (!v('f-name')) document.getElementById('f-name').value = 'Ty Jackson';
@@ -877,6 +958,7 @@ function prefillDefaults() {
 
 // ── INIT ──
 prefillDefaults();
+checkDealMemoInput();
 checkDashboardImport();
 renderHistory();
 render();

@@ -897,6 +897,23 @@ function recalc() {
     dealGrade: grade,
     mao: r(mao),
   };
+
+  // ── Write results to localStorage for Connected Deal Dashboard ──
+  try {
+    localStorage.setItem('iw_brrrr_output', JSON.stringify({
+      cashFlow:       r(monthlyCF),
+      annualCashFlow: r(annualCF),
+      refiProceeds:   r(refiLoanAmount),
+      cashLeftInDeal: r(cashLeftInDeal),
+      capRate:        isFinite(capRate) ? Math.round(capRate * 10) / 10 : null,
+      cocReturn:      (CoC !== null && isFinite(CoC)) ? Math.round(CoC * 10) / 10 : null,
+      mao:            r(mao),
+      dealGrade:      grade,
+      dealScore:      score,
+      address:        document.getElementById('address').value,
+      timestamp:      new Date().toISOString(),
+    }));
+  } catch(e) {}
 }
 
 // Lead form submit
@@ -1068,9 +1085,43 @@ function dismissDealImport(){
   localStorage.removeItem('iw_active_deal');
 }
 
+// ── BRRRR INPUT IMPORT (from Connected Deal Dashboard) ──
+function checkBRRRRImport(){
+  const raw = localStorage.getItem('iw_brrrr_input');
+  if(!raw) return;
+  try{
+    const d = JSON.parse(raw);
+    localStorage.removeItem('iw_brrrr_input');
+
+    // Map fields
+    if(d.address)                                          document.getElementById('address').value       = d.address;
+    if(d.arv   || d.ARV)                                  document.getElementById('arv').value            = d.arv || d.ARV;
+    if(d.purchasePrice || d.MAO)                           document.getElementById('purchasePrice').value  = d.purchasePrice || d.MAO;
+    if(d.rehabTotal)                                       document.getElementById('rehabCost').value      = d.rehabTotal;
+    if(d.carryingCosts){
+      // If carryingCosts is a monthly figure use it directly; otherwise divide by 3 (default rehab timeline)
+      const rehabMo = parseInt(document.getElementById('rehabTimeline').value) || 3;
+      const perMonth = d.carryingCosts > 5000 ? Math.round(d.carryingCosts / rehabMo) : d.carryingCosts;
+      document.getElementById('holdingCosts').value = perMonth;
+    }
+
+    recalc();
+
+    // Show import banner (reuse the existing banner, update its text)
+    const addr = d.address || 'Unknown address';
+    document.getElementById('deal-banner-address').textContent = addr + ' — pre-filled from Deal Dashboard';
+    const banner = document.getElementById('deal-import-banner');
+    // Override button row to just show a dismiss (fields already applied)
+    banner.querySelector('button[onclick="applyDealImport()"]').style.display = 'none';
+    banner.querySelector('button[onclick="dismissDealImport()"]').textContent = 'Dismiss';
+    banner.style.display = 'flex';
+  } catch(e){}
+}
+
 // Init
 recalc();
 checkDealImport();
+checkBRRRRImport();
 </script>
 </body>
 </html>

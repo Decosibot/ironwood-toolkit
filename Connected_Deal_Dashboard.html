@@ -1337,21 +1337,37 @@ async function pullFromMAO() {
 // ── PUSH TO TOOLS (write localStorage, then open the tool) ──
 function pushToTool(tool) {
   const d = activeDeal || {};
+  const rehab = d.rehabTotal || d.rehabFromEstimator || 0;
+  const purchase = d.purchasePrice || d.maoResult?.maxOffer || 0;
+
+  // Unified payload — includes both casings for field name inconsistencies across tools
   const payload = {
     _source: 'Connected Deal Dashboard',
     _dealId: d.id || null,
     address: d.address || '',
+    // Both casings — BRRRR reads ARV uppercase, MAO reads arv lowercase
     arv: d.arv || 0,
-    purchasePrice: d.purchasePrice || d.maoResult?.maxOffer || 0,
-    rehabTotal: d.rehabTotal || d.rehabFromEstimator || 0,
+    ARV: d.arv || 0,
+    // Both names — BRRRR reads rehabCost, MAO reads rehabBudget, others use rehabTotal
+    rehabTotal: rehab,
+    rehabCost: rehab,
+    rehabBudget: rehab,
+    purchasePrice: purchase,
+    MAO: purchase,
+    askingPrice: purchase,
     exitStrategy: d.exitStrategy || '',
     assignmentFee: d.p2p?.assignmentFee || 0,
     sellerName: d.p2p?.sellerName || '',
+    sellerPhone: d.p2p?.sellerPhone || '',
+    situation: d.p2p?.situation || '',
     brrrrResult: d.brrrrResult || null,
     maoResult: d.maoResult || null,
     closingCosts: d.closingCosts || 0,
     carryingCosts: d.carryingCosts || 0,
+    // MAO uses carrying-monthly = carryingCosts / 3
+    carryingMonthly: Math.round((d.carryingCosts || 0) / 3),
     salePrice: d.salePrice || 0,
+    notes: d.notes || '',
   };
 
   const urls = {
@@ -1372,7 +1388,12 @@ function pushToTool(tool) {
     trackrecord: 'iw_trackrecord_input',
   };
 
-  try { localStorage.setItem(keys[tool], JSON.stringify(payload)); } catch(e) {}
+  try {
+    localStorage.setItem(keys[tool], JSON.stringify(payload));
+    // Also write iw_active_deal so legacy readers (BRRRR checkDealImport, Lender Package) pick it up
+    localStorage.setItem('iw_active_deal', JSON.stringify(payload));
+  } catch(e) {}
+
   if (urls[tool]) {
     showToast('Deal pushed — opening ' + tool + '…');
     setTimeout(() => window.open(urls[tool], '_blank'), 400);

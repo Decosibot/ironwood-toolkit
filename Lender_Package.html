@@ -71,6 +71,12 @@
 
 /* ── HEADER BACK LINKS ── */
 .iw-header-right { display: flex; gap: 10px; align-items: center; }
+
+/* ── DASHBOARD LOAD BANNER ── */
+#pitchBanner { display: none; background: #1a2a1a; border: 1px solid #2d5a2d; border-radius: 8px; padding: 11px 20px; margin: 0 0 20px; align-items: center; justify-content: space-between; gap: 12px; }
+#pitchBanner span { font-size: 13px; color: #86efac; font-weight: 600; }
+#pitchBanner button { background: transparent; border: 1px solid #2d5a2d; color: #86efac; border-radius: 6px; padding: 4px 12px; font-size: 12px; cursor: pointer; }
+#pitchBanner button:hover { background: #2d5a2d; }
 </style>
 </head>
 <body>
@@ -95,6 +101,14 @@
   <div class="iw-eyebrow">Lender Outreach</div>
   <h1>Lender Package</h1>
   <p>Fill out the deal details below, review the email preview on the right, then open in Gmail to send.</p>
+</div>
+
+<!-- DASHBOARD LOAD BANNER (iw_pitch_input) -->
+<div id="pitchBanner" style="display:none;max-width:1280px;margin:0 auto 0;padding:0 24px 16px;">
+  <div style="background:#1a2a1a;border:1px solid #2d5a2d;border-radius:8px;padding:11px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+    <span style="font-size:13px;color:#86efac;font-weight:600;">Deal pre-filled from Dashboard</span>
+    <button onclick="document.getElementById('pitchBanner').style.display='none'" style="background:transparent;border:1px solid #2d5a2d;color:#86efac;border-radius:6px;padding:4px 12px;font-size:12px;cursor:pointer;">Dismiss</button>
+  </div>
 </div>
 
 <div class="pkg-wrap">
@@ -480,6 +494,65 @@ window.addEventListener('load', () => {
     }
   } catch(e) { console.warn('Could not load deal from localStorage', e); }
 
+  // Load pitch input (iw_pitch_input) — from Connected Dashboard
+  try {
+    const pitchRaw = localStorage.getItem('iw_pitch_input');
+    if (pitchRaw) {
+      const p = JSON.parse(pitchRaw);
+      if (p) {
+        if (p.address)    setField('f-prop-address',  p.address);
+        if (p.arv)        setField('f-arv',            p.arv);
+        // rehabTotal or rehabCost
+        const rehabVal = p.rehabTotal || p.rehabCost;
+        if (rehabVal)     setField('f-rehab-cost',     rehabVal);
+        // purchasePrice or MAO
+        const priceVal = p.purchasePrice || p.MAO;
+        if (priceVal)     setField('f-purchase-price', priceVal);
+
+        // exitStrategy — map to select options
+        if (p.exitStrategy) {
+          const exitMap = {
+            'Flip':             'Fix & Flip',
+            'BRRRR':            'BRRRR',
+            'Wholesale':        'Wholesale',
+            'New Build':        'New Construction',
+            'Creative Finance': 'Hold/Rental',
+          };
+          const mapped = exitMap[p.exitStrategy] || p.exitStrategy;
+          setSelectField('f-exit-strategy', mapped);
+          const loanMap = {
+            'Fix & Flip':       'Fix & Flip',
+            'BRRRR':            'Fix & Flip',
+            'Hold/Rental':      'DSCR Rental',
+            'New Construction': 'New Construction',
+            'Wholesale':        'Bridge',
+          };
+          setSelectField('f-loan-type', loanMap[mapped] || 'Fix & Flip');
+        }
+
+        // Augment description with brrrrResult and maoResult if present
+        const descEl = document.getElementById('f-description');
+        const notes = [];
+        if (p.brrrrResult && p.brrrrResult.cashFlow !== undefined) {
+          notes.push('Projected monthly cash flow: $' + parseFloat(p.brrrrResult.cashFlow).toLocaleString('en-US', {maximumFractionDigits:0}));
+        }
+        if (p.maoResult && p.maoResult.maxOffer !== undefined) {
+          notes.push('MAO (max allowable offer): $' + parseFloat(p.maoResult.maxOffer).toLocaleString('en-US', {maximumFractionDigits:0}));
+        }
+        if (notes.length > 0 && descEl && (!descEl.value || descEl.dataset.auto === 'true')) {
+          // will be overwritten by autoFillDescription — append after that runs
+          descEl.dataset.pitchNotes = notes.join(' | ');
+        }
+
+        // Show banner
+        document.getElementById('pitchBanner').style.display = 'block';
+
+        // Clear input key
+        localStorage.removeItem('iw_pitch_input');
+      }
+    }
+  } catch(e) { console.warn('Could not load iw_pitch_input from localStorage', e); }
+
   // Load lender target
   try {
     const lenderRaw = localStorage.getItem('iw_lender_target');
@@ -494,6 +567,15 @@ window.addEventListener('load', () => {
   updateLoanHint();
   autoFillSubject();
   autoFillDescription();
+
+  // Append pitch notes (cash flow / MAO) to auto-generated description
+  const _descEl = document.getElementById('f-description');
+  if (_descEl && _descEl.dataset.pitchNotes) {
+    _descEl.value = (_descEl.value ? _descEl.value + '\n\n' : '') + _descEl.dataset.pitchNotes;
+    _descEl.dataset.auto = 'true'; // keep it replaceable if user re-triggers auto-fill
+    delete _descEl.dataset.pitchNotes;
+  }
+
   updatePreview();
 });
 

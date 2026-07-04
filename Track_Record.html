@@ -145,7 +145,30 @@ let allDeals = [];
 let currentFilter = 'All';
 
 // ── INIT ──
-window.addEventListener('load', loadDeals);
+window.addEventListener('load', () => { checkTrackRecordInput(); loadDeals(); });
+
+// ── READ FROM DASHBOARD PUSH ──
+function checkTrackRecordInput() {
+  let data;
+  try { data = JSON.parse(localStorage.getItem('iw_trackrecord_input') || 'null'); } catch(e) {}
+  if (!data || !data._dealId) return;
+  localStorage.removeItem('iw_trackrecord_input');
+  // Compute net profit from dashboard numbers and write back to Firestore
+  const salePrice    = parseFloat(data.salePrice) || 0;
+  const purchasePrice= parseFloat(data.purchasePrice || data.MAO) || 0;
+  const rehabTotal   = parseFloat(data.rehabTotal) || 0;
+  const closingCosts = parseFloat(data.closingCosts) || 0;
+  const carryingCosts= parseFloat(data.carryingCosts) || 0;
+  const netProfit    = salePrice > 0 ? salePrice - purchasePrice - rehabTotal - closingCosts - carryingCosts : 0;
+  if (!data._dealId) return;
+  db.collection('deals').doc(data._dealId).update({
+    status: 'Closed',
+    netProfit,
+    rehabCost: rehabTotal,
+    closedAt: firebase.firestore.FieldValue.serverTimestamp(),
+    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+  }).catch(() => {});
+}
 
 function loadDeals() {
   db.collection('deals')

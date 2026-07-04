@@ -580,6 +580,13 @@
 </head>
 <body>
 
+<!-- DEAL DASHBOARD IMPORT BANNER -->
+<div id="iw-import-banner" style="display:none;width:100%;background:#d4edda;border-bottom:2px solid #4f7a4a;padding:10px 24px;font-size:13px;font-family:'Geist',system-ui,sans-serif;color:#2d5a27;box-sizing:border-box;">
+  <strong style="letter-spacing:.05em;text-transform:uppercase;font-size:11px;">Pre-filled from Deal Dashboard</strong>
+  &nbsp;&mdash;&nbsp;
+  <span id="iw-import-address" style="font-weight:600;"></span>
+</div>
+
 <div class="iw-header">
   <a class="iw-logo-area" href="index.html">
     <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
@@ -985,6 +992,31 @@
   iwPopulateDeals();
   window.addEventListener('storage', e => { if (e.key === 'ironwood_deals') iwPopulateDeals(); });
 
+  // ── READ FROM CONNECTED DEAL DASHBOARD ──────────────────────────────
+  (function iwReadDashboardInput() {
+    try {
+      const raw = localStorage.getItem('iw_mao_input');
+      if (!raw) return;
+      const d = JSON.parse(raw);
+      localStorage.removeItem('iw_mao_input');
+
+      // Map fields
+      const arvVal = d.arv || d.ARV;
+      if (arvVal)            document.getElementById('arv').value             = arvVal;
+      if (d.rehabTotal)      document.getElementById('rehab').value           = d.rehabTotal;
+      if (d.carryingCosts)   document.getElementById('carrying-monthly').value = Math.round(d.carryingCosts / 3);
+
+      // Show import banner
+      const addr = d.address || '';
+      const banner = document.getElementById('iw-import-banner');
+      document.getElementById('iw-import-address').textContent = addr;
+      banner.style.display = 'block';
+
+      // Auto-calculate
+      if (arvVal) calculate();
+    } catch(e) {}
+  })();
+
   let propertyType = 'improved';
 
   function setType(type) {
@@ -1180,6 +1212,19 @@
     advEl.className = `advice-box ${verdictClass}`;
 
     document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+    // Write results to localStorage for Connected Deal Dashboard
+    try {
+      localStorage.setItem('iw_mao_output', JSON.stringify({
+        maxOffer:    mao,
+        discountPct: ratio,
+        verdict:     verdict,
+        totalCosts:  totalCosts,
+        cashFlow:    cashFlow,
+        address:     document.getElementById('arv').value,
+        timestamp:   new Date().toISOString()
+      }));
+    } catch(e) {}
   }
 
   // Initialize slider labels
