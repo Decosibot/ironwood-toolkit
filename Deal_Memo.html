@@ -330,10 +330,46 @@ body { background: var(--bg); color: var(--cream); font-family: 'Geist', system-
       </div>
 
       <div class="panel" style="margin-bottom:16px">
-        <h3>Description &amp; Selling Points</h3>
+        <h3>Deal Story <span style="font-weight:400;font-size:10px;color:var(--muted)">— fill each section, nothing gets missed</span></h3>
+
         <div class="field">
-          <label>Deal Description (appears on memo)</label>
-          <textarea id="f-desc" rows="5" placeholder="Describe the property, location highlights, comp strength, seller situation, and why this is a deal..." oninput="render()"></textarea>
+          <label style="display:flex;align-items:center;gap:6px;">
+            <span style="background:var(--bronze);color:#0a0a0a;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:800;">1</span>
+            Property Description
+          </label>
+          <textarea id="f-desc-property" rows="2" placeholder="3/2 SFR in Panthersville, solid brick construction, 1,400 sf. Good bones, needs cosmetic work throughout." oninput="render()"></textarea>
+        </div>
+
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:6px;">
+            <span style="background:var(--bronze);color:#0a0a0a;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:800;">2</span>
+            Location Highlights
+          </label>
+          <textarea id="f-desc-location" rows="2" placeholder="Minutes from I-285, 10 min to downtown Decatur, strong rental demand, A-rated schools nearby." oninput="render()"></textarea>
+        </div>
+
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:6px;">
+            <span style="background:var(--bronze);color:#0a0a0a;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:800;">3</span>
+            Comp Strength
+          </label>
+          <textarea id="f-desc-comps" rows="2" placeholder="3 comps within .5 mi sold $275K–$295K in last 90 days, all similar size and bed/bath count." oninput="render()"></textarea>
+        </div>
+
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:6px;">
+            <span style="background:var(--bronze);color:#0a0a0a;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:800;">4</span>
+            Seller Situation
+          </label>
+          <textarea id="f-desc-seller" rows="2" placeholder="Motivated seller, relocating out of state, property has been vacant 6 months, priced to move fast." oninput="render()"></textarea>
+        </div>
+
+        <div class="field">
+          <label style="display:flex;align-items:center;gap:6px;">
+            <span style="background:var(--bronze);color:#0a0a0a;border-radius:4px;padding:1px 7px;font-size:10px;font-weight:800;">5</span>
+            Why This is a Deal
+          </label>
+          <textarea id="f-desc-why" rows="2" placeholder="Buyer walks in with $90K+ in equity at ARV. Even at a conservative 80% ARV you're still netting $40K+ after a light rehab." oninput="render()"></textarea>
         </div>
       </div>
 
@@ -503,8 +539,12 @@ function render() {
   const assignFee = n('f-assignfee');
   const exit     = v('f-exit') || 'Wholesale';
   const closing  = v('f-closing') || '14 Days';
-  const deadline = v('f-deadline');
-  const desc     = v('f-desc');
+  const deadline     = v('f-deadline');
+  const descProperty = v('f-desc-property');
+  const descLocation = v('f-desc-location');
+  const descComps    = v('f-desc-comps');
+  const descSeller   = v('f-desc-seller');
+  const descWhy      = v('f-desc-why');
   const ctaName  = v('f-name') || 'Ty Jackson';
   const ctaPhone = v('f-phone') || '';
   const ctaEmail = v('f-email') || '';
@@ -587,10 +627,31 @@ function render() {
       </div>
     </div>` : ''}
 
-    ${desc ? `
+    ${(descProperty || descLocation || descComps || descSeller || descWhy) ? `
     <div class="memo-section">
       <h4>Deal Overview</h4>
-      <div class="memo-desc">${esc(desc)}</div>
+      <table style="width:100%;border-collapse:collapse;">
+        ${descProperty ? `<tr style="border-bottom:1px solid rgba(255,255,255,.08);">
+          <td style="width:28%;padding:8px 10px 8px 0;vertical-align:top;font-size:9px;color:var(--bronze);text-transform:uppercase;letter-spacing:.5px;font-weight:800;white-space:nowrap;">Property</td>
+          <td style="padding:8px 0;font-size:13px;line-height:1.6;color:rgba(244,239,230,.85);">${esc(descProperty)}</td>
+        </tr>` : ''}
+        ${descLocation ? `<tr style="border-bottom:1px solid rgba(255,255,255,.08);">
+          <td style="padding:8px 10px 8px 0;vertical-align:top;font-size:9px;color:var(--bronze);text-transform:uppercase;letter-spacing:.5px;font-weight:800;white-space:nowrap;">Location</td>
+          <td style="padding:8px 0;font-size:13px;line-height:1.6;color:rgba(244,239,230,.85);">${esc(descLocation)}</td>
+        </tr>` : ''}
+        ${descComps ? `<tr style="border-bottom:1px solid rgba(255,255,255,.08);">
+          <td style="padding:8px 10px 8px 0;vertical-align:top;font-size:9px;color:var(--bronze);text-transform:uppercase;letter-spacing:.5px;font-weight:800;white-space:nowrap;">Comps</td>
+          <td style="padding:8px 0;font-size:13px;line-height:1.6;color:rgba(244,239,230,.85);">${esc(descComps)}</td>
+        </tr>` : ''}
+        ${descSeller ? `<tr style="border-bottom:1px solid rgba(255,255,255,.08);">
+          <td style="padding:8px 10px 8px 0;vertical-align:top;font-size:9px;color:var(--bronze);text-transform:uppercase;letter-spacing:.5px;font-weight:800;white-space:nowrap;">Seller</td>
+          <td style="padding:8px 0;font-size:13px;line-height:1.6;color:rgba(244,239,230,.85);">${esc(descSeller)}</td>
+        </tr>` : ''}
+        ${descWhy ? `<tr>
+          <td style="padding:8px 10px 8px 0;vertical-align:top;font-size:9px;color:var(--bronze);text-transform:uppercase;letter-spacing:.5px;font-weight:800;white-space:nowrap;">Why It's a Deal</td>
+          <td style="padding:8px 0;font-size:13px;line-height:1.6;color:rgba(244,239,230,.85);font-weight:600;">${esc(descWhy)}</td>
+        </tr>` : ''}
+      </table>
     </div>` : ''}
 
     <div class="memo-cta">
@@ -622,8 +683,12 @@ function copyText() {
   const condition = v('f-condition');
   const exit     = v('f-exit');
   const closing  = v('f-closing');
-  const deadline = v('f-deadline');
-  const desc     = v('f-desc');
+  const deadline      = v('f-deadline');
+  const descProperty  = v('f-desc-property');
+  const descLocation  = v('f-desc-location');
+  const descComps     = v('f-desc-comps');
+  const descSeller    = v('f-desc-seller');
+  const descWhy       = v('f-desc-why');
   const ctaName  = v('f-name');
   const ctaPhone = v('f-phone');
   const ctaEmail = v('f-email');
@@ -657,7 +722,12 @@ function copyText() {
     closing ? `⏰ Closing: ${closing}` : '',
     deadline ? `🔴 Deadline: ${deadline}` : '',
     ``,
-    desc   ? `📝 OVERVIEW\n${desc}` : '',
+    (descProperty || descLocation || descComps || descSeller || descWhy) ? `📝 DEAL OVERVIEW` : '',
+    descProperty ? `\n🏠 PROPERTY\n${descProperty}` : '',
+    descLocation ? `\n📍 LOCATION\n${descLocation}` : '',
+    descComps    ? `\n📊 COMP STRENGTH\n${descComps}` : '',
+    descSeller   ? `\n👤 SELLER SITUATION\n${descSeller}` : '',
+    descWhy      ? `\n💡 WHY IT'S A DEAL\n${descWhy}` : '',
     ``,
     `━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━`,
     `📞 Contact: ${[ctaName, ctaPhone, ctaEmail].filter(Boolean).join(' · ')}`,
@@ -683,7 +753,10 @@ function saveMemo() {
     beds: v('f-beds'), baths: v('f-baths'), sqft: v('f-sqft'),
     propType: v('f-type'), year: v('f-year'), area: v('f-area'),
     condition: v('f-condition'), closing: v('f-closing'),
-    deadline: v('f-deadline'), desc: v('f-desc'),
+    closingCosts: n('f-closing-costs'), holding: n('f-holding'),
+    deadline: v('f-deadline'),
+    descProperty: v('f-desc-property'), descLocation: v('f-desc-location'),
+    descComps: v('f-desc-comps'), descSeller: v('f-desc-seller'), descWhy: v('f-desc-why'),
     name: v('f-name'), phone: v('f-phone'), email: v('f-email'), company: v('f-company'),
     photos: photos.slice(0, 6),
   };
@@ -702,7 +775,10 @@ function loadMemo(id) {
   set('f-area', d.area); set('f-condition', d.condition);
   set('f-arv', d.arv); set('f-rehab', d.rehab); set('f-asking', d.asking);
   set('f-assignfee', d.assignFee); set('f-exit', d.exit); set('f-closing', d.closing);
-  set('f-deadline', d.deadline); set('f-desc', d.desc);
+  set('f-closing-costs', d.closingCosts); set('f-holding', d.holding);
+  set('f-deadline', d.deadline);
+  set('f-desc-property', d.descProperty); set('f-desc-location', d.descLocation);
+  set('f-desc-comps', d.descComps); set('f-desc-seller', d.descSeller); set('f-desc-why', d.descWhy);
   set('f-name', d.name); set('f-phone', d.phone); set('f-email', d.email); set('f-company', d.company);
   photos = d.photos || [];
   renderPhotoGrid();
@@ -745,7 +821,8 @@ function clearHistory() {
 // ── CLEAR FORM ──
 function clearForm() {
   ['f-address','f-type','f-year','f-beds','f-baths','f-sqft','f-area','f-condition',
-   'f-arv','f-rehab','f-asking','f-assignfee','f-deadline','f-desc',
+   'f-arv','f-rehab','f-asking','f-assignfee','f-closing-costs','f-holding','f-deadline',
+   'f-desc-property','f-desc-location','f-desc-comps','f-desc-seller','f-desc-why',
    'f-name','f-phone','f-email','f-company'].forEach(id => {
     const el = document.getElementById(id);
     if (el) el.value = id === 'f-type' ? 'Single Family' : id === 'f-exit' ? 'Wholesale' : id === 'f-closing' ? '14 Days' : '';
