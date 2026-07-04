@@ -1,0 +1,1241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Toolkit SOP — Ironwood Property Group</title>
+<link rel="stylesheet" href="iw-design.css"/>
+<style>
+/* ── Layout ── */
+.sop-wrap { max-width: 960px; margin: 0 auto; padding: 32px 24px 80px; }
+
+/* ── TOC ── */
+.toc { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius-lg); padding: 24px 28px; margin-bottom: 40px; }
+.toc-title { font-family: 'Instrument Serif', serif; font-size: 20px; color: var(--ink); margin-bottom: 14px; }
+.toc-section { margin-bottom: 10px; }
+.toc-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); margin-bottom: 4px; }
+.toc-links { display: flex; flex-wrap: wrap; gap: 6px; }
+.toc-link { font-size: 12px; font-weight: 600; color: var(--bronze-deep); padding: 4px 12px; background: var(--bronze-wash); border: 1px solid var(--bronze-tint); border-radius: 20px; text-decoration: none; white-space: nowrap; }
+.toc-link:hover { background: var(--bronze-tint); text-decoration: none; }
+
+/* ── Section headers ── */
+.sop-section { margin-bottom: 48px; }
+.sop-section-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 2px solid var(--hairline); }
+.sop-section-icon { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; }
+.sop-section-icon.bronze { background: var(--bronze-tint); }
+.sop-section-icon.green  { background: var(--green-tint); }
+.sop-section-icon.peach  { background: #fde8d8; }
+.sop-section-icon.blue   { background: #dceeff; }
+.sop-section-icon.gold   { background: #fef3cd; }
+.sop-section-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--muted); }
+.sop-section-title { font-family: 'Instrument Serif', serif; font-size: 26px; color: var(--ink); line-height: 1.2; }
+
+/* ── Step cards ── */
+.steps { display: flex; flex-direction: column; gap: 14px; }
+.step { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 18px 20px; position: relative; }
+.step:hover { border-color: var(--bronze); }
+.step-num { position: absolute; top: 18px; right: 18px; font-size: 11px; font-weight: 700; color: var(--muted); background: var(--bg); border: 1px solid var(--hairline); border-radius: 20px; padding: 2px 8px; }
+.step-title { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 6px; padding-right: 52px; }
+.step-body { font-size: 13px; color: var(--ink-soft); line-height: 1.65; }
+.step-body p { margin-bottom: 6px; }
+.step-body ul { padding-left: 18px; margin-top: 4px; }
+.step-body li { margin-bottom: 4px; }
+.step-link { display: inline-block; margin-top: 8px; font-size: 12px; font-weight: 700; color: var(--bronze-deep); background: var(--bronze-wash); border: 1px solid var(--bronze-tint); border-radius: 6px; padding: 4px 12px; text-decoration: none; }
+.step-link:hover { background: var(--bronze-tint); text-decoration: none; }
+.step-tag { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 7px; border-radius: 4px; margin-right: 4px; margin-bottom: 4px; }
+.step-tag.p2p    { background: #fde8d8; color: #8a3a10; }
+.step-tag.ap     { background: #dceeff; color: #1a3a6a; }
+.step-tag.iw     { background: var(--green-tint); color: #1a4d32; }
+.step-tag.all    { background: #fef3cd; color: #6a4a00; }
+.step-tag.hub    { background: var(--bronze-tint); color: var(--bronze-deep); }
+
+/* ── Flow diagram ── */
+.flow { display: flex; flex-direction: column; gap: 0; margin: 20px 0; }
+.flow-row { display: flex; align-items: stretch; gap: 0; }
+.flow-box { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 12px 16px; flex: 1; }
+.flow-box.hub { background: var(--bronze-tint); border-color: var(--bronze); }
+.flow-box-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 3px; }
+.flow-box-name { font-size: 13px; font-weight: 700; color: var(--ink); }
+.flow-box-key { font-size: 10px; color: var(--muted); font-family: monospace; margin-top: 2px; }
+.flow-arrow { display: flex; align-items: center; justify-content: center; padding: 0 8px; font-size: 18px; color: var(--muted); flex-shrink: 0; }
+.flow-arrow.down { padding: 4px 0; justify-content: center; font-size: 16px; }
+.flow-gap { height: 8px; }
+
+/* ── Rules / callout ── */
+.rule-box { border-radius: var(--radius); padding: 14px 18px; margin: 14px 0; }
+.rule-box.bronze { background: var(--bronze-wash); border-left: 3px solid var(--bronze); }
+.rule-box.green  { background: var(--green-tint); border-left: 3px solid var(--green); }
+.rule-box.warn   { background: #fef3cd; border-left: 3px solid #c8960c; }
+.rule-box.red    { background: var(--red-tint); border-left: 3px solid var(--red); }
+.rule-box-title  { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: 5px; }
+.rule-box p, .rule-box li { font-size: 13px; line-height: 1.6; color: var(--ink-soft); }
+.rule-box ul { padding-left: 16px; }
+
+/* ── Glossary ── */
+.glossary { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media(max-width:600px){ .glossary { grid-template-columns: 1fr; } }
+.gloss-item { background: var(--surface); border: 1px solid var(--hairline); border-radius: var(--radius); padding: 12px 14px; }
+.gloss-term { font-size: 12px; font-weight: 700; color: var(--ink); font-family: monospace; }
+.gloss-def  { font-size: 12px; color: var(--muted); margin-top: 3px; line-height: 1.5; }
+
+/* ── Waterfall visual ── */
+.waterfall { display: flex; flex-direction: column; gap: 6px; margin: 14px 0; }
+.wf-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 8px; }
+.wf-row.revenue { background: var(--green-tint); }
+.wf-row.deduct  { background: var(--red-tint); }
+.wf-row.result  { background: var(--bronze-tint); font-weight: 700; }
+.wf-label { flex: 1; font-size: 13px; font-weight: 600; color: var(--ink-soft); }
+.wf-note  { font-size: 11px; color: var(--muted); }
+
+/* ── Company badge ── */
+.co-badges { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 16px; }
+.co-badge { padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 700; border: 1px solid; }
+.co-badge.p2p { background: #fde8d8; border-color: #e87040; color: #8a3a10; }
+.co-badge.ap  { background: #dceeff; border-color: #4a6fa5; color: #1a3a6a; }
+.co-badge.iw  { background: var(--green-tint); border-color: var(--green); color: #1a4d32; }
+
+/* ── Print ── */
+@media print {
+  .iw-header, .iw-hero, .toc-link, .step-link, .iw-footer { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .step { break-inside: avoid; }
+  .sop-section { break-before: auto; }
+}
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="iw-header">
+  <a class="iw-logo-area" href="index.html">
+    <img src="ihr-logo.png" alt="IHR" style="width:38px;height:38px;object-fit:contain;flex-shrink:0;border-radius:4px;">
+    <div>
+      <div class="iw-logo-text">Ironwood Property Group</div>
+      <div class="iw-logo-sub">Atlanta Metro</div>
+    </div>
+  </a>
+  <div class="iw-header-right">
+    <button class="iw-back-btn" onclick="window.print()" style="cursor:pointer;">Print</button>
+    <a class="iw-back-btn" href="System_Flowchart.html">Flowchart</a>
+    <a class="iw-back-btn" href="index.html">← Toolkit</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="iw-hero">
+  <div class="iw-eyebrow">Ironwood Property Group</div>
+  <h1>Toolkit Standard Operating Procedures</h1>
+  <p>How every tool works, who uses it, and the exact order to run each deal from first contact to closed profit.</p>
+</div>
+
+<div class="sop-wrap">
+
+  <!-- TABLE OF CONTENTS -->
+  <div class="toc">
+    <div class="toc-title">Contents</div>
+    <div class="toc-section">
+      <div class="toc-section-label">Overview</div>
+      <div class="toc-links">
+        <a class="toc-link" href="#how-it-works">How the System Works</a>
+        <a class="toc-link" href="#companies">Three-Company Structure</a>
+        <a class="toc-link" href="#hub">The Hub — Deal Dashboard</a>
+        <a class="toc-link" href="#data-keys">Data Keys Reference</a>
+      </div>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-label">Deal Flow — Step by Step</div>
+      <div class="toc-links">
+        <a class="toc-link" href="#step-lead">1. Lead Comes In</a>
+        <a class="toc-link" href="#step-qualify">2. Qualify the Deal</a>
+        <a class="toc-link" href="#step-analyze">3. Run the Numbers</a>
+        <a class="toc-link" href="#step-scope">4. Scope the Rehab</a>
+        <a class="toc-link" href="#step-present">5. Present the Deal</a>
+        <a class="toc-link" href="#step-fund">6. Fund the Deal</a>
+        <a class="toc-link" href="#step-execute">7. Execute &amp; Close</a>
+        <a class="toc-link" href="#step-report">8. Report &amp; Record</a>
+      </div>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-label">By Company</div>
+      <div class="toc-links">
+        <a class="toc-link" href="#p2p-sop">Peach to Palms SOP</a>
+        <a class="toc-link" href="#ap-sop">Anchor Pro SOP</a>
+        <a class="toc-link" href="#iw-sop">Ironwood SOP</a>
+      </div>
+    </div>
+    <div class="toc-section">
+      <div class="toc-section-label">Finance &amp; Reporting</div>
+      <div class="toc-links">
+        <a class="toc-link" href="#waterfall">Profit Waterfall</a>
+        <a class="toc-link" href="#monthly-pl">Monthly P&L</a>
+        <a class="toc-link" href="#track-record">Track Record</a>
+        <a class="toc-link" href="#capital">Capital &amp; Funding</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════ SECTION 1: HOW IT WORKS ═══════════ -->
+  <div class="sop-section" id="how-it-works">
+    <div class="sop-section-header">
+      <div class="sop-section-icon bronze">🔄</div>
+      <div>
+        <div class="sop-section-label">Overview</div>
+        <div class="sop-section-title">How the System Works</div>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:var(--ink-soft);margin-bottom:16px;">The Ironwood toolkit is a closed-loop system. Every tool passes data to the next using the browser's local storage. The <strong>Connected Deal Dashboard</strong> is the central hub — it holds the single deal record that all three companies share. No re-entering numbers. No duplicate spreadsheets.</p>
+
+    <div class="flow">
+      <div class="flow-row">
+        <div class="flow-box"><div class="flow-box-label">Entry</div><div class="flow-box-name">Lead Capture / REI Reply / Homeowner Form</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box hub"><div class="flow-box-label">Hub</div><div class="flow-box-name">Connected Deal Dashboard</div><div class="flow-box-key">Firestore · iw_active_deal</div></div>
+      </div>
+      <div class="flow-gap"></div>
+      <div class="flow-row">
+        <div class="flow-box"><div class="flow-box-label">Analysis</div><div class="flow-box-name">MAO Calculator</div><div class="flow-box-key">iw_mao_input / output</div></div>
+        <div class="flow-arrow">⇄</div>
+        <div class="flow-box hub" style="max-width:160px;flex:none;"><div class="flow-box-label">Hub</div><div class="flow-box-name" style="font-size:12px;">Dashboard</div></div>
+        <div class="flow-arrow">⇄</div>
+        <div class="flow-box"><div class="flow-box-label">Analysis</div><div class="flow-box-name">BRRRR Analyzer</div><div class="flow-box-key">iw_brrrr_input / output</div></div>
+      </div>
+      <div class="flow-gap"></div>
+      <div class="flow-row">
+        <div class="flow-box"><div class="flow-box-label">Ironwood</div><div class="flow-box-name">Remodel Estimator</div><div class="flow-box-key">iw_remodeler_output</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box hub" style="max-width:160px;flex:none;"><div class="flow-box-label">Hub</div><div class="flow-box-name" style="font-size:12px;">Dashboard</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box"><div class="flow-box-label">Output</div><div class="flow-box-name">Deal Memo → Private Money Pitch</div><div class="flow-box-key">iw_dealmemo_output · iw_pitch_input</div></div>
+      </div>
+      <div class="flow-gap"></div>
+      <div class="flow-row">
+        <div class="flow-box"><div class="flow-box-label">Close</div><div class="flow-box-name">Track Record (Firestore)</div><div class="flow-box-key">iw_trackrecord_input</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box"><div class="flow-box-label">Finance</div><div class="flow-box-name">Monthly P&L (Import Deals)</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-box"><div class="flow-box-label">Splits</div><div class="flow-box-name">Profit Waterfall</div></div>
+      </div>
+    </div>
+
+    <div class="rule-box bronze">
+      <div class="rule-box-title">Core Rule</div>
+      <p>All tools run in the same browser window so localStorage data passes between them. Always open tools from the toolkit index or from the Dashboard's Tools tab — do not open multiple browser profiles at the same time or data will not transfer.</p>
+    </div>
+  </div>
+
+
+  <!-- ═══════════ SECTION 2: THREE COMPANIES ═══════════ -->
+  <div class="sop-section" id="companies">
+    <div class="sop-section-header">
+      <div class="sop-section-icon gold">🏢</div>
+      <div>
+        <div class="sop-section-label">Structure</div>
+        <div class="sop-section-title">Three-Company Structure</div>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:var(--ink-soft);margin-bottom:20px;">Every deal moves through up to three companies in sequence. Each company has its own tools, P&L, and waterfall — but they all share one deal record in Firestore.</p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">Company 1</span>
+        <div class="step-title">Peach to Palms Property Group <span class="step-tag p2p">P2P</span></div>
+        <div class="step-body">
+          <p><strong>Role:</strong> Acquisitions. Finds the deal, negotiates the contract, decides the exit strategy.</p>
+          <p><strong>Exit strategies:</strong> Wholesale (assignment fee), creative finance (subject-to, seller finance, novation), or flip pipeline (hand to Ironwood).</p>
+          <p><strong>Key tools:</strong> MAO Calculator · BRRRR Analyzer · Deal Memo · Private Money Pitch (Lender Package) · P2P P&L · Track Record · Deal Pipeline</p>
+          <p><strong>Who runs it:</strong> Ty Jackson leads acquisitions. Jeff supports on analysis and funding decisions.</p>
+          <p><strong>Waterfall:</strong> Revenue in → Opex + deal costs → 25% reserve → 10% portfolio fund → $2K/mo Ty draw → remainder forward.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">Company 2</span>
+        <div class="step-title">Anchor Pro Solutions <span class="step-tag ap">AP</span></div>
+        <div class="step-body">
+          <p><strong>Role:</strong> Rehab execution. Scopes, bids, and manages the renovation on every deal that needs work.</p>
+          <p><strong>Activates when:</strong> A P2P deal goes Under Contract and needs a scope of work. Also takes direct homeowner renovation clients.</p>
+          <p><strong>Key tools:</strong> Remodel Estimator · Scope of Work · Room Scanner · Change Order Form · Draw Schedule · Invoice · AP P&L</p>
+          <p><strong>Who runs it:</strong> Ty Jackson owns Anchor Pro. Ironwood covers sub labor and materials management.</p>
+          <p><strong>Waterfall:</strong> Revenue in → Opex + job costs → 25% reserve → 10% reinvestment → $2K/mo Ty draw → remainder forward.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">Company 3</span>
+        <div class="step-title">Ironwood Property Group LLC <span class="step-tag iw">Ironwood</span></div>
+        <div class="step-body">
+          <p><strong>Role:</strong> Asset ownership and disposition. Holds the renovated property, lists it, manages rentals, or executes BRRRR refinance.</p>
+          <p><strong>Also does:</strong> Direct homeowner renovation contracts (full-scope home services, $400K+ Marietta/Cobb target market).</p>
+          <p><strong>Key tools:</strong> Connected Deal Dashboard · Profit Waterfall · Ironwood Monthly P&L · Capital Engine · Client Portal · Rental Dashboard · New Construction Pipeline</p>
+          <p><strong>Who runs it:</strong> Jeff (35% equity) and Ty (30% equity). Ironwood entity itself holds 35%.</p>
+          <p><strong>Waterfall:</strong> Gross profit → P2P assignment fee off the top → remainder split 35% Jeff / 30% Ty / 35% Ironwood reinvestment.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════ SECTION 3: THE HUB ═══════════ -->
+  <div class="sop-section" id="hub">
+    <div class="sop-section-header">
+      <div class="sop-section-icon bronze">⚡</div>
+      <div>
+        <div class="sop-section-label">Core Tool</div>
+        <div class="sop-section-title">The Hub — Connected Deal Dashboard</div>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:var(--ink-soft);margin-bottom:16px;">The Dashboard is the only tool that writes to Firestore in real time. Every other tool reads from or writes back to it via localStorage. Think of it as the deal's permanent file — open it first, close it last.</p>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">Tab 1</span>
+        <div class="step-title">Overview Tab</div>
+        <div class="step-body">
+          <p>Create the deal here. Set the address, ARV, asking price, exit strategy, and lead source. This creates the Firestore record every other tab and tool will update.</p>
+          <ul>
+            <li>Fill ARV → MAO hint auto-calculates (70% × ARV)</li>
+            <li>Set exit strategy (Wholesale / Flip / BRRRR / Creative Finance / New Build)</li>
+            <li>Advance stages: Lead → Offer Sent → Under Contract → Scoped → Decision → Active → Closed / Dead</li>
+          </ul>
+        </div>
+        <a class="step-link" href="Connected_Deal_Dashboard.html">Open Dashboard</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">Tab 2</span>
+        <div class="step-title">P2P Tab — Acquisitions Layer</div>
+        <div class="step-body">
+          <p>Used by Peach to Palms. Record seller motivation, asking price, timeline, assignment fee, and deal costs. These numbers feed the Waterfall tab.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">Tab 3</span>
+        <div class="step-title">Anchor Pro Tab — Scope Layer</div>
+        <div class="step-body">
+          <p>Used by Anchor Pro. Add scope line items (rooms + costs), set the scope total. This number syncs to the Waterfall as the rehab cost deduction.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">Tab 4</span>
+        <div class="step-title">Ironwood Tab — Asset Layer</div>
+        <div class="step-body">
+          <p>Used by Ironwood LLC. Set sale price, list date, draw schedule, and final carrying/closing costs. Sale price flows into the Waterfall as gross revenue.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">Tab 5</span>
+        <div class="step-title">Waterfall Tab — Profit Splits</div>
+        <div class="step-body">
+          <p>Auto-calculates from the other tabs. Shows gross profit, P2P assignment fee deduction, and final 35/30/35 split. No manual entry needed — just verify the numbers match reality.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <span class="step-num">Tab 6</span>
+        <div class="step-title">Tools Tab — Push &amp; Pull</div>
+        <div class="step-body">
+          <p>The bridge between the Dashboard and every other tool.</p>
+          <ul>
+            <li><strong>Pull:</strong> Import rehab cost from Remodel Estimator, import BRRRR result, import MAO result</li>
+            <li><strong>Push:</strong> Send this deal to BRRRR Analyzer, MAO Calculator, Remodel Estimator, Deal Memo, Private Money Pitch, or Track Record</li>
+            <li><strong>P&L links:</strong> Jump directly to P2P P&L, Anchor Pro P&L, Ironwood P&L, or Profit Waterfall</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════ SECTION 4: DEAL FLOW STEPS ═══════════ -->
+
+  <!-- Step 1: Lead -->
+  <div class="sop-section" id="step-lead">
+    <div class="sop-section-header">
+      <div class="sop-section-icon peach">📞</div>
+      <div>
+        <div class="sop-section-label">Deal Flow — Step 1</div>
+        <div class="sop-section-title">Lead Comes In</div>
+      </div>
+    </div>
+    <div class="co-badges"><span class="co-badge p2p">Peach to Palms</span></div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">1.1</span>
+        <div class="step-title">Inbound Lead Sources</div>
+        <div class="step-body">
+          <p>Leads enter through one of these channels:</p>
+          <ul>
+            <li><strong>REI Reply</strong> — AI voicemail answers inbound calls, scores the lead HOT / WARM / COLD, writes to Firestore, sends SMS alert</li>
+            <li><strong>Home Valuation Tool</strong> — seller enters property info, gets instant value range, submits contact info → GHL pipeline</li>
+            <li><strong>Seller Lead Form</strong> — direct intake for motivated sellers</li>
+            <li><strong>Investor Inquiry Form</strong> — buyers and accredited investors opt in</li>
+            <li><strong>Direct (cold call, DM, referral)</strong> — Ty enters manually into Dashboard</li>
+          </ul>
+        </div>
+        <a class="step-link" href="IPG_HomeValuation.html">Home Valuation Tool</a>
+        <a class="step-link" href="Ironwood_SellerLead.html">Seller Lead Form</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">1.2</span>
+        <div class="step-title">Create the Deal in the Dashboard</div>
+        <div class="step-body">
+          <p>Open the Connected Deal Dashboard. Click <strong>+ New Deal</strong>. Fill in:</p>
+          <ul>
+            <li>Property address</li>
+            <li>Lead source (REI Reply / Cold Call / Direct Mail / Referral / Website / Inbound / Other)</li>
+            <li>Exit strategy (set a best guess — can change later)</li>
+            <li>ARV (from Zillow, PropStream, or comp pull)</li>
+            <li>Asking price (seller's number)</li>
+          </ul>
+          <p>Click Save. The deal is now in Firestore and visible across all company tabs.</p>
+        </div>
+        <a class="step-link" href="Connected_Deal_Dashboard.html">Open Dashboard</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">1.3</span>
+        <div class="step-title">Advance Stage to "Offer Sent"</div>
+        <div class="step-body">
+          <p>Once you've spoken to the seller and submitted an offer, click <strong>Advance to Offer Sent</strong> in the Overview tab. This timestamps the stage change in Firestore and keeps the pipeline accurate.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 2: Qualify -->
+  <div class="sop-section" id="step-qualify">
+    <div class="sop-section-header">
+      <div class="sop-section-icon peach">🧮</div>
+      <div>
+        <div class="sop-section-label">Deal Flow — Step 2</div>
+        <div class="sop-section-title">Qualify the Deal</div>
+      </div>
+    </div>
+    <div class="co-badges"><span class="co-badge p2p">Peach to Palms</span></div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">2.1</span>
+        <div class="step-title">Run the MAO Calculator</div>
+        <div class="step-body">
+          <p>From the Dashboard Tools tab, click <strong>Open in MAO Calculator</strong>. The deal data (ARV, rehab estimate) loads automatically.</p>
+          <p>The MAO Calculator shows:</p>
+          <ul>
+            <li>Maximum Allowable Offer = ARV × 70% − Rehab</li>
+            <li>Discount percentage from asking price</li>
+            <li>Whether the deal is worth pursuing (verdict label)</li>
+            <li>Rough profit split preview</li>
+          </ul>
+          <p>When done, return to the Dashboard → Tools tab → <strong>Pull MAO Result</strong> to save it to the deal record.</p>
+        </div>
+        <a class="step-link" href="MAO_Calculator.html">MAO Calculator</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">2.2</span>
+        <div class="step-title">Run the BRRRR Analyzer (if hold strategy)</div>
+        <div class="step-body">
+          <p>If the exit strategy is BRRRR or rental hold, push to the BRRRR Analyzer from the Dashboard. It loads ARV, rehab, and purchase price automatically.</p>
+          <p>The BRRRR Analyzer shows:</p>
+          <ul>
+            <li>All-in cost, refi loan amount, cash left in deal</li>
+            <li>Monthly cash flow and cap rate</li>
+            <li>Deal grade A–D and deal score</li>
+            <li>Whether you can pull your full investment out at refi</li>
+          </ul>
+          <p>Pull the BRRRR result back to the Dashboard when done.</p>
+        </div>
+        <a class="step-link" href="IPG_BRRRRAnalyzer.html">BRRRR Analyzer</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">2.3</span>
+        <div class="step-title">Decision: Go / No-Go / Counter</div>
+        <div class="step-body">
+          <p>Review the MAO (and BRRRR if applicable). Three outcomes:</p>
+          <ul>
+            <li><strong>Go</strong> — asking price is at or below MAO. Advance stage to Under Contract.</li>
+            <li><strong>Counter</strong> — seller is above MAO but motivated. Submit MAO as counter offer.</li>
+            <li><strong>No-Go</strong> — numbers don't work. Mark deal Dead in the Dashboard. Record note on why for the track record.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 3: Analyze -->
+  <div class="sop-section" id="step-analyze">
+    <div class="sop-section-header">
+      <div class="sop-section-icon peach">📊</div>
+      <div>
+        <div class="sop-section-label">Deal Flow — Step 3</div>
+        <div class="sop-section-title">Run the Full Numbers</div>
+      </div>
+    </div>
+    <div class="co-badges"><span class="co-badge p2p">Peach to Palms</span><span class="co-badge ap">Anchor Pro</span></div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">3.1</span>
+        <div class="step-title">Walk the Property — Room Scanner</div>
+        <div class="step-body">
+          <p>At the property, open the Room Scanner on your phone. Take photos room by room. The scanner:</p>
+          <ul>
+            <li>Uses AI to identify distress signals and needed repairs</li>
+            <li>Voice dictation — narrate what you see, it types it</li>
+            <li>Builds a line-item estimate per room</li>
+            <li>Saves job history for future reference</li>
+          </ul>
+          <p>The Room Scanner output becomes your baseline for the Remodel Estimator scope.</p>
+        </div>
+        <a class="step-link" href="Room_Scanner.html">Room Scanner</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">3.2</span>
+        <div class="step-title">Build the Scope — Remodel Estimator</div>
+        <div class="step-body">
+          <p>Open the Remodel Estimator from the Dashboard (Tools tab → Open in Remodel Estimator). Data auto-populates.</p>
+          <p>In the Estimator:</p>
+          <ul>
+            <li>Select company (Anchor Pro or Ironwood)</li>
+            <li>Add line items by room (labor + materials, markup %)</li>
+            <li>Assign paint colors — pick from 130+ Sherwin-Williams, Behr, Valspar, and Glidden colors with swatches</li>
+            <li>Select scope category tags (Kitchen / Bath / Flooring / Exterior, etc.)</li>
+            <li>Review the proposal preview and profit margin breakdown</li>
+          </ul>
+          <p>When complete, click <strong>Push Rehab Cost to Dashboard</strong>. Return to the Dashboard → Tools tab → <strong>Pull Rehab Cost</strong> to lock it into the deal record.</p>
+        </div>
+        <a class="step-link" href="Remodel_Estimator.html">Remodel Estimator</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">3.3</span>
+        <div class="step-title">Advance Stage to "Scoped"</div>
+        <div class="step-body">
+          <p>Once rehab cost is confirmed and pulled into the Dashboard, advance the deal stage to <strong>Scoped</strong>. This triggers the Anchor Pro layer — the scope is locked and ready for the bid.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 4: Scope -->
+  <div class="sop-section" id="step-scope">
+    <div class="sop-section-header">
+      <div class="sop-section-icon blue">🔨</div>
+      <div>
+        <div class="sop-section-label">Deal Flow — Step 4</div>
+        <div class="sop-section-title">Scope of Work &amp; Proposal</div>
+      </div>
+    </div>
+    <div class="co-badges"><span class="co-badge ap">Anchor Pro</span></div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">4.1</span>
+        <div class="step-title">Generate the Proposal</div>
+        <div class="step-body">
+          <p>In the Remodel Estimator, click <strong>Build Proposal</strong>. The printed proposal includes:</p>
+          <ul>
+            <li>Line items by category with labor + materials breakdown</li>
+            <li>Paint color swatches with brand, name, and code for each surface</li>
+            <li>Scope summary and total</li>
+            <li>Company branding (Anchor Pro or Ironwood depending on client type)</li>
+          </ul>
+          <p>Save to PDF or print directly. This is the document you present to the homeowner client or attach to the deal file.</p>
+        </div>
+        <a class="step-link" href="Remodel_Estimator.html">Remodel Estimator</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">4.2</span>
+        <div class="step-title">Client Service Agreement</div>
+        <div class="step-body">
+          <p>Once scope is approved, generate the service agreement. Fill in client name, property, scope summary, total contract amount, and payment schedule (typically 3 phases: deposit / mid-project / completion).</p>
+        </div>
+        <a class="step-link" href="ClientServiceAgreement.html">Service Agreement</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">4.3</span>
+        <div class="step-title">Set Up the Draw Schedule</div>
+        <div class="step-body">
+          <p>For lender-funded deals, open the Draw Schedule tool. Group scope items into draw bundles (typically 3–5 draws). Each draw request goes to the lender with the bundle total and supporting scope items. The tool syncs draw totals back to the Deal Pipeline.</p>
+        </div>
+        <a class="step-link" href="Draw_Schedule.html">Draw Schedule</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">4.4</span>
+        <div class="step-title">Scope of Work Tool (Full Build Tracker)</div>
+        <div class="step-body">
+          <p>For larger projects, use the Scope of Work tool alongside the Estimator. It provides a full construction budget tracker with a client-facing view vs. internal view, and tracks build progress phase by phase.</p>
+        </div>
+        <a class="step-link" href="ScopeOfWork_Tool.html">Scope of Work</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 5: Present -->
+  <div class="sop-section" id="step-present">
+    <div class="sop-section-header">
+      <div class="sop-section-icon peach">📄</div>
+      <div>
+        <div class="sop-section-label">Deal Flow — Step 5</div>
+        <div class="sop-section-title">Present the Deal</div>
+      </div>
+    </div>
+    <div class="co-badges"><span class="co-badge p2p">Peach to Palms</span></div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">5.1</span>
+        <div class="step-title">Build the Deal Memo</div>
+        <div class="step-body">
+          <p>From the Dashboard Tools tab, click <strong>Send to Deal Memo (Final)</strong>. All deal numbers — ARV, rehab, purchase, assignment fee, closing costs, holding costs — load automatically.</p>
+          <p>In the Deal Memo, complete the 5 Deal Story sections:</p>
+          <ul>
+            <li><strong>The Property</strong> — beds/baths, sqft, year built, condition</li>
+            <li><strong>The Location</strong> — neighborhood, proximity to schools/jobs/highways</li>
+            <li><strong>The Comps</strong> — 2–3 recent comparable sales that support the ARV</li>
+            <li><strong>The Seller Situation</strong> — motivation, timeline, flexibility</li>
+            <li><strong>Why It's a Deal</strong> — the investment thesis in 2–3 sentences</li>
+          </ul>
+          <p>The memo auto-calculates:</p>
+          <ul>
+            <li>All-in cost (purchase + rehab + closing + holding)</li>
+            <li>Buyer's projected sell price at 85% ARV</li>
+            <li>Buyer's net profit and ROI %</li>
+            <li>Your assignment fee</li>
+          </ul>
+          <p>Click <strong>Copy Text</strong> to copy a formatted version for text/email blast to your cash buyer list. Click <strong>Build Memo</strong> to generate the PDF-ready version.</p>
+        </div>
+        <a class="step-link" href="Deal_Memo.html">Deal Memo</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">5.2</span>
+        <div class="step-title">Investor Deal Summary (for equity partners)</div>
+        <div class="step-body">
+          <p>For deals requiring equity partners or JV investors, use the Investor Deal Summary instead of or alongside the Deal Memo. It presents projected returns in an investor-facing format with IRR and equity split scenarios.</p>
+        </div>
+        <a class="step-link" href="Investor_Deal_Summary.html">Investor Deal Summary</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">5.3</span>
+        <div class="step-title">Advance Stage to "Decision"</div>
+        <div class="step-body">
+          <p>Once the deal is presented to buyers or partners, advance the stage to <strong>Decision</strong>. You're waiting for a buyer to commit or an investor to fund. Follow up within 48 hours.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 6: Fund -->
+  <div class="sop-section" id="step-fund">
+    <div class="sop-section-header">
+      <div class="sop-section-icon gold">💰</div>
+      <div>
+        <div class="sop-section-label">Deal Flow — Step 6</div>
+        <div class="sop-section-title">Fund the Deal</div>
+      </div>
+    </div>
+    <div class="co-badges"><span class="co-badge p2p">Peach to Palms</span><span class="co-badge iw">Ironwood</span></div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">6.1</span>
+        <div class="step-title">Private Money Pitch (Lender Package)</div>
+        <div class="step-body">
+          <p>For deals needing private or hard money, push from the Dashboard → <strong>Send to Private Money Pitch</strong>. The Lender Package auto-populates with deal numbers, BRRRR results, and MAO data.</p>
+          <p>The Lender Package generates a professional one-page pitch deck showing:</p>
+          <ul>
+            <li>Deal summary and ARV</li>
+            <li>Loan amount requested and LTV</li>
+            <li>Rehab scope summary</li>
+            <li>Exit strategy and projected timeline</li>
+            <li>Borrower profile</li>
+          </ul>
+        </div>
+        <a class="step-link" href="Lender_Package.html">Lender Package</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">6.2</span>
+        <div class="step-title">Lender Directory &amp; Tracker</div>
+        <div class="step-body">
+          <p>Use the Lender Directory to find hard money and private lenders with matching criteria (LTV, property type, state). Log each application in the Lender Tracker — track status, follow-up dates, and approval notes per deal.</p>
+        </div>
+        <a class="step-link" href="Lender_Directory.html">Lender Directory</a>
+        <a class="step-link" href="Lender_Tracker.html">Lender Tracker</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">6.3</span>
+        <div class="step-title">Capital Engine (Cash Buyer + Deal Cycle)</div>
+        <div class="step-body">
+          <p>Use the Capital Engine to see how each deal funds the next. It shows your cash buyer list, hard money lender stack, and the Wholesale → Flip → BRRRR phase roadmap — so you can see when you'll have capital to acquire the next deal.</p>
+        </div>
+        <a class="step-link" href="Capital_Engine.html">Capital Engine</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 7: Execute -->
+  <div class="sop-section" id="step-execute">
+    <div class="sop-section-header">
+      <div class="sop-section-icon blue">🏗️</div>
+      <div>
+        <div class="sop-section-label">Deal Flow — Step 7</div>
+        <div class="sop-section-title">Execute &amp; Close</div>
+      </div>
+    </div>
+    <div class="co-badges"><span class="co-badge ap">Anchor Pro</span><span class="co-badge iw">Ironwood</span></div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">7.1</span>
+        <div class="step-title">Advance to "Active" — Renovation Underway</div>
+        <div class="step-body">
+          <p>Once funded and contracted, advance the deal stage to <strong>Active</strong>. Update the Ironwood tab in the Dashboard with the rehab start date.</p>
+          <p>During the renovation:</p>
+          <ul>
+            <li>Use <strong>Client Portal</strong> to send project status updates to the homeowner or investor</li>
+            <li>Use <strong>Change Order Form</strong> for any scope additions — client reviews and signs digitally</li>
+            <li>Use <strong>Draw Schedule</strong> to request draws from the lender as phases complete</li>
+            <li>Use <strong>Invoice Tool</strong> to bill the client at each milestone</li>
+          </ul>
+        </div>
+        <a class="step-link" href="Ironwood_ClientPortal.html">Client Portal</a>
+        <a class="step-link" href="IPG_ChangeOrder.html">Change Order</a>
+        <a class="step-link" href="IPG_InvoicePayment.html">Invoice &amp; Payment</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">7.2</span>
+        <div class="step-title">Project Status (Client-Facing)</div>
+        <div class="step-body">
+          <p>The Project Status tool lets clients check their own project progress with a project code. They see the phase stepper, recent milestones, and PM contact info. Use code "DEMO" to preview.</p>
+        </div>
+        <a class="step-link" href="IPG_ProjectStatus.html">Project Status</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">7.3</span>
+        <div class="step-title">Close the Deal in the Dashboard</div>
+        <div class="step-body">
+          <p>When the property sells or the job completes:</p>
+          <ol style="padding-left:18px;">
+            <li>Enter final sale price in the Ironwood tab</li>
+            <li>Enter actual closing costs and carrying costs</li>
+            <li>Advance stage to <strong>Closed</strong></li>
+            <li>Go to Tools tab → click <strong>Log to Track Record</strong></li>
+          </ol>
+          <p>The Track Record tool reads the deal from localStorage and writes it to Firestore with net profit, rehab cost, and close date. It appears in Track Record instantly.</p>
+        </div>
+        <a class="step-link" href="Track_Record.html">Track Record</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">7.4</span>
+        <div class="step-title">Lien Waiver &amp; Final Documents</div>
+        <div class="step-body">
+          <p>At job completion, issue conditional and unconditional lien waivers to all subcontractors before final payment is released. Use the Lien Waiver tool to generate both forms.</p>
+        </div>
+        <a class="step-link" href="LienWaiver.html">Lien Waiver</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Step 8: Report -->
+  <div class="sop-section" id="step-report">
+    <div class="sop-section-header">
+      <div class="sop-section-icon green">📈</div>
+      <div>
+        <div class="sop-section-label">Deal Flow — Step 8</div>
+        <div class="sop-section-title">Report &amp; Record</div>
+      </div>
+    </div>
+    <div class="co-badges"><span class="co-badge p2p">Peach to Palms</span><span class="co-badge ap">Anchor Pro</span><span class="co-badge iw">Ironwood</span></div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">8.1</span>
+        <div class="step-title">Monthly P&L — Run at Month End</div>
+        <div class="step-body">
+          <p>At the end of each month, open the P&L for each company:</p>
+          <ul>
+            <li>Select the month at the top</li>
+            <li>Click <strong>Import Deals</strong> — closed deals from the Dashboard auto-populate as revenue rows</li>
+            <li>Manually add any additional revenue (direct client jobs, referral fees)</li>
+            <li>Fill in operating expenses</li>
+            <li>The waterfall auto-calculates: reserve → reinvestment → draw → forward balance</li>
+            <li>Print or export the report for your records</li>
+          </ul>
+        </div>
+        <a class="step-link" href="P2P_PL.html">P2P P&L</a>
+        <a class="step-link" href="AnchorPro_PL.html">Anchor Pro P&L</a>
+        <a class="step-link" href="Monthly_PL.html">Ironwood P&L</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">8.2</span>
+        <div class="step-title">Profit Waterfall — Partner Splits</div>
+        <div class="step-body">
+          <p>Open the Profit Waterfall for a deal-by-deal view of partner distributions. It auto-imports from the Remodel Estimator and shows Jeff / Jordan / Ty splits alongside Ironwood reinvestment. Use this at partner meetings to walk through what each deal returned.</p>
+        </div>
+        <a class="step-link" href="Profit_Waterfall.html">Profit Waterfall</a>
+      </div>
+
+      <div class="step">
+        <span class="step-num">8.3</span>
+        <div class="step-title">Track Record — Portfolio Overview</div>
+        <div class="step-body">
+          <p>The Track Record shows every closed deal across all three companies. Filter by exit strategy (Wholesale, Flip, BRRRR, Creative Finance, New Build). Summary cards show total deals closed, total revenue, total profit, and average profit per deal. Print it as your investor-facing track record document.</p>
+        </div>
+        <a class="step-link" href="Track_Record.html">Track Record</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════ COMPANY SOPS ═══════════ -->
+
+  <!-- P2P SOP -->
+  <div class="sop-section" id="p2p-sop">
+    <div class="sop-section-header">
+      <div class="sop-section-icon peach">🍑</div>
+      <div>
+        <div class="sop-section-label">Company SOP</div>
+        <div class="sop-section-title">Peach to Palms — Full SOP</div>
+      </div>
+    </div>
+
+    <div class="rule-box bronze" style="margin-bottom:20px;">
+      <div class="rule-box-title">Mission</div>
+      <p>Find motivated sellers in the SE US market. Negotiate contracts below MAO. Assign to cash buyers (wholesale) or hand to Ironwood (flip/BRRRR/creative finance). Every deal starts here.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">Weekly</span>
+        <div class="step-title">Lead Generation</div>
+        <div class="step-body">
+          <ul>
+            <li>REI Reply handles inbound voicemails — review HOT leads daily</li>
+            <li>Cold calling list: driving for dollars addresses, absentee owners, probate</li>
+            <li>Direct mail campaigns (track responses in Dashboard by lead source)</li>
+            <li>GHL pipeline for SMS follow-up sequences</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">Per Deal</span>
+        <div class="step-title">Acquisitions Checklist</div>
+        <div class="step-body">
+          <ul>
+            <li>☐ Pull comps — set ARV in Dashboard</li>
+            <li>☐ Run MAO — confirm asking is at or below MAO</li>
+            <li>☐ Walk the property — use Room Scanner</li>
+            <li>☐ Lock up contract — advance stage to Under Contract</li>
+            <li>☐ Build scope (Remodel Estimator) — pull rehab cost into Dashboard</li>
+            <li>☐ Build Deal Memo — complete all 5 Deal Story sections</li>
+            <li>☐ Blast to buyer list — copy text from Deal Memo</li>
+            <li>☐ Collect assignment fee — advance stage to Closed</li>
+            <li>☐ Log to Track Record from Dashboard Tools tab</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">Monthly</span>
+        <div class="step-title">P&L Review</div>
+        <div class="step-body">
+          <ul>
+            <li>Open P2P P&L → select month → Import Deals</li>
+            <li>Add any manual revenue (direct referral fees, creative finance payments)</li>
+            <li>Verify: 25% to reserve, 10% to portfolio fund, $2K draw to Ty</li>
+            <li>Record remaining balance in forward bucket</li>
+          </ul>
+        </div>
+        <a class="step-link" href="P2P_PL.html">P2P P&L</a>
+      </div>
+      <div class="step">
+        <span class="step-num">Key Tools</span>
+        <div class="step-title">P2P Tool Stack</div>
+        <div class="step-body">
+          <ul>
+            <li><a href="Connected_Deal_Dashboard.html">Connected Deal Dashboard</a> — create and manage all deals</li>
+            <li><a href="MAO_Calculator.html">MAO Calculator</a> — qualify every deal before offer</li>
+            <li><a href="IPG_BRRRRAnalyzer.html">BRRRR Analyzer</a> — hold strategy analysis</li>
+            <li><a href="Deal_Memo.html">Deal Memo</a> — buyer blast document</li>
+            <li><a href="Lender_Package.html">Private Money Pitch</a> — investor and lender package</li>
+            <li><a href="Track_Record.html">Track Record</a> — closed deal portfolio</li>
+            <li><a href="P2P_PL.html">P2P P&L</a> — monthly financial report</li>
+            <li><a href="IPG_HomeValuation.html">Home Valuation</a> — seller lead capture</li>
+            <li><a href="IPG_STREstimator.html">STR Estimator</a> — Airbnb income projection for sellers</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- AP SOP -->
+  <div class="sop-section" id="ap-sop">
+    <div class="sop-section-header">
+      <div class="sop-section-icon blue">⚙️</div>
+      <div>
+        <div class="sop-section-label">Company SOP</div>
+        <div class="sop-section-title">Anchor Pro Solutions — Full SOP</div>
+      </div>
+    </div>
+
+    <div class="rule-box bronze" style="margin-bottom:20px;">
+      <div class="rule-box-title">Mission</div>
+      <p>Execute every renovation on time, on budget, with documented scope and client communication at every phase. Anchor Pro is activated by P2P deal flow and also takes direct homeowner clients from the Ironwood Estimator and ads.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">Per Job — Internal Deal</span>
+        <div class="step-title">Pipeline Deal Scope Checklist</div>
+        <div class="step-body">
+          <ul>
+            <li>☐ Deal reaches "Scoped" stage in Dashboard → Anchor Pro tab activates</li>
+            <li>☐ Open Remodel Estimator — data pre-populated from Dashboard</li>
+            <li>☐ Build room-by-room scope with paint colors and labor breakdown</li>
+            <li>☐ Push rehab cost back to Dashboard</li>
+            <li>☐ Generate proposal PDF</li>
+            <li>☐ Get signed Service Agreement</li>
+            <li>☐ Set up Draw Schedule (lender-funded deals)</li>
+            <li>☐ Send client to Project Status tool for live progress updates</li>
+            <li>☐ Issue Change Orders for any scope additions</li>
+            <li>☐ Issue Lien Waivers at completion</li>
+            <li>☐ Send final Invoice — collect payment via Invoice Payment tool</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">Per Job — Direct Client</span>
+        <div class="step-title">Homeowner Client Checklist</div>
+        <div class="step-body">
+          <ul>
+            <li>☐ Lead comes in via Public Estimator or ads</li>
+            <li>☐ Import lead into Remodel Estimator (Connect section → Import Lead)</li>
+            <li>☐ Walk property — use Room Scanner to document scope</li>
+            <li>☐ Build full scope in Remodel Estimator with paint selections</li>
+            <li>☐ Generate and present proposal</li>
+            <li>☐ Get signed Service Agreement</li>
+            <li>☐ Create deal in Dashboard → Anchor Pro tab → log job revenue</li>
+            <li>☐ Same execution flow as pipeline deal above</li>
+          </ul>
+        </div>
+        <a class="step-link" href="Ironwood_Estimator_Public.html">Public Estimator</a>
+      </div>
+      <div class="step">
+        <span class="step-num">Monthly</span>
+        <div class="step-title">Anchor Pro P&L Review</div>
+        <div class="step-body">
+          <ul>
+            <li>Open Anchor Pro P&L → select month → Import Deals</li>
+            <li>Verify job revenue rows match completed invoices</li>
+            <li>Add operating expenses (tools, insurance, fuel, marketing)</li>
+            <li>Waterfall: 25% reserve → 10% reinvestment → $2K Ty draw → forward</li>
+          </ul>
+        </div>
+        <a class="step-link" href="AnchorPro_PL.html">Anchor Pro P&L</a>
+      </div>
+      <div class="step">
+        <span class="step-num">Key Tools</span>
+        <div class="step-title">Anchor Pro Tool Stack</div>
+        <div class="step-body">
+          <ul>
+            <li><a href="Remodel_Estimator.html">Remodel Estimator</a> — scope, bid, and proposal builder</li>
+            <li><a href="Room_Scanner.html">Room Scanner</a> — AI-assisted site walk and estimate</li>
+            <li><a href="ScopeOfWork_Tool.html">Scope of Work</a> — detailed build tracker</li>
+            <li><a href="Ironwood_Estimator_Public.html">Public Estimator</a> — lead funnel for ads</li>
+            <li><a href="Ironwood_ClientPortal.html">Client Portal</a> — job progress and payment milestones</li>
+            <li><a href="IPG_ChangeOrder.html">Change Order</a> — client digital signature</li>
+            <li><a href="Draw_Schedule.html">Draw Schedule</a> — lender draw requests</li>
+            <li><a href="IPG_InvoicePayment.html">Invoice &amp; Payment</a> — client billing</li>
+            <li><a href="LienWaiver.html">Lien Waiver</a> — sub release at completion</li>
+            <li><a href="AnchorPro_PL.html">Anchor Pro P&L</a> — monthly financial report</li>
+            <li><a href="Ironwood_Contractors.html">Contractor Directory</a> — sub roster and contacts</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ironwood SOP -->
+  <div class="sop-section" id="iw-sop">
+    <div class="sop-section-header">
+      <div class="sop-section-icon green">🌲</div>
+      <div>
+        <div class="sop-section-label">Company SOP</div>
+        <div class="sop-section-title">Ironwood Property Group — Full SOP</div>
+      </div>
+    </div>
+
+    <div class="rule-box bronze" style="margin-bottom:20px;">
+      <div class="rule-box-title">Mission</div>
+      <p>Own and manage assets. Ironwood holds renovated properties, manages dispositions, executes BRRRR refinances, and builds the long-term portfolio. It also coordinates partner financials and runs the overall ecosystem.</p>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <span class="step-num">Per Deal</span>
+        <div class="step-title">Asset Management Checklist</div>
+        <div class="step-body">
+          <ul>
+            <li>☐ Deal advances to Active in Dashboard → Ironwood tab activates</li>
+            <li>☐ Set sale price target or rental rate</li>
+            <li>☐ Monitor renovation through Client Portal and Draw Schedule</li>
+            <li>☐ At completion — enter final sale price, closing costs, carrying costs</li>
+            <li>☐ Advance stage to Closed</li>
+            <li>☐ Log to Track Record (Dashboard → Tools tab)</li>
+            <li>☐ Run Profit Waterfall to confirm partner splits</li>
+          </ul>
+        </div>
+      </div>
+      <div class="step">
+        <span class="step-num">BRRRR Exit</span>
+        <div class="step-title">BRRRR Refinance Checklist</div>
+        <div class="step-body">
+          <ul>
+            <li>☐ Renovation complete — wait 6 months for season (most lenders)</li>
+            <li>☐ Run BRRRR Analyzer — confirm refi proceeds ≥ all-in cost</li>
+            <li>☐ Submit refi package — use Lender Package tool</li>
+            <li>☐ At refi close — record cash-out proceeds in Dashboard (Ironwood tab)</li>
+            <li>☐ If keeping as rental — log to Rental Dashboard for ongoing cash flow tracking</li>
+            <li>☐ Log to Track Record with BRRRR exit strategy tag</li>
+          </ul>
+        </div>
+        <a class="step-link" href="Rental_Dashboard.html">Rental Dashboard</a>
+      </div>
+      <div class="step">
+        <span class="step-num">Monthly</span>
+        <div class="step-title">Ironwood P&L &amp; Partner Report</div>
+        <div class="step-body">
+          <ul>
+            <li>Open Ironwood Monthly P&L → select month → Import from Deal Pipeline</li>
+            <li>All closed deals (across all exit strategies) populate as revenue</li>
+            <li>Verify rehab costs imported as cost deductions</li>
+            <li>Check YTD summary panel for running totals</li>
+            <li>Share report with Jeff and Ty at monthly partner meeting</li>
+          </ul>
+        </div>
+        <a class="step-link" href="Monthly_PL.html">Ironwood P&L</a>
+      </div>
+      <div class="step">
+        <span class="step-num">Key Tools</span>
+        <div class="step-title">Ironwood Tool Stack</div>
+        <div class="step-body">
+          <ul>
+            <li><a href="Connected_Deal_Dashboard.html">Connected Deal Dashboard</a> — master deal record</li>
+            <li><a href="Profit_Waterfall.html">Profit Waterfall</a> — deal-by-deal partner splits</li>
+            <li><a href="Monthly_PL.html">Ironwood P&L</a> — monthly financial report</li>
+            <li><a href="Capital_Engine.html">Capital Engine</a> — cash buyer list and deal cycle</li>
+            <li><a href="IPG_AccountAllocator.html">Account Allocator</a> — 35/30/35 split calculator</li>
+            <li><a href="Rental_Dashboard.html">Rental Dashboard</a> — portfolio rental tracking</li>
+            <li><a href="NewConstruction_Pipeline.html">New Construction Pipeline</a> — duplex build tracker</li>
+            <li><a href="Track_Record.html">Track Record</a> — closed deal portfolio</li>
+            <li><a href="Ironwood_Dashboard.html">Ironwood Dashboard</a> — KPI overview</li>
+            <li><a href="BusinessCredit_Tracker.html">Business Credit Tracker</a> — credit utilization</li>
+            <li><a href="Vendor_Accounts_Tracker.html">Vendor Accounts</a> — net 30/60/90 trade lines</li>
+            <li><a href="Key_Man_Insurance.html">Key Man Insurance</a> — policy tracker across companies</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════ FINANCE SECTIONS ═══════════ -->
+
+  <div class="sop-section" id="waterfall">
+    <div class="sop-section-header">
+      <div class="sop-section-icon gold">💧</div>
+      <div>
+        <div class="sop-section-label">Finance</div>
+        <div class="sop-section-title">Profit Waterfall — How Money Flows</div>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:var(--ink-soft);margin-bottom:16px;">Every dollar earned flows through a defined waterfall before reaching partners. This prevents overpaying partners on paper while leaving the company undercapitalized.</p>
+
+    <div class="waterfall">
+      <div class="wf-row revenue"><span class="wf-label">💰 Sale Price / Job Revenue</span><span class="wf-note">Gross in</span></div>
+      <div class="wf-row deduct"><span class="wf-label">− Purchase Price</span><span class="wf-note">What we paid</span></div>
+      <div class="wf-row deduct"><span class="wf-label">− Rehab Cost (Anchor Pro scope total)</span><span class="wf-note">Hard construction cost</span></div>
+      <div class="wf-row deduct"><span class="wf-label">− Closing Costs</span><span class="wf-note">Title, escrow, agent fees</span></div>
+      <div class="wf-row deduct"><span class="wf-label">− Carrying Costs</span><span class="wf-note">Insurance, taxes, utilities during hold</span></div>
+      <div class="wf-row result"><span class="wf-label">= Gross Profit</span></div>
+      <div class="wf-row deduct"><span class="wf-label">− P2P Assignment Fee (off the top)</span><span class="wf-note">Wholesale fee to Peach to Palms</span></div>
+      <div class="wf-row result"><span class="wf-label">= Net Profit Available for Splits</span></div>
+      <div class="wf-row revenue"><span class="wf-label">35% → Jeff</span></div>
+      <div class="wf-row revenue"><span class="wf-label">30% → Ty</span></div>
+      <div class="wf-row revenue"><span class="wf-label">35% → Ironwood LLC (reinvestment)</span></div>
+    </div>
+
+    <div class="rule-box warn" style="margin-top:14px;">
+      <div class="rule-box-title">Each Company Also Has Its Own Waterfall</div>
+      <ul>
+        <li><strong>P2P:</strong> Revenue → Opex + deal costs → 25% reserve → 10% portfolio fund → $2K/mo Ty draw → forward</li>
+        <li><strong>Anchor Pro:</strong> Revenue → Opex + job costs → 25% reserve → 10% reinvestment → $2K/mo Ty draw → forward</li>
+        <li><strong>Ironwood LLC:</strong> Net profit → 35/30/35 split (Jeff/Ty/Ironwood reinvestment)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="sop-section" id="monthly-pl">
+    <div class="sop-section-header">
+      <div class="sop-section-icon green">📊</div>
+      <div>
+        <div class="sop-section-label">Finance</div>
+        <div class="sop-section-title">Monthly P&L — End of Month Process</div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-title">End-of-Month Checklist (runs in parallel for all 3 companies)</div>
+        <div class="step-body">
+          <ul>
+            <li>☐ Open each P&L, select the current month</li>
+            <li>☐ Click Import Deals — closed deals auto-populate from Firestore</li>
+            <li>☐ Add any manual revenue rows not captured by the dashboard (direct cash, referral fees)</li>
+            <li>☐ Enter all operating expenses (software, marketing, insurance, fuel, office)</li>
+            <li>☐ Enter all job costs (Anchor Pro only — labor, materials, subs)</li>
+            <li>☐ Review waterfall totals — verify reserve and reinvestment buckets are funded</li>
+            <li>☐ Check YTD summary for the full year picture</li>
+            <li>☐ Export JSON backup or print PDF for records</li>
+            <li>☐ Share Ironwood P&L with Jeff at monthly partner meeting</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sop-section" id="track-record">
+    <div class="sop-section-header">
+      <div class="sop-section-icon green">🏆</div>
+      <div>
+        <div class="sop-section-label">Finance</div>
+        <div class="sop-section-title">Track Record — Closing a Deal</div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-title">How to Properly Close and Log a Deal</div>
+        <div class="step-body">
+          <ol style="padding-left:18px;">
+            <li>In the Dashboard, open the deal → Ironwood tab</li>
+            <li>Enter final sale price, actual closing costs, actual carrying costs</li>
+            <li>In the Waterfall tab — confirm all numbers are accurate</li>
+            <li>Go to Tools tab → click <strong>Log to Track Record</strong></li>
+            <li>The tool calculates net profit and writes directly to Firestore</li>
+            <li>Open Track Record — the deal appears immediately</li>
+            <li>Advance Dashboard stage to <strong>Closed</strong></li>
+          </ol>
+          <p style="margin-top:8px;">The Track Record is your investor-facing portfolio. Keep it clean — only log a deal when all final numbers are confirmed.</p>
+        </div>
+        <a class="step-link" href="Track_Record.html">Track Record</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="sop-section" id="capital">
+    <div class="sop-section-header">
+      <div class="sop-section-icon gold">🏦</div>
+      <div>
+        <div class="sop-section-label">Finance</div>
+        <div class="sop-section-title">Capital &amp; Funding Stack</div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-title">Funding Sources by Deal Type</div>
+        <div class="step-body">
+          <ul>
+            <li><strong>Wholesale:</strong> No funding needed — assignment fee collected at close before the deal funds</li>
+            <li><strong>Flip:</strong> Hard money (70% LTV typical) + cash for down payment and rehab gap. Use Capital Engine to see available lenders.</li>
+            <li><strong>BRRRR:</strong> Hard money acquisition + rehab → DSCR or conventional refi at 75% LTV to recycle capital</li>
+            <li><strong>Creative Finance:</strong> Subject-to (take over existing mortgage), seller finance (seller is the lender), or novation (seller lists with us, we renovate first)</li>
+            <li><strong>New Construction:</strong> Construction loan → permanent takeout financing. Track in New Construction Pipeline.</li>
+          </ul>
+        </div>
+        <a class="step-link" href="Capital_Engine.html">Capital Engine</a>
+        <a class="step-link" href="Lender_Directory.html">Lender Directory</a>
+      </div>
+
+      <div class="step">
+        <div class="step-title">Business Credit Infrastructure</div>
+        <div class="step-body">
+          <ul>
+            <li>Track all business credit accounts in the <strong>Business Credit Tracker</strong> — limits, balances, utilization %</li>
+            <li>Track vendor/trade accounts (net 30/60/90) in the <strong>Vendor Accounts Tracker</strong> — materials accounts that build business credit without hard pulls</li>
+            <li>Monitor operational recurring costs in the <strong>Operational Costs Tracker</strong></li>
+          </ul>
+        </div>
+        <a class="step-link" href="BusinessCredit_Tracker.html">Business Credit</a>
+        <a class="step-link" href="Vendor_Accounts_Tracker.html">Vendor Accounts</a>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ═══════════ DATA KEYS REFERENCE ═══════════ -->
+  <div class="sop-section" id="data-keys">
+    <div class="sop-section-header">
+      <div class="sop-section-icon bronze">🔑</div>
+      <div>
+        <div class="sop-section-label">Technical Reference</div>
+        <div class="sop-section-title">Data Keys — How Tools Talk to Each Other</div>
+      </div>
+    </div>
+
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px;">These are the localStorage keys that pass data between tools. You do not need to manage these manually — they are set and read automatically when you use the Push / Pull buttons. This reference is for troubleshooting if data is not auto-populating.</p>
+
+    <div class="glossary">
+      <div class="gloss-item"><div class="gloss-term">iw_dashboard_push</div><div class="gloss-def">Set by Remodel Estimator → Push Rehab Cost. Read by Dashboard → Pull Rehab Cost.</div></div>
+      <div class="gloss-item"><div class="gloss-term">iw_remodeler_output</div><div class="gloss-def">Written by Remodel Estimator after push. Stores rehab total, scope summary, address.</div></div>
+      <div class="gloss-item"><div class="gloss-term">iw_mao_input</div><div class="gloss-def">Set by Dashboard → Push to MAO Calculator. Read by MAO on load.</div></div>
+      <div class="gloss-item"><div class="gloss-term">iw_mao_output</div><div class="gloss-def">Written by MAO Calculator after calc. Read by Dashboard → Pull MAO Result.</div></div>
+      <div class="gloss-item"><div class="gloss-term">iw_brrrr_input</div><div class="gloss-def">Set by Dashboard → Push to BRRRR Analyzer. Read by BRRRR on load.</div></div>
+      <div class="gloss-item"><div class="gloss-term">iw_brrrr_output</div><div class="gloss-def">Written by BRRRR Analyzer after calc. Read by Dashboard → Pull BRRRR Result.</div></div>
+      <div class="gloss-item"><div class="gloss-term">iw_dealmemo_input</div><div class="gloss-def">Set by Dashboard → Send to Deal Memo. Read by Deal Memo on load.</div></div>
+      <div class="gloss-item"><div class="gloss-term">iw_dealmemo_output</div><div class="gloss-def">Written by Deal Memo after calc. Stores buyer profit, ROI, assignment fee.</div></div>
+      <div class="gloss-item"><div class="gloss-term">iw_pitch_input</div><div class="gloss-def">Set by Dashboard → Send to Private Money Pitch. Read by Lender Package on load.</div></div>
+      <div class="gloss-item"><div class="gloss-term">iw_trackrecord_input</div><div class="gloss-def">Set by Dashboard → Log to Track Record. Read by Track Record on load — writes deal closed to Firestore.</div></div>
+      <div class="gloss-item"><div class="gloss-term">iw_active_deal</div><div class="gloss-def">Legacy key — written alongside tool-specific keys for backward compatibility with older tools.</div></div>
+      <div class="gloss-item"><div class="gloss-term">Firestore: deals collection</div><div class="gloss-def">Permanent deal records. Written by Dashboard (save) and Track Record (close). Read by all P&L tools on Import Deals.</div></div>
+    </div>
+
+    <div class="rule-box red" style="margin-top:16px;">
+      <div class="rule-box-title">Troubleshooting — Data Not Auto-Populating</div>
+      <ul>
+        <li>Make sure you opened the destination tool <em>after</em> clicking Push in the source tool — the key must be set before the tool loads</li>
+        <li>All tools must be in the same browser (same localStorage context) — different browsers or incognito windows will not share data</li>
+        <li>If a tool shows a green import banner at the top, data loaded correctly — dismiss it to continue</li>
+        <li>If no banner appears and fields are blank, go back to the Dashboard → Tools tab and push again</li>
+      </ul>
+    </div>
+  </div>
+
+</div><!-- end .sop-wrap -->
+
+<div class="iw-footer">Ironwood Property Group · Atlanta Metro · <a href="mailto:info@ironwoodpropertygroup.com">info@ironwoodpropertygroup.com</a></div>
+
+</body>
+</html>
